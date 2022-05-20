@@ -12,6 +12,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.argument.EnchantmentArgumentType;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -23,6 +24,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.village.Merchant;
 import net.minecraft.village.VillagerProfession;
 
 public class LibrGetCommand {
@@ -43,6 +45,11 @@ public class LibrGetCommand {
         int level = context.getArgument("level", Integer.class);
         if(level > enchantment.getMaxLevel()){
             context.getSource().sendFeedback(new LiteralText("Level over the max! Max level: " + enchantment.getMaxLevel()).formatted(Formatting.RED));
+            return 1;
+        }
+
+        if(enchantment == Enchantments.SOUL_SPEED){
+            context.getSource().sendFeedback(new LiteralText("Soul speed can not be traded by villagers!").formatted(Formatting.RED));
             return 1;
         }
 
@@ -99,6 +106,10 @@ public class LibrGetCommand {
             VillagerEntity villager = (VillagerEntity) entity;
             if(villager.getVillagerData().getProfession() != VillagerProfession.LIBRARIAN){
                 context.getSource().sendFeedback(new LiteralText("Villager is not a librarian!").formatted(Formatting.RED));
+                return 1;
+            }
+            if(!((Merchant)villager).canRefreshTrades()){
+                context.getSource().sendFeedback(new LiteralText("This librarian has already been traded!").formatted(Formatting.RED));
                 return 1;
             }
             context.getSource().sendFeedback(new LiteralText("Villager selected"));
