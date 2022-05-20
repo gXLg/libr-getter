@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.gxlg.librgetter.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "Ticker",
+    "Trader"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

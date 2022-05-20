@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "librgetter",
+  "version": "0.0.1",
+
+  "name": "Librarian Getter",
+  "description": "Allows you to bruteforce a librarian villager for the desired enchantment",
+  "authors": [
+    "gXLg"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/librgetter/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.gxlg.librgetter.LibrGetter"
+    ]
+  },
+  "mixins": [
+    "librgetter.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "~1.16.5"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
