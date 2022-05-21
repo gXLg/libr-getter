@@ -261,7 +261,9 @@ public class Worker {
         villager = newVillager;
     }
 
-    public static void setSource(FabricClientCommandSource newSource){ source = newSource; }
+    public static void setSource(FabricClientCommandSource newSource){
+        source = newSource;
+    }
 
     public enum State {
         STANDBY,

@@ -12,7 +12,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.argument.EnchantmentArgumentType;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -48,8 +47,8 @@ public class LibrGetCommand {
             return 1;
         }
 
-        if(enchantment == Enchantments.SOUL_SPEED){
-            context.getSource().sendFeedback(new LiteralText("Soul speed can not be traded by villagers!").formatted(Formatting.RED));
+        if(!enchantment.isAvailableForEnchantedBookOffer()){
+            context.getSource().sendFeedback(new LiteralText("This enchantment can not be traded by villagers!").formatted(Formatting.RED));
             return 1;
         }
 
@@ -78,13 +77,25 @@ public class LibrGetCommand {
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
-        if(world == null) return 1;
+        if(world == null){
+            context.getSource().sendFeedback(new LiteralText("InternalError: world == null").formatted(Formatting.RED));
+            return 1;
+        }
         ClientPlayerEntity player = client.player;
-        if(player == null) return 1;
+        if(player == null){
+            context.getSource().sendFeedback(new LiteralText("InternalError: player == null").formatted(Formatting.RED));
+            return 1;
+        }
         HitResult hit = client.crosshairTarget;
-        if(hit == null) return 1;
+        if(hit == null){
+            context.getSource().sendFeedback(new LiteralText("InternalError: hit == null").formatted(Formatting.RED));
+            return 1;
+        }
         HitResult.Type hitType = hit.getType();
-        if(hitType == HitResult.Type.MISS) return 1;
+        if(hitType == HitResult.Type.MISS){
+            context.getSource().sendFeedback(new LiteralText("You are not targeting anything!").formatted(Formatting.RED));
+            return 1;
+        }
 
         if(hitType == HitResult.Type.BLOCK){
             BlockPos blockPos = ((BlockHitResult)hit).getBlockPos();
