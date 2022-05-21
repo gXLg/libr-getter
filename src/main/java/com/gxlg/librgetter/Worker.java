@@ -2,14 +2,16 @@ package com.gxlg.librgetter;
 
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -75,16 +77,16 @@ public class Worker {
                 return;
             }
             int slot = -1;
-            Item[] items = { Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.GOLDEN_AXE };
-            for(Item item : items){
-                for(int i = 0; i < inventory.main.size(); i ++){
-                    ItemStack stack = inventory.getStack(i);
-                    if(stack.getItem() == item){
-                        slot = i;
-                        break;
-                    }
+            float max = -1;
+            for(int i = 0; i < inventory.main.size(); i ++){
+                ItemStack stack = inventory.getStack(i);
+                float f = stack.getMiningSpeedMultiplier(Blocks.LECTERN.getDefaultState());
+                int ef = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
+                f += (float)(ef * ef + 1);
+                if(f > max){
+                    max = f;
+                    slot = i;
                 }
-                if(slot != -1) break;
             }
             ClientPlayerInteractionManager manager = client.interactionManager;
             if(manager == null){
@@ -263,6 +265,11 @@ public class Worker {
 
     public static void setSource(FabricClientCommandSource newSource){
         source = newSource;
+    }
+
+    public static void noRefresh(){
+        source.sendFeedback(new LiteralText("The villager trades can not be updated!").formatted(Formatting.RED));
+        state = State.STANDBY;
     }
 
     public enum State {

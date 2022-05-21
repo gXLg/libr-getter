@@ -119,10 +119,6 @@ public class LibrGetCommand {
                 context.getSource().sendFeedback(new LiteralText("Villager is not a librarian!").formatted(Formatting.RED));
                 return 1;
             }
-            if(!((Merchant)villager).canRefreshTrades()){
-                context.getSource().sendFeedback(new LiteralText("This librarian has already been traded!").formatted(Formatting.RED));
-                return 1;
-            }
             context.getSource().sendFeedback(new LiteralText("Villager selected"));
 
             Worker.setVillager(villager);
