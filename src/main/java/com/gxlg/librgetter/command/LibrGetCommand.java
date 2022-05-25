@@ -23,23 +23,40 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.village.Merchant;
 import net.minecraft.village.VillagerProfession;
 
 public class LibrGetCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher){
         dispatcher.register(ClientCommandManager
                 .literal("librget")
+                .then(ClientCommandManager.literal("add")
                         .then(ClientCommandManager.argument("enchantment", EnchantmentArgumentType.enchantment())
                                 .then(ClientCommandManager.argument("level", IntegerArgumentType.integer(1))
-                                        .executes(LibrGetCommand::run)))
-                        .then(ClientCommandManager.literal("stop")
-                                .executes(LibrGetCommand::runStop))
+                                        .executes(LibrGetCommand::runAdd))))
+                .then(ClientCommandManager.literal("remove")
+                        .then(ClientCommandManager.argument("enchantment", EnchantmentArgumentType.enchantment())
+                                .then(ClientCommandManager.argument("level", IntegerArgumentType.integer(1))
+                                        .executes(LibrGetCommand::runRemove))))
+                .then(ClientCommandManager.literal("clear")
+                        .executes(LibrGetCommand::runClear))
+                .then(ClientCommandManager.literal("stop")
+                        .executes(LibrGetCommand::runStop))
+                .then(ClientCommandManager.literal("start")
+                    .executes(LibrGetCommand::runStart))
                 .executes(LibrGetCommand::runSelector)
         );
     }
 
-    private static int run(CommandContext<FabricClientCommandSource> context){
+    private static int runRemove(CommandContext<FabricClientCommandSource> context){
+        return enchanter(context, true);
+    }
+
+    private static int runAdd(CommandContext<FabricClientCommandSource> context){
+        return enchanter(context, false);
+    }
+
+
+    private static int enchanter(CommandContext<FabricClientCommandSource> context, boolean remove){
         Enchantment enchantment = context.getArgument("enchantment", Enchantment.class);
         int level = context.getArgument("level", Integer.class);
         if(level > enchantment.getMaxLevel()){
@@ -60,16 +77,31 @@ public class LibrGetCommand {
         String looking = id + "_" + level + "s";
 
         Worker.setSource(context.getSource());
-        Worker.begin(looking);
+        if(remove)
+            Worker.remove(looking);
+        else
+            Worker.add(looking);
 
         return 0;
     }
+    private  static int runClear(CommandContext<FabricClientCommandSource> context){
+        Worker.setSource(context.getSource());
+        Worker.clear();
+        return 0;
+    }
     private static int runStop(CommandContext<FabricClientCommandSource> context){
+        Worker.setSource(context.getSource());
         Worker.stop();
+        return 0;
+    }
+    private static int runStart(CommandContext<FabricClientCommandSource> context){
+        Worker.setSource(context.getSource());
+        Worker.begin();
         return 0;
     }
     private static int runSelector(CommandContext<FabricClientCommandSource> context) {
 
+        Worker.setSource(context.getSource());
         if(Worker.getState() != Worker.State.STANDBY){
             context.getSource().sendFeedback(new LiteralText("LibrGetter is running!").formatted(Formatting.RED));
             return 1;

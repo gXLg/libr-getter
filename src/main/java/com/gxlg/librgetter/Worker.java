@@ -31,6 +31,8 @@ import net.minecraft.village.VillagerProfession;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+
 public class Worker {
 
     @Nullable
@@ -47,7 +49,7 @@ public class Worker {
 
     private static FabricClientCommandSource source;
 
-    private static String looking;
+    private static final ArrayList<String> looking = new ArrayList<>();
 
     private static int counter;
 
@@ -221,15 +223,19 @@ public class Worker {
 
             source.sendFeedback(new LiteralText("Enchantment offered: " + enchant));
 
-            if(looking.equals(enchant)) {
-                source.sendFeedback(new LiteralText("Successfully found after: " + counter + " tries").formatted(Formatting.GREEN));
-                state = State.STANDBY;
-            } else
+            for(String l: looking) {
+                if (l.equals(enchant)) {
+                    source.sendFeedback(new LiteralText("Successfully found after: " + counter + " tries").formatted(Formatting.GREEN));
+                    state = State.STANDBY;
+                    break;
+                }
+            }
+            if(state != State.STANDBY)
                 state = State.START;
         }
     }
 
-    public static void begin(String newLooking){
+    public static void begin(){
         if(state != State.STANDBY) {
             source.sendFeedback(new LiteralText("LibrGetter is already running!").formatted(Formatting.RED));
             return;
@@ -242,12 +248,39 @@ public class Worker {
             source.sendFeedback(new LiteralText("The villager is not been set!").formatted(Formatting.RED));
             return;
         }
-        source.sendFeedback(new LiteralText("LibrGetter process started to look for " + newLooking).formatted(Formatting.GREEN));
+        if(looking.isEmpty()){
+            source.sendFeedback(new LiteralText("There are no entries in the goals list!").formatted(Formatting.RED));
+            return;
+        }
+        source.sendFeedback(new LiteralText("LibrGetter process started").formatted(Formatting.GREEN));
         counter = 0;
-        looking = newLooking;
         state = State.START;
     }
+    public static void add(String newLooking){
+        if(looking.contains(newLooking)){
+            source.sendFeedback(new LiteralText(newLooking + " is already in the goals list!").formatted(Formatting.RED));
+            return;
+        }
+        looking.add(newLooking);
+        source.sendFeedback(new LiteralText("Added " + newLooking).formatted(Formatting.GREEN));
+    }
+    public static void remove(String newLooking){
+        if(!looking.contains(newLooking)){
+            source.sendFeedback(new LiteralText(newLooking + " is not in the goals list!").formatted(Formatting.RED));
+            return;
+        }
+        looking.remove(newLooking);
+        source.sendFeedback(new LiteralText("Removed " + newLooking).formatted(Formatting.YELLOW));
+    }
+    public static void clear(){
+        looking.clear();
+        source.sendFeedback(new LiteralText("Cleared the goals list").formatted(Formatting.YELLOW));
+    }
     public static void stop(){
+        if(state == State.STANDBY){
+            source.sendFeedback(new LiteralText("LibrGetter isn't running").formatted(Formatting.RED));
+            return;
+        }
         source.sendFeedback(new LiteralText("Successfully stopped the process").formatted(Formatting.YELLOW));
         state = State.STANDBY;
     }
