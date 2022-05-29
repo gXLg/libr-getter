@@ -72,7 +72,7 @@ public class Worker {
                 state = State.STANDBY;
                 return;
             }
-            PlayerInventory inventory = player.inventory;
+            PlayerInventory inventory = player.getInventory();
             if(inventory == null){
                 source.sendFeedback(new LiteralText("InternalError: inventory == null").formatted(Formatting.RED));
                 state = State.STANDBY;
@@ -141,7 +141,7 @@ public class Worker {
                 state = State.STANDBY;
                 return;
             }
-            PlayerInventory inventory = player.inventory;
+            PlayerInventory inventory = player.getInventory();
             if(inventory == null){
                 source.sendFeedback(new LiteralText("InternalError: inventory == null").formatted(Formatting.RED));
                 state = State.STANDBY;
@@ -164,14 +164,15 @@ public class Worker {
             }
             if(PlayerInventory.isValidHotbarIndex(slot))
                 inventory.selectedSlot = slot;
-            else
+            else//inventory update
                 manager.pickFromInventory(slot);
             UpdateSelectedSlotC2SPacket packetSelect = new UpdateSelectedSlotC2SPacket(inventory.selectedSlot);
             handler.sendPacket(packetSelect);
-
+// placing block
             Vec3d lowBlockPos = new Vec3d(block.getX(), block.getY() - 1, block.getZ());
-            BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, block, false);
-            PlayerInteractBlockC2SPacket packetSet = new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, lowBlock);
+            BlockPos lowBlock = new BlockPos(block.getX(), block.getY() - 1, block.getZ());
+            BlockHitResult blockHitResult = new BlockHitResult(lowBlockPos, Direction.UP, lowBlock, false);
+            PlayerInteractBlockC2SPacket packetSet = new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, blockHitResult);
 
             handler.sendPacket(packetSet);
             state = State.GET;
@@ -184,8 +185,8 @@ public class Worker {
                 source.sendFeedback(new LiteralText("InternalError: handler == null").formatted(Formatting.RED));
                 state = State.STANDBY;
                 return;
-            }
-            PlayerInteractEntityC2SPacket packet = new PlayerInteractEntityC2SPacket(villager, Hand.MAIN_HAND, false);
+            }//villager interact
+            PlayerInteractEntityC2SPacket packet = PlayerInteractEntityC2SPacket.interact(villager, false, Hand.MAIN_HAND);
             handler.sendPacket(packet);
             trades = null;
             state = State.GETTING;
@@ -202,7 +203,7 @@ public class Worker {
 
             String enchant;
             if(trade != -1){
-                NbtCompound tag = trades.get(trade).getSellItem().getTag();
+                NbtCompound tag = trades.get(trade).getSellItem().getNbt();
                 if(tag == null){
                     source.sendFeedback(new LiteralText("InternalError: tag == null").formatted(Formatting.RED));
                     state = State.STANDBY;
