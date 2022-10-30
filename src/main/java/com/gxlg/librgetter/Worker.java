@@ -101,7 +101,7 @@ public class Worker {
         if(state == State.START){
             counter ++;
 
-            PlayerInventory inventory = player.inventory;
+            PlayerInventory inventory = player.getInventory();
             if(inventory == null){
                 source.sendFeedback(new LiteralText("InternalError: inventory == null").formatted(Formatting.RED));
                 state = State.STANDBY;
@@ -164,7 +164,7 @@ public class Worker {
             manager.updateBlockBreakingProgress(block, Direction.UP);
         } else if(state == State.PLACE){
 
-            PlayerInventory inventory = player.inventory;
+            PlayerInventory inventory = player.getInventory();
             if(inventory == null){
                 source.sendFeedback(new LiteralText("InternalError: inventory == null").formatted(Formatting.RED));
                 state = State.STANDBY;
@@ -193,8 +193,9 @@ public class Worker {
             handler.sendPacket(packetSelect);
 
             Vec3d lowBlockPos = new Vec3d(block.getX(), block.getY() - 1, block.getZ());
-            BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, block, false);
-            PlayerInteractBlockC2SPacket packetSet = new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, lowBlock);
+            BlockPos lowBlock = new BlockPos(block.getX(), block.getY() - 1, block.getZ());
+            BlockHitResult blockHitResult = new BlockHitResult(lowBlockPos, Direction.UP, lowBlock, false);
+            PlayerInteractBlockC2SPacket packetSet = new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, blockHitResult);
 
             handler.sendPacket(packetSet);
             state = State.GET;
@@ -207,7 +208,7 @@ public class Worker {
                 state = State.STANDBY;
                 return;
             }
-            PlayerInteractEntityC2SPacket packet = new PlayerInteractEntityC2SPacket(villager, Hand.MAIN_HAND, false);
+            PlayerInteractEntityC2SPacket packet = PlayerInteractEntityC2SPacket.interact(villager, false, Hand.MAIN_HAND);
             handler.sendPacket(packet);
             trades = null;
             state = State.GETTING;
@@ -224,7 +225,7 @@ public class Worker {
 
             Look enchant = null;
             if(trade != -1){
-                NbtCompound tag = trades.get(trade).getSellItem().getTag();
+                NbtCompound tag = trades.get(trade).getSellItem().getNbt();
                 if(tag == null){
                     source.sendFeedback(new LiteralText("InternalError: tag == null").formatted(Formatting.RED));
                     state = State.STANDBY;
