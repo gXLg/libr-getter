@@ -14,12 +14,14 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.*;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -49,14 +51,49 @@ public class Worker {
 
     private static FabricClientCommandSource source;
 
-    private static final ArrayList<String> looking = new ArrayList<>();
+    private static final ArrayList<Look> looking = new ArrayList<>();
 
+    private static class Look {
+        public String name;
+        public int level;
+
+        public Look(String n, int l){
+            name = n; level = l;
+        }
+
+        @Override
+        public String toString(){
+            return name + " " + level;
+        }
+
+        @Override
+        public boolean equals(Object l){
+            if(!l.getClass().equals(Look.class))
+                return false;
+            Look ll = (Look) l;
+            return name.equals(ll.name) && level == ll.level;
+        }
+    }
     private static int counter;
 
     public static void tick(){
 
         if(state == State.STANDBY) return;
         if(block == null || villager == null){
+            source.sendFeedback(new LiteralText("Block or villager are not specified!").formatted(Formatting.RED));
+            state = State.STANDBY;
+            return;
+        }
+
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
+        if(player == null){
+            source.sendFeedback(new LiteralText("InternalError: player == null").formatted(Formatting.RED));
+            state = State.STANDBY;
+            return;
+        }
+        if(!block.isWithinDistance(player.getPos(), 3.4f) || villager.distanceTo(player) > 3.4f){
+            source.sendFeedback(new LiteralText("Too far away!").formatted(Formatting.RED));
             state = State.STANDBY;
             return;
         }
@@ -64,14 +101,6 @@ public class Worker {
         if(state == State.START){
             counter ++;
 
-            MinecraftClient client = MinecraftClient.getInstance();
-
-            ClientPlayerEntity player = client.player;
-            if(player == null){
-                source.sendFeedback(new LiteralText("InternalError: player == null").formatted(Formatting.RED));
-                state = State.STANDBY;
-                return;
-            }
             PlayerInventory inventory = player.inventory;
             if(inventory == null){
                 source.sendFeedback(new LiteralText("InternalError: inventory == null").formatted(Formatting.RED));
@@ -82,6 +111,8 @@ public class Worker {
             float max = -1;
             for(int i = 0; i < inventory.main.size(); i ++){
                 ItemStack stack = inventory.getStack(i);
+                if(stack.getMaxDamage() - stack.getDamage() < 10 && stack.isDamageable())
+                    continue;
                 float f = stack.getMiningSpeedMultiplier(Blocks.LECTERN.getDefaultState());
                 int ef = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
                 f += (float)(ef * ef + 1);
@@ -102,7 +133,7 @@ public class Worker {
                 state = State.STANDBY;
                 return;
             }
-            if(slot != -1) {
+            if(slot != -1){
                 if (PlayerInventory.isValidHotbarIndex(slot))
                     inventory.selectedSlot = slot;
                 else
@@ -112,7 +143,6 @@ public class Worker {
             }
             state = State.BREAK;
         } else if(state == State.BREAK){
-            MinecraftClient client = MinecraftClient.getInstance();
 
             ClientWorld world = client.world;
             if(world == null){
@@ -133,14 +163,7 @@ public class Worker {
             }
             manager.updateBlockBreakingProgress(block, Direction.UP);
         } else if(state == State.PLACE){
-            MinecraftClient client = MinecraftClient.getInstance();
 
-            ClientPlayerEntity player = client.player;
-            if(player == null){
-                source.sendFeedback(new LiteralText("InternalError: player == null").formatted(Formatting.RED));
-                state = State.STANDBY;
-                return;
-            }
             PlayerInventory inventory = player.inventory;
             if(inventory == null){
                 source.sendFeedback(new LiteralText("InternalError: inventory == null").formatted(Formatting.RED));
@@ -178,7 +201,6 @@ public class Worker {
         } else if(state == State.GET){
             if(villager.getVillagerData().getProfession() == VillagerProfession.NONE) return;
 
-            MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
             if(handler == null){
                 source.sendFeedback(new LiteralText("InternalError: handler == null").formatted(Formatting.RED));
@@ -200,7 +222,7 @@ public class Worker {
             else
                 trade = -1;
 
-            String enchant;
+            Look enchant = null;
             if(trade != -1){
                 NbtCompound tag = trades.get(trade).getSellItem().getTag();
                 if(tag == null){
@@ -213,21 +235,21 @@ public class Worker {
                 NbtElement id = element.get("id");
                 NbtElement lvl = element.get("lvl");
                 if(id == null || lvl == null){
-                    source.sendFeedback(new LiteralText("InternalError: tag == null").formatted(Formatting.RED));
+                    source.sendFeedback(new LiteralText("InternalError: id == null or lvl == null").formatted(Formatting.RED));
                     state = State.STANDBY;
                     return;
                 }
-                enchant = id.asString() + "_" + lvl.asString();
-            } else
-                enchant = "none";
+                enchant = new Look(id.asString(), ((NbtShort) lvl).intValue());
+            }
 
             source.sendFeedback(new LiteralText("Enchantment offered: " + enchant));
-
-            for(String l: looking) {
-                if (l.equals(enchant)) {
-                    source.sendFeedback(new LiteralText("Successfully found after: " + counter + " tries").formatted(Formatting.GREEN));
-                    state = State.STANDBY;
-                    break;
+            if(enchant != null){
+                for (Look l: looking){
+                    if (l.equals(enchant)){
+                        source.sendFeedback(new LiteralText("Successfully found after: " + counter + " tries").formatted(Formatting.GREEN));
+                        state = State.STANDBY;
+                        break;
+                    }
                 }
             }
             if(state != State.STANDBY)
@@ -236,7 +258,7 @@ public class Worker {
     }
 
     public static void begin(){
-        if(state != State.STANDBY) {
+        if(state != State.STANDBY){
             source.sendFeedback(new LiteralText("LibrGetter is already running!").formatted(Formatting.RED));
             return;
         }
@@ -256,21 +278,47 @@ public class Worker {
         counter = 0;
         state = State.START;
     }
-    public static void add(String newLooking){
-        if(looking.contains(newLooking)){
+    public static void add(String name, int level){
+        Look newLooking = new Look(name, level);
+        boolean contains = false;
+        for(Look l: looking){
+            if(l.equals(newLooking)){
+                contains = true;
+                break;
+            }
+        }
+        if(contains){
             source.sendFeedback(new LiteralText(newLooking + " is already in the goals list!").formatted(Formatting.RED));
             return;
         }
         looking.add(newLooking);
         source.sendFeedback(new LiteralText("Added " + newLooking).formatted(Formatting.GREEN));
     }
-    public static void remove(String newLooking){
-        if(!looking.contains(newLooking)){
+    public static void remove(String name, int level){
+        Look newLooking = new Look(name, level);
+        boolean contains = false;
+        for(Look l: looking){
+            if(l.equals(newLooking)){
+                contains = true;
+                break;
+            }
+        }
+        if(!contains){
             source.sendFeedback(new LiteralText(newLooking + " is not in the goals list!").formatted(Formatting.RED));
             return;
         }
         looking.remove(newLooking);
         source.sendFeedback(new LiteralText("Removed " + newLooking).formatted(Formatting.YELLOW));
+    }
+    public static void list(){
+        MutableText output = new LiteralText("Goals list:");
+        for(Look l: looking){
+            output = output.append("\n- " + l + " ").append(new LiteralText("(remove)").setStyle(
+                Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget remove " + l))
+            ));
+
+        }
+        source.sendFeedback(output);
     }
     public static void clear(){
         looking.clear();
@@ -278,7 +326,7 @@ public class Worker {
     }
     public static void stop(){
         if(state == State.STANDBY){
-            source.sendFeedback(new LiteralText("LibrGetter isn't running").formatted(Formatting.RED));
+            source.sendFeedback(new LiteralText("LibrGetter isn't running!").formatted(Formatting.RED));
             return;
         }
         source.sendFeedback(new LiteralText("Successfully stopped the process").formatted(Formatting.YELLOW));

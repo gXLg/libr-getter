@@ -39,6 +39,8 @@ public class LibrGetCommand {
                                         .executes(LibrGetCommand::runRemove))))
                 .then(ClientCommandManager.literal("clear")
                         .executes(LibrGetCommand::runClear))
+                .then(ClientCommandManager.literal("list")
+                        .executes(LibrGetCommand::runList))
                 .then(ClientCommandManager.literal("stop")
                         .executes(LibrGetCommand::runStop))
                 .then(ClientCommandManager.literal("start")
@@ -53,6 +55,12 @@ public class LibrGetCommand {
 
     private static int runAdd(CommandContext<FabricClientCommandSource> context){
         return enchanter(context, false);
+    }
+
+    private static int runList(CommandContext<FabricClientCommandSource> context){
+        Worker.setSource(context.getSource());
+        Worker.list();
+        return 0;
     }
 
 
@@ -74,13 +82,12 @@ public class LibrGetCommand {
             context.getSource().sendFeedback(new LiteralText("InternalError: id == null").formatted(Formatting.RED));
             return 1;
         }
-        String looking = id + "_" + level + "s";
 
         Worker.setSource(context.getSource());
         if(remove)
-            Worker.remove(looking);
+            Worker.remove(id.toString(), level);
         else
-            Worker.add(looking);
+            Worker.add(id.toString(), level);
 
         return 0;
     }
@@ -99,7 +106,7 @@ public class LibrGetCommand {
         Worker.begin();
         return 0;
     }
-    private static int runSelector(CommandContext<FabricClientCommandSource> context) {
+    private static int runSelector(CommandContext<FabricClientCommandSource> context){
 
         Worker.setSource(context.getSource());
         if(Worker.getState() != Worker.State.STANDBY){
