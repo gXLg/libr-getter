@@ -246,7 +246,7 @@ public class Worker {
             if(enchant != null){
                 for (Look l: looking){
                     if (l.equals(enchant)){
-                        source.sendFeedback(new LiteralText("Successfully found after: " + counter + " tries").formatted(Formatting.GREEN));
+                        source.sendFeedback(new LiteralText("Successfully found " + enchant + " after: " + counter + " tries").formatted(Formatting.GREEN));
                         state = State.STANDBY;
                         break;
                     }
