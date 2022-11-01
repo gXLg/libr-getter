@@ -1,6 +1,6 @@
 package com.gxlg.librgetter;
 
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -15,11 +15,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.*;
-import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
@@ -80,7 +79,7 @@ public class Worker {
 
         if(state == State.STANDBY) return;
         if(block == null || villager == null){
-            source.sendFeedback(new LiteralText("Block or villager are not specified!").formatted(Formatting.RED));
+            source.sendFeedback(MutableText.of(new LiteralTextContent("Block or villager are not specified!")).formatted(Formatting.RED));
             state = State.STANDBY;
             return;
         }
@@ -88,12 +87,12 @@ public class Worker {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if(player == null){
-            source.sendFeedback(new LiteralText("InternalError: player == null").formatted(Formatting.RED));
+            source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: player == null")).formatted(Formatting.RED));
             state = State.STANDBY;
             return;
         }
         if(!block.isWithinDistance(player.getPos(), 3.4f) || villager.distanceTo(player) > 3.4f){
-            source.sendFeedback(new LiteralText("Too far away!").formatted(Formatting.RED));
+            source.sendFeedback(MutableText.of(new LiteralTextContent("Too far away!")).formatted(Formatting.RED));
             state = State.STANDBY;
             return;
         }
@@ -103,7 +102,7 @@ public class Worker {
 
             PlayerInventory inventory = player.getInventory();
             if(inventory == null){
-                source.sendFeedback(new LiteralText("InternalError: inventory == null").formatted(Formatting.RED));
+                source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: inventory == null")).formatted(Formatting.RED));
                 state = State.STANDBY;
                 return;
             }
@@ -123,13 +122,13 @@ public class Worker {
             }
             ClientPlayerInteractionManager manager = client.interactionManager;
             if(manager == null){
-                source.sendFeedback(new LiteralText("InternalError: manager == null").formatted(Formatting.RED));
+                source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: manager == null")).formatted(Formatting.RED));
                 state = State.STANDBY;
                 return;
             }
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
             if(handler == null){
-                source.sendFeedback(new LiteralText("InternalError: handler == null").formatted(Formatting.RED));
+                source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: handler == null")).formatted(Formatting.RED));
                 state = State.STANDBY;
                 return;
             }
@@ -146,7 +145,7 @@ public class Worker {
 
             ClientWorld world = client.world;
             if(world == null){
-                source.sendFeedback(new LiteralText("InternalError: world == null").formatted(Formatting.RED));
+                source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: world == null")).formatted(Formatting.RED));
                 state = State.STANDBY;
                 return;
             }
@@ -157,7 +156,7 @@ public class Worker {
             }
             ClientPlayerInteractionManager manager = client.interactionManager;
             if(manager == null){
-                source.sendFeedback(new LiteralText("InternalError: manager == null").formatted(Formatting.RED));
+                source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: manager == null")).formatted(Formatting.RED));
                 state = State.STANDBY;
                 return;
             }
@@ -166,7 +165,7 @@ public class Worker {
 
             PlayerInventory inventory = player.getInventory();
             if(inventory == null){
-                source.sendFeedback(new LiteralText("InternalError: inventory == null").formatted(Formatting.RED));
+                source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: inventory == null")).formatted(Formatting.RED));
                 state = State.STANDBY;
                 return;
             }
@@ -175,13 +174,13 @@ public class Worker {
 
             ClientPlayerInteractionManager manager = client.interactionManager;
             if(manager == null){
-                source.sendFeedback(new LiteralText("InternalError: manager == null").formatted(Formatting.RED));
+                source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: manager == null")).formatted(Formatting.RED));
                 state = State.STANDBY;
                 return;
             }
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
             if(handler == null){
-                source.sendFeedback(new LiteralText("InternalError: handler == null").formatted(Formatting.RED));
+                source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: handler == null")).formatted(Formatting.RED));
                 state = State.STANDBY;
                 return;
             }
@@ -195,16 +194,15 @@ public class Worker {
             Vec3d lowBlockPos = new Vec3d(block.getX(), block.getY() - 1, block.getZ());
             BlockPos lowBlock = new BlockPos(block.getX(), block.getY() - 1, block.getZ());
             BlockHitResult blockHitResult = new BlockHitResult(lowBlockPos, Direction.UP, lowBlock, false);
-            PlayerInteractBlockC2SPacket packetSet = new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, blockHitResult);
+            manager.interactBlock(player, Hand.MAIN_HAND, blockHitResult);
 
-            handler.sendPacket(packetSet);
             state = State.GET;
         } else if(state == State.GET){
             if(villager.getVillagerData().getProfession() == VillagerProfession.NONE) return;
 
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
             if(handler == null){
-                source.sendFeedback(new LiteralText("InternalError: handler == null").formatted(Formatting.RED));
+                source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: handler == null")).formatted(Formatting.RED));
                 state = State.STANDBY;
                 return;
             }
@@ -227,7 +225,7 @@ public class Worker {
             if(trade != -1){
                 NbtCompound tag = trades.get(trade).getSellItem().getNbt();
                 if(tag == null){
-                    source.sendFeedback(new LiteralText("InternalError: tag == null").formatted(Formatting.RED));
+                    source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: tag == null")).formatted(Formatting.RED));
                     state = State.STANDBY;
                     return;
                 }
@@ -236,18 +234,18 @@ public class Worker {
                 NbtElement id = element.get("id");
                 NbtElement lvl = element.get("lvl");
                 if(id == null || lvl == null){
-                    source.sendFeedback(new LiteralText("InternalError: id == null or lvl == null").formatted(Formatting.RED));
+                    source.sendFeedback(MutableText.of(new LiteralTextContent("InternalError: id == null or lvl == null")).formatted(Formatting.RED));
                     state = State.STANDBY;
                     return;
                 }
                 enchant = new Look(id.asString(), ((NbtShort) lvl).intValue());
             }
 
-            source.sendFeedback(new LiteralText("Enchantment offered: " + enchant));
+            source.sendFeedback(MutableText.of(new LiteralTextContent("Enchantment offered: " + enchant)));
             if(enchant != null){
                 for (Look l: looking){
                     if (l.equals(enchant)){
-                        source.sendFeedback(new LiteralText("Successfully found after: " + counter + " tries").formatted(Formatting.GREEN));
+                        source.sendFeedback(MutableText.of(new LiteralTextContent("Successfully found " + enchant + " after: " + counter + " tries")).formatted(Formatting.GREEN));
                         state = State.STANDBY;
                         break;
                     }
@@ -260,22 +258,22 @@ public class Worker {
 
     public static void begin(){
         if(state != State.STANDBY){
-            source.sendFeedback(new LiteralText("LibrGetter is already running!").formatted(Formatting.RED));
+            source.sendFeedback(MutableText.of(new LiteralTextContent("LibrGetter is already running!")).formatted(Formatting.RED));
             return;
         }
         if(block == null){
-            source.sendFeedback(new LiteralText("The lectern is not been set!").formatted(Formatting.RED));
+            source.sendFeedback(MutableText.of(new LiteralTextContent("The lectern is not been set!")).formatted(Formatting.RED));
             return;
         }
         if(villager == null){
-            source.sendFeedback(new LiteralText("The villager is not been set!").formatted(Formatting.RED));
+            source.sendFeedback(MutableText.of(new LiteralTextContent("The villager is not been set!")).formatted(Formatting.RED));
             return;
         }
         if(looking.isEmpty()){
-            source.sendFeedback(new LiteralText("There are no entries in the goals list!").formatted(Formatting.RED));
+            source.sendFeedback(MutableText.of(new LiteralTextContent("There are no entries in the goals list!")).formatted(Formatting.RED));
             return;
         }
-        source.sendFeedback(new LiteralText("LibrGetter process started").formatted(Formatting.GREEN));
+        source.sendFeedback(MutableText.of(new LiteralTextContent("LibrGetter process started")).formatted(Formatting.GREEN));
         counter = 0;
         state = State.START;
     }
@@ -289,11 +287,11 @@ public class Worker {
             }
         }
         if(contains){
-            source.sendFeedback(new LiteralText(newLooking + " is already in the goals list!").formatted(Formatting.RED));
+            source.sendFeedback(MutableText.of(new LiteralTextContent(newLooking + " is already in the goals list!")).formatted(Formatting.RED));
             return;
         }
         looking.add(newLooking);
-        source.sendFeedback(new LiteralText("Added " + newLooking).formatted(Formatting.GREEN));
+        source.sendFeedback(MutableText.of(new LiteralTextContent("Added " + newLooking)).formatted(Formatting.GREEN));
     }
     public static void remove(String name, int level){
         Look newLooking = new Look(name, level);
@@ -305,16 +303,16 @@ public class Worker {
             }
         }
         if(!contains){
-            source.sendFeedback(new LiteralText(newLooking + " is not in the goals list!").formatted(Formatting.RED));
+            source.sendFeedback(MutableText.of(new LiteralTextContent(newLooking + " is not in the goals list!")).formatted(Formatting.RED));
             return;
         }
         looking.remove(newLooking);
-        source.sendFeedback(new LiteralText("Removed " + newLooking).formatted(Formatting.YELLOW));
+        source.sendFeedback(MutableText.of(new LiteralTextContent("Removed " + newLooking)).formatted(Formatting.YELLOW));
     }
     public static void list(){
-        MutableText output = new LiteralText("Goals list:");
+        MutableText output = MutableText.of(new LiteralTextContent("Goals list:"));
         for(Look l: looking){
-            output = output.append("\n- " + l + " ").append(new LiteralText("(remove)").setStyle(
+            output = output.append("\n- " + l + " ").append(MutableText.of(new LiteralTextContent("(remove)")).setStyle(
                 Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget remove " + l))
             ));
 
@@ -323,14 +321,14 @@ public class Worker {
     }
     public static void clear(){
         looking.clear();
-        source.sendFeedback(new LiteralText("Cleared the goals list").formatted(Formatting.YELLOW));
+        source.sendFeedback(MutableText.of(new LiteralTextContent("Cleared the goals list")).formatted(Formatting.YELLOW));
     }
     public static void stop(){
         if(state == State.STANDBY){
-            source.sendFeedback(new LiteralText("LibrGetter isn't running!").formatted(Formatting.RED));
+            source.sendFeedback(MutableText.of(new LiteralTextContent("LibrGetter isn't running!")).formatted(Formatting.RED));
             return;
         }
-        source.sendFeedback(new LiteralText("Successfully stopped the process").formatted(Formatting.YELLOW));
+        source.sendFeedback(MutableText.of(new LiteralTextContent("Successfully stopped the process")).formatted(Formatting.YELLOW));
         state = State.STANDBY;
     }
 
@@ -350,7 +348,7 @@ public class Worker {
     }
 
     public static void noRefresh(){
-        source.sendFeedback(new LiteralText("The villager trades can not be updated!").formatted(Formatting.RED));
+        source.sendFeedback(MutableText.of(new LiteralTextContent("The villager trades can not be updated!")).formatted(Formatting.RED));
         state = State.STANDBY;
     }
 
