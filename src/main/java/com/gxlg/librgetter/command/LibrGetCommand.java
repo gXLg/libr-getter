@@ -4,18 +4,22 @@ import com.gxlg.librgetter.Worker;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EnchantmentArgumentType;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.LiteralTextContent;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -26,7 +30,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerProfession;
 
 public class LibrGetCommand {
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher){
+    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess){
         dispatcher.register(ClientCommandManager
                 .literal("librget")
                 .then(ClientCommandManager.literal("add")
@@ -68,18 +72,18 @@ public class LibrGetCommand {
         Enchantment enchantment = context.getArgument("enchantment", Enchantment.class);
         int level = context.getArgument("level", Integer.class);
         if(level > enchantment.getMaxLevel()){
-            context.getSource().sendFeedback(new LiteralText("Level over the max! Max level: " + enchantment.getMaxLevel()).formatted(Formatting.RED));
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("Level over the max! Max level: " + enchantment.getMaxLevel())).formatted(Formatting.RED));
             return 1;
         }
 
         if(!enchantment.isAvailableForEnchantedBookOffer()){
-            context.getSource().sendFeedback(new LiteralText("This enchantment can not be traded by villagers!").formatted(Formatting.RED));
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("This enchantment can not be traded by villagers!")).formatted(Formatting.RED));
             return 1;
         }
 
         Identifier id = Registry.ENCHANTMENT.getId(enchantment);
         if(id == null){
-            context.getSource().sendFeedback(new LiteralText("InternalError: id == null").formatted(Formatting.RED));
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("InternalError: id == null")).formatted(Formatting.RED));
             return 1;
         }
 
@@ -110,55 +114,55 @@ public class LibrGetCommand {
 
         Worker.setSource(context.getSource());
         if(Worker.getState() != Worker.State.STANDBY){
-            context.getSource().sendFeedback(new LiteralText("LibrGetter is running!").formatted(Formatting.RED));
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("LibrGetter is running!")).formatted(Formatting.RED));
             return 1;
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
         if(world == null){
-            context.getSource().sendFeedback(new LiteralText("InternalError: world == null").formatted(Formatting.RED));
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("InternalError: world == null")).formatted(Formatting.RED));
             return 1;
         }
         ClientPlayerEntity player = client.player;
         if(player == null){
-            context.getSource().sendFeedback(new LiteralText("InternalError: player == null").formatted(Formatting.RED));
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("InternalError: player == null")).formatted(Formatting.RED));
             return 1;
         }
         HitResult hit = client.crosshairTarget;
         if(hit == null){
-            context.getSource().sendFeedback(new LiteralText("InternalError: hit == null").formatted(Formatting.RED));
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("InternalError: hit == null")).formatted(Formatting.RED));
             return 1;
         }
         HitResult.Type hitType = hit.getType();
         if(hitType == HitResult.Type.MISS){
-            context.getSource().sendFeedback(new LiteralText("You are not targeting anything!").formatted(Formatting.RED));
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("You are not targeting anything!")).formatted(Formatting.RED));
             return 1;
         }
 
         if(hitType == HitResult.Type.BLOCK){
             BlockPos blockPos = ((BlockHitResult)hit).getBlockPos();
             if(!world.getBlockState(blockPos).isOf(Blocks.LECTERN)){
-                context.getSource().sendFeedback(new LiteralText("Block is not a lectern!").formatted(Formatting.RED));
+                context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("Block is not a lectern!")).formatted(Formatting.RED));
                 return 1;
             }
 
             Worker.setBlock(blockPos);
-            context.getSource().sendFeedback(new LiteralText("Block selected"));
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("Block selected")));
 
         } else if(hitType == HitResult.Type.ENTITY){
             EntityHitResult entityHitResult = (EntityHitResult) hit;
             Entity entity = entityHitResult.getEntity();
             if(!(entity instanceof MerchantEntity)){
-                context.getSource().sendFeedback(new LiteralText("Entity is not a villager!").formatted(Formatting.RED));
+                context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("Entity is not a villager!")).formatted(Formatting.RED));
                 return 1;
             }
             VillagerEntity villager = (VillagerEntity) entity;
             if(villager.getVillagerData().getProfession() != VillagerProfession.LIBRARIAN){
-                context.getSource().sendFeedback(new LiteralText("Villager is not a librarian!").formatted(Formatting.RED));
+                context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("Villager is not a librarian!")).formatted(Formatting.RED));
                 return 1;
             }
-            context.getSource().sendFeedback(new LiteralText("Villager selected"));
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("Villager selected")));
 
             Worker.setVillager(villager);
 

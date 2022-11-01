@@ -1,9 +1,8 @@
 # LibrGetter
 ![logo](https://repository-images.githubusercontent.com/494582079/ff4c06f7-2c03-4f56-bf4d-6ec8d95e0345)
+
 A fabric mod which allows you to bruteforce
 a librarian villager for the desired enchantment.
-
-Mod supports version up from 1.16.5 to 1.18 exclusive.
 
 # Installation
 Download the jar from the [releases page](https://github.com/gXLg/libr-getter/releases/latest).
