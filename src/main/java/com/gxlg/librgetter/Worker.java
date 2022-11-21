@@ -151,7 +151,7 @@ public class Worker {
             }
             BlockState targetBlock = world.getBlockState(block);
             if(targetBlock.isAir()){
-                state = State.PLACE;
+                state = State.LOSE;
                 return;
             }
             ClientPlayerInteractionManager manager = client.interactionManager;
@@ -161,6 +161,9 @@ public class Worker {
                 return;
             }
             manager.updateBlockBreakingProgress(block, Direction.UP);
+        } else if(state == State.LOSE){
+            if(villager.getVillagerData().getProfession() != VillagerProfession.NONE) return;
+            state = State.PLACE;
         } else if(state == State.PLACE){
 
             PlayerInventory inventory = player.getInventory();
@@ -199,6 +202,11 @@ public class Worker {
             state = State.GET;
         } else if(state == State.GET){
             if(villager.getVillagerData().getProfession() == VillagerProfession.NONE) return;
+            if(villager.getVillagerData().getProfession() != VillagerProfession.LIBRARIAN){
+                source.sendFeedback(MutableText.of(new LiteralTextContent("Villager received other profession!")).formatted(Formatting.RED));
+                state = State.STANDBY;
+                return;
+            }
 
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
             if(handler == null){
@@ -357,6 +365,7 @@ public class Worker {
 
         START,
         BREAK,
+        LOSE,
         PLACE,
         GET,
         GETTING
