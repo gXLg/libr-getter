@@ -11,13 +11,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.argument.EnchantmentArgumentType;
+import net.minecraft.command.argument.RegistryEntryPredicateArgumentType;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
@@ -26,7 +25,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerProfession;
 
 public class LibrGetCommand {
@@ -34,11 +32,11 @@ public class LibrGetCommand {
         dispatcher.register(ClientCommandManager
                 .literal("librget")
                 .then(ClientCommandManager.literal("add")
-                        .then(ClientCommandManager.argument("enchantment", EnchantmentArgumentType.enchantment())
+                        .then(ClientCommandManager.argument("enchantment", RegistryEntryPredicateArgumentType.registryEntryPredicate(registryAccess, Registries.ENCHANTMENT.getKey()))
                                 .then(ClientCommandManager.argument("level", IntegerArgumentType.integer(1))
                                         .executes(LibrGetCommand::runAdd))))
                 .then(ClientCommandManager.literal("remove")
-                        .then(ClientCommandManager.argument("enchantment", EnchantmentArgumentType.enchantment())
+                        .then(ClientCommandManager.argument("enchantment", RegistryEntryPredicateArgumentType.registryEntryPredicate(registryAccess, Registries.ENCHANTMENT.getKey()))
                                 .then(ClientCommandManager.argument("level", IntegerArgumentType.integer(1))
                                         .executes(LibrGetCommand::runRemove))))
                 .then(ClientCommandManager.literal("clear")
@@ -81,7 +79,7 @@ public class LibrGetCommand {
             return 1;
         }
 
-        Identifier id = Registry.ENCHANTMENT.getId(enchantment);
+        Identifier id = Registries.ENCHANTMENT.getId(enchantment);
         if(id == null){
             context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("InternalError: id == null")).formatted(Formatting.RED));
             return 1;
