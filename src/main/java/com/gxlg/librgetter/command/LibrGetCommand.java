@@ -11,13 +11,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.argument.EnchantmentArgumentType;
+import net.minecraft.command.argument.RegistryEntryPredicateArgumentType;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
@@ -26,19 +27,22 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerProfession;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class LibrGetCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess){
         dispatcher.register(ClientCommandManager
                 .literal("librget")
                 .then(ClientCommandManager.literal("add")
-                        .then(ClientCommandManager.argument("enchantment", EnchantmentArgumentType.enchantment())
+                        .then(ClientCommandManager.argument("enchantment", RegistryEntryPredicateArgumentType.registryEntryPredicate(registryAccess, Registries.ENCHANTMENT.getKey()))
                                 .then(ClientCommandManager.argument("level", IntegerArgumentType.integer(1))
                                         .executes(LibrGetCommand::runAdd))))
                 .then(ClientCommandManager.literal("remove")
-                        .then(ClientCommandManager.argument("enchantment", EnchantmentArgumentType.enchantment())
+                        .then(ClientCommandManager.argument("enchantment", RegistryEntryPredicateArgumentType.registryEntryPredicate(registryAccess, Registries.ENCHANTMENT.getKey()))
                                 .then(ClientCommandManager.argument("level", IntegerArgumentType.integer(1))
                                         .executes(LibrGetCommand::runRemove))))
                 .then(ClientCommandManager.literal("clear")
@@ -69,30 +73,60 @@ public class LibrGetCommand {
 
 
     private static int enchanter(CommandContext<FabricClientCommandSource> context, boolean remove){
-        Enchantment enchantment = context.getArgument("enchantment", Enchantment.class);
+
+        RegistryEntryPredicateArgumentType.EntryPredicate<?> argument = context.getArgument("enchantment", RegistryEntryPredicateArgumentType.EntryPredicate.class);
+        Optional<RegistryEntryPredicateArgumentType.EntryPredicate<Enchantment>> opt = argument.tryCast(Registries.ENCHANTMENT.getKey());
+        if(!opt.isPresent()){
+            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("This argument type is not supported!")).formatted(Formatting.RED));
+            return 1;
+        }
+
+        RegistryEntryPredicateArgumentType.EntryPredicate<Enchantment> predicate = opt.get();
+        Optional<RegistryEntry.Reference<Enchantment>> optrefl = predicate.getEntry().left();
+        Optional<RegistryEntryList.Named<Enchantment>> optrefr = predicate.getEntry().right();
+
+        List<Enchantment> list = new ArrayList<>();
+
+        if(!optrefl.isPresent()){
+            if(!optrefr.isPresent()){
+                context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("Wrong enchantment provided!")).formatted(Formatting.RED));
+                return 1;
+            }
+            RegistryEntryList.Named<Enchantment> named = optrefr.get();
+            for(RegistryEntry<Enchantment> ref: named){
+                list.add(ref.value());
+            }
+        } else {
+            RegistryEntry.Reference<Enchantment> reference = optrefl.get();
+            Enchantment enchantment = reference.value();
+            list.add(enchantment);
+        }
         int level = context.getArgument("level", Integer.class);
-        if(level > enchantment.getMaxLevel()){
-            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("Level over the max! Max level: " + enchantment.getMaxLevel())).formatted(Formatting.RED));
-            return 1;
+
+        for(Enchantment enchantment: list){
+            Identifier id = Registries.ENCHANTMENT.getId(enchantment);
+            if (id == null) {
+                context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("InternalError: id == null")).formatted(Formatting.RED));
+                return 1;
+            }
+
+            if (level > enchantment.getMaxLevel()) {
+                context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("Level over the max for " + id + "! Max level: " + enchantment.getMaxLevel())).formatted(Formatting.RED));
+                return 1;
+            }
+
+            if (!enchantment.isAvailableForEnchantedBookOffer()) {
+                context.getSource().sendFeedback(MutableText.of(new LiteralTextContent(id + " can not be traded by villagers!")).formatted(Formatting.RED));
+                return 1;
+            }
+
+            Worker.setSource(context.getSource());
+            if (remove)
+                Worker.remove(id.toString(), level);
+            else
+                Worker.add(id.toString(), level);
+
         }
-
-        if(!enchantment.isAvailableForEnchantedBookOffer()){
-            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("This enchantment can not be traded by villagers!")).formatted(Formatting.RED));
-            return 1;
-        }
-
-        Identifier id = Registry.ENCHANTMENT.getId(enchantment);
-        if(id == null){
-            context.getSource().sendFeedback(MutableText.of(new LiteralTextContent("InternalError: id == null")).formatted(Formatting.RED));
-            return 1;
-        }
-
-        Worker.setSource(context.getSource());
-        if(remove)
-            Worker.remove(id.toString(), level);
-        else
-            Worker.add(id.toString(), level);
-
         return 0;
     }
     private  static int runClear(CommandContext<FabricClientCommandSource> context){
