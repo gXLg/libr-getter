@@ -25,3 +25,7 @@ and that you are able to pick up the lectern item once it breaks
 
 If anything is not set, the mod should complain. The mod also checks whether the villager can
 upgrade his offers and whether the enchantment may be obtained.
+
+## Specific to 1.19.3
+`<desired enchantment` can now be an enchantment tag. All enchantments under this tag
+will be added/removed when using a tag.
