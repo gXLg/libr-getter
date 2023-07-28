@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.gxlg.librgetter.command.LibrGetCommand;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +27,8 @@ public class LibrGetter implements ClientModInitializer {
 
     @Override
     public void onInitializeClient(){
-        LibrGetCommand.register(ClientCommandManager.DISPATCHER);
+
+        ClientCommandRegistrationCallback.EVENT.register(LibrGetCommand::register);
         LOGGER.info("Hello World from LibrGetter!");
 
         Path configPath = FabricLoader.getInstance().getConfigDir().resolve("librgetter.json");
