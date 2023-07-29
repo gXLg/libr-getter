@@ -222,7 +222,7 @@ public class Worker {
 
             Config.Enchantment enchant = null;
             if(trade != -1){
-                NbtCompound tag = trades.get(trade).getSellItem().getTag();
+                NbtCompound tag = trades.get(trade).getSellItem().getNbt();
                 if(tag == null){
                     source.sendError(new LiteralText("InternalError: tag == null"));
                     state = State.STANDBY;
