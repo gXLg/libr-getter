@@ -8,6 +8,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -184,6 +185,7 @@ public class Worker {
             handler.sendPacket(packetSelect);
 
             Vec3d lowBlockPos = new Vec3d(block.getX(), block.getY() - 1, block.getZ());
+            player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lowBlockPos.add(0.5, 1, 0.5));
             BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, block, false);
             PlayerInteractBlockC2SPacket packetSet = new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, lowBlock);
 
