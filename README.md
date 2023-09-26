@@ -38,11 +38,14 @@ Stopping a process is as simple as writing `/librget stop`. After stopping the p
 with `/librget start`.
 
 ## Config
-* `/librget config notify <true/false>` - enable/disable sound notification when finding an enchantment.
-* `/librget config autotool <true/false>` - enable/disable automatic tool selection:
+* `/librget config notify <true/false>` - enable/disable sound notification when finding an enchantment (default: false).
+* `/librget config autotool <true/false>` - enable/disable automatic tool selection (default: true):
   * When true: each time before breaking the lectern mod chooses most efficient tool, which has more than 10 durability points
-  * When false: mod remembers which tool you are holding when starting the process and switches to exactly this tool each time before breaking. If holding nothing or a non-tool item, no tool will be picked.
-* `/librget config `
+  * When false: mod remembers which tool you are holding when starting the process and switches to exactly this tool each time before breaking.
+    If holding nothing or a non-tool item, no tool will be picked.
+* `/librget config actionbar <true/false>` - enable/disable logging found enchantments into the action bar instead of chat (default: false).
+* `/librget config lock <true/false>` - enable/disable locking the trades after match (default: false).
+* `/librget config removegoal <true/false>` - enable/disable removing the goal from goals list when being found (default: false).
 
 # Features
 * Stops the process, when an enchantment from the goals list is found.
@@ -51,3 +54,5 @@ with `/librget start`.
 * Stops when villager accidentally picked another job during the process.
 * Checks if villager was already traded.
 * Checks if enchantment can be obtained from a villager and complains if not.
+* Supports enchantments tags in the Warden release.
+* Stable against multiple lag types.
