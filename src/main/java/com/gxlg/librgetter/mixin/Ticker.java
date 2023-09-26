@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientPlayerInteractionManager.class)
 public class Ticker {
     @Inject(at = @At("HEAD"), method = "tick")
-    private void init(CallbackInfo info){
+    private void tick(CallbackInfo info) {
         Worker.tick();
     }
 }

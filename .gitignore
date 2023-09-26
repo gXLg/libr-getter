@@ -9,6 +9,7 @@ run
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
+.idea/uiDesigner.xml
 .idea/libraries/
 *.iws
 *.iml

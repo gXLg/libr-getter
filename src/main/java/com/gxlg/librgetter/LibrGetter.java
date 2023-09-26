@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.gxlg.librgetter.command.LibrGetCommand;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,31 +26,31 @@ public class LibrGetter implements ClientModInitializer {
     public static Config config;
 
     @Override
-    public void onInitializeClient(){
-
-        ClientCommandRegistrationCallback.EVENT.register(LibrGetCommand::register);
+    public void onInitializeClient() {
+        LibrGetCommand.register(ClientCommandManager.DISPATCHER);
         LOGGER.info("Hello World from LibrGetter!");
 
         Path configPath = FabricLoader.getInstance().getConfigDir().resolve("librgetter.json");
-        if(Files.notExists(configPath)){
+        if (Files.notExists(configPath)) {
             try {
                 Files.createFile(configPath);
-            } catch(IOException e){
+            } catch (IOException e) {
                 throw new RuntimeException("Could not initialize config", e);
             }
             confPath = configPath;
             config = new Config();
         } else {
-            try (FileReader reader = new FileReader(configPath.toFile())){
+            try (FileReader reader = new FileReader(configPath.toFile())) {
                 confPath = configPath;
                 config = GSON.fromJson(reader, Config.class);
-            } catch (IOException e){
+            } catch (IOException e) {
                 throw new RuntimeException("Could not parse config", e);
             }
         }
         saveConfigs();
     }
-    public static void saveConfigs(){
+
+    public static void saveConfigs() {
         Path dir = confPath.getParent();
 
         try {
@@ -64,7 +64,7 @@ public class LibrGetter implements ClientModInitializer {
             Files.createFile(tempPath);
             Files.write(tempPath, GSON.toJson(config).getBytes(StandardCharsets.UTF_8), StandardOpenOption.WRITE);
             Files.move(tempPath, confPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-        } catch(IOException e){
+        } catch (IOException e) {
             throw new RuntimeException("Could not save config", e);
         }
     }
