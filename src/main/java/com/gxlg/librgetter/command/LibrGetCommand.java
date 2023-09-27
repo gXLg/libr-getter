@@ -6,17 +6,18 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EnchantmentArgumentType;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -26,7 +27,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerProfession;
 
 public class LibrGetCommand {
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
         dispatcher.register(ClientCommandManager
                 .literal("librget")
                 .then(ClientCommandManager.literal("add")
@@ -87,7 +88,7 @@ public class LibrGetCommand {
 
     private static int runNotify(CommandContext<FabricClientCommandSource> context) {
         boolean toggle = context.getArgument("toggle", Boolean.class);
-        context.getSource().sendFeedback(new LiteralText("Notification config was set to " + toggle));
+        context.getSource().sendFeedback(Text.literal("Notification config was set to " + toggle));
         LibrGetter.config.notify = toggle;
         LibrGetter.saveConfigs();
         return 0;
@@ -95,7 +96,7 @@ public class LibrGetCommand {
 
     private static int runTool(CommandContext<FabricClientCommandSource> context) {
         boolean toggle = context.getArgument("toggle", Boolean.class);
-        context.getSource().sendFeedback(new LiteralText("AutoTool config was set to " + toggle));
+        context.getSource().sendFeedback(Text.literal("AutoTool config was set to " + toggle));
         LibrGetter.config.autoTool = toggle;
         LibrGetter.saveConfigs();
         return 0;
@@ -103,7 +104,7 @@ public class LibrGetCommand {
 
     private static int runActionBar(CommandContext<FabricClientCommandSource> context) {
         boolean toggle = context.getArgument("toggle", Boolean.class);
-        context.getSource().sendFeedback(new LiteralText("ActionBar config was set to " + toggle));
+        context.getSource().sendFeedback(Text.literal("ActionBar config was set to " + toggle));
         LibrGetter.config.actionBar = toggle;
         LibrGetter.saveConfigs();
         return 0;
@@ -111,7 +112,7 @@ public class LibrGetCommand {
 
     private static int runLock(CommandContext<FabricClientCommandSource> context) {
         boolean toggle = context.getArgument("toggle", Boolean.class);
-        context.getSource().sendFeedback(new LiteralText("Lock config was set to " + toggle));
+        context.getSource().sendFeedback(Text.literal("Lock config was set to " + toggle));
         LibrGetter.config.lock = toggle;
         LibrGetter.saveConfigs();
         return 0;
@@ -119,7 +120,7 @@ public class LibrGetCommand {
 
     private static int runRemoveGoal(CommandContext<FabricClientCommandSource> context) {
         boolean toggle = context.getArgument("toggle", Boolean.class);
-        context.getSource().sendFeedback(new LiteralText("Lock config was set to " + toggle));
+        context.getSource().sendFeedback(Text.literal("Lock config was set to " + toggle));
         LibrGetter.config.removeGoal = toggle;
         LibrGetter.saveConfigs();
         return 0;
@@ -129,12 +130,12 @@ public class LibrGetCommand {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            context.getSource().sendError(new LiteralText("InternalError: player == null"));
+            context.getSource().sendError(Text.literal("InternalError: player == null"));
             return 1;
         }
         ClientWorld world = client.world;
         if (world == null) {
-            context.getSource().sendError(new LiteralText("InternalError: world == null"));
+            context.getSource().sendError(Text.literal("InternalError: world == null"));
             return 1;
         }
 
@@ -158,7 +159,7 @@ public class LibrGetCommand {
             if (lec != null) break;
         }
         if (lec == null) {
-            context.getSource().sendError(new LiteralText("Could not find a lectern near you!"));
+            context.getSource().sendError(Text.literal("Could not find a lectern near you!"));
             return 1;
         }
         Iterable<Entity> all = world.getEntities();
@@ -177,7 +178,7 @@ public class LibrGetCommand {
             }
         }
         if (vi == null) {
-            context.getSource().sendError(new LiteralText("Could not find a Librarian near you!"));
+            context.getSource().sendError(Text.literal("Could not find a Librarian near you!"));
             return 1;
         }
 
@@ -198,7 +199,7 @@ public class LibrGetCommand {
         } catch (IllegalArgumentException ignored) {
         }
         if (level > enchantment.getMaxLevel()) {
-            context.getSource().sendError(new LiteralText("Level over the max! Max level: " + enchantment.getMaxLevel()));
+            context.getSource().sendError(Text.literal("Level over the max! Max level: " + enchantment.getMaxLevel()));
             return 1;
         }
 
@@ -209,13 +210,13 @@ public class LibrGetCommand {
         }
 
         if (!enchantment.isAvailableForEnchantedBookOffer()) {
-            context.getSource().sendError(new LiteralText("This enchantment can not be traded by villagers!"));
+            context.getSource().sendError(Text.literal("This enchantment can not be traded by villagers!"));
             return 1;
         }
 
         Identifier id = Registry.ENCHANTMENT.getId(enchantment);
         if (id == null) {
-            context.getSource().sendError(new LiteralText("InternalError: id == null"));
+            context.getSource().sendError(Text.literal("InternalError: id == null"));
             return 1;
         }
 
@@ -250,55 +251,55 @@ public class LibrGetCommand {
 
         Worker.setSource(context.getSource());
         if (Worker.getState() != Worker.State.STANDBY) {
-            context.getSource().sendError(new LiteralText("LibrGetter is running!"));
+            context.getSource().sendError(Text.literal("LibrGetter is running!"));
             return 1;
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
         if (world == null) {
-            context.getSource().sendError(new LiteralText("InternalError: world == null"));
+            context.getSource().sendError(Text.literal("InternalError: world == null"));
             return 1;
         }
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            context.getSource().sendError(new LiteralText("InternalError: player == null"));
+            context.getSource().sendError(Text.literal("InternalError: player == null"));
             return 1;
         }
         HitResult hit = client.crosshairTarget;
         if (hit == null) {
-            context.getSource().sendError(new LiteralText("InternalError: hit == null"));
+            context.getSource().sendError(Text.literal("InternalError: hit == null"));
             return 1;
         }
         HitResult.Type hitType = hit.getType();
         if (hitType == HitResult.Type.MISS) {
-            context.getSource().sendError(new LiteralText("You are not targeting anything!"));
+            context.getSource().sendError(Text.literal("You are not targeting anything!"));
             return 1;
         }
 
         if (hitType == HitResult.Type.BLOCK) {
             BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
             if (!world.getBlockState(blockPos).isOf(Blocks.LECTERN)) {
-                context.getSource().sendError(new LiteralText("Block is not a lectern!"));
+                context.getSource().sendError(Text.literal("Block is not a lectern!"));
                 return 1;
             }
 
             Worker.setBlock(blockPos);
-            context.getSource().sendFeedback(new LiteralText("Block selected"));
+            context.getSource().sendFeedback(Text.literal("Block selected"));
 
         } else if (hitType == HitResult.Type.ENTITY) {
             EntityHitResult entityHitResult = (EntityHitResult) hit;
             Entity entity = entityHitResult.getEntity();
             if (!(entity instanceof VillagerEntity)) {
-                context.getSource().sendError(new LiteralText("Entity is not a villager!"));
+                context.getSource().sendError(Text.literal("Entity is not a villager!"));
                 return 1;
             }
             VillagerEntity villager = (VillagerEntity) entity;
             if (villager.getVillagerData().getProfession() != VillagerProfession.LIBRARIAN) {
-                context.getSource().sendError(new LiteralText("Villager is not a librarian!"));
+                context.getSource().sendError(Text.literal("Villager is not a librarian!"));
                 return 1;
             }
-            context.getSource().sendFeedback(new LiteralText("Villager selected"));
+            context.getSource().sendFeedback(Text.literal("Villager selected"));
             Worker.setVillager(villager);
 
         }
