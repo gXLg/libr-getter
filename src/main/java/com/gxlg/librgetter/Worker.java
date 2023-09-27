@@ -208,7 +208,7 @@ public class Worker {
             }
             Vec3d lowBlockPos = new Vec3d(block.getX(), block.getY() - 1, block.getZ());
             player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lowBlockPos.add(0.5, 1, 0.5));
-            BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, block, false);
+            BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, block.down(), false);
             manager.interactBlock(player, Hand.MAIN_HAND, lowBlock);
 
         } else if (state == State.GET) {
