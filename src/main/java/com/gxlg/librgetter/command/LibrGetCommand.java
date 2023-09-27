@@ -126,7 +126,7 @@ public class LibrGetCommand {
 
     private static int runRemoveGoal(CommandContext<FabricClientCommandSource> context) {
         boolean toggle = context.getArgument("toggle", Boolean.class);
-        context.getSource().sendFeedback(Text.literal("Lock config was set to " + toggle));
+        context.getSource().sendFeedback(Text.literal("RemoveGoal config was set to " + toggle));
         LibrGetter.config.removeGoal = toggle;
         LibrGetter.saveConfigs();
         return 0;
@@ -197,8 +197,6 @@ public class LibrGetCommand {
     }
 
     private static int enchanter(CommandContext<FabricClientCommandSource> context, boolean remove) {
-        //Enchantment enchantment = context.getArgument("enchantment", Enchantment.class);
-
         RegistryEntryPredicateArgumentType.EntryPredicate<?> argument = context.getArgument("enchantment", RegistryEntryPredicateArgumentType.EntryPredicate.class);
         Optional<RegistryEntryPredicateArgumentType.EntryPredicate<Enchantment>> opt = argument.tryCast(Registries.ENCHANTMENT.getKey());
         if(!opt.isPresent()){
@@ -232,9 +230,11 @@ public class LibrGetCommand {
         } catch (IllegalArgumentException ignored) { }
 
         for(Enchantment enchantment : list) {
+            Identifier id = Registries.ENCHANTMENT.getId(enchantment);
+
             if (lvl > enchantment.getMaxLevel()) {
-                context.getSource().sendError(Text.literal("Level over the max! Max level: " + enchantment.getMaxLevel()));
-                return 1;
+                context.getSource().sendError(Text.literal("Level for " + id + " over the max! Max level: " + enchantment.getMaxLevel()));
+                continue;
             }
             int level = lvl;
             if(lvl == -1) level = enchantment.getMaxLevel();
@@ -246,11 +246,10 @@ public class LibrGetCommand {
             }
 
             if (!enchantment.isAvailableForEnchantedBookOffer()) {
-                context.getSource().sendError(Text.literal("This enchantment can not be traded by villagers!"));
-                return 1;
+                context.getSource().sendError(Text.literal( id + " can not be traded by villagers!"));
+                continue;
             }
 
-            Identifier id = Registries.ENCHANTMENT.getId(enchantment);
             if (id == null) {
                 context.getSource().sendError(Text.literal("InternalError: id == null"));
                 return 1;
