@@ -84,7 +84,7 @@ public class Worker {
         if (state == State.START) {
             counter++;
 
-            PlayerInventory inventory = player.inventory;
+            PlayerInventory inventory = player.getInventory();
             if (inventory == null) {
                 source.sendError(new LiteralText("InternalError: inventory == null"));
                 state = State.STANDBY;
@@ -164,7 +164,7 @@ public class Worker {
             if (villager.getVillagerData().getProfession() != VillagerProfession.NONE) return;
             state = State.SELECT;
         } else if (state == State.SELECT) {
-            PlayerInventory inventory = player.inventory;
+            PlayerInventory inventory = player.getInventory();
             if (inventory == null) {
                 source.sendError(new LiteralText("InternalError: inventory == null"));
                 state = State.STANDBY;
@@ -227,7 +227,7 @@ public class Worker {
             }
             state = State.GETTING;
             trades = null;
-            PlayerInteractEntityC2SPacket packet = new PlayerInteractEntityC2SPacket(villager, Hand.MAIN_HAND, false);
+            PlayerInteractEntityC2SPacket packet = PlayerInteractEntityC2SPacket.interact(villager, false, Hand.MAIN_HAND);
             handler.sendPacket(packet);
         } else if (state == State.GETTING) {
             if (trades == null) return;
@@ -252,7 +252,7 @@ public class Worker {
                             lockType = getLockType(player);
                             state = State.LOCK;
                             trades = null;
-                            PlayerInteractEntityC2SPacket packet = new PlayerInteractEntityC2SPacket(villager, Hand.MAIN_HAND, false);
+                            PlayerInteractEntityC2SPacket packet = PlayerInteractEntityC2SPacket.interact(villager, false, Hand.MAIN_HAND);
                             handler.sendPacket(packet);
                         } else {
                             state = State.STANDBY;
@@ -299,7 +299,7 @@ public class Worker {
 
             if (lockType == 0) {
                 if (screen.getScreenHandler().getSlot(0).inventory.getStack(0).getCount() < 1) {
-                    int slot = player.inventory.getSlotWithStack(Items.BOOK.getDefaultStack());
+                    int slot = player.getInventory().getSlotWithStack(Items.BOOK.getDefaultStack());
                     if (slot < 9) slot += 27;
                     else slot -= 9;
                     manager.clickSlot(screen.getScreenHandler().syncId, slot + 3, 0, SlotActionType.PICKUP, player);
@@ -307,7 +307,7 @@ public class Worker {
                     return;
                 }
                 if (screen.getScreenHandler().getSlot(0).inventory.getStack(1).getCount() < enchant.price) {
-                    int slot = player.inventory.getSlotWithStack(Items.EMERALD.getDefaultStack());
+                    int slot = player.getInventory().getSlotWithStack(Items.EMERALD.getDefaultStack());
                     if (slot < 9) slot += 27;
                     else slot -= 9;
                     manager.clickSlot(screen.getScreenHandler().syncId, slot + 3, 0, SlotActionType.PICKUP, player);
@@ -317,7 +317,7 @@ public class Worker {
             } else if (lockType == 1) {
                 ItemStack item = trades.get(otherTrade).getAdjustedFirstBuyItem();
                 if (screen.getScreenHandler().getSlot(0).inventory.getStack(0).getCount() < item.getCount()) {
-                    int slot = player.inventory.getSlotWithStack(item.getItem().getDefaultStack());
+                    int slot = player.getInventory().getSlotWithStack(item.getItem().getDefaultStack());
                     if (slot < 9) slot += 27;
                     else slot -= 9;
                     manager.clickSlot(screen.getScreenHandler().syncId, slot + 3, 0, SlotActionType.PICKUP, player);
@@ -334,8 +334,8 @@ public class Worker {
         int emerald = 0;
         int book = 0;
         int paper = 0;
-        for (int i = 0; i < player.inventory.size(); i++) {
-            ItemStack stack = player.inventory.getStack(i);
+        for (int i = 0; i < player.getInventory().size(); i++) {
+            ItemStack stack = player.getInventory().getStack(i);
             if (stack.isItemEqual(Items.EMERALD.getDefaultStack())) emerald += stack.getCount();
             if (stack.isItemEqual(Items.BOOK.getDefaultStack())) book += stack.getCount();
             if (stack.isItemEqual(Items.PAPER.getDefaultStack())) paper += stack.getCount();
