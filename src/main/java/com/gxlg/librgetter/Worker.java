@@ -115,7 +115,7 @@ public class Worker {
                 }
                 for (int i = 0; i < inventory.main.size(); i++) {
                     ItemStack stack = inventory.getStack(i);
-                    if (stack.isItemEqualIgnoreDamage(defaultAxe)) {
+                    if (ItemStack.areEqual(stack, defaultAxe)) {
                         slot = i;
                         break;
                     }
@@ -198,7 +198,7 @@ public class Worker {
 
         } else if (state == State.PLACE) {
 
-            if (player.world.getBlockState(block).isOf(Blocks.LECTERN)) state = State.GET;
+            if (player.getWorld().getBlockState(block).isOf(Blocks.LECTERN)) state = State.GET;
 
             ClientPlayerInteractionManager manager = client.interactionManager;
             if (manager == null) {
@@ -336,9 +336,9 @@ public class Worker {
         int paper = 0;
         for (int i = 0; i < player.getInventory().size(); i++) {
             ItemStack stack = player.getInventory().getStack(i);
-            if (stack.isItemEqual(Items.EMERALD.getDefaultStack())) emerald += stack.getCount();
-            if (stack.isItemEqual(Items.BOOK.getDefaultStack())) book += stack.getCount();
-            if (stack.isItemEqual(Items.PAPER.getDefaultStack())) paper += stack.getCount();
+            if (stack.getItem() == Items.EMERALD) emerald += stack.getCount();
+            if (stack.getItem() == Items.BOOK) book += stack.getCount();
+            if (stack.getItem() == Items.PAPER) paper += stack.getCount();
         }
         int max;
         if (enchant == null) {
