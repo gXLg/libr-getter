@@ -370,7 +370,7 @@ public class Worker {
             trade = -1;
 
         if (trade != -1) {
-            NbtCompound tag = trades.get(trade).getSellItem().getTag();
+            NbtCompound tag = trades.get(trade).getSellItem().getNbt();
             if (tag == null) {
                 source.sendError(new LiteralText("InternalError: tag == null"));
                 state = State.STANDBY;
