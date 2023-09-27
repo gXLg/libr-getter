@@ -432,7 +432,7 @@ public class Worker {
 
         source.sendFeedback(Text.literal("LibrGetter process started").formatted(Formatting.GREEN));
         counter = 0;
-        state = State.START;
+        state = State.GET;
     }
 
     public static void add(String name, int level, int price) {

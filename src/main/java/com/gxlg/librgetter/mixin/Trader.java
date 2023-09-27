@@ -17,7 +17,7 @@ public class Trader {
     @Inject(at = @At("HEAD"), method = "onSetTradeOffers")
     public void onSetTradeOffers(SetTradeOffersS2CPacket packet, CallbackInfo callback) {
         if (Worker.getState() != Worker.State.STANDBY) {
-            if (!packet.isRefreshable()) {
+            if (packet.getExperience() > 0) {
                 Worker.noRefresh();
                 return;
             }

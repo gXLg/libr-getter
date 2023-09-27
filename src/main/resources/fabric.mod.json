@@ -23,7 +23,6 @@
     "librgetter.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.22",
     "fabric": "*",
     "minecraft": [
       "1.19.3",
