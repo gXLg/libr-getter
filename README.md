@@ -24,8 +24,8 @@ The compiled jar should be under build/libs/.
 ## Start
 
 ### Manual
-1. Face a librarian and type `/librget` (client-side command)
-2. Face his lectern and type `/librget` once again
+1. Face a librarian and type `/librget config` (client-side command)
+2. Face his lectern and type `/librget config` once again
 3. You can then start by running `/librget start`
 
 ### Automatic
