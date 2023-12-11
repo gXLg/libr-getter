@@ -73,8 +73,8 @@ public class LibrGetCommand {
                         .then(ClientCommandManager.literal("removegoal")
                                 .then(ClientCommandManager.argument("toggle", BoolArgumentType.bool())
                                         .executes(LibrGetCommand::runRemoveGoal)))
-                        .executes(LibrGetCommand::runSelector)
                 )
+                .executes(LibrGetCommand::runSelector)
         );
     }
 
