@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -63,7 +62,7 @@ public class LibrGetter implements ClientModInitializer {
 
             Path tempPath = confPath.resolveSibling(confPath.getFileName() + ".tmp");
             Files.createFile(tempPath);
-            Files.write(tempPath, GSON.toJson(config).getBytes(StandardCharsets.UTF_8), StandardOpenOption.WRITE);
+            Files.writeString(tempPath, GSON.toJson(config), StandardOpenOption.WRITE);
             Files.move(tempPath, confPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException("Could not save config", e);
