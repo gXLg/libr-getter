@@ -172,8 +172,7 @@ public class LibrGetCommand {
         VillagerEntity vi = null;
         float d = -1;
         for (Entity e : all) {
-            if (e instanceof VillagerEntity) {
-                VillagerEntity v = (VillagerEntity) e;
+            if (e instanceof VillagerEntity v) {
                 if (v.getVillagerData().getProfession() == VillagerProfession.LIBRARIAN) {
                     float dd = v.distanceTo(player);
                     if ((d == -1 || dd < d) && dd < 10) {
@@ -199,7 +198,7 @@ public class LibrGetCommand {
     private static int enchanter(CommandContext<FabricClientCommandSource> context, boolean remove) {
         RegistryEntryPredicateArgumentType.EntryPredicate<?> argument = context.getArgument("enchantment", RegistryEntryPredicateArgumentType.EntryPredicate.class);
         Optional<RegistryEntryPredicateArgumentType.EntryPredicate<Enchantment>> opt = argument.tryCast(Registries.ENCHANTMENT.getKey());
-        if(!opt.isPresent()){
+        if(opt.isEmpty()){
             context.getSource().sendError(Text.literal("This argument type is not supported!"));
             return 1;
         }
@@ -209,8 +208,8 @@ public class LibrGetCommand {
 
         List<Enchantment> list = new ArrayList<>();
 
-        if(!optrefl.isPresent()){
-            if(!optrefr.isPresent()){
+        if(optrefl.isEmpty()){
+            if(optrefr.isEmpty()){
                 context.getSource().sendError(Text.literal("Wrong enchantment provided!"));
                 return 1;
             }
@@ -326,11 +325,10 @@ public class LibrGetCommand {
         } else if (hitType == HitResult.Type.ENTITY) {
             EntityHitResult entityHitResult = (EntityHitResult) hit;
             Entity entity = entityHitResult.getEntity();
-            if (!(entity instanceof VillagerEntity)) {
+            if (!(entity instanceof VillagerEntity villager)) {
                 context.getSource().sendError(Text.literal("Entity is not a villager!"));
                 return 1;
             }
-            VillagerEntity villager = (VillagerEntity) entity;
             if (villager.getVillagerData().getProfession() != VillagerProfession.LIBRARIAN) {
                 context.getSource().sendError(Text.literal("Villager is not a librarian!"));
                 return 1;
