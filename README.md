@@ -61,14 +61,14 @@ with `/librget start`.
 Since the mod isn't that big, multiple versions of Minecraft can support the same version of LibrGetter.
 I included multi version compiled mods, and named them as follows:
 
-| Included Versions                                      | Name          |
-|--------------------------------------------------------|---------------|
-| 1.16.4<br>1.16.5                                       | Netherite     |
-| 1.17                                                   | Axolotl       |
-| 1.17.1<br>1.18<br>1.18.1<br>1.18.2                     | Copper        |
-| 1.19<br>1.19.1<br>1.19.2                               | Sculk         |
-| 1.19.3<br>1.19.4<br>1.20<br>1.20.1<br>1.20.2<br>1.20.3 | Warden        |
-| 1.20.4                                                 | CherryBlossom |
+| Included Versions                  | Name          |
+|------------------------------------|---------------|
+| 1.16.4<br>1.16.5                   | Netherite     |
+| 1.17                               | Axolotl       |
+| 1.17.1<br>1.18<br>1.18.1<br>1.18.2 | Copper        |
+| 1.19<br>1.19.1<br>1.19.2           | Sculk         |
+| 1.19.3<br>1.19.4<br>1.20<br>1.20.1 | Warden        |
+| 1.20.2<br>1.20.3<br>1.20.4         | CherryBlossom |
 
 I think these names are pretty cute and easy to use -
 just search for your version and grab the right `libr-getter-<version>-<name>.jar` from the releases!
