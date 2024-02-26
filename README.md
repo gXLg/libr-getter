@@ -1,6 +1,6 @@
-# LibrGetter
-![logo](https://repository-images.githubusercontent.com/494582079/ff4c06f7-2c03-4f56-bf4d-6ec8d95e0345)
-
+<img align="left" width="100" src="https://repository-images.githubusercontent.com/494582079/ff4c06f7-2c03-4f56-bf4d-6ec8d95e0345"  alt="logo"/>
+<h1>LibrGetter</h1>
+<br clear="left">
 A fabric mod which allows you to bruteforce
 a librarian villager for the desired enchantment.
 
@@ -46,6 +46,7 @@ with `/librget start`.
 * `/librget config actionbar <true/false>` - enable/disable logging found enchantments into the action bar instead of chat (default: false).
 * `/librget config lock <true/false>` - enable/disable locking the trades after match (default: false).
 * `/librget config removegoal <true/false>` - enable/disable removing the goal from goals list when being found (default: false).
+* `/librget config checkupdate <true/false>` - enable/disable checking if a new update has been released (default: true).
 
 # Features
 * Stops the process, when an enchantment from the goals list is found.
@@ -54,21 +55,6 @@ with `/librget start`.
 * Stops when villager accidentally picked another job during the process.
 * Checks if villager was already traded.
 * Checks if enchantment can be obtained from a villager and complains if not.
-* Supports enchantments tags in the Warden release.
+* Supports enchantments tags up from `1.19.3`.
 * Stable against multiple lag types.
-
-# Naming
-Since the mod isn't that big, multiple versions of Minecraft can support the same version of LibrGetter.
-I included multi version compiled mods, and named them as follows:
-
-| Included Versions                  | Name          |
-|------------------------------------|---------------|
-| 1.16.4<br>1.16.5                   | Netherite     |
-| 1.17                               | Axolotl       |
-| 1.17.1<br>1.18<br>1.18.1<br>1.18.2 | Copper        |
-| 1.19<br>1.19.1<br>1.19.2           | Sculk         |
-| 1.19.3<br>1.19.4<br>1.20<br>1.20.1 | Warden        |
-| 1.20.2<br>1.20.3<br>1.20.4         | CherryBlossom |
-
-I think these names are pretty cute and easy to use -
-just search for your version and grab the right `libr-getter-<version>-<name>.jar` from the releases!
+* Single mod for all versions from `1.16.4` up to `1.20.4`.

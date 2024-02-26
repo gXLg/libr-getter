@@ -1,33 +1,29 @@
 {
-  "schemaVersion": 1,
-  "id": "librgetter",
-  "version": "${version}",
-  "name": "Librarian Getter",
-  "description": "Allows you to bruteforce a librarian villager for the desired enchantment",
-  "authors": [
-    "gXLg"
-  ],
-  "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/gXLg/libr-getter"
-  },
-  "license": "CC0-1.0",
-  "icon": "assets/librgetter/icon.png",
-  "environment": "client",
-  "entrypoints": {
-    "client": [
-      "com.gxlg.librgetter.LibrGetter"
-    ]
-  },
-  "mixins": [
-    "librgetter.mixins.json"
-  ],
-  "depends": {
-    "fabric": "*",
-    "minecraft": [
-      "1.20.2",
-      "1.20.3",
-      "1.20.4"
-    ]
-  }
+	"schemaVersion": 1,
+	"id": "librgetter",
+	"version": "${version}",
+	"name": "Librarian Getter",
+	"description": "Allows you to bruteforce a librarian villager for the desired enchantment",
+	"authors": [
+		"gXLg"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/gXLg/libr-getter"
+	},
+	"license": "MIT",
+	"icon": "assets/librgetter/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.gxlg.librgetter.LibrGetter"
+		]
+	},
+	"mixins": [
+		"librgetter.mixins.json"
+	],
+	"depends": {
+		"fabric": "*",
+		"minecraft": ">=1.16.4"
+	}
 }

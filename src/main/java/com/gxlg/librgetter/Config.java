@@ -11,6 +11,8 @@ public class Config {
     public boolean lock = false;
     public boolean removeGoal = false;
 
+    public boolean checkUpdate = true;
+
     public static class Enchantment {
         final public String id;
         final public int lvl;

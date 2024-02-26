@@ -1,5 +1,6 @@
 package com.gxlg.librgetter.mixin;
 
+import com.gxlg.librgetter.LibrGetter;
 import com.gxlg.librgetter.Worker;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -33,7 +34,7 @@ public class Trader {
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
             if (handler == null) return;
             CloseHandledScreenC2SPacket packetClose = new CloseHandledScreenC2SPacket(packet.getSyncId());
-            handler.sendPacket(packetClose);
+            LibrGetter.MULTI.getConnection(handler).send(packetClose);
         }
     }
 }
