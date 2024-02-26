@@ -1,0 +1,34 @@
+name: Publish on GitHub, CurseForge & Modrinth
+
+on: [ release ]
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: Build
+        run: ./gradlew clean build
+        
+      - name: Publish to Modrinth
+        uses: Kir-Antipov/mc-publish@v3.2                                   
+        with:
+          modrinth-id: 6Ts2vJ13                                             
+          modrinth-token: "${{ secrets.MODRINTH_TOKEN }}"
+          modrinth-unfeature-mode: any
