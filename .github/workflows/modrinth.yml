@@ -27,10 +27,16 @@ jobs:
 
       - name: Build
         run: ./gradlew clean build
-        
-      - name: Publish to Modrinth
+
+      - name: Update description
+        uses: funnyboy-roks/modrinth-auto-desc@v1.5
+        with:
+          auth-token: "${{ secrets.MODRINTH_TOKEN }}"
+          slug: 6Ts2vJ13
+
+      - name: Publish files to Modrinth
         uses: Kir-Antipov/mc-publish@v3.3.0
         with:
-          modrinth-id: 6Ts2vJ13                                             
+          modrinth-id: 6Ts2vJ13
           modrinth-token: "${{ secrets.MODRINTH_TOKEN }}"
           modrinth-unfeature-mode: any
