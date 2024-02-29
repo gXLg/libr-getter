@@ -15,6 +15,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.AxeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
@@ -345,10 +346,12 @@ public class Worker {
         if (trades == null) return;
 
         int trade;
-        if (trades.get(0).getSellItem().getItem() == Items.ENCHANTED_BOOK) {
+        Item f = trades.get(0).getSellItem().getItem();
+        Item s = trades.get(1).getSellItem().getItem();
+        if (f == Items.BOOK || f == Items.ENCHANTED_BOOK) {
             trade = 0;
             otherTrade = 1;
-        } else if (trades.get(1).getSellItem().getItem() == Items.ENCHANTED_BOOK) {
+        } else if (s == Items.BOOK || s == Items.ENCHANTED_BOOK) {
             trade = 1;
             otherTrade = 0;
         } else trade = -1;
@@ -408,7 +411,7 @@ public class Worker {
         state = State.GET;
     }
 
-    public static void add(String name, int level, int price) {
+    public static void add(String name, int level, int price, boolean custom) {
         Config.Enchantment newLooking = new Config.Enchantment(name, level, price);
         Config.Enchantment already = null;
         for (Config.Enchantment l : LibrGetter.config.goals) {
@@ -422,7 +425,7 @@ public class Worker {
             already.price = price;
         } else {
             LibrGetter.config.goals.add(newLooking);
-            LibrGetter.MULTI.sendFeedback(source, "Added " + newLooking + " with max price " + newLooking.price, Formatting.GREEN);
+            LibrGetter.MULTI.sendFeedback(source, "Added " + (custom ? "custom enchantment " : "") + newLooking + " with max price " + newLooking.price, Formatting.GREEN);
         }
         LibrGetter.saveConfigs();
     }

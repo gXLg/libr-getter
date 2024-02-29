@@ -8,6 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.datafixers.util.Either;
@@ -34,9 +35,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.village.TradeOfferList;
 
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -134,7 +133,7 @@ public class MultiVersion {
         }
         for (Config.Enchantment l : LibrGetter.config.goals) {
             text = invokeMethod(mc, text, new Object[]{"\n- " + l + " (" + l.price + ") "}, "method_27693", "append");
-            Style style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget remove " + l));
+            Style style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget remove \"" + l.id + "\" " + l.lvl));
             Object remC = invokeMethod(tc, rem, null, "method_27662", "copy");
             invokeMethod(mc, remC, new Object[]{style}, "method_10862", "setStyle");
             text = invokeMethod(mc, text, new Object[]{remC}, new Class[]{tc}, "method_10852", "append");
@@ -158,10 +157,16 @@ public class MultiVersion {
         }
     }
 
-    public boolean getEnchantments(List<Enchantment> list, CommandContext<?> context) {
+    public boolean getEnchantments(List<Either<Enchantment, String>> list, CommandContext<?> context) {
         if (getApiLevel() >= 4) {
             Class<?> pred = clazz("net.minecraft.class_7737$class_7741", "net.minecraft.command.argument.RegistryEntryPredicateArgumentType$EntryPredicate");
-            Object argument = pred.cast(context.getArgument("enchantment", pred));
+            Object argument;
+            try {
+                argument = pred.cast(context.getArgument("enchantment", pred));
+            } catch (IllegalArgumentException ignored) {
+                list.add(Either.right(context.getArgument("enchantment_custom", String.class)));
+                return true;
+            }
 
             Class<?> registries = clazz("net.minecraft.class_7923", "net.minecraft.registry.Registries");
             Object ench = field(registries, null, "field_41176", "ENCHANTMENT");
@@ -189,15 +194,19 @@ public class MultiVersion {
                 Class<?> refClass = clazz("net.minecraft.class_6885$class_6888", "net.minecraft.registry.entry.RegistryEntryList$Named");
                 Object refL = optrefr.get();
                 Stream<?> stream = (Stream<?>) invokeMethod(refClass, refL, null, "method_40239", "stream");
-                stream.forEach(ref -> list.add((Enchantment) invokeMethod(entryClass, ref, null, "comp_349", "value")));
+                stream.forEach(ref -> list.add(Either.left((Enchantment) invokeMethod(entryClass, ref, null, "comp_349", "value"))));
             } else {
                 Object ref = optrefl.get();
                 Enchantment enchantment = (Enchantment) invokeMethod(entryClass, ref, null, "comp_349", "value");
-                list.add(enchantment);
+                list.add(Either.left(enchantment));
             }
         } else {
-            Enchantment enchantment = context.getArgument("enchantment", Enchantment.class);
-            list.add(enchantment);
+            try {
+                Enchantment enchantment = context.getArgument("enchantment", Enchantment.class);
+                list.add(Either.left(enchantment));
+            } catch (IllegalArgumentException ignored) {
+                list.add(Either.right(context.getArgument("enchantment_custom", String.class)));
+            }
         }
         return true;
     }
@@ -280,10 +289,23 @@ public class MultiVersion {
         r = invokeMethod(ArgumentBuilder.class, r, new Object[]{d}, new Class[]{ArgumentBuilder.class}, "then");
         a = invokeMethod(ArgumentBuilder.class, a, new Object[]{r}, new Class[]{ArgumentBuilder.class}, "then");
         l = invokeMethod(ArgumentBuilder.class, l, new Object[]{a}, new Class[]{ArgumentBuilder.class}, "then");
+        a = argument(ccm, "enchantment_custom", StringArgumentType.string());
+        r = argument(ccm, "level", IntegerArgumentType.integer(1));
+        r = invokeMethod(ArgumentBuilder.class, r, new Object[]{runner(LibrGetCommand::runAdd)}, new Class[]{Command.class}, "executes");
+        d = argument(ccm, "maxprice", IntegerArgumentType.integer(1, 64));
+        d = invokeMethod(ArgumentBuilder.class, d, new Object[]{runner(LibrGetCommand::runAdd)}, new Class[]{Command.class}, "executes");
+        r = invokeMethod(ArgumentBuilder.class, r, new Object[]{d}, new Class[]{ArgumentBuilder.class}, "then");
+        a = invokeMethod(ArgumentBuilder.class, a, new Object[]{r}, new Class[]{ArgumentBuilder.class}, "then");
+        l = invokeMethod(ArgumentBuilder.class, l, new Object[]{a}, new Class[]{ArgumentBuilder.class}, "then");
         base = invokeMethod(ArgumentBuilder.class, base, new Object[]{l}, new Class[]{ArgumentBuilder.class}, "then");
 
         l = literal(ccm, "remove");
         a = argument(ccm, "enchantment", LibrGetter.MULTI.enchantmentArgument(registryAccess));
+        r = argument(ccm, "level", IntegerArgumentType.integer(1));
+        r = invokeMethod(ArgumentBuilder.class, r, new Object[]{runner(LibrGetCommand::runRemove)}, new Class[]{Command.class}, "executes");
+        a = invokeMethod(ArgumentBuilder.class, a, new Object[]{r}, new Class[]{ArgumentBuilder.class}, "then");
+        l = invokeMethod(ArgumentBuilder.class, l, new Object[]{a}, new Class[]{ArgumentBuilder.class}, "then");
+        a = argument(ccm, "enchantment_custom", StringArgumentType.string());
         r = argument(ccm, "level", IntegerArgumentType.integer(1));
         r = invokeMethod(ArgumentBuilder.class, r, new Object[]{runner(LibrGetCommand::runRemove)}, new Class[]{Command.class}, "executes");
         a = invokeMethod(ArgumentBuilder.class, a, new Object[]{r}, new Class[]{ArgumentBuilder.class}, "then");
@@ -337,6 +359,11 @@ public class MultiVersion {
         r = invokeMethod(ArgumentBuilder.class, r, new Object[]{runner(LibrGetCommand::runCheckUpdate)}, new Class[]{Command.class}, "executes");
         a = invokeMethod(ArgumentBuilder.class, a, new Object[]{r}, new Class[]{ArgumentBuilder.class}, "then");
         l = invokeMethod(ArgumentBuilder.class, l, new Object[]{a}, new Class[]{ArgumentBuilder.class}, "then");
+        a = literal(ccm, "warning");
+        r = argument(ccm, "toggle", BoolArgumentType.bool());
+        r = invokeMethod(ArgumentBuilder.class, r, new Object[]{runner(LibrGetCommand::runWarning)}, new Class[]{Command.class}, "executes");
+        a = invokeMethod(ArgumentBuilder.class, a, new Object[]{r}, new Class[]{ArgumentBuilder.class}, "then");
+        l = invokeMethod(ArgumentBuilder.class, l, new Object[]{a}, new Class[]{ArgumentBuilder.class}, "then");
         base = invokeMethod(ArgumentBuilder.class, base, new Object[]{l}, new Class[]{ArgumentBuilder.class}, "then");
 
         base = invokeMethod(ArgumentBuilder.class, base, new Object[]{runner(LibrGetCommand::runSelector)}, new Class[]{Command.class}, "executes");
@@ -364,32 +391,78 @@ public class MultiVersion {
         Object tag = invokeMethod(ItemStack.class, trades.get(trade).getSellItem(), null, "method_7969", "getNbt", "getTag");
         Class<?> nbtcompound = clazz("net.minecraft.class_2487", "net.minecraft.nbt.CompoundTag", "net.minecraft.nbt.NbtCompound");
         Class<?> nbtlist = clazz("net.minecraft.class_2499", "net.minecraft.nbt.ListTag", "net.minecraft.nbt.NbtList");
-        Class<?> nbtelement = clazz("net.minecraft.class_2520", "net.minecraft.nbt.Tag", "net.minecraft.nbt.NbtElement");
-        Class<?> nbtshort = clazz("net.minecraft.class_2516", "net.minecraft.nbt.ShortTag", "net.minecraft.nbt.NbtShort");
 
         if (tag == null) {
             return Either.right("InternalError: tag == null");
         }
 
-        Object list = invokeMethod(nbtcompound, tag, new Object[]{"StoredEnchantments", 10}, new Class[]{String.class, int.class}, "method_10554", "getList");
-        Object element = nbtcompound.cast(invokeMethod(nbtlist, list, new Object[]{0}, new Class[]{int.class}, "method_10534", "get"));
+        String id = null;
+        int lvl = -1;
 
-        Object id = invokeMethod(nbtcompound, element, new Object[]{"id"}, "method_10580", "get");
-        Object lvl = invokeMethod(nbtcompound, element, new Object[]{"lvl"}, "method_10580", "get");
+        boolean anyBukkit = false;
+        if ((boolean) invokeMethod(nbtcompound, tag, new Object[]{"PublicBukkitValues"}, "method_10545", "contains")) {
+            // Parse Bukkit plugins
+
+            Object element = invokeMethod(nbtcompound, tag, new Object[]{"PublicBukkitValues"}, "method_10562", "getCompound");
+            Set<?> ukeys = (Set<?>) invokeMethod(nbtcompound, element, null, "method_10541", "getKeys");
+            Set<String> keys = new HashSet<>();
+            for (Object key : ukeys) {
+                keys.add((String) key);
+            }
+
+            boolean solution = false;
+            for (String key : keys) {
+                if (key.startsWith("enchantmentsolution:")) {
+                    solution = true;
+                    break;
+                }
+            }
+
+            if (solution) {
+                // Enchantment Solution
+                anyBukkit = true;
+                for (String key : keys) {
+                    if (keys.contains(key + "_level")) {
+                        id = key;
+                        String lvls = (String) invokeMethod(nbtcompound, element, new Object[]{key + "_level"}, "method_10558", "getString");
+                        lvl = Integer.parseInt(lvls);
+                        break;
+                    }
+                }
+                if (id == null) {
+                    return Either.right("Unkown type of Data for 'Enchantment Solution'");
+                }
+            }
+        }
+        if (!anyBukkit) {
+            if ((boolean) invokeMethod(nbtcompound, tag, new Object[]{"Enchantments"}, "method_10545", "contains")) {
+                // Legacy enchantment books
+                Object list = invokeMethod(nbtcompound, tag, new Object[]{"Enchantments", 10}, new Class[]{String.class, int.class}, "method_10554", "getList");
+                Object element = nbtcompound.cast(invokeMethod(nbtlist, list, new Object[]{0}, new Class[]{int.class}, "method_10534", "get"));
+                id = (String) invokeMethod(nbtcompound, element, new Object[]{"id"}, "method_10558", "getString");
+                lvl = (short) invokeMethod(nbtcompound, element, new Object[]{"lvl"}, "method_10568", "getShort");
+
+            } else if ((boolean) invokeMethod(nbtcompound, tag, new Object[]{"StoredEnchantments"}, "method_10545", "contains")) {
+                // Vanilla minecraft
+                Object list = invokeMethod(nbtcompound, tag, new Object[]{"StoredEnchantments", 10}, new Class[]{String.class, int.class}, "method_10554", "getList");
+                Object element = nbtcompound.cast(invokeMethod(nbtlist, list, new Object[]{0}, new Class[]{int.class}, "method_10534", "get"));
+                id = (String) invokeMethod(nbtcompound, element, new Object[]{"id"}, "method_10558", "getString");
+                lvl = (short) invokeMethod(nbtcompound, element, new Object[]{"lvl"}, "method_10568", "getShort");
+            } else {
+                return Either.right("Unkown type of Enchantment Data");
+            }
+        }
 
         ItemStack f = trades.get(trade).getAdjustedFirstBuyItem();
         ItemStack s = trades.get(trade).getSecondBuyItem();
         if (f.getItem() != Items.EMERALD) f = null;
         if (s.getItem() == Items.EMERALD) f = s;
 
-        if (id == null || lvl == null || f == null) {
-            return Either.right("InternalError: id == null or lvl == null or f == null");
+        if (f == null) {
+            return Either.right("InternalError: f == null");
         }
 
-        String ids = (String) invokeMethod(nbtelement, id, null, "method_10714", "asString");
-        int lvli = (int) invokeMethod(nbtshort, nbtshort.cast(lvl), null, "method_10701", "getInt", "intValue");
-
-        return Either.left(new Config.Enchantment(ids, lvli, f.getCount()));
+        return Either.left(new Config.Enchantment(id, lvl, f.getCount()));
     }
 
 

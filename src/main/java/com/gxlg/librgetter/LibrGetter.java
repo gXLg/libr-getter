@@ -67,7 +67,6 @@ public class LibrGetter implements ClientModInitializer {
         if (config.checkUpdate) {
             // checking for a new update
             CompletableFuture.runAsync(() -> {
-                LOGGER.warn("start checking");
                 try {
                     URL url = new URL("https://api.github.com/repos/gXLg/libr-getter/releases/latest");
                     InputStreamReader reader = new InputStreamReader(url.openStream());
@@ -89,7 +88,7 @@ public class LibrGetter implements ClientModInitializer {
             ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
                 ClientPlayerEntity player = client.player;
                 if (newVersion != null) {
-                    MULTI.sendMessage(player, "New version of LibrGetter is available on GitHub:\n" + newVersion, false);
+                    MULTI.sendMessage(player, "New version of LibrGetter has been released:\n" + newVersion, false);
                     newVersion = null;
                 }
             });

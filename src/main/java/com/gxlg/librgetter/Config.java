@@ -12,6 +12,7 @@ public class Config {
     public boolean removeGoal = false;
 
     public boolean checkUpdate = true;
+    public boolean warning = true;
 
     public static class Enchantment {
         final public String id;

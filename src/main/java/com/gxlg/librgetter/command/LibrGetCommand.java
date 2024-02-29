@@ -3,6 +3,7 @@ package com.gxlg.librgetter.command;
 import com.gxlg.librgetter.LibrGetter;
 import com.gxlg.librgetter.Worker;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -10,6 +11,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -84,6 +86,13 @@ public class LibrGetCommand {
         return 0;
     }
 
+    public static int runWarning(CommandContext<?> context) {
+        boolean toggle = context.getArgument("toggle", Boolean.class);
+        LibrGetter.MULTI.sendFeedback(context.getSource(), "Warning config was set to " + toggle);
+        LibrGetter.config.warning = toggle;
+        LibrGetter.saveConfigs();
+        return 0;
+    }
 
     public static int runAutostart(CommandContext<?> context) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -150,14 +159,15 @@ public class LibrGetCommand {
     }
 
     private static int enchanter(CommandContext<?> context, boolean remove) {
-        List<Enchantment> list = new ArrayList<>();
+        List<Either<Enchantment, String>> list = new ArrayList<>();
 
         if (!LibrGetter.MULTI.getEnchantments(list, context)) return 1;
 
         int lvl = -1;
         try {
             lvl = context.getArgument("level", Integer.class);
-        } catch (IllegalArgumentException ignored) { }
+        } catch (IllegalArgumentException ignored) {
+        }
 
         int price = 64;
         try {
@@ -165,32 +175,51 @@ public class LibrGetCommand {
         } catch (IllegalArgumentException ignored) {
         }
 
-        for(Enchantment enchantment : list) {
-            Identifier id = LibrGetter.MULTI.enchantmentId(enchantment);
+        for (Either<Enchantment, String> item : list) {
+            if (item.left().isPresent()) {
+                Enchantment enchantment = item.left().get();
 
-            if (lvl > enchantment.getMaxLevel()) {
-                LibrGetter.MULTI.sendError(context.getSource(), "Level for " + id + " over the max! Max level: " + enchantment.getMaxLevel());
-                continue;
+                Identifier id = LibrGetter.MULTI.enchantmentId(enchantment);
+
+                if (lvl > enchantment.getMaxLevel() && LibrGetter.config.warning) {
+                    LibrGetter.MULTI.sendFeedback(context.getSource(), "Level for " + id + " over the max! Max level: " + enchantment.getMaxLevel(), Formatting.YELLOW);
+                }
+                int level = lvl;
+                if (lvl == -1) level = enchantment.getMaxLevel();
+
+
+                if (!enchantment.isAvailableForEnchantedBookOffer() && LibrGetter.config.warning) {
+                    LibrGetter.MULTI.sendFeedback(context.getSource(), id + " can not be traded by villagers!", Formatting.YELLOW);
+                }
+
+                if (id == null) {
+                    LibrGetter.MULTI.sendError(context.getSource(), "InternalError: id == null");
+                    return 1;
+                }
+
+                Worker.setSource(context.getSource());
+                if (remove)
+                    Worker.remove(id.toString(), level);
+                else
+                    Worker.add(id.toString(), level, price, false);
+            } else if (item.right().isPresent()) {
+                String custom = item.right().get();
+
+                Identifier enchantment = Identifier.tryParse(custom);
+                if (enchantment == null) {
+                    LibrGetter.MULTI.sendError(context.getSource(), "Could not parse custom enchantment!");
+                    return 1;
+                }
+
+                if (!remove && LibrGetter.config.warning)
+                    LibrGetter.MULTI.sendFeedback(context.getSource(), "Adding custom enchantment " + enchantment, Formatting.YELLOW);
+
+                Worker.setSource(context.getSource());
+                if (remove)
+                    Worker.remove(enchantment.toString(), lvl);
+                else
+                    Worker.add(enchantment.toString(), lvl, price, true);
             }
-            int level = lvl;
-            if(lvl == -1) level = enchantment.getMaxLevel();
-
-
-            if (!enchantment.isAvailableForEnchantedBookOffer()) {
-                LibrGetter.MULTI.sendError(context.getSource(), id + " can not be traded by villagers!");
-                continue;
-            }
-
-            if (id == null) {
-                LibrGetter.MULTI.sendError(context.getSource(), "InternalError: id == null");
-                return 1;
-            }
-
-            Worker.setSource(context.getSource());
-            if (remove)
-                Worker.remove(id.toString(), level);
-            else
-                Worker.add(id.toString(), level, price);
         }
 
         return 0;
