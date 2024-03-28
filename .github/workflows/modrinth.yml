@@ -31,12 +31,12 @@ jobs:
       - name: Update description
         uses: funnyboy-roks/modrinth-auto-desc@v1.5
         with:
-          auth-token: "${{ secrets.MODRINTH_TOKEN }}"
+          auth-token: ${{ secrets.MODRINTH_TOKEN }}
           slug: 6Ts2vJ13
 
       - name: Publish files to Modrinth
-        uses: Kir-Antipov/mc-publish@v3.3.0
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: 6Ts2vJ13
-          modrinth-token: "${{ secrets.MODRINTH_TOKEN }}"
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-unfeature-mode: any
