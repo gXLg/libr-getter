@@ -194,8 +194,8 @@ public class MultiVersion {
         Object rem;
         if (getApiLevel() >= 3) {
             fcs = clazz("net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource");
-            text = invokeMethod(tc, null, new Object[]{"librgetter.list"}, "method_43469", "translatable");
-            rem = invokeMethod(tc, null, new Object[]{"librgetter.remove"}, "method_43469", "translatable");
+            text = invokeMethod(tc, null, new Object[]{"librgetter.list"}, "method_43471", "translatable");
+            rem = invokeMethod(tc, null, new Object[]{"librgetter.remove"}, "method_43471", "translatable");
         } else {
             fcs = clazz("net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource");
             Class<?> tra = clazz("net.minecraft.class_2588", "net.minecraft.text.TranslatableText");
