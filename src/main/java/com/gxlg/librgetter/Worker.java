@@ -44,11 +44,6 @@ public class Worker {
     @Nullable
     private static VillagerEntity villager;
     private static State state = State.STANDBY;
-
-    public static State getState() {
-        return state;
-    }
-
     private static Object source;
     private static int counter;
     @Nullable
@@ -56,11 +51,15 @@ public class Worker {
     private static int otherTrade = 0;
     private static int lockType;
 
+    public static State getState() {
+        return state;
+    }
+
     public static void tick() {
 
         if (state == State.STANDBY) return;
         if (block == null || villager == null) {
-            LibrGetter.MULTI.sendError(source, "Block or villager are not specified!");
+            LibrGetter.MULTI.sendError(source, "librgetter.specify");
             state = State.STANDBY;
             return;
         }
@@ -68,12 +67,12 @@ public class Worker {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            LibrGetter.MULTI.sendError(source, "InternalError: player == null");
+            LibrGetter.MULTI.sendError(source, "librgetter.internal", "player");
             state = State.STANDBY;
             return;
         }
         if (!block.isWithinDistance(player.getPos(), 3.4f) || villager.distanceTo(player) > 3.4f) {
-            LibrGetter.MULTI.sendError(source, "Too far away!");
+            LibrGetter.MULTI.sendError(source, "librgetter.far");
             state = State.STANDBY;
             return;
         }
@@ -83,7 +82,7 @@ public class Worker {
 
             PlayerInventory inventory = LibrGetter.MULTI.getInventory(player);
             if (inventory == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: inventory == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "inventory");
                 state = State.STANDBY;
                 return;
             }
@@ -117,13 +116,13 @@ public class Worker {
             }
             ClientPlayerInteractionManager manager = client.interactionManager;
             if (manager == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: manager == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "manager");
                 state = State.STANDBY;
                 return;
             }
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
             if (handler == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: handler == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "handler");
                 state = State.STANDBY;
                 return;
             }
@@ -138,7 +137,7 @@ public class Worker {
 
             ClientWorld world = client.world;
             if (world == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: world == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "world");
                 state = State.STANDBY;
                 return;
             }
@@ -149,7 +148,7 @@ public class Worker {
             }
             ClientPlayerInteractionManager manager = client.interactionManager;
             if (manager == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: manager == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "manager");
                 state = State.STANDBY;
                 return;
             }
@@ -160,7 +159,7 @@ public class Worker {
         } else if (state == State.SELECT) {
             PlayerInventory inventory = LibrGetter.MULTI.getInventory(player);
             if (inventory == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: inventory == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "inventory");
                 state = State.STANDBY;
                 return;
             }
@@ -169,13 +168,13 @@ public class Worker {
 
             ClientPlayerInteractionManager manager = client.interactionManager;
             if (manager == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: manager == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "manager");
                 state = State.STANDBY;
                 return;
             }
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
             if (handler == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: handler == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "handler");
                 state = State.STANDBY;
                 return;
             }
@@ -194,7 +193,7 @@ public class Worker {
 
             ClientPlayerInteractionManager manager = client.interactionManager;
             if (manager == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: manager == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "manager");
                 state = State.STANDBY;
                 return;
             }
@@ -206,14 +205,14 @@ public class Worker {
         } else if (state == State.GET) {
             if (villager.getVillagerData().getProfession() == VillagerProfession.NONE) return;
             if (villager.getVillagerData().getProfession() != VillagerProfession.LIBRARIAN) {
-                LibrGetter.MULTI.sendError(source, "Villager received other profession!");
+                LibrGetter.MULTI.sendError(source, "librgetter.pick");
                 state = State.STANDBY;
                 return;
             }
 
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
             if (handler == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: handler == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "handler");
                 state = State.STANDBY;
                 return;
             }
@@ -227,15 +226,15 @@ public class Worker {
             if (trades == null) return;
             getEnchant();
 
-            LibrGetter.MULTI.sendMessage(player, "Enchantment offered: " + enchant, LibrGetter.config.actionBar);
+            LibrGetter.MULTI.sendMessage(player, "librgetter.offer", LibrGetter.config.actionBar, enchant);
             if (enchant != null) {
                 for (Config.Enchantment l : LibrGetter.config.goals) {
                     if (l.meets(enchant)) {
-                        LibrGetter.MULTI.sendFeedback(source, "Successfully found " + enchant + " after " + counter + " tries for a price of " + enchant.price + " emeralds!", Formatting.GREEN);
+                        LibrGetter.MULTI.sendFeedback(source, "librgetter.found", Formatting.GREEN, enchant, counter, enchant.price);
                         if (LibrGetter.config.lock) {
                             ClientPlayNetworkHandler handler = client.getNetworkHandler();
                             if (handler == null) {
-                                LibrGetter.MULTI.sendError(source, "InternalError: handler == null");
+                                LibrGetter.MULTI.sendError(source, "librgetter.internal", "handler");
                                 state = State.STANDBY;
                                 return;
                             }
@@ -249,7 +248,7 @@ public class Worker {
                         }
                         if (LibrGetter.config.notify) {
                             if (client.world == null) {
-                                LibrGetter.MULTI.sendError(source, "InternalError: world == null");
+                                LibrGetter.MULTI.sendError(source, "librgetter.internal", "world");
                             } else {
                                 client.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.NEUTRAL, 10.0F, 0.7F);
                             }
@@ -264,21 +263,21 @@ public class Worker {
             if (trades == null) return;
             if (enchant == null) return;
             if (lockType == -1) {
-                LibrGetter.MULTI.sendError(source, "Not enough items to lock the trade!");
+                LibrGetter.MULTI.sendError(source, "librgetter.lock");
                 state = State.STANDBY;
                 return;
             }
 
             MerchantScreen screen = (MerchantScreen) client.currentScreen;
             if (screen == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: screen == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "screen");
                 state = State.STANDBY;
                 return;
             }
 
             ClientPlayerInteractionManager manager = client.interactionManager;
             if (manager == null) {
-                LibrGetter.MULTI.sendError(source, "InternalError: manager == null");
+                LibrGetter.MULTI.sendError(source, "librgetter.internal", "manager");
                 state = State.STANDBY;
                 return;
             }
@@ -357,11 +356,15 @@ public class Worker {
         } else trade = -1;
 
         if (trade != -1) {
-            Either<Config.Enchantment, String> either = LibrGetter.MULTI.parseTrade(trades, trade);
+            Either<Config.Enchantment, String[]> either = LibrGetter.MULTI.parseTrade(trades, trade);
             Optional<Config.Enchantment> en = either.left();
-            Optional<String> err = either.right();
+            Optional<String[]> err = either.right();
             if (err.isPresent()) {
-                LibrGetter.MULTI.sendError(source, err.get());
+                String[] ret = err.get();
+                Object[] args = new String[ret.length - 1];
+                System.arraycopy(ret, 1, args, 0, ret.length - 1);
+
+                LibrGetter.MULTI.sendError(source, ret[0], args);
                 state = State.STANDBY;
                 return;
             }
@@ -374,26 +377,26 @@ public class Worker {
 
     public static void begin() {
         if (state != State.STANDBY) {
-            LibrGetter.MULTI.sendError(source, "LibrGetter is already running!");
+            LibrGetter.MULTI.sendError(source, "librgetter.running");
             return;
         }
         if (block == null) {
-            LibrGetter.MULTI.sendError(source, "The lectern is not been set!");
+            LibrGetter.MULTI.sendError(source, "librgetter.no_lectern");
             return;
         }
         if (villager == null) {
-            LibrGetter.MULTI.sendError(source, "The villager is not been set!");
+            LibrGetter.MULTI.sendError(source, "librgetter.no_librarian");
             return;
         }
         if (LibrGetter.config.goals.isEmpty()) {
-            LibrGetter.MULTI.sendError(source, "There are no entries in the goals list!");
+            LibrGetter.MULTI.sendError(source, "librgetter.goals");
             return;
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            LibrGetter.MULTI.sendError(source, "InternalError: player == null");
+            LibrGetter.MULTI.sendError(source, "librgetter.internal", "player");
             return;
         }
 
@@ -401,12 +404,12 @@ public class Worker {
 
         if (LibrGetter.config.lock) {
             if (getLockType(player) == -1) {
-                LibrGetter.MULTI.sendError(source, "Not enough items to lock the trade!");
+                LibrGetter.MULTI.sendError(source, "librgetter.lock");
                 return;
             }
         }
 
-        LibrGetter.MULTI.sendFeedback(source, "LibrGetter process started", Formatting.GREEN);
+        LibrGetter.MULTI.sendFeedback(source, "librgetter.start", Formatting.GREEN);
         counter = 0;
         state = State.GET;
     }
@@ -421,11 +424,11 @@ public class Worker {
             }
         }
         if (already != null) {
-            LibrGetter.MULTI.sendFeedback(source, already + " max price was changed to " + price, Formatting.GREEN);
+            LibrGetter.MULTI.sendFeedback(source, "librgetter.price", Formatting.GREEN, already, price);
             already.price = price;
         } else {
             LibrGetter.config.goals.add(newLooking);
-            LibrGetter.MULTI.sendFeedback(source, "Added " + (custom ? "custom enchantment " : "") + newLooking + " with max price " + newLooking.price, Formatting.GREEN);
+            LibrGetter.MULTI.sendFeedback(source, custom ? "libgetter.add_custom" : "libgetter.add", Formatting.GREEN, newLooking, newLooking.price);
         }
         LibrGetter.saveConfigs();
     }
@@ -440,12 +443,12 @@ public class Worker {
             }
         }
         if (already == null) {
-            LibrGetter.MULTI.sendError(source, newLooking + " is not in the goals list!");
+            LibrGetter.MULTI.sendError(source, "librgetter.not", newLooking);
             return;
         }
         LibrGetter.config.goals.remove(already);
         LibrGetter.saveConfigs();
-        LibrGetter.MULTI.sendFeedback(source, "Removed " + newLooking, Formatting.YELLOW);
+        LibrGetter.MULTI.sendFeedback(source, "librgetter.removed", Formatting.YELLOW, newLooking);
     }
 
     public static void list() {
@@ -455,15 +458,15 @@ public class Worker {
     public static void clear() {
         LibrGetter.config.goals.clear();
         LibrGetter.saveConfigs();
-        LibrGetter.MULTI.sendFeedback(source, "Cleared the goals list", Formatting.YELLOW);
+        LibrGetter.MULTI.sendFeedback(source, "librgetter.cleared", Formatting.YELLOW);
     }
 
     public static void stop() {
         if (state == State.STANDBY) {
-            LibrGetter.MULTI.sendError(source, "LibrGetter isn't running!");
+            LibrGetter.MULTI.sendError(source, "librgetter.not_running");
             return;
         }
-        LibrGetter.MULTI.sendFeedback(source, "Successfully stopped the process", Formatting.YELLOW);
+        LibrGetter.MULTI.sendFeedback(source, "librgetter.stop", Formatting.YELLOW);
         state = State.STANDBY;
     }
 
@@ -484,7 +487,7 @@ public class Worker {
     }
 
     public static void noRefresh() {
-        LibrGetter.MULTI.sendError(source, "The villager trades can not be updated!");
+        LibrGetter.MULTI.sendError(source, "librgetter.update");
         state = State.STANDBY;
     }
 

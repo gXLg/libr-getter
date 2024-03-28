@@ -77,6 +77,14 @@ with `/librget start`.
 * `/librget config checkupdate <true/false>` - enable/disable checking if a new update has been released (default: true).
 * `/librget config warning <true/false>` - enable/disable warning when custom enchantments format is used (default: true).
 
+# Localization
+LibrGetter supports localization and currently implement the following languages:
+* English :us:/:gb:
+* German :de:
+* Russian :ru:
+
+You may request further languages in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues).
+
 # Features
 * Stops the process, when an enchantment from the goals list is found.
 * All the configs and the goals list gets saved to a file, so you don't have to set up the mod every time.

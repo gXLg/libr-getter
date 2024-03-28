@@ -49,6 +49,68 @@ public class MultiVersion {
         version = (String) invokeMethod(clazzGameVersion, gameVersion, null, "method_48019", "getName");
     }
 
+    private static Object construct(Class<?> clazz, Object[] args, Class<?>... params) {
+        try {
+            Constructor<?> con = clazz.getConstructor(params);
+            return con.newInstance(args);
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Method method(Class<?> clazz, Class<?>[] args, String... methods) {
+        for (String method : methods) {
+            try {
+                return clazz.getMethod(method, args);
+            } catch (NoSuchMethodException ignored) {
+            }
+        }
+        throw new RuntimeException("method not found from " + Arrays.toString(methods));
+    }
+
+    private static Object invokeMethod(Class<?> clazz, Object instance, Object[] args, String... methods) {
+        if (args == null) args = new Object[0];
+
+        Class<?>[] search = new Class<?>[args.length];
+        for (int i = 0; i < args.length; i++) search[i] = args[i].getClass();
+
+        return invokeMethod(clazz, instance, args, search, methods);
+    }
+
+    private static Object invokeMethod(Class<?> clazz, Object instance, Object[] args, Class<?>[] search, String... methods) {
+        if (args == null) args = new Object[0];
+        if (search == null) search = new Class<?>[0];
+
+        Method method = method(clazz, search, methods);
+        try {
+            return method.invoke(instance, args);
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodError e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Class<?> clazz(String... classes) {
+        for (String clazz : classes) {
+            try {
+                return Thread.currentThread().getContextClassLoader().loadClass(clazz);
+            } catch (ClassNotFoundException ignored) {
+            }
+        }
+        throw new RuntimeException("class not found from " + Arrays.toString(classes));
+    }
+
+    private static Object field(Class<?> clazz, Object instance, String... fields) {
+        for (String field : fields) {
+            try {
+                Field f = clazz.getField(field);
+                return f.get(instance);
+            } catch (NoSuchFieldException | IllegalAccessException ignored) {
+            }
+        }
+        throw new RuntimeException("field not found from " + Arrays.toString(fields));
+    }
+
     public String getVersion() {
         return version;
     }
@@ -69,48 +131,57 @@ public class MultiVersion {
         return (ClientConnection) invokeMethod(ClientPlayNetworkHandler.class, handler, null, "method_48296", "method_2872", "getConnection");
     }
 
-    public void sendError(Object source, String message) {
+    public void sendError(Object source, String message, Object... args) {
+        Object[] argv = new Object[]{message, args};
+        Class<?>[] argcl = new Class[]{String.class, Object[].class};
+
         Class<?> fcs;
         Class<?> tc = clazz("net.minecraft.class_2561", "net.minecraft.text.Text");
         Object text;
         if (getApiLevel() >= 3) {
             fcs = clazz("net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource");
-            text = invokeMethod(tc, null, new Object[]{message}, "method_43470", "literal");
+            text = invokeMethod(tc, null, argv, argcl, "method_43471", "translatable");
         } else {
             fcs = clazz("net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource");
-            Class<?> lit = clazz("net.minecraft.class_2585", "net.minecraft.text.LiteralText");
-            text = construct(lit, new Object[]{message}, String.class);
+            Class<?> tra = clazz("net.minecraft.class_2588", "net.minecraft.text.TranslatableText");
+            text = construct(tra, argv, argcl);
         }
         invokeMethod(fcs, source, new Object[]{text}, new Class[]{tc}, "sendError");
     }
 
-    public void sendFeedback(Object source, String message, Formatting... format) {
+    public void sendFeedback(Object source, String message, Formatting format, Object... args) {
+        Object[] argv = new Object[]{message, args};
+        Class<?>[] argcl = new Class[]{String.class, Object[].class};
+
         Class<?> fcs;
         Class<?> mc = clazz("net.minecraft.class_5250", "net.minecraft.text.MutableText");
         Class<?> tc = clazz("net.minecraft.class_2561", "net.minecraft.text.Text");
         Object text;
         if (getApiLevel() >= 3) {
             fcs = clazz("net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource");
-            text = invokeMethod(tc, null, new Object[]{message}, "method_43470", "literal");
+            text = invokeMethod(tc, null, argv, argcl, "method_43471", "translatable");
         } else {
             fcs = clazz("net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource");
-            Class<?> lit = clazz("net.minecraft.class_2585", "net.minecraft.text.LiteralText");
-            text = construct(lit, new Object[]{message}, String.class);
+            Class<?> tra = clazz("net.minecraft.class_2588", "net.minecraft.text.TranslatableText");
+            text = construct(tra, argv, argcl);
         }
-        if (format.length != 0) {
-            text = invokeMethod(mc, text, new Object[]{format[0]}, "method_27692", "formatted");
+        if (format != null) {
+            text = invokeMethod(mc, text, new Object[]{format}, "method_27692", "formatted");
         }
         invokeMethod(fcs, source, new Object[]{text}, new Class[]{tc}, "sendFeedback");
     }
 
-    public void sendMessage(ClientPlayerEntity player, String message, boolean ab) {
+    public void sendMessage(ClientPlayerEntity player, String message, boolean ab, Object... args) {
+        Object[] argv = new Object[]{message, args};
+        Class<?>[] argcl = new Class[]{String.class, Object[].class};
+
         Class<?> tc = clazz("net.minecraft.class_2561", "net.minecraft.text.Text");
         Object text;
         if (getApiLevel() >= 3) {
-            text = invokeMethod(tc, null, new Object[]{message}, "method_43470", "literal");
+            text = invokeMethod(tc, null, argv, argcl, "method_43471", "translatable");
         } else {
-            Class<?> lit = clazz("net.minecraft.class_2585", "net.minecraft.text.LiteralText");
-            text = construct(lit, new Object[]{message}, String.class);
+            Class<?> tra = clazz("net.minecraft.class_2588", "net.minecraft.text.TranslatableText");
+            text = construct(tra, argv, argcl);
         }
         invokeMethod(ClientPlayerEntity.class, player, new Object[]{text, ab}, new Class[]{tc, boolean.class}, "method_7353", "sendMessage");
     }
@@ -123,13 +194,13 @@ public class MultiVersion {
         Object rem;
         if (getApiLevel() >= 3) {
             fcs = clazz("net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource");
-            text = invokeMethod(tc, null, new Object[]{"Goals list:"}, "method_43470", "literal");
-            rem = invokeMethod(tc, null, new Object[]{"(remove)"}, "method_43470", "literal");
+            text = invokeMethod(tc, null, new Object[]{"librgetter.list"}, "method_43471", "translatable");
+            rem = invokeMethod(tc, null, new Object[]{"librgetter.remove"}, "method_43471", "translatable");
         } else {
             fcs = clazz("net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource");
-            Object t = invokeMethod(tc, null, new Object[]{"Goals list:"}, "method_30163", "of");
-            text = invokeMethod(tc, t, null, "method_27662", "copy");
-            rem = invokeMethod(tc, null, new Object[]{"(remove)"}, "method_30163", "of");
+            Class<?> tra = clazz("net.minecraft.class_2588", "net.minecraft.text.TranslatableText");
+            text = construct(tra, new Object[]{"librgetter.list"});
+            rem = construct(tra, new Object[]{"librgetter.remove"});
         }
         for (Config.Enchantment l : LibrGetter.config.goals) {
             text = invokeMethod(mc, text, new Object[]{"\n- " + l + " (" + l.price + ") "}, "method_27693", "append");
@@ -176,7 +247,7 @@ public class MultiVersion {
             Optional<?> opt = (Optional<?>) invokeMethod(pred, argument, new Object[]{key}, "method_45648", "tryCast");
 
             if (!opt.isPresent()) {
-                sendError(context, "This argument type is not supported!");
+                sendError(context, "librgetter.argument");
                 return false;
             }
 
@@ -188,7 +259,7 @@ public class MultiVersion {
             Class<?> entryClass = clazz("net.minecraft.class_6880$class_6883", "net.minecraft.registry.entry.RegistryEntry$Reference");
             if (!optrefl.isPresent()) {
                 if (!optrefr.isPresent()) {
-                    sendError(context, "Wrong enchantment provided!");
+                    sendError(context, "librgetter.wrong");
                     return false;
                 }
                 Class<?> refClass = clazz("net.minecraft.class_6885$class_6888", "net.minecraft.registry.entry.RegistryEntryList$Named");
@@ -387,13 +458,13 @@ public class MultiVersion {
         }
     }
 
-    public Either<Config.Enchantment, String> parseTrade(TradeOfferList trades, int trade) {
+    public Either<Config.Enchantment, String[]> parseTrade(TradeOfferList trades, int trade) {
         Object tag = invokeMethod(ItemStack.class, trades.get(trade).getSellItem(), null, "method_7969", "getNbt", "getTag");
         Class<?> nbtcompound = clazz("net.minecraft.class_2487", "net.minecraft.nbt.CompoundTag", "net.minecraft.nbt.NbtCompound");
         Class<?> nbtlist = clazz("net.minecraft.class_2499", "net.minecraft.nbt.ListTag", "net.minecraft.nbt.NbtList");
 
         if (tag == null) {
-            return Either.right("InternalError: tag == null");
+            return Either.left(null);
         }
 
         String id = null;
@@ -430,7 +501,7 @@ public class MultiVersion {
                     }
                 }
                 if (id == null) {
-                    return Either.right("Unkown type of Data for 'Enchantment Solution'");
+                    return Either.right(new String[]{"librgetter.unknown", "Enchantment Solution"});
                 }
             }
         }
@@ -449,7 +520,7 @@ public class MultiVersion {
                 id = (String) invokeMethod(nbtcompound, element, new Object[]{"id"}, "method_10558", "getString");
                 lvl = (short) invokeMethod(nbtcompound, element, new Object[]{"lvl"}, "method_10568", "getShort");
             } else {
-                return Either.right("Unkown type of Enchantment Data");
+                return Either.right(new String[]{"librgetter.type"});
             }
         }
 
@@ -459,72 +530,9 @@ public class MultiVersion {
         if (s.getItem() == Items.EMERALD) f = s;
 
         if (f == null) {
-            return Either.right("InternalError: f == null");
+            return Either.right(new String[]{"librgetter.internal", "f"});
         }
 
         return Either.left(new Config.Enchantment(id, lvl, f.getCount()));
-    }
-
-
-    private static Object construct(Class<?> clazz, Object[] args, Class<?>... params) {
-        try {
-            Constructor<?> con = clazz.getConstructor(params);
-            return con.newInstance(args);
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
-                 IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static Method method(Class<?> clazz, Class<?>[] args, String... methods) {
-        for (String method : methods) {
-            try {
-                return clazz.getMethod(method, args);
-            } catch (NoSuchMethodException ignored) {
-            }
-        }
-        throw new RuntimeException("method not found from " + Arrays.toString(methods));
-    }
-
-    private static Object invokeMethod(Class<?> clazz, Object instance, Object[] args, String... methods) {
-        if (args == null) args = new Object[0];
-
-        Class<?>[] search = new Class<?>[args.length];
-        for (int i = 0; i < args.length; i++) search[i] = args[i].getClass();
-
-        return invokeMethod(clazz, instance, args, search, methods);
-    }
-
-    private static Object invokeMethod(Class<?> clazz, Object instance, Object[] args, Class<?>[] search, String... methods) {
-        if (args == null) args = new Object[0];
-        if (search == null) search = new Class<?>[0];
-
-        Method method = method(clazz, search, methods);
-        try {
-            return method.invoke(instance, args);
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodError e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static Class<?> clazz(String... classes) {
-        for (String clazz : classes) {
-            try {
-                return Thread.currentThread().getContextClassLoader().loadClass(clazz);
-            } catch (ClassNotFoundException ignored) {
-            }
-        }
-        throw new RuntimeException("class not found from " + Arrays.toString(classes));
-    }
-
-    private static Object field(Class<?> clazz, Object instance, String... fields) {
-        for (String field : fields) {
-            try {
-                Field f = clazz.getField(field);
-                return f.get(instance);
-            } catch (NoSuchFieldException | IllegalAccessException ignored) {
-            }
-        }
-        throw new RuntimeException("field not found from " + Arrays.toString(fields));
     }
 }

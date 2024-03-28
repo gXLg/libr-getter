@@ -88,7 +88,7 @@ public class LibrGetter implements ClientModInitializer {
             ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
                 ClientPlayerEntity player = client.player;
                 if (newVersion != null) {
-                    MULTI.sendMessage(player, "New version of LibrGetter has been released:\n" + newVersion, false);
+                    MULTI.sendMessage(player, "librgetter.version", false, newVersion);
                     newVersion = null;
                 }
             });
