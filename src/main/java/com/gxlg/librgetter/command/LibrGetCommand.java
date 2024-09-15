@@ -1,7 +1,11 @@
 package com.gxlg.librgetter.command;
 
+import com.gxlg.librgetter.Config;
 import com.gxlg.librgetter.LibrGetter;
 import com.gxlg.librgetter.Worker;
+import com.gxlg.librgetter.utils.Commands;
+import com.gxlg.librgetter.utils.Messages;
+import com.gxlg.librgetter.utils.Minecraft;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Blocks;
@@ -22,88 +26,44 @@ import net.minecraft.village.VillagerProfession;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("SameReturnValue")
 public class LibrGetCommand {
 
-    public static int runRemove(CommandContext<?> context) {
+    public static int remove(CommandContext<?> context) {
         return enchanter(context, true);
     }
 
-    public static int runAdd(CommandContext<?> context) {
+    public static int add(CommandContext<?> context) {
         return enchanter(context, false);
     }
 
-    public static int runList(CommandContext<?> context) {
-        Worker.setSource(context.getSource());
-        Worker.list();
+    public static int list(CommandContext<?> context) {
+        Messages.list(context.getSource());
         return 0;
     }
 
-    public static int runNotify(CommandContext<?> context) {
-        boolean toggle = context.getArgument("toggle", Boolean.class);
-        LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.config", null, "Notification", toggle);
-        LibrGetter.config.notify = toggle;
+    public static int config(CommandContext<?> context, String config) {
+        boolean toggle = Config.getBoolean(config);
+        try {
+            toggle = context.getArgument("toggle", Boolean.class);
+        } catch (IllegalArgumentException ignored) {
+        }
+        Messages.sendFeedback(context.getSource(), "librgetter.config", null, config, toggle);
+        Config.setBoolean(config, toggle);
         LibrGetter.saveConfigs();
         return 0;
     }
 
-    public static int runTool(CommandContext<?> context) {
-        boolean toggle = context.getArgument("toggle", Boolean.class);
-        LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.config", null, "AutoTool", toggle);
-        LibrGetter.config.autoTool = toggle;
-        LibrGetter.saveConfigs();
-        return 0;
-    }
-
-    public static int runActionBar(CommandContext<?> context) {
-        boolean toggle = context.getArgument("toggle", Boolean.class);
-        LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.config", null, "ActionBar", toggle);
-        LibrGetter.config.actionBar = toggle;
-        LibrGetter.saveConfigs();
-        return 0;
-    }
-
-    public static int runLock(CommandContext<?> context) {
-        boolean toggle = context.getArgument("toggle", Boolean.class);
-        LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.config", null, "Lock", toggle);
-        LibrGetter.config.lock = toggle;
-        LibrGetter.saveConfigs();
-        return 0;
-    }
-
-    public static int runRemoveGoal(CommandContext<?> context) {
-        boolean toggle = context.getArgument("toggle", Boolean.class);
-        LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.config", null, "RemoveGoal", toggle);
-        LibrGetter.config.removeGoal = toggle;
-        LibrGetter.saveConfigs();
-        return 0;
-    }
-
-    public static int runCheckUpdate(CommandContext<?> context) {
-        boolean toggle = context.getArgument("toggle", Boolean.class);
-        LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.config", null, "CheckUpdate", toggle);
-        LibrGetter.config.checkUpdate = toggle;
-        LibrGetter.saveConfigs();
-        return 0;
-    }
-
-    public static int runWarning(CommandContext<?> context) {
-        boolean toggle = context.getArgument("toggle", Boolean.class);
-        LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.config", null, "Warning", toggle);
-        LibrGetter.config.warning = toggle;
-        LibrGetter.saveConfigs();
-        return 0;
-    }
-
-    public static int runAutostart(CommandContext<?> context) {
+    public static int autostart(CommandContext<?> context) {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            LibrGetter.MULTI.sendError(context.getSource(), "librgetter.internal", "player");
+            Messages.sendError(context.getSource(), "librgetter.internal", "player");
             return 1;
         }
         ClientWorld world = client.world;
         if (world == null) {
-            LibrGetter.MULTI.sendError(context.getSource(), "librgetter.internal", "world");
+            Messages.sendError(context.getSource(), "librgetter.internal", "world");
             return 1;
         }
 
@@ -127,15 +87,14 @@ public class LibrGetCommand {
             if (lec != null) break;
         }
         if (lec == null) {
-            LibrGetter.MULTI.sendError(context.getSource(), "librgetter.find_lectern");
+            Messages.sendError(context.getSource(), "librgetter.find_lectern");
             return 1;
         }
         Iterable<Entity> all = world.getEntities();
         VillagerEntity vi = null;
         float d = -1;
         for (Entity e : all) {
-            if (e instanceof VillagerEntity) {
-                VillagerEntity v = (VillagerEntity) e;
+            if (e instanceof VillagerEntity v) {
                 if (v.getVillagerData().getProfession() == VillagerProfession.LIBRARIAN) {
                     float dd = v.distanceTo(player);
                     if ((d == -1 || dd < d) && dd < 10) {
@@ -146,22 +105,21 @@ public class LibrGetCommand {
             }
         }
         if (vi == null) {
-            LibrGetter.MULTI.sendError(context, "librgetter.find_librarian");
+            Messages.sendError(context.getSource(), "librgetter.find_librarian");
             return 1;
         }
 
         Worker.setSource(context.getSource());
         Worker.setBlock(lec);
         Worker.setVillager(vi);
-        Worker.begin();
+        Worker.start();
 
         return 0;
     }
 
     private static int enchanter(CommandContext<?> context, boolean remove) {
         List<Either<Enchantment, String>> list = new ArrayList<>();
-
-        if (!LibrGetter.MULTI.getEnchantments(list, context)) return 1;
+        if (!Commands.getEnchantments(list, context)) return 1;
 
         int lvl = -1;
         try {
@@ -179,21 +137,20 @@ public class LibrGetCommand {
             if (item.left().isPresent()) {
                 Enchantment enchantment = item.left().get();
 
-                Identifier id = LibrGetter.MULTI.enchantmentId(enchantment);
+                Identifier id = Minecraft.enchantmentId(enchantment);
 
                 if (lvl > enchantment.getMaxLevel() && LibrGetter.config.warning) {
-                    LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.level", Formatting.YELLOW, id, enchantment.getMaxLevel());
+                    Messages.sendFeedback(context.getSource(), "librgetter.level", Formatting.YELLOW, id, enchantment.getMaxLevel());
                 }
                 int level = lvl;
                 if (lvl == -1) level = enchantment.getMaxLevel();
 
-
-                if (!enchantment.isAvailableForEnchantedBookOffer() && LibrGetter.config.warning) {
-                    LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.notrade", Formatting.YELLOW, id);
+                if (!Minecraft.canBeTraded(enchantment) && LibrGetter.config.warning) {
+                    Messages.sendFeedback(context.getSource(), "librgetter.notrade", Formatting.YELLOW, id);
                 }
 
                 if (id == null) {
-                    LibrGetter.MULTI.sendError(context.getSource(), "librgetter.internal", "id");
+                    Messages.sendError(context.getSource(), "librgetter.internal", "id");
                     return 1;
                 }
 
@@ -207,12 +164,12 @@ public class LibrGetCommand {
 
                 Identifier enchantment = Identifier.tryParse(custom);
                 if (enchantment == null) {
-                    LibrGetter.MULTI.sendError(context.getSource(), "librgetter.parse");
+                    Messages.sendError(context.getSource(), "librgetter.parse");
                     return 1;
                 }
 
                 if (!remove && LibrGetter.config.warning)
-                    LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.custom", Formatting.YELLOW, enchantment);
+                    Messages.sendFeedback(context.getSource(), "librgetter.custom", Formatting.YELLOW, enchantment);
 
                 Worker.setSource(context.getSource());
                 if (remove)
@@ -225,77 +182,76 @@ public class LibrGetCommand {
         return 0;
     }
 
-    public static int runClear(CommandContext<?> context) {
+    public static int clear(CommandContext<?> context) {
         Worker.setSource(context.getSource());
         Worker.clear();
         return 0;
     }
 
-    public static int runStop(CommandContext<?> context) {
+    public static int stop(CommandContext<?> context) {
         Worker.setSource(context.getSource());
         Worker.stop();
         return 0;
     }
 
-    public static int runStart(CommandContext<?> context) {
+    public static int start(CommandContext<?> context) {
         Worker.setSource(context.getSource());
-        Worker.begin();
+        Worker.start();
         return 0;
     }
 
-    public static int runSelector(CommandContext<?> context) {
+    public static int selector(CommandContext<?> context) {
 
         Worker.setSource(context.getSource());
         if (Worker.getState() != Worker.State.STANDBY) {
-            LibrGetter.MULTI.sendError(context.getSource(), "librgetter.running");
+            Messages.sendError(context.getSource(), "librgetter.running");
             return 1;
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
         if (world == null) {
-            LibrGetter.MULTI.sendError(context.getSource(), "librgetter.internal", "world");
+            Messages.sendError(context.getSource(), "librgetter.internal", "world");
             return 1;
         }
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            LibrGetter.MULTI.sendError(context.getSource(), "librgetter.internal", "player");
+            Messages.sendError(context.getSource(), "librgetter.internal", "player");
             return 1;
         }
         HitResult hit = client.crosshairTarget;
         if (hit == null) {
-            LibrGetter.MULTI.sendError(context.getSource(), "librgetter.internal", "hit");
+            Messages.sendError(context.getSource(), "librgetter.internal", "hit");
             return 1;
         }
         HitResult.Type hitType = hit.getType();
         if (hitType == HitResult.Type.MISS) {
-            LibrGetter.MULTI.sendError(context.getSource(), "librgetter.nothing");
+            Messages.sendError(context.getSource(), "librgetter.nothing");
             return 1;
         }
 
         if (hitType == HitResult.Type.BLOCK) {
             BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
             if (!world.getBlockState(blockPos).isOf(Blocks.LECTERN)) {
-                LibrGetter.MULTI.sendError(context.getSource(), "librgetter.not_lectern");
+                Messages.sendError(context.getSource(), "librgetter.not_lectern");
                 return 1;
             }
 
             Worker.setBlock(blockPos);
-            LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.lectern", null);
+            Messages.sendFeedback(context.getSource(), "librgetter.lectern", null);
 
         } else if (hitType == HitResult.Type.ENTITY) {
             EntityHitResult entityHitResult = (EntityHitResult) hit;
             Entity entity = entityHitResult.getEntity();
-            if (!(entity instanceof VillagerEntity)) {
-                LibrGetter.MULTI.sendError(context.getSource(), "librgetter.not_villager");
+            if (!(entity instanceof VillagerEntity villager)) {
+                Messages.sendError(context.getSource(), "librgetter.not_villager");
                 return 1;
             }
-            VillagerEntity villager = (VillagerEntity) entity;
             if (villager.getVillagerData().getProfession() != VillagerProfession.LIBRARIAN) {
-                LibrGetter.MULTI.sendError(context.getSource(), "librgetter.not_librarian");
+                Messages.sendError(context.getSource(), "librgetter.not_librarian");
                 return 1;
             }
-            LibrGetter.MULTI.sendFeedback(context.getSource(), "librgetter.librarian", null);
+            Messages.sendFeedback(context.getSource(), "librgetter.librarian", null);
             Worker.setVillager(villager);
 
         }

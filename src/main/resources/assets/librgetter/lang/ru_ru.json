@@ -39,5 +39,20 @@
   "librgetter.argument": "Этот вид аргумента не поддерживается!",
   "librgetter.wrong": "Предоставлены неправильные чары!",
   "librgetter.unknown": "Неизвестный тип данных для плагина '%s'",
-  "librgetter.type": "Неизвестный тип данных зачарования"
+  "librgetter.type": "Неизвестный тип данных зачарования",
+
+  "librgetter.keys.category": "LibrGetter",
+  "librgetter.keys.open": "Открыть меню конфигураций",
+
+  "librgetter.menu": "Меню конфигураций",
+
+  "librgetter.config.notify": "Проигрывает звук, когда успешно найдено",
+  "librgetter.config.autoTool": "Автоматически выбирает самый еффективный инструмент для ломания кафедры",
+  "librgetter.config.actionBar": "Отправляет логи сделок в actionbar вместо чата",
+  "librgetter.config.lock": "Автоматически блокирует сделку, когда успешно найдено",
+  "librgetter.config.removeGoal": "Автоматически удаляет зачарование из списка целей, когда успешно найдено",
+  "librgetter.config.checkUpdate": "Ищет обновления мода и сообщает о них в чате при первом заходе в мир",
+  "librgetter.config.warning": "Отправляет предупреждения для пользовательских чар",
+  "librgetter.config.offhand": "Кладёт кафедры в другую руку для еффективного размещения",
+  "librgetter.config.manual": "Режим для мануального ломания и размещения кафедр"
 }

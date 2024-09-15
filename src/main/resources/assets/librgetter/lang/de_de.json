@@ -1,5 +1,5 @@
 {
-  "librgetter.config": "Konfiguration '%s' gesetzt auf %s",
+  "librgetter.config": "Konfiguration '%s': %s",
   "librgetter.internal": "Inerner Fehler: %s == null",
   "librgetter.find_lectern": "Kein Lesepult in der Nähe gefunden!",
   "librgetter.find_librarian": "Kein Bibliothekar in der Nähe gefunden!",
@@ -39,5 +39,20 @@
   "librgetter.argument": "Diese Art von Argumenten ist nicht unterstützt!",
   "librgetter.wrong": "Falsche Verzauberung angegeben!",
   "librgetter.unknown": "Unbekannter Datentyp für den Plugin '%s'",
-  "librgetter.type": "Unbekannte Art von Verzauberung"
+  "librgetter.type": "Unbekannte Art von Verzauberung",
+
+  "librgetter.keys.category": "LibrGetter",
+  "librgetter.keys.open": "Das Einstellungsmenü öffnen",
+
+  "librgetter.menu": "Einstellungsmenü",
+
+  "librgetter.config.notify": "Spielt ein Ton ab, wenn erfolgreich gefunden",
+  "librgetter.config.autoTool": "Sucht automatisch das beste Werkzeug zum zerstören des Lesepults",
+  "librgetter.config.actionBar": "Sendet Logs der Vorschläge in die Action Bar statt dem Chat",
+  "librgetter.config.lock": "Fixiert den Handel automatisch, wenn erfolgreich gefunden",
+  "librgetter.config.removeGoal": "Entfernt die Verzauberung automatisch aus der Suchliste, wenn erfolgreich gefunden",
+  "librgetter.config.checkUpdate": "Überprüft auf Mod Updates und sendet eine Nachricht beim ersten Weltöffnen",
+  "librgetter.config.warning": "Sendet Warnungen über Benutzerdefinierte Verzauberungen",
+  "librgetter.config.offhand": "Legt die Lesepulte in die andere Hand für eine effiziente Platzierung",
+  "librgetter.config.manual": "Modus zum manuellem Abbauen und Platzieren der Lesepulte"
 }

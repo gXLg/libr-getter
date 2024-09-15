@@ -1,14 +1,13 @@
 {
-	"required": true,
-	"package": "com.gxlg.librgetter.mixin",
-	"compatibilityLevel": "JAVA_8",
-	"mixins": [
-	],
-	"client": [
-		"Ticker",
-		"Trader"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "com.gxlg.librgetter.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "BookScreenAccessor",
+    "Manager",
+    "Trader"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }

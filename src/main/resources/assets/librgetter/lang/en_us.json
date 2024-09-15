@@ -1,5 +1,5 @@
 {
-  "librgetter.config": "'%s' config was set to %s",
+  "librgetter.config": "'%s' config: %s",
   "librgetter.internal": "Internal Error: %s == null",
   "librgetter.find_lectern": "Could not find a lectern near you!",
   "librgetter.find_librarian": "Could not find a librarian near you!",
@@ -39,5 +39,20 @@
   "librgetter.argument": "This argument type is not supported!",
   "librgetter.wrong": "Wrong enchantment provided!",
   "librgetter.unknown": "Unknown type of data for the plugin '%s'",
-  "librgetter.type": "Unknown type of enchantment data"
+  "librgetter.type": "Unknown type of enchantment data",
+
+  "librgetter.keys.category": "LibrGetter",
+  "librgetter.keys.open": "Open the config menu",
+
+  "librgetter.menu": "Config menu",
+
+  "librgetter.config.notify": "Plays a sound once finished",
+  "librgetter.config.autoTool": "Automatically select a tool to break the lectern efficiently",
+  "librgetter.config.actionBar": "Send trade logs to the actionbar instead of the chat",
+  "librgetter.config.lock": "Automatically lock the trade once found",
+  "librgetter.config.removeGoal": "Automatically remove an enchantment from the goals list once found",
+  "librgetter.config.checkUpdate": "Check for version update and notify about it on a first world join",
+  "librgetter.config.warning": "Send warnings for custom enchantment formats",
+  "librgetter.config.offhand": "Put the lectern in the offhand for efficient placement",
+  "librgetter.config.manual": "Mode for manually breaking and replacing the lecterns"
 }

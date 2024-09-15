@@ -1,29 +1,31 @@
 {
-	"schemaVersion": 1,
-	"id": "librgetter",
-	"version": "${version}",
-	"name": "Librarian Getter",
-	"description": "Allows you to bruteforce a librarian villager for the desired enchantment",
-	"authors": [
-		"gXLg"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/gXLg/libr-getter"
-	},
-	"license": "MIT",
-	"icon": "assets/librgetter/icon.png",
-	"environment": "client",
-	"entrypoints": {
-		"client": [
-			"com.gxlg.librgetter.LibrGetter"
-		]
-	},
-	"mixins": [
-		"librgetter.mixins.json"
-	],
-	"depends": {
-		"fabric": "*",
-		"minecraft": ">=1.16.4"
-	}
+  "schemaVersion": 1,
+  "id": "librgetter",
+  "version": "${version}",
+  "name": "LibrGetter",
+  "description": "A highly configurable fabric mod to automatically cycle a librarian villager for the desired enchantment by replacing his lectern.",
+  "authors": [
+    "gXLg"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/libr-getter",
+    "sources": "https://github.com/gXLg/libr-getter",
+    "issues": "https://github.com/gXLg/libr-getter/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/librgetter/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.gxlg.librgetter.LibrGetter"
+    ]
+  },
+  "mixins": [
+    "librgetter.mixins.json"
+  ],
+  "depends": {
+    "fabric": ">=0.31.0",
+    "fabric-key-binding-api-v1": "*",
+    "minecraft": ">=1.17 <=1.21.1"
+  }
 }

@@ -47,7 +47,7 @@ You can request support for more plugins in the [<kbd>issues</kbd>](https://gith
 Please make sure to follow the [<kbd>guide</kbd>](https://gxlg.github.io/multi-mod) to help me.
 
 ### Warning
-Adding custom enchantments or levels exceeding the vanilla maximum sends a warning into the chat by defualt.
+Adding custom enchantments or levels exceeding the vanilla maximum sends a warning into the chat by default.
 This warning also includes non-tradable enchantments. You can enable/disable all the warnings with the config option `warning`.
 
 ## Start
@@ -68,20 +68,42 @@ with `/librget start`.
 ## Config
 * `/librget config notify <true/false>` - enable/disable sound notification when finding an enchantment (default: false).
 * `/librget config autotool <true/false>` - enable/disable automatic tool selection (default: true):
-  * When true: each time before breaking the lectern mod chooses most efficient tool, which has more than 10 durability points
+  * When true: each time before breaking the lectern mod chooses most efficient tool, which has more than 10 durability points.
   * When false: mod remembers which tool you are holding when starting the process and switches to exactly this tool each time before breaking.
     If holding nothing or a non-tool item, no tool will be picked.
 * `/librget config actionbar <true/false>` - enable/disable logging found enchantments into the action bar instead of chat (default: false).
 * `/librget config lock <true/false>` - enable/disable locking the trades after match (default: false).
+  * In order to lock a trade you will need to have one of the following inventory configurations:
+    * 24 paper to sell and 9 emeralds to buy a bookshelf.
+    * 1 book and an amount of emeralds equalling to the most expensive expected book.
 * `/librget config removegoal <true/false>` - enable/disable removing the goal from goals list when being found (default: false).
+  * When false: when an enchantment is found, the `(remove)`-button will appear in the message.
 * `/librget config checkupdate <true/false>` - enable/disable checking if a new update has been released (default: true).
+  * The update message will appear once on the first world/server join. If you have [<kbd>Mod Menu</kbd>](https://modrinth.com/mod/modmenu),
+    it will show you a blue dot whenever a new version is available, regardless of this config.
 * `/librget config warning <true/false>` - enable/disable warning when custom enchantments format is used (default: true).
+* `/librget config offhand <true/false>` - enable/disable putting the lectern in the offhand for higher efficiency (default: false).
+  * The process becomes a bit more efficient if you don't have to switch slots in order to place the lectern.
+  * Note: you will need to have more than one lectern in your inventory in order to increase efficiency.
+  * Note: you can also place the lectern in the offhand without the `offhand` config and it will remain there.
+* `/librget config manual <true/false>` - enable/disable manual mode (default: false).
+  * Manual mode disables the automatic breaking and replacing of lecterns as well as trade locking, and gives you more control about the functionality.
+  * When switched on, upon finding an enchantment from the goals list, the mod will switch to a state, where you can not break any lecterns.
+    To finish the process you will have to use `/librget stop`.
+
+# View Config
+You can use `/librget config <config>` to print out the currently set value.
+In addition to that you can modify the config file manually. The file is located at `<minecraft folder>/config/librgetter.json`
+
+# Config Menu
+LibrGetter provides a keybind to open a book GUI with clickable configs
+and their short description. By default, the keybind is set to the letter <kbd>K</kbd>. 
 
 # Localization
-LibrGetter supports localization and currently implement the following languages:
-* English :us:/:gb:
-* German :de:
-* Russian :ru:
+LibrGetter supports localization and currently implements the following languages:
+* English 🇺🇸/🇬🇧
+* German 🇩🇪
+* Russian 🇷🇺
 
 You may request further languages in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues).
 
@@ -91,7 +113,16 @@ You may request further languages in the [<kbd>issues</kbd>](https://github.com/
 * Stops when you are too far from the villager.
 * Stops when villager accidentally picked another job during the process.
 * Checks if villager was already traded.
+* Stable against multiple lag types.
+* Compatible with [<kbd>OffersHUD</kbd>](https://modrinth.com/mod/offershud).
 * Checks if enchantment can be obtained from a villager and complains if not.
 * Supports enchantments tags up from `1.19.3`.
-* Stable against multiple lag types.
-* Single mod for all versions from `1.16.4` up to `1.20.4`.
+* Single mod for all versions from `1.17` up to `1.21.1`.
+
+# About Me
+I am a computer science student in Germany and have a part-time job at a tech company.
+Apart from that, I enjoy my free time by spending it with friends, chatting online or gaming.
+
+Therefore, I may not be quick when it comes to bringing out new updates.
+If you want to support and motivate me to go on and keep this project alive,
+you could consider making a small [<kbd>donation</kbd>](https://www.paypal.com/donate/?hosted_button_id=DVC2UQP2AXR68).
