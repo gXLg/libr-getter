@@ -1,5 +1,5 @@
 # LibrGetter
-<img width="100" src="https://repository-images.githubusercontent.com/494582079/ff4c06f7-2c03-4f56-bf4d-6ec8d95e0345"  alt="logo"/>
+<img width="100" src="https://repository-images.githubusercontent.com/494582079/ff4c06f7-2c03-4f56-bf4d-6ec8d95e0345" alt="logo"/>
 
 A fabric mod which allows you to bruteforce
 a librarian villager for the desired enchantment.
@@ -17,7 +17,7 @@ The compiled jar should be under `build/libs/`.
 
 # Usage
 ## Enchantments in the goals list
-1. Add enchantments to the goals list through `/librget add <desired enchantment> [desired level] [maximum  price in emeralds]`,
+1. Add enchantments to the goals list through `/librget add <desired enchantment> [desired level] [maximum price in emeralds]`,
    where the desired level parameter is optional and defaults to the max level
    and price parameter is optional and defaults to 64
 2. The goals may be removed through `/librget remove <enchantment> <level>`
