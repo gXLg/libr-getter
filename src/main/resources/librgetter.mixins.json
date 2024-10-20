@@ -5,9 +5,10 @@
   "client": [
     "BookScreenAccessor",
     "Manager",
-    "Trader"
+    "Trader",
+    "AbstractBlockAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
-	}
+  }
 }

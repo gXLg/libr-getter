@@ -1,5 +1,6 @@
 package com.gxlg.librgetter;
 
+import com.gxlg.librgetter.mixin.AbstractBlockAccessor;
 import com.gxlg.librgetter.utils.Messages;
 import com.gxlg.librgetter.utils.Minecraft;
 import com.mojang.datafixers.util.Either;
@@ -416,6 +417,7 @@ public class Worker {
         }
     }
 
+    @SuppressWarnings("ReferenceToMixin")
     public static void start() {
         if (state != State.STANDBY) {
             Messages.sendError(source, "librgetter.running");
@@ -440,6 +442,28 @@ public class Worker {
             Messages.sendError(source, "librgetter.internal", "player");
             return;
         }
+
+        if (LibrGetter.config.safeChecker) {
+            ClientWorld world = client.world;
+            if (world == null) {
+                Messages.sendError(source, "librgetter.internal", "world");
+                return;
+            }
+            // If the villager is sitting, assume it cannot move
+            if (!villager.hasVehicle()) {
+                // The block above the lectern is not collidable
+                if (!((AbstractBlockAccessor) world.getBlockState(block.up()).getBlock()).getCollidable()) {
+                    // All the surrounding blocks must be collidable
+                    for (Direction dir : new Direction[]{ Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST }) {
+                        if (!((AbstractBlockAccessor) world.getBlockState(block.up().offset(dir)).getBlock()).getCollidable()) {
+                            Messages.sendError(source, "librgetter.unsafe");
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
 
         if (!LibrGetter.config.autoTool) defaultAxe = player.getMainHandStack();
 

@@ -97,6 +97,10 @@ with `/librget start`.
     Although, in some situations, server-side lag may be so high, that this doesn't happen.
     If you experience lags, this option is recommended to turn on.
   * The waiting mode will slow down the process by around 1-2 ticks without lag, but will guarantee, that the villager updates its profession.
+* `/librget config safeChecker <true/false>` - enable/disable the safe checker (default: true).
+  * Checks if the villager could interfere with the placing process by running over the lecterns position.
+  * Checks if the block above the lectern or the surrounding blocks are solid.
+  * If the villager is inside a vehicle, the test if positive by default.
 
 # View Config
 You can use `/librget config <config>` to print out the currently set value.

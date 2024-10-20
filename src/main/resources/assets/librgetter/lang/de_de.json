@@ -40,6 +40,7 @@
   "librgetter.wrong": "Falsche Verzauberung angegeben!",
   "librgetter.unknown": "Unbekannter Datentyp für den Plugin '%s'",
   "librgetter.type": "Unbekannte Art von Verzauberung",
+  "librgetter.unsafe": "Der Dorfbewohner könnte den Platzierungsprozess verhindern, verbauen Sie den Lesepult besser",
 
   "librgetter.keys.category": "LibrGetter",
   "librgetter.keys.open": "Das Einstellungsmenü öffnen",
@@ -55,5 +56,6 @@
   "librgetter.config.warning": "Sendet Warnungen über Benutzerdefinierte Verzauberungen",
   "librgetter.config.offhand": "Legt die Lesepulte in die andere Hand für eine effiziente Platzierung",
   "librgetter.config.manual": "Modus zum manuellem Abbauen und Platzieren der Lesepulte",
-  "librgetter.config.waitLose": "Warten, bis der Dorfbewohner sein Beruf verliert; kann den Prozess verlangsamen, garantiert aber die Aktualisierung des Berufs bei Lag"
+  "librgetter.config.waitLose": "Warten, bis der Dorfbewohner sein Beruf verliert; kann den Prozess verlangsamen, garantiert aber die Aktualisierung des Berufs bei Lag",
+  "librgetter.config.safeCheker": "Prüft, ob der Dorfbewohner den Platzierungsprozess verhindern könnte"
 }

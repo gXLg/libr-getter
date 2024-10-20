@@ -40,6 +40,7 @@
   "librgetter.wrong": "Wrong enchantment provided!",
   "librgetter.unknown": "Unknown type of data for the plugin '%s'",
   "librgetter.type": "Unknown type of enchantment data",
+  "librgetter.unsafe": "The villager could interfere with the placing process, please obstruct the lectern",
 
   "librgetter.keys.category": "LibrGetter",
   "librgetter.keys.open": "Open the config menu",
@@ -55,5 +56,6 @@
   "librgetter.config.warning": "Send warnings for custom enchantment formats",
   "librgetter.config.offhand": "Put the lectern in the offhand for efficient placement",
   "librgetter.config.manual": "Mode for manually breaking and replacing the lecterns",
-  "librgetter.config.waitLose": "Wait for the villager to lose its profession; may slow down the process, but guarantees the profession update during lags"
+  "librgetter.config.waitLose": "Wait for the villager to lose its profession; may slow down the process, but guarantees the profession update during lags",
+  "librgetter.config.safeCheker": "Check if the villager can interfere with the placing process"
 }
