@@ -32,7 +32,7 @@ public class MultiVersion {
 
         if (version.equals("1.18.2") || version.equals("1.18.1") || version.equals("1.18") || version.equals("1.17.1"))
             return true;
-        if (level == ApiLevel.INVENTORY) return false;
+        if (level == ApiLevel.VILLAGER_PACKET) return false;
 
         if (version.equals("1.17")) return true;
         return level != ApiLevel.BASE;
@@ -40,7 +40,7 @@ public class MultiVersion {
 
     public enum ApiLevel {
         BASE,
-        INVENTORY,
+        VILLAGER_PACKET,
         API_COMMAND_V2,
         TAGS,
         COMPONENTS,

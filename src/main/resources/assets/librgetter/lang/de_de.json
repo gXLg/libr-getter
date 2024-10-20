@@ -54,5 +54,6 @@
   "librgetter.config.checkUpdate": "Überprüft auf Mod Updates und sendet eine Nachricht beim ersten Weltöffnen",
   "librgetter.config.warning": "Sendet Warnungen über Benutzerdefinierte Verzauberungen",
   "librgetter.config.offhand": "Legt die Lesepulte in die andere Hand für eine effiziente Platzierung",
-  "librgetter.config.manual": "Modus zum manuellem Abbauen und Platzieren der Lesepulte"
+  "librgetter.config.manual": "Modus zum manuellem Abbauen und Platzieren der Lesepulte",
+  "librgetter.config.waitLose": "Warten, bis der Dorfbewohner sein Beruf verliert; kann den Prozess verlangsamen, garantiert aber die Aktualisierung des Berufs bei Lag"
 }

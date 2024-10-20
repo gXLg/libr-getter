@@ -92,6 +92,11 @@ with `/librget start`.
   * Manual mode disables the automatic breaking and replacing of lecterns as well as trade locking, and gives you more control about the functionality.
   * When switched on, upon finding an enchantment from the goals list, the mod will switch to a state, where you can not break any lecterns.
     To finish the process you will have to use `/librget stop`.
+* `/librget config waitlose <true/false>` - enable/disable waiting for villager to lose profession (default: false).
+  * Villagers will usually update the profession, when the lectern is replaced.
+    Although, in some situations, server-side lag may be so high, that this doesn't happen.
+    If you experience lags, this option is recommended to turn on.
+  * The waiting mode will slow down the process by around 1-2 ticks without lag, but will guarantee, that the villager updates its profession.
 
 # View Config
 You can use `/librget config <config>` to print out the currently set value.

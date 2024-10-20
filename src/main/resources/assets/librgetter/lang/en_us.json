@@ -54,5 +54,6 @@
   "librgetter.config.checkUpdate": "Check for version update and notify about it on a first world join",
   "librgetter.config.warning": "Send warnings for custom enchantment formats",
   "librgetter.config.offhand": "Put the lectern in the offhand for efficient placement",
-  "librgetter.config.manual": "Mode for manually breaking and replacing the lecterns"
+  "librgetter.config.manual": "Mode for manually breaking and replacing the lecterns",
+  "librgetter.config.waitLose": "Wait for the villager to lose its profession; may slow down the process, but guarantees the profession update during lags"
 }

@@ -12,17 +12,20 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOfferList;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Set;
@@ -78,16 +81,8 @@ public class Minecraft {
         }
     }
 
-    public static PlayerInventory getInventory(ClientPlayerEntity player) {
-        if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.INVENTORY)) {
-            return (PlayerInventory) Reflection.invokeMethod(ClientPlayerEntity.class, player, null, "method_31548", "getInventory");
-        } else {
-            return (PlayerInventory) Reflection.field(ClientPlayerEntity.class, player, "field_7514", "inventory");
-        }
-    }
-
     public static PlayerInteractEntityC2SPacket interactPacket(VillagerEntity villager) {
-        if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.INVENTORY)) {
+        if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.VILLAGER_PACKET)) {
             return (PlayerInteractEntityC2SPacket) Reflection.invokeMethod(PlayerInteractEntityC2SPacket.class, null, new Object[]{villager, false, Hand.MAIN_HAND}, new Class[]{Entity.class, boolean.class, Hand.class}, "method_34207", "interact");
         } else {
             return (PlayerInteractEntityC2SPacket) Reflection.construct(PlayerInteractEntityC2SPacket.class, new Object[]{villager, Hand.MAIN_HAND, false}, Entity.class, Hand.class, boolean.class);
@@ -254,5 +249,13 @@ public class Minecraft {
         } else {
             return (boolean) Reflection.invokeMethod(Enchantment.class, enchantment, null, "method_25949", "isAvailableForEnchantedBookOffer");
         }
+    }
+
+    public static void playSound(ClientWorld world, ClientPlayerEntity player) {
+        Reflection.invokeMethod(World.class, world, new Object[]{
+                player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.NEUTRAL, 10.0F, 0.7F, false
+        }, new Class[]{
+                double.class, double.class, double.class, SoundEvent.class, SoundCategory.class, float.class, float.class, boolean.class
+        }, "method_8486", "playSound");
     }
 }

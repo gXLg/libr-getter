@@ -20,8 +20,6 @@ import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -86,7 +84,7 @@ public class Worker {
                 return;
             }
 
-            PlayerInventory inventory = Minecraft.getInventory(player);
+            PlayerInventory inventory = player.getInventory();
             if (inventory == null) {
                 Messages.sendError(source, "librgetter.internal", "inventory");
                 state = State.STANDBY;
@@ -150,7 +148,7 @@ public class Worker {
             }
             BlockState targetBlock = world.getBlockState(block);
             if (targetBlock.isAir()) {
-                state = State.SELECT_PLACE;
+                state = LibrGetter.config.waitLose ? State.WAIT_LOSE : State.SELECT_PLACE;
                 return;
             }
 
@@ -164,13 +162,19 @@ public class Worker {
             }
             manager.updateBlockBreakingProgress(block, Direction.UP);
 
+        } else if (state == State.WAIT_LOSE) {
+            // If the villager doesn't update his profession because of lag,
+            // we wait until the profession is lost based on the config.
+            if (villager.getVillagerData().getProfession() != VillagerProfession.NONE) return;
+            state = State.SELECT_PLACE;
+
         } else if (state == State.SELECT_PLACE) {
             ClientWorld world = Minecraft.getWorld(player);
             if (world.getBlockState(block).isOf(Blocks.LECTERN)) state = State.RESET;
             if (LibrGetter.config.manual) return;
 
             // select
-            PlayerInventory inventory = Minecraft.getInventory(player);
+            PlayerInventory inventory = player.getInventory();
             if (inventory == null) {
                 Messages.sendError(source, "librgetter.internal", "inventory");
                 state = State.STANDBY;
@@ -219,10 +223,11 @@ public class Worker {
             player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lowBlockPos.add(0.5, 1, 0.5));
             BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, block.down(), false);
             Minecraft.interactBlock(manager, player, lowBlock, mainhand);
+
         } else if (state == State.RESET) {
-            // The villager will cycle his profession for sure if the lectern was once replaced.
-            // So we wait for the villager to lose his profession before re-fetching his trades,
-            // but only after replacing the lectern
+            // The villager will update his profession for sure if the lectern was once replaced and the server lag is not too high.
+            // So we wait for the villager to lose his profession before re-fetching his trades, but only after replacing the lectern.
+
             if (villager.getVillagerData().getProfession() == VillagerProfession.NONE) return;
             trades = null;
             state = State.GET;
@@ -234,7 +239,6 @@ public class Worker {
                 return;
             }
 
-            if (villager.getVillagerData().getProfession() == VillagerProfession.NONE) return;
             if (villager.getVillagerData().getProfession() != VillagerProfession.LIBRARIAN) {
                 Messages.sendError(source, "librgetter.pick");
                 state = State.STANDBY;
@@ -289,7 +293,7 @@ public class Worker {
                             if (client.world == null) {
                                 Messages.sendError(source, "librgetter.internal", "world");
                             } else {
-                                client.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.NEUTRAL, 10.0F, 0.7F);
+                                Minecraft.playSound(client.world, player);
                             }
                         }
                         if (LibrGetter.config.removeGoal) remove(enchant.id, enchant.lvl);
@@ -317,7 +321,7 @@ public class Worker {
 
             if (lockType == 0) {
                 if (player.currentScreenHandler.getSlot(0).inventory.getStack(0).getCount() < 1) {
-                    int slot = Minecraft.getInventory(player).getSlotWithStack(Items.BOOK.getDefaultStack());
+                    int slot = player.getInventory().getSlotWithStack(Items.BOOK.getDefaultStack());
                     if (slot < 9) slot += 27;
                     else slot -= 9;
                     manager.clickSlot(player.currentScreenHandler.syncId, slot + 3, 0, SlotActionType.PICKUP, player);
@@ -325,7 +329,7 @@ public class Worker {
                     return;
                 }
                 if (player.currentScreenHandler.getSlot(0).inventory.getStack(1).getCount() < enchant.price) {
-                    int slot = Minecraft.getInventory(player).getSlotWithStack(Items.EMERALD.getDefaultStack());
+                    int slot = player.getInventory().getSlotWithStack(Items.EMERALD.getDefaultStack());
                     if (slot < 9) slot += 27;
                     else slot -= 9;
                     manager.clickSlot(player.currentScreenHandler.syncId, slot + 3, 0, SlotActionType.PICKUP, player);
@@ -335,7 +339,7 @@ public class Worker {
             } else if (lockType == 1) {
                 ItemStack item = Minecraft.getFirstBuyItem(trades.get(otherTrade));
                 if (player.currentScreenHandler.getSlot(0).inventory.getStack(0).getCount() < item.getCount()) {
-                    int slot = Minecraft.getInventory(player).getSlotWithStack(item.getItem().getDefaultStack());
+                    int slot = player.getInventory().getSlotWithStack(item.getItem().getDefaultStack());
                     if (slot < 9) slot += 27;
                     else slot -= 9;
                     manager.clickSlot(player.currentScreenHandler.syncId, slot + 3, 0, SlotActionType.PICKUP, player);
@@ -352,8 +356,8 @@ public class Worker {
         int emerald = 0;
         int book = 0;
         int paper = 0;
-        for (int i = 0; i < Minecraft.getInventory(player).size(); i++) {
-            ItemStack stack = Minecraft.getInventory(player).getStack(i);
+        for (int i = 0; i < player.getInventory().size(); i++) {
+            ItemStack stack = player.getInventory().getStack(i);
             if (stack.getItem() == Items.EMERALD) emerald += stack.getCount();
             if (stack.getItem() == Items.BOOK) book += stack.getCount();
             if (stack.getItem() == Items.PAPER) paper += stack.getCount();
@@ -529,6 +533,6 @@ public class Worker {
     }
 
     public enum State {
-        STANDBY, PICK, BREAK, SELECT_PLACE, RESET, GET, PARSING, LOCK, MANUAL_WAIT
+        STANDBY, PICK, BREAK, SELECT_PLACE, WAIT_LOSE, RESET, GET, PARSING, LOCK, MANUAL_WAIT
     }
 }

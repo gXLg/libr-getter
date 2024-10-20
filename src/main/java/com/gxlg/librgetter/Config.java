@@ -17,6 +17,7 @@ public class Config {
     public boolean warning = true;
     public boolean offhand = false;
     public boolean manual = false;
+    public boolean waitLose = false;
 
     public List<Enchantment> goals = new ArrayList<>();
 
