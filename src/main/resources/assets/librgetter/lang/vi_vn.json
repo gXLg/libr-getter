@@ -1,14 +1,12 @@
 {
   "librgetter.config": "'%s' cấu hình: %s",
-  "librgetter.internal": "lỗi nội bộ: %s == null",
-  "__comment3": "*does `null` need to translate ? if no then delete this, else also delete this but replace it with `vô giá trị`"
+  "librgetter.internal": "lỗi nội bộ: %s == null, hãy gửi lại lỗi này để chúng tôi sửa",
   "librgetter.find_lectern": "Không thể tìm thấy bục để sách ở gần bạn!",
   "librgetter.find_librarian": "Không thể tìm thấy thủ thư ở gần bạn!",
   "librgetter.level": "Cấp độ cho '%s' vượt quá tối đa. Cấp độ tối đa: %s",
   "librgetter.notrade": "'%s' không thể trao đổi với thủ thư!",
-  "librgetter.parse": "Không thể phân tích phù phép tùy chỉnh!",
-  "__comment1": "*the word `custom` in this case isn't easy to translate,should be replaced"
-  "librgetter.custom": "Thêm phù phép tùy chỉnh '%s'",
+  "librgetter.parse": "Không thể phân tích phù phép đặc biệt!",
+  "librgetter.custom": "Thêm phù phép đặc biệt '%s'",
   "librgetter.running": "LibrGetter đang hoạt động rồi!",
   "librgetter.nothing": "Bạn đang không nhắm vào gì cả!",
   "librgetter.not_lectern": "Khối này không phải là bục để sách!",
@@ -28,8 +26,7 @@
   "librgetter.start": "LibrGetter bắt đầu hoạt động",
   "librgetter.price": "'%s' giá tối đa đã chuyển thành %s",
   "libgetter.add": "Đã thêm '%s' với giá tối đa %s",
-  "libgetter.add_custom": "đã thêm phù phép tùy chỉnh '%s' với giá tối đa %s",
-  "__comment2": "*the word `custom` is the same as comment1"
+  "libgetter.add_custom": "đã thêm phù phép đặc biệt '%s' với giá tối đa %s",
   "librgetter.not": "'%s' không ở trong mục tiêu",
   "librgetter.removed": "Đã xóa '%s'",
   "librgetter.cleared": "Đã xóa danh sách mục tiêu",
@@ -49,14 +46,13 @@
   "librgetter.keys.open": "Mở menu cấu hình",
 
   "librgetter.menu": "Menu cấu hình",
-  "__comment4": "*the word `menu` in this case isn't easy to translate,should be replaced"
   "librgetter.config.notify": "Phát âm thanh khi hoàn thành",
   "librgetter.config.autoTool": "Tự động chọn dùng cụ để đập bục để sách một cách hiệu quả",
   "librgetter.config.actionBar": "Gửi nhật kí giao dịch đến thanh hành động thay vì mục trò chuyện",
   "librgetter.config.lock": "Tự động khóa giao dịch khi tìm thấy",
   "librgetter.config.removeGoal": "tự động xóa loại phù phép trong danh sách mục tiêu khi tìm thấy",
   "librgetter.config.checkUpdate": "Kiểm tra bản cập nhật và thông báo nó (nếu có) khi vào thế giới",
-  "librgetter.config.warning": "Gửi cảnh báo cho định dạng của phù phép tùy chỉnh",
+  "librgetter.config.warning": "Gửi cảnh báo cho định dạng của phù phép đặc biệt",
   "librgetter.config.offhand": "Đặt bục để sách vào tay phụ để đặt bục giảng nhanh hơn",
   "librgetter.config.manual": "Chế độ đặt và đập bục giảng thủ công",
   "librgetter.config.waitLose": "Đợi thủ thư từ bỏ nghề nghiệp; có thể chạy chậm hơn, nhưng sẽ không bị lỗi trong khi lag",
