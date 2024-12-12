@@ -42,14 +42,14 @@ public class LibrGetCommand {
         return 0;
     }
 
-    public static int config(CommandContext<?> context, String config) {
-        boolean toggle = Config.getBoolean(config);
+    public static <T> int config(CommandContext<?> context, Config.Configurable<T> config) {
+        T value = config.get();
         try {
-            toggle = context.getArgument("toggle", Boolean.class);
+            value = context.getArgument("value", config.type());
         } catch (IllegalArgumentException ignored) {
         }
-        Messages.sendFeedback(context.getSource(), "librgetter.config", null, config, toggle);
-        Config.setBoolean(config, toggle);
+        Messages.sendFeedback(context.getSource(), "librgetter.config", null, config.name(), value);
+        config.set(value);
         LibrGetter.saveConfigs();
         return 0;
     }

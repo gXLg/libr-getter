@@ -56,5 +56,6 @@
   "librgetter.config.offhand": "Đặt bục để sách vào tay phụ để đặt bục giảng nhanh hơn",
   "librgetter.config.manual": "Chế độ đặt và đập bục giảng thủ công",
   "librgetter.config.waitLose": "Đợi thủ thư từ bỏ nghề nghiệp; có thể chạy chậm hơn, nhưng sẽ không bị lỗi trong khi lag",
-  "librgetter.config.safeCheker": "Kiểm tra dân làng có thể can thiệp vào việc đặt bục để sách hay không"
+  "librgetter.config.safeChecker": "Kiểm tra dân làng có thể can thiệp vào việc đặt bục để sách hay không",
+  "librgetter.config.timeout": "Thời gian (giây) để đợi dân làng cập nhật nghề nghiệp trước khi thay bục đặt sách; đặt thành 0 để tắt"
 }

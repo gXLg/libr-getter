@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ConfigMenu {
     private static final List<Object> list = new ArrayList<>();
-    public static int pageCount = (int) Math.ceil(Config.listBooleans().size() / 4.0);
+    public static int pageCount = (int) Math.ceil(Config.getConfigurables().size() / 4.0);
 
     public static BookScreen.Contents getContent() {
         if (list.isEmpty()) {
@@ -40,11 +40,10 @@ public class ConfigMenu {
 
     public static void updatePage(int index) {
         Object text = Messages.bookTitle();
-        int finish = Math.min(index * 4 + 4, Config.listBooleans().size());
+        int finish = Math.min(index * 4 + 4, Config.getConfigurables().size());
         for (int i = index * 4; i < finish; i++) {
-            String config = Config.listBooleans().get(i);
-            boolean value = Config.getBoolean(config);
-            text = Messages.bookEntry(text, config, value);
+            Config.Configurable<?> config = Config.getConfigurables().get(i);
+            text = Messages.bookEntry(text, config);
         }
 
         list.set(index, text);

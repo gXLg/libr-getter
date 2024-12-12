@@ -26,6 +26,6 @@
   "depends": {
     "fabric": ">=0.31.0",
     "fabric-key-binding-api-v1": "*",
-    "minecraft": ">=1.17 <=1.21.1"
+    "minecraft": ">=1.17 <=1.21.4"
   }
 }

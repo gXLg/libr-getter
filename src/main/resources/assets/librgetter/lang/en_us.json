@@ -1,6 +1,6 @@
 {
   "librgetter.config": "'%s' config: %s",
-  "librgetter.internal": "Internal Error: %s == null",
+  "librgetter.internal": "Internal Error: %s == null, please report this error so it can be fixed",
   "librgetter.find_lectern": "Could not find a lectern near you!",
   "librgetter.find_librarian": "Could not find a librarian near you!",
   "librgetter.level": "Level for '%s' over the max. Max level: %s",
@@ -57,5 +57,6 @@
   "librgetter.config.offhand": "Put the lectern in the offhand for efficient placement",
   "librgetter.config.manual": "Mode for manually breaking and replacing the lecterns",
   "librgetter.config.waitLose": "Wait for the villager to lose its profession; may slow down the process, but guarantees the profession update during lags",
-  "librgetter.config.safeCheker": "Check if the villager can interfere with the placing process"
+  "librgetter.config.safeChecker": "Check if the villager can interfere with the placing process",
+  "librgetter.config.timeout": "Time in seconds to wait for a villager to update its profession before replacing the lectern; set to 0 to disable"
 }

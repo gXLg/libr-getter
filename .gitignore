@@ -45,3 +45,5 @@ bin/
 
 # Own files
 changelog.txt
+
+tmp/

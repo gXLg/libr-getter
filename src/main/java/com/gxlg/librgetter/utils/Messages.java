@@ -160,8 +160,8 @@ public class Messages {
         return text;
     }
 
-    public static Object bookEntry(Object text, String config, boolean value) {
-        String argument = config.toLowerCase();
+    public static Object bookEntry(Object text, Config.Configurable<?> configurable) {
+        String config = configurable.name();
 
         Object name;
         if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.API_COMMAND_V2)) {
@@ -172,26 +172,53 @@ public class Messages {
         }
 
         Style cStyle = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (Text) name));
-        Style tStyle = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget config " + argument + " true")).withColor(Formatting.GREEN).withUnderline(value);
-        Style fStyle = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget config " + argument + " false")).withColor(Formatting.RED).withUnderline(!value);
-
         Object c = Text.of(config);
         c = Reflection.invokeMethod(tc, c, null, "method_27662", "copy");
         Reflection.invokeMethod(mc, c, new Object[]{cStyle}, "method_10862", "setStyle");
 
-        Object t = Text.of("[true]");
-        t = Reflection.invokeMethod(tc, t, null, "method_27662", "copy");
-        Reflection.invokeMethod(mc, t, new Object[]{tStyle}, "method_10862", "setStyle");
-
-        Object f = Text.of("[false]");
-        f = Reflection.invokeMethod(tc, f, null, "method_27662", "copy");
-        Reflection.invokeMethod(mc, f, new Object[]{fStyle}, "method_10862", "setStyle");
-
         text = Reflection.invokeMethod(mc, text, new Object[]{"\n\n"}, "method_27693", "append");
         text = Reflection.invokeMethod(mc, text, new Object[]{c}, new Class[]{tc}, "method_10852", "append");
         text = Reflection.invokeMethod(mc, text, new Object[]{"\n"}, "method_27693", "append");
+
+        Object t, f;
+        String m;
+
+        if (configurable.type() == Boolean.class) {
+            boolean value = (boolean) configurable.get();
+            Style tStyle = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget config " + config + " true")).withColor(Formatting.GREEN).withUnderline(value);
+            Style fStyle = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget config " + config + " false")).withColor(Formatting.RED).withUnderline(!value);
+
+            t = Text.of("[true]");
+            t = Reflection.invokeMethod(tc, t, null, "method_27662", "copy");
+            Reflection.invokeMethod(mc, t, new Object[]{tStyle}, "method_10862", "setStyle");
+
+            f = Text.of("[false]");
+            f = Reflection.invokeMethod(tc, f, null, "method_27662", "copy");
+            Reflection.invokeMethod(mc, f, new Object[]{fStyle}, "method_10862", "setStyle");
+
+            m = " ";
+
+        } else if (configurable.type() == Integer.class) {
+            int value = (int) configurable.get();
+            Style mStyle = configurable.inRange(value - 1) ? Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget config " + config + " " + (value - 1))).withColor(Formatting.RED) : Style.EMPTY.withColor(Formatting.GRAY);
+            Style pStyle = configurable.inRange(value + 1) ? Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget config " + config + " " + (value + 1))).withColor(Formatting.GREEN) : Style.EMPTY.withColor(Formatting.GRAY);
+
+            t = Text.of("[-]");
+            t = Reflection.invokeMethod(tc, t, null, "method_27662", "copy");
+            Reflection.invokeMethod(mc, t, new Object[]{mStyle}, "method_10862", "setStyle");
+
+            f = Text.of("[+]");
+            f = Reflection.invokeMethod(tc, f, null, "method_27662", "copy");
+            Reflection.invokeMethod(mc, f, new Object[]{pStyle}, "method_10862", "setStyle");
+
+            m = " " + value + " ";
+
+        } else {
+            throw new RuntimeException("Unexpected type of configurable!");
+        }
+
         text = Reflection.invokeMethod(mc, text, new Object[]{t}, new Class[]{tc}, "method_10852", "append");
-        text = Reflection.invokeMethod(mc, text, new Object[]{" "}, "method_27693", "append");
+        text = Reflection.invokeMethod(mc, text, new Object[]{m}, "method_27693", "append");
         text = Reflection.invokeMethod(mc, text, new Object[]{f}, new Class[]{tc}, "method_10852", "append");
 
         return text;

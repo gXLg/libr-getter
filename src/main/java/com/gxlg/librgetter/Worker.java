@@ -1,8 +1,8 @@
 package com.gxlg.librgetter;
 
-import com.gxlg.librgetter.mixin.AbstractBlockAccessor;
 import com.gxlg.librgetter.utils.Messages;
 import com.gxlg.librgetter.utils.Minecraft;
+import com.gxlg.librgetter.utils.PathFinding;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,6 +31,7 @@ import net.minecraft.village.TradeOfferList;
 import net.minecraft.village.VillagerProfession;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 public class Worker {
@@ -48,14 +49,14 @@ public class Worker {
     @Nullable
     private static Config.Enchantment enchant;
     private static int otherTrade = 0;
-    private static int lockType;
+    private static LockType lockType;
+    private static int timeout = 0;
 
     public static State getState() {
         return state;
     }
 
     public static void tick() {
-
         if (state == State.STANDBY) return;
         if (block == null || villager == null) {
             Messages.sendError(source, "librgetter.specify");
@@ -75,15 +76,10 @@ public class Worker {
             state = State.STANDBY;
             return;
         }
-        if (state == State.MANUAL_WAIT) return;
+        if (state == State.MANUAL_WAIT_FINISH) return;
 
-        if (state == State.PICK) {
+        if (state == State.SELECT_AXE) {
             counter++;
-
-            if (LibrGetter.config.manual) {
-                state = State.BREAK;
-                return;
-            }
 
             PlayerInventory inventory = player.getInventory();
             if (inventory == null) {
@@ -108,7 +104,7 @@ public class Worker {
                 }
             } else {
                 if (defaultAxe == null || !defaultAxe.isDamageable()) {
-                    state = State.BREAK;
+                    state = State.BREAK_LECTERN;
                     return;
                 }
                 for (int i = 0; i < inventory.main.size(); i++) {
@@ -132,14 +128,19 @@ public class Worker {
                 return;
             }
             if (slot != -1) {
-                if (PlayerInventory.isValidHotbarIndex(slot)) {
-                    inventory.selectedSlot = slot;
-                    UpdateSelectedSlotC2SPacket packetSelect = new UpdateSelectedSlotC2SPacket(inventory.selectedSlot);
-                    Minecraft.getConnection(handler).send(packetSelect);
-                } else manager.pickFromInventory(slot);
+                if (!PlayerInventory.isValidHotbarIndex(slot)) {
+                    int syncId = player.playerScreenHandler.syncId;
+                    int swap = inventory.getSwappableHotbarSlot();
+                    manager.clickSlot(syncId, slot, swap, SlotActionType.SWAP, player);
+                    slot = swap;
+                }
+                inventory.selectedSlot = slot;
+                UpdateSelectedSlotC2SPacket packetSelect = new UpdateSelectedSlotC2SPacket(inventory.selectedSlot);
+                Minecraft.getConnection(handler).send(packetSelect);
             }
-            state = State.BREAK;
-        } else if (state == State.BREAK) {
+            state = State.BREAK_LECTERN;
+
+        } else if (state == State.BREAK_LECTERN) {
 
             ClientWorld world = client.world;
             if (world == null) {
@@ -149,7 +150,7 @@ public class Worker {
             }
             BlockState targetBlock = world.getBlockState(block);
             if (targetBlock.isAir()) {
-                state = LibrGetter.config.waitLose ? State.WAIT_LOSE : State.SELECT_PLACE;
+                state = LibrGetter.config.waitLose ? State.WAIT_VILLAGER_LOSE_PROFESSION : State.SELECT_LECTERN_AND_PLACE;
                 return;
             }
 
@@ -163,15 +164,18 @@ public class Worker {
             }
             manager.updateBlockBreakingProgress(block, Direction.UP);
 
-        } else if (state == State.WAIT_LOSE) {
+        } else if (state == State.WAIT_VILLAGER_LOSE_PROFESSION) {
             // If the villager doesn't update his profession because of lag,
             // we wait until the profession is lost based on the config.
             if (villager.getVillagerData().getProfession() != VillagerProfession.NONE) return;
-            state = State.SELECT_PLACE;
+            state = State.SELECT_LECTERN_AND_PLACE;
 
-        } else if (state == State.SELECT_PLACE) {
+        } else if (state == State.SELECT_LECTERN_AND_PLACE) {
             ClientWorld world = Minecraft.getWorld(player);
-            if (world.getBlockState(block).isOf(Blocks.LECTERN)) state = State.RESET;
+            if (world.getBlockState(block).isOf(Blocks.LECTERN)) {
+                state = State.WAIT_VILLAGER_ACCEPT_PROFESSION;
+                return;
+            }
             if (LibrGetter.config.manual) return;
 
             // select
@@ -209,11 +213,15 @@ public class Worker {
                     manager.clickSlot(player.currentScreenHandler.syncId, slot, 40, SlotActionType.SWAP, player);
                     mainhand = false;
                 } else {
-                    if (PlayerInventory.isValidHotbarIndex(slot)) {
-                        inventory.selectedSlot = slot;
-                        UpdateSelectedSlotC2SPacket packetSelect = new UpdateSelectedSlotC2SPacket(inventory.selectedSlot);
-                        Minecraft.getConnection(handler).send(packetSelect);
-                    } else manager.pickFromInventory(slot);
+                    if (!PlayerInventory.isValidHotbarIndex(slot)) {
+                        int syncId = player.playerScreenHandler.syncId;
+                        int swap = inventory.getSwappableHotbarSlot();
+                        manager.clickSlot(syncId, slot, swap, SlotActionType.SWAP, player);
+                        slot = swap;
+                    }
+                    inventory.selectedSlot = slot;
+                    UpdateSelectedSlotC2SPacket packetSelect = new UpdateSelectedSlotC2SPacket(inventory.selectedSlot);
+                    Minecraft.getConnection(handler).send(packetSelect);
                 }
             } else {
                 mainhand = false;
@@ -225,18 +233,25 @@ public class Worker {
             BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, block.down(), false);
             Minecraft.interactBlock(manager, player, lowBlock, mainhand);
 
-        } else if (state == State.RESET) {
-            // The villager will update his profession for sure if the lectern was once replaced and the server lag is not too high.
-            // So we wait for the villager to lose his profession before re-fetching his trades, but only after replacing the lectern.
-
-            if (villager.getVillagerData().getProfession() == VillagerProfession.NONE) return;
+        } else if (state == State.WAIT_VILLAGER_ACCEPT_PROFESSION) {
+            if (villager.getVillagerData().getProfession() == VillagerProfession.NONE) {
+                if (LibrGetter.config.timeout != 0) {
+                    timeout++;
+                    if (timeout >= LibrGetter.config.timeout * 20) {
+                        timeout = 0;
+                        state = LibrGetter.config.manual ? State.BREAK_LECTERN : State.SELECT_AXE;
+                    }
+                }
+                return;
+            }
+            timeout = 0;
             trades = null;
-            state = State.GET;
+            state = State.GET_TRADES;
 
-        } else if (state == State.GET) {
+        } else if (state == State.GET_TRADES) {
             // wait until the villager accepts profession and click him as long as trades == null
             if (trades != null) {
-                state = State.PARSING;
+                state = State.PARSE_TRADES;
                 return;
             }
 
@@ -261,7 +276,7 @@ public class Worker {
             }
             manager.interactEntity(player, villager, Hand.MAIN_HAND);
 
-        } else if (state == State.PARSING) {
+        } else if (state == State.PARSE_TRADES) {
             // parsing the trades
             getEnchant();
 
@@ -271,7 +286,7 @@ public class Worker {
                     if (l.meets(enchant)) {
                         Messages.sendFound(source, enchant, counter);
                         if (LibrGetter.config.manual) {
-                            state = State.MANUAL_WAIT;
+                            state = State.MANUAL_WAIT_FINISH;
                             return;
                         }
 
@@ -283,7 +298,7 @@ public class Worker {
                                 return;
                             }
                             lockType = getLockType(player);
-                            state = State.LOCK;
+                            state = State.LOCK_TRADES;
                             trades = null;
                             PlayerInteractEntityC2SPacket packet = Minecraft.interactPacket(villager);
                             Minecraft.getConnection(handler).send(packet);
@@ -302,12 +317,12 @@ public class Worker {
                     }
                 }
             }
-            if (state == State.PARSING) state = State.PICK;
+            if (state == State.PARSE_TRADES) state = LibrGetter.config.manual ? State.BREAK_LECTERN : State.SELECT_AXE;
 
-        } else if (state == State.LOCK) {
+        } else if (state == State.LOCK_TRADES) {
             if (trades == null) return;
             if (enchant == null) return;
-            if (lockType == -1) {
+            if (lockType == LockType.CANNOT) {
                 Messages.sendError(source, "librgetter.lock");
                 state = State.STANDBY;
                 return;
@@ -320,7 +335,7 @@ public class Worker {
                 return;
             }
 
-            if (lockType == 0) {
+            if (lockType == LockType.BOOK) {
                 if (player.currentScreenHandler.getSlot(0).inventory.getStack(0).getCount() < 1) {
                     int slot = player.getInventory().getSlotWithStack(Items.BOOK.getDefaultStack());
                     if (slot < 9) slot += 27;
@@ -337,7 +352,7 @@ public class Worker {
                     manager.clickSlot(player.currentScreenHandler.syncId, 1, 0, SlotActionType.PICKUP, player);
                     return;
                 }
-            } else if (lockType == 1) {
+            } else if (lockType == LockType.TRADE) {
                 ItemStack item = Minecraft.getFirstBuyItem(trades.get(otherTrade));
                 if (player.currentScreenHandler.getSlot(0).inventory.getStack(0).getCount() < item.getCount()) {
                     int slot = player.getInventory().getSlotWithStack(item.getItem().getDefaultStack());
@@ -353,7 +368,7 @@ public class Worker {
         }
     }
 
-    private static int getLockType(ClientPlayerEntity player) {
+    private static LockType getLockType(ClientPlayerEntity player) {
         int emerald = 0;
         int book = 0;
         int paper = 0;
@@ -372,11 +387,11 @@ public class Worker {
 
         if (book == 0 || emerald < max) {
             if (emerald < 9 || paper < 24) {
-                return -1;
+                return LockType.CANNOT;
             }
-            return 1;
+            return LockType.TRADE;
         }
-        return 0;
+        return LockType.BOOK;
     }
 
     private static void getEnchant() {
@@ -417,7 +432,6 @@ public class Worker {
         }
     }
 
-    @SuppressWarnings("ReferenceToMixin")
     public static void start() {
         if (state != State.STANDBY) {
             Messages.sendError(source, "librgetter.running");
@@ -451,24 +465,18 @@ public class Worker {
             }
             // If the villager is sitting, assume it cannot move
             if (!villager.hasVehicle()) {
-                // The block above the lectern is not collidable
-                if (!((AbstractBlockAccessor) world.getBlockState(block.up()).getBlock()).getCollidable()) {
-                    // All the surrounding blocks must be collidable
-                    for (Direction dir : new Direction[]{ Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST }) {
-                        if (!((AbstractBlockAccessor) world.getBlockState(block.up().offset(dir)).getBlock()).getCollidable()) {
-                            Messages.sendError(source, "librgetter.unsafe");
-                            return;
-                        }
-                    }
+                List<BlockPos> path = PathFinding.findPath(villager.getBlockPos(), block, world, 2);
+                if (path != null) {
+                    Messages.sendError(source, "librgetter.unsafe");
+                    return;
                 }
             }
         }
 
-
         if (!LibrGetter.config.autoTool) defaultAxe = player.getMainHandStack();
 
         if (LibrGetter.config.lock) {
-            if (getLockType(player) == -1) {
+            if (getLockType(player) == LockType.CANNOT) {
                 Messages.sendError(source, "librgetter.lock");
                 return;
             }
@@ -476,7 +484,7 @@ public class Worker {
 
         Messages.sendFeedback(source, "librgetter.start", Formatting.GREEN);
         counter = 0;
-        state = State.RESET;
+        state = State.WAIT_VILLAGER_ACCEPT_PROFESSION;
     }
 
     public static void add(String name, int level, int price, boolean custom) {
@@ -535,6 +543,10 @@ public class Worker {
         block = newBlock;
     }
 
+    public static @Nullable BlockPos getBlock() {
+        return block;
+    }
+
     public static void setTrades(@Nullable TradeOfferList newTrades) {
         trades = newTrades;
     }
@@ -557,6 +569,10 @@ public class Worker {
     }
 
     public enum State {
-        STANDBY, PICK, BREAK, SELECT_PLACE, WAIT_LOSE, RESET, GET, PARSING, LOCK, MANUAL_WAIT
+        STANDBY, SELECT_AXE, BREAK_LECTERN, SELECT_LECTERN_AND_PLACE, WAIT_VILLAGER_LOSE_PROFESSION, WAIT_VILLAGER_ACCEPT_PROFESSION, GET_TRADES, PARSE_TRADES, LOCK_TRADES, MANUAL_WAIT_FINISH
+    }
+
+    private enum LockType {
+        CANNOT, BOOK, TRADE
     }
 }

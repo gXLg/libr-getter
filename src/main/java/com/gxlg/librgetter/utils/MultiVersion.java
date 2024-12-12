@@ -17,7 +17,7 @@ public class MultiVersion {
     }
 
     public static boolean isApiLevel(ApiLevel level) {
-        if (version.equals("1.21.1") || version.equals("1.21")) return true;
+        if (version.equals("1.21.4") || version.equals("1.21.3") || version.equals("1.21.2") || version.equals("1.21.1") || version.equals("1.21")) return true;
         if (level == ApiLevel.EFFECTS) return false;
 
         if (version.equals("1.20.6") || version.equals("1.20.5")) return true;

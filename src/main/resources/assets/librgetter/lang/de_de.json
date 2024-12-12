@@ -1,6 +1,6 @@
 {
   "librgetter.config": "Konfiguration '%s': %s",
-  "librgetter.internal": "Inerner Fehler: %s == null",
+  "librgetter.internal": "Interner Fehler: %s == null, bitte melden Sie den Fehler, damit dieser behoben werden kann",
   "librgetter.find_lectern": "Kein Lesepult in der Nähe gefunden!",
   "librgetter.find_librarian": "Kein Bibliothekar in der Nähe gefunden!",
   "librgetter.level": "Level für '%s' über dem Maximum. Höchster Level: %s",
@@ -57,5 +57,6 @@
   "librgetter.config.offhand": "Legt die Lesepulte in die andere Hand für eine effiziente Platzierung",
   "librgetter.config.manual": "Modus zum manuellem Abbauen und Platzieren der Lesepulte",
   "librgetter.config.waitLose": "Warten, bis der Dorfbewohner sein Beruf verliert; kann den Prozess verlangsamen, garantiert aber die Aktualisierung des Berufs bei Lag",
-  "librgetter.config.safeCheker": "Prüft, ob der Dorfbewohner den Platzierungsprozess verhindern könnte"
+  "librgetter.config.safeChecker": "Prüft, ob der Dorfbewohner den Platzierungsprozess verhindern könnte",
+  "librgetter.config.timeout": "Zeit in Sekunden, die gewartet wird, bis ein Dorfbewohner seinen Beruf aktualisiert, bevor das Lesepult ersetzt wird; auf 0 setzen, um zu deaktivieren"
 }

@@ -1,49 +1,85 @@
 plugins {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.9-SNAPSHOT'
 }
 
 version = project.mod_version
 group = project.maven_group
 
 base {
-	archivesName = project.archives_base_name
+    archivesName = project.archives_base_name
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
+    // Add repositories to retrieve artifacts from in here.
+    // You should only use this when depending on other mods because
+    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+    // for more information about repositories.
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
 processResources {
-	inputs.property "version", project.version
+    inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-	//noinspection GroovyAssignabilityCheck, GroovyAccessibility
-	it.options.release = 16
+    //noinspection GroovyAssignabilityCheck, GroovyAccessibility
+    it.options.release = 16
 }
 
 java {
-	sourceCompatibility JavaVersion.VERSION_16
-	targetCompatibility JavaVersion.VERSION_16
+    sourceCompatibility JavaVersion.VERSION_16
+    targetCompatibility JavaVersion.VERSION_16
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName.get()}"}
-	}
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}"}
+    }
+}
+
+// pre-processor
+interface InjectedExecOps {
+    @Inject
+    ExecOperations getExecOps()
+}
+
+tasks.register("preprocessJava") {
+    def injected = project.objects.newInstance(InjectedExecOps)
+    doLast {
+        copy {
+            from "src/main/java"
+            into "tmp"
+        }
+        fileTree("src/main/java") each { file ->
+            injected.execOps.exec {
+                commandLine "node", "preprocess.js", file
+            }
+        }
+    }
+}
+
+tasks.register("cleanup") {
+    doLast {
+        copy {
+            from "tmp"
+            into "src/main/java"
+        }
+        delete "tmp"
+    }
+}
+
+compileJava {
+    dependsOn preprocessJava
+    finalizedBy cleanup
 }

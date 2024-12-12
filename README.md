@@ -69,38 +69,46 @@ with `/librget start`.
 
 ## Config
 * `/librget config notify <true/false>` - enable/disable sound notification when finding an enchantment (default: false).
-* `/librget config autotool <true/false>` - enable/disable automatic tool selection (default: true):
+* `/librget config autoTool <true/false>` - enable/disable automatic tool selection (default: true).
   * When true: each time before breaking the lectern mod chooses most efficient tool, which has more than 10 durability points.
   * When false: mod remembers which tool you are holding when starting the process and switches to exactly this tool each time before breaking.
     If holding nothing or a non-tool item, no tool will be picked.
-* `/librget config actionbar <true/false>` - enable/disable logging found enchantments into the action bar instead of chat (default: false).
+  * This config has no effect when manual mode is enabled
+* `/librget config actionBar <true/false>` - enable/disable logging found enchantments into the action bar instead of chat (default: false).
 * `/librget config lock <true/false>` - enable/disable locking the trades after match (default: false).
   * In order to lock a trade you will need to have one of the following inventory configurations:
     * 24 paper to sell and 9 emeralds to buy a bookshelf.
     * 1 book and an amount of emeralds equalling to the most expensive expected book.
-* `/librget config removegoal <true/false>` - enable/disable removing the goal from goals list when being found (default: false).
+  * This config has no effect when manual mode is enabled
+* `/librget config removeGoal <true/false>` - enable/disable removing the goal from goals list when being found (default: false).
   * When false: when an enchantment is found, the `(remove)`-button will appear in the message.
-* `/librget config checkupdate <true/false>` - enable/disable checking if a new update has been released (default: true).
-  * The update message will appear once on the first world/server join. If you have [<kbd>Mod Menu</kbd>](https://modrinth.com/mod/modmenu),
+* `/librget config checkUpdate <true/false>` - enable/disable checking if a new update has been released (default: true).
+  * An update message will appear in the chat once on the first world/server join. If you have [<kbd>Mod Menu</kbd>](https://modrinth.com/mod/modmenu),
     it will show you a blue dot whenever a new version is available, regardless of this config.
 * `/librget config warning <true/false>` - enable/disable warning when custom enchantments format is used (default: true).
 * `/librget config offhand <true/false>` - enable/disable putting the lectern in the offhand for higher efficiency (default: false).
   * The process becomes a bit more efficient if you don't have to switch slots in order to place the lectern.
   * Note: you will need to have more than one lectern in your inventory in order to increase efficiency.
   * Note: you can also place the lectern in the offhand without the `offhand` config and it will remain there.
+  * This config has no effect when manual mode is enabled
 * `/librget config manual <true/false>` - enable/disable manual mode (default: false).
   * Manual mode disables the automatic breaking and replacing of lecterns as well as trade locking, and gives you more control about the functionality.
-  * When switched on, upon finding an enchantment from the goals list, the mod will switch to a state, where you can not break any lecterns.
+  * When enabled, upon finding an enchantment from the goals list, the mod will switch to a state, where you can not break any lecterns.
     To finish the process you will have to use `/librget stop`.
-* `/librget config waitlose <true/false>` - enable/disable waiting for villager to lose profession (default: false).
+* `/librget config waitLose <true/false>` - enable/disable waiting for villager to lose profession (default: false).
   * Villagers will usually update the profession, when the lectern is replaced.
     Although, in some situations, server-side lag may be so high, that this doesn't happen.
     If you experience lags, this option is recommended to turn on.
   * The waiting mode will slow down the process by around 1-2 ticks without lag, but will guarantee, that the villager updates its profession.
+  * When manual mode is enabled, during this waiting the placing of the lectern is disabled on the client
 * `/librget config safeChecker <true/false>` - enable/disable the safe checker (default: true).
   * Checks if the villager could interfere with the placing process by running over the lecterns position.
-  * Checks if the block above the lectern or the surrounding blocks are solid.
   * If the villager is inside a vehicle, the test if positive by default.
+* `/librget config timeout <int [0; 20]>` - Time in seconds to wait for a villager to update its profession before replacing the lectern
+  * If set to 0, this option is disabled
+  * If set to any other number, the mod will hang in a state, where it waits for the villager to accept the librarian profession
+    for the specified amount of time, until it reaches the timeout, then it will break and replace the lectern again
+  * This config has no effect when manual mode is enabled
 
 # View Config
 You can use `/librget config <config>` to print out the currently set value.
@@ -115,6 +123,7 @@ LibrGetter supports localization and currently implements the following language
 * English 🇺🇸/🇬🇧
 * German 🇩🇪
 * Russian 🇷🇺
+* Vitenamese 🇻🇳 (thanks [@ToanAnh312](https://github.com/ToanAnh312))
 
 You may request further languages in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues).
 
@@ -128,7 +137,7 @@ You may request further languages in the [<kbd>issues</kbd>](https://github.com/
 * Compatible with [<kbd>OffersHUD</kbd>](https://modrinth.com/mod/offershud).
 * Checks if enchantment can be obtained from a villager and complains if not.
 * Supports enchantments tags up from `1.19.3`.
-* Single mod for all versions from `1.17` up to `1.21.1`.
+* Single mod for all versions from `1.17` up to `1.21.4`.
 
 # About Me
 I am a computer science student in Germany and have a part-time job at a tech company.
@@ -136,4 +145,4 @@ Apart from that, I enjoy my free time by spending it with friends, chatting onli
 
 Therefore, I may not be quick when it comes to bringing out new updates.
 If you want to support and motivate me to go on and keep this project alive,
-you could consider making a small [<kbd>donation</kbd>](https://www.paypal.com/donate/?hosted_button_id=DVC2UQP2AXR68).
+you could consider making a small [<kbd>☕ donation</kbd>](https://www.paypal.com/donate?hosted_button_id=DVC2UQP2AXR68).

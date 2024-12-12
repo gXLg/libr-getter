@@ -1,9 +1,13 @@
 package com.gxlg.librgetter;
 
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("CanBeFinal")
 public class Config {
@@ -19,6 +23,9 @@ public class Config {
     public boolean manual = false;
     public boolean waitLose = false;
     public boolean safeChecker = true;
+
+    @IntRange(min = 0, max = 20)
+    public int timeout = 0;
 
     public List<Enchantment> goals = new ArrayList<>();
 
@@ -48,33 +55,71 @@ public class Config {
         }
     }
 
-    private static List<String> booleans = null;
+    public record Configurable<T>(String name, Class<T> type) {
+        public T get() {
+            try {
+                Field f = Config.class.getField(name);
+                return type.cast(f.get(LibrGetter.config));
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        public void set(T value) {
+            try {
+                Field f = Config.class.getField(name);
+                f.set(LibrGetter.config, value);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-    public static List<String> listBooleans() {
-        if (booleans != null) return booleans;
-        booleans = new ArrayList<>();
+        public ArgumentType<?> argument() {
+            Field f;
+            try {
+                f = Config.class.getField(name);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (type == Boolean.class) {
+                return BoolArgumentType.bool();
+            } else if (type == Integer.class) {
+                IntRange a = f.getDeclaredAnnotation(IntRange.class);
+                if (a == null) return IntegerArgumentType.integer();
+                return IntegerArgumentType.integer(a.min(), a.max());
+            } else throw new RuntimeException("This field does not support ArgumentTypes");
+        }
+
+        public boolean inRange(int i) {
+            if (type != Integer.class) throw new RuntimeException("The field of type '" + type.getName() + "' does not support the inRange(int) method");
+            Field f;
+            try {
+                f = Config.class.getField(name);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+            IntRange a = f.getDeclaredAnnotation(IntRange.class);
+            if (a == null) return true;
+            else return a.min() <= i && i <= a.max();
+        }
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface IntRange {
+        int min() default Integer.MIN_VALUE;
+        int max() default Integer.MAX_VALUE;
+    }
+
+    private static final List<Configurable<?>> configurable = new ArrayList<>();
+    static {
         for (Field f : Config.class.getFields()) {
-            if (f.getType() == boolean.class) booleans.add(f.getName());
+            if (f.getType() == boolean.class) configurable.add(new Configurable<>(f.getName(), Boolean.class));
+            if (f.getType() == int.class) configurable.add(new Configurable<>(f.getName(), Integer.class));
         }
-        Collections.sort(booleans);
-        return booleans;
+        configurable.sort(Comparator.comparing(Configurable::name));
     }
 
-    public static boolean getBoolean(String name) {
-        try {
-            Field f = Config.class.getField(name);
-            return f.getBoolean(LibrGetter.config);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void setBoolean(String name, boolean value) {
-        try {
-            Field f = Config.class.getField(name);
-            f.setBoolean(LibrGetter.config, value);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public static List<Configurable<?>> getConfigurables() {
+        return configurable;
     }
 }

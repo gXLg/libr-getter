@@ -20,14 +20,18 @@ import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOfferList;
+import net.minecraft.village.TradedItem;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -94,12 +98,12 @@ public class Minecraft {
 
         Object tag;
         if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.COMPONENTS)) {
-            Class<?> cm = Reflection.clazz("net.minecraft.class_9323", "ComponentMap");
-            Class<?> ch = Reflection.clazz("net.minecraft.class_9322", "ComponentHolder");
-            Class<?> dsc = Reflection.clazz("net.minecraft.class_9334", "DataComponentTypes");
-            Class<?> dc = Reflection.clazz("net.minecraft.class_9331", "DataComponentType");
+            Class<?> cm = Reflection.clazz("net.minecraft.class_9323", "net.minecraft.component.ComponentMap");
+            Class<?> ch = Reflection.clazz("net.minecraft.class_9322", "net.minecraft.component.ComponentHolder");
+            Class<?> dsc = Reflection.clazz("net.minecraft.class_9334", "net.minecraft.component.DataComponentTypes");
+            Class<?> dc = Reflection.clazz("net.minecraft.class_9331", "net.minecraft.component.ComponentType", "net.minecraft.component.DataComponentType");
             Object CUST = Reflection.field(dsc, null, "field_49628", "CUSTOM_DATA");
-            Class<?> nc = Reflection.clazz("net.minecraft.class_9279", "NbtComponent");
+            Class<?> nc = Reflection.clazz("net.minecraft.class_9279", "net.minecraft.component.type.NbtComponent");
 
             Object cmap = Reflection.invokeMethod(ch, stack, null, "method_57353", "getComponents");
             Object nbt = Reflection.invokeMethod(cm, cmap, new Object[]{CUST}, new Class[]{dc}, "method_57829", "get");
@@ -127,14 +131,14 @@ public class Minecraft {
 
         } else {
             if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.COMPONENTS)) {
-                Class<?> cm = Reflection.clazz("net.minecraft.class_9323", "ComponentMap");
-                Class<?> ch = Reflection.clazz("net.minecraft.class_9322", "ComponentHolder");
-                Class<?> dsc = Reflection.clazz("net.minecraft.class_9334", "DataComponentTypes");
-                Class<?> dc = Reflection.clazz("net.minecraft.class_9331", "DataComponentType");
+                Class<?> cm = Reflection.clazz("net.minecraft.class_9323", "net.minecraft.component.ComponentMap");
+                Class<?> ch = Reflection.clazz("net.minecraft.class_9322", "net.minecraft.component.ComponentHolder");
+                Class<?> dsc = Reflection.clazz("net.minecraft.class_9334", "net.minecraft.component.DataComponentTypes");
+                Class<?> dc = Reflection.clazz("net.minecraft.class_9331", "net.minecraft.component.ComponentType", "net.minecraft.component.DataComponentType");
                 Object ENCH = Reflection.field(dsc, null, "field_49633", "ENCHANTMENTS");
                 Object STOR = Reflection.field(dsc, null, "field_49643", "STORED_ENCHANTMENTS");
-                Class<?> ic = Reflection.clazz("net.minecraft.class_9304", "ItemEnchantmentsComponent");
-                Class<?> rc = Reflection.clazz("net.minecraft.class_6880", "RegistryEntry");
+                Class<?> ic = Reflection.clazz("net.minecraft.class_9304", "net.minecraft.component.type.ItemEnchantmentsComponent");
+                Class<?> rc = Reflection.clazz("net.minecraft.class_6880", "net.minecraft.registry.entry.RegistryEntry");
 
                 Object cmap = Reflection.invokeMethod(ch, stack, null, "method_57353", "getComponents");
 
@@ -143,7 +147,7 @@ public class Minecraft {
                 Set<?> s = null;
                 boolean tryNext = false;
                 if (ecom != null) {
-                    s = (Set<?>) Reflection.invokeMethod(ic, ecom, null, "method_57539", "getEnchantmentsMap");
+                    s = (Set<?>) Reflection.invokeMethod(ic, ecom, null, "method_57539", "getEnchantmentsMap", "getEnchantmentEntries");
                     if (s.isEmpty()) tryNext = true;
                 } else tryNext = true;
 
@@ -157,8 +161,13 @@ public class Minecraft {
                     } else tryNext = true;
                 }
 
+                // Insert more methods to find an enchantment here
+                // ...
+
+                // Should try next, but all methods already used, so return empty
                 if (tryNext) return Either.left(Config.Enchantment.EMPTY);
 
+                // found something
                 for (Object r : s) {
                     Object2IntMap.Entry<?> e = (Object2IntMap.Entry<?>) r;
                     id = (String) Reflection.invokeMethod(rc, e.getKey(), null, "method_55840", "getIdAsString");
@@ -202,13 +211,20 @@ public class Minecraft {
     }
 
     public static ItemStack getSecondBuyItem(TradeOffer offer) {
-        return (ItemStack) Reflection.invokeMethod(TradeOffer.class, offer, new Object[]{}, "method_8247", "getSecondBuyItem", "getDisplayedSecondBuyItem");
+        if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.COMPONENTS)) {
+            Optional<?> optional = (Optional<?>) Reflection.invokeMethod(TradeOffer.class, offer, new Object[]{}, "method_57557", "getSecondBuyItem");
+            if (optional.isEmpty()) return ItemStack.EMPTY;
+            TradedItem item = (TradedItem) optional.get();
+            return item.itemStack();
+        } else {
+            return (ItemStack) Reflection.invokeMethod(TradeOffer.class, offer, new Object[]{}, "method_8247", "getSecondBuyItem", "getDisplayedSecondBuyItem");
+        }
     }
 
     public static int getEfficiencyLevel(ItemStack stack) {
         if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.EFFECTS)) {
-            Class<?> ic = Reflection.clazz("net.minecraft.class_9304", "ItemEnchantmentsComponent");
-            Class<?> rc = Reflection.clazz("net.minecraft.class_6880", "RegistryEntry");
+            Class<?> ic = Reflection.clazz("net.minecraft.class_9304", "net.minecraft.component.type.ItemEnchantmentsComponent");
+            Class<?> rc = Reflection.clazz("net.minecraft.class_6880", "net.minecraft.registry.entry.RegistryEntry");
 
             Object com = Reflection.invokeMethod(ItemStack.class, stack, null, "method_58657", "getEnchantments");
             Set<?> s = (Set<?>) Reflection.invokeMethod(ic, com, null, "method_57534", "getEnchantments");
@@ -257,5 +273,10 @@ public class Minecraft {
         }, new Class[]{
                 double.class, double.class, double.class, SoundEvent.class, SoundCategory.class, float.class, float.class, boolean.class
         }, "method_8486", "playSound");
+    }
+
+    public static void setActionResultFail(CallbackInfoReturnable<ActionResult> info) {
+        Object field = Reflection.field(ActionResult.class, null, "field_5814", "FAIL");
+        info.setReturnValue((ActionResult) field);
     }
 }

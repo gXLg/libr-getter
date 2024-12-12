@@ -5,7 +5,6 @@ import com.gxlg.librgetter.command.LibrGetCommand;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -141,7 +140,7 @@ public class Commands {
         return function::apply;
     }
 
-    private static <T> Command<T> runner(BiFunction<CommandContext<T>, String, Integer> function, String config) {
+    private static <T, U> Command<T> runner(BiFunction<CommandContext<T>, Config.Configurable<U>, Integer> function, Config.Configurable<U> config) {
         return t -> function.apply(t, config);
     }
 
@@ -206,16 +205,18 @@ public class Commands {
         }, new Class[]{ArgumentBuilder.class}, "then");
 
 
-        // automatically create config commands for each boolean in Config.class
+        // automatically create config commands for each simply configurable value in Config
         l = literal(ccm, "config");
-        for (String name : Config.listBooleans()) {
-            a = literal(ccm, name.toLowerCase());
-            r = argument(ccm, "toggle", BoolArgumentType.bool());
-            r = Reflection.invokeMethod(ArgumentBuilder.class, r, new Object[]{runner(LibrGetCommand::config, name)}, new Class[]{Command.class}, "executes");
+        for (Config.Configurable<?> configurable : Config.getConfigurables()) {
+            String name = configurable.name();
+            a = literal(ccm, name);
+            r = argument(ccm, "value", configurable.argument());
+            r = Reflection.invokeMethod(ArgumentBuilder.class, r, new Object[]{runner(LibrGetCommand::config, configurable)}, new Class[]{Command.class}, "executes");
             a = Reflection.invokeMethod(ArgumentBuilder.class, a, new Object[]{r}, new Class[]{ArgumentBuilder.class}, "then");
-            a = Reflection.invokeMethod(ArgumentBuilder.class, a, new Object[]{runner(LibrGetCommand::config, name)}, new Class[]{Command.class}, "executes");
+            a = Reflection.invokeMethod(ArgumentBuilder.class, a, new Object[]{runner(LibrGetCommand::config, configurable)}, new Class[]{Command.class}, "executes");
             l = Reflection.invokeMethod(ArgumentBuilder.class, l, new Object[]{a}, new Class[]{ArgumentBuilder.class}, "then");
         }
+
         base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{l}, new Class[]{ArgumentBuilder.class}, "then");
 
         base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{runner(LibrGetCommand::selector)}, new Class[]{Command.class}, "executes");

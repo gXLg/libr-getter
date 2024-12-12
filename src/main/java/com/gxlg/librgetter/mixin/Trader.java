@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class Trader {
     @Inject(at = @At("HEAD"), method = "onSetTradeOffers")
     public void onSetTradeOffers(SetTradeOffersS2CPacket packet, CallbackInfo callback) {
-        if (Worker.getState() == Worker.State.GET || Worker.getState() == Worker.State.LOCK) {
+        if (Worker.getState() == Worker.State.GET_TRADES || Worker.getState() == Worker.State.LOCK_TRADES) {
             if (packet.getExperience() > 0) {
                 Worker.noRefresh();
                 return;
@@ -29,7 +29,7 @@ public class Trader {
 
     @Inject(at = @At("HEAD"), method = "onOpenScreen", cancellable = true)
     public void onOpenScreen(OpenScreenS2CPacket packet, CallbackInfo callback) {
-        if (Worker.getState() == Worker.State.GET && packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT) {
+        if (Worker.getState() == Worker.State.GET_TRADES && packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT) {
             callback.cancel();
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
