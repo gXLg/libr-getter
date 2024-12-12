@@ -117,7 +117,6 @@ LibrGetter supports localization and currently implements the following language
 * Russian 🇷🇺
 * Vietnam 🇻🇳/🇻🇮
 
-
 You may request further languages in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues).
 
 # Features
