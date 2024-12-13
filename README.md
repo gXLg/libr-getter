@@ -108,7 +108,6 @@ with `/librget start`.
   * If set to 0, this option is disabled
   * If set to any other number, the mod will hang in a state, where it waits for the villager to accept the librarian profession
     for the specified amount of time, until it reaches the timeout, then it will break and replace the lectern again
-  * This config has no effect when manual mode is enabled
 
 # View Config
 You can use `/librget config <config>` to print out the currently set value.
