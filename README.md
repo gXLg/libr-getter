@@ -135,7 +135,7 @@ Mods that previously were not compatible and were made explicitly compatible:
 
 Mods that add/change functionality of LibrGetter:
 ### Trade Cycling
-> ([<kbd>Modrinth</kbd>](https://modrinth.com/mod/trade-cycling))
+[<kbd>Modrinth</kbd>](https://modrinth.com/mod/trade-cycling)
 
 With Trade Cycling installed on the server, instead of replacing the lectern, LibrGetter will push the cycling button, until an enchantment is found.
 Since Trade Cycling requires you to have the Merchant screen open, the process can't be stopped using commands, instead you can close the trading screen to automatically stop.
