@@ -1,6 +1,6 @@
 package com.gxlg.librgetter.utils.plugins;
 
-import com.gxlg.librgetter.utils.Nbt;
+import com.gxlg.librgetter.utils.reflection.Nbt;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.HashSet;

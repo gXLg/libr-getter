@@ -39,7 +39,6 @@
   "librgetter.argument": "This argument type is not supported!",
   "librgetter.wrong": "Wrong enchantment provided!",
   "librgetter.unknown": "Unknown type of data for the plugin '%s'",
-  "librgetter.type": "Unknown type of enchantment data",
   "librgetter.unsafe": "The villager could interfere with the placing process, please obstruct the lectern",
 
   "librgetter.keys.category": "LibrGetter",
@@ -58,5 +57,8 @@
   "librgetter.config.manual": "Mode for manually breaking and replacing the lecterns",
   "librgetter.config.waitLose": "Wait for the villager to lose its profession; may slow down the process, but guarantees the profession update during lags",
   "librgetter.config.safeChecker": "Check if the villager can interfere with the placing process",
-  "librgetter.config.timeout": "Time in seconds to wait for a villager to update its profession before replacing the lectern; set to 0 to disable"
+  "librgetter.config.timeout": "Time in seconds to wait for a villager to update its profession before replacing the lectern; set to 0 to disable",
+  "librgetter.config.fallback": "Fallback option to search for unsupported enchantments; not guaranteed to make a match; may cause lag with a large list of enchantments",
+
+  "librgetter.config._tradeCycling": "Trade Cycling"
 }

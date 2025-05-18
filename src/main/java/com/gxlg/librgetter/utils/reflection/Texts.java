@@ -1,7 +1,8 @@
-package com.gxlg.librgetter.utils;
+package com.gxlg.librgetter.utils.reflection;
 
 import com.gxlg.librgetter.Config;
 import com.gxlg.librgetter.LibrGetter;
+import com.gxlg.librgetter.utils.MultiVersion;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
@@ -9,7 +10,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-public class Messages {
+public class Texts {
 
     private static final Class<?> tc = Reflection.clazz("net.minecraft.class_2561", "net.minecraft.text.Text");
     private static final Class<?> mc = Reflection.clazz("net.minecraft.class_5250", "net.minecraft.text.MutableText");
@@ -56,7 +57,9 @@ public class Messages {
                 Class<?> tra = Reflection.clazz("net.minecraft.class_2588", "net.minecraft.text.TranslatableText");
                 rem = Reflection.construct(tra, new Object[]{"librgetter.remove", new Object[]{}}, String.class, Object[].class);
             }
-            Style style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget remove \"" + enchant.id + "\" " + enchant.lvl)).withColor(Formatting.YELLOW);
+
+            Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + enchant.id + "\" " + enchant.lvl)).withColor(Formatting.YELLOW);
+
             Reflection.invokeMethod(mc, rem, new Object[]{style}, "method_10862", "setStyle");
             text = Reflection.invokeMethod(mc, text, new Object[]{rem}, new Class[]{tc}, "method_10852", "append");
         }
@@ -111,7 +114,7 @@ public class Messages {
         }
         Text hov = Text.of(hover);
 
-        Style style = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hov));
+        Style style = Style.EMPTY.withHoverEvent(hoverable(hov));
         Reflection.invokeMethod(mc, msg, new Object[]{style}, "method_10862", "setStyle");
 
         Reflection.invokeMethod(ClientPlayerEntity.class, player, new Object[]{msg, false}, new Class[]{tc, boolean.class}, "method_7353", "sendMessage");
@@ -133,7 +136,7 @@ public class Messages {
         }
         for (Config.Enchantment l : LibrGetter.config.goals) {
             text = Reflection.invokeMethod(mc, text, new Object[]{"\n- " + l + " (" + l.price + ") "}, "method_27693", "append");
-            Style style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget remove \"" + l.id + "\" " + l.lvl)).withColor(Formatting.YELLOW);
+            Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + l.id + "\" " + l.lvl)).withColor(Formatting.YELLOW);
             Object remC = Reflection.invokeMethod(tc, rem, null, "method_27662", "copy");
             Reflection.invokeMethod(mc, remC, new Object[]{style}, "method_10862", "setStyle");
             text = Reflection.invokeMethod(mc, text, new Object[]{remC}, new Class[]{tc}, "method_10852", "append");
@@ -162,6 +165,7 @@ public class Messages {
 
     public static Object bookEntry(Object text, Config.Configurable<?> configurable) {
         String config = configurable.name();
+        String showName = config.startsWith("_") ? "+ " + config.substring(1) : config;
 
         Object name;
         if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.API_COMMAND_V2)) {
@@ -171,8 +175,8 @@ public class Messages {
             name = Reflection.construct(tra, new Object[]{"librgetter.config." + config, new Object[]{}}, String.class, Object[].class);
         }
 
-        Style cStyle = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (Text) name));
-        Object c = Text.of(config);
+        Style cStyle = Style.EMPTY.withHoverEvent(hoverable(name));
+        Object c = Text.of(showName);
         c = Reflection.invokeMethod(tc, c, null, "method_27662", "copy");
         Reflection.invokeMethod(mc, c, new Object[]{cStyle}, "method_10862", "setStyle");
 
@@ -185,8 +189,8 @@ public class Messages {
 
         if (configurable.type() == Boolean.class) {
             boolean value = (boolean) configurable.get();
-            Style tStyle = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget config " + config + " true")).withColor(Formatting.GREEN).withUnderline(value);
-            Style fStyle = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget config " + config + " false")).withColor(Formatting.RED).withUnderline(!value);
+            Style tStyle = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " true")).withColor(Formatting.GREEN).withUnderline(value);
+            Style fStyle = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " false")).withColor(Formatting.RED).withUnderline(!value);
 
             t = Text.of("[true]");
             t = Reflection.invokeMethod(tc, t, null, "method_27662", "copy");
@@ -200,8 +204,8 @@ public class Messages {
 
         } else if (configurable.type() == Integer.class) {
             int value = (int) configurable.get();
-            Style mStyle = configurable.inRange(value - 1) ? Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget config " + config + " " + (value - 1))).withColor(Formatting.RED) : Style.EMPTY.withColor(Formatting.GRAY);
-            Style pStyle = configurable.inRange(value + 1) ? Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/librget config " + config + " " + (value + 1))).withColor(Formatting.GREEN) : Style.EMPTY.withColor(Formatting.GRAY);
+            Style mStyle = configurable.inRange(value - 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value - 1))).withColor(Formatting.RED) : Style.EMPTY.withColor(Formatting.GRAY);
+            Style pStyle = configurable.inRange(value + 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value + 1))).withColor(Formatting.GREEN) : Style.EMPTY.withColor(Formatting.GRAY);
 
             t = Text.of("[-]");
             t = Reflection.invokeMethod(tc, t, null, "method_27662", "copy");
@@ -222,5 +226,27 @@ public class Messages {
         text = Reflection.invokeMethod(mc, text, new Object[]{f}, new Class[]{tc}, "method_10852", "append");
 
         return text;
+    }
+
+    public static ClickEvent runnable(String command) {
+        if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.MORE_ABSTRACTION)) {
+            Class<?> run = Reflection.clazz("net.minecraft.class_2558$class_10609", "net.minecraft.text.ClickEvent$RunCommand");
+            return (ClickEvent) Reflection.construct(run, new Object[]{command}, String.class);
+        } else {
+            Class<?> action = Reflection.clazz("net.minecraft.class_2558$class_2559", "net.minecraft.text.ClickEvent$Action");
+            Object event = Reflection.field(action, null, "field_11750", "RUN_COMMAND");
+            return (ClickEvent) Reflection.construct(ClickEvent.class, new Object[]{event, command}, action, String.class);
+        }
+    }
+
+    public static HoverEvent hoverable(Object text) {
+        if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.MORE_ABSTRACTION)) {
+            Class<?> hover = Reflection.clazz("net.minecraft.class_2568$class_10613", "net.minecraft.text.HoverEvent$ShowText");
+            return (HoverEvent) Reflection.construct(hover, new Object[]{text}, Text.class);
+        } else {
+            Class<?> action = Reflection.clazz("net.minecraft.class_2568$class_5247", "net.minecraft.text.HoverEvent$Action");
+            Object event = Reflection.field(action, null, "field_24342", "SHOW_TEXT");
+            return (HoverEvent) Reflection.construct(HoverEvent.class, new Object[]{event, text}, action, Object.class);
+        }
     }
 }

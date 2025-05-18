@@ -1,15 +1,12 @@
 package com.gxlg.librgetter.utils;
 
-import net.minecraft.SharedConstants;
+import com.gxlg.librgetter.utils.reflection.Minecraft;
 
 public class MultiVersion {
     private static final String version;
 
     static {
-        Class<?> clazzGameVersion = Reflection.clazz("com.mojang.bridge.game.GameVersion", "net.minecraft.class_6489", "net.minecraft.GameVersion");
-        Class<?> clazzConstants = SharedConstants.class;
-        Object gameVersion = Reflection.invokeMethod(clazzConstants, null, null, "method_16673", "getGameVersion");
-        version = (String) Reflection.invokeMethod(clazzGameVersion, gameVersion, null, "method_48019", "getName");
+        version = Minecraft.getVersion();
     }
 
     public static String getVersion() {
@@ -17,7 +14,11 @@ public class MultiVersion {
     }
 
     public static boolean isApiLevel(ApiLevel level) {
-        if (version.equals("1.21.4") || version.equals("1.21.3") || version.equals("1.21.2") || version.equals("1.21.1") || version.equals("1.21")) return true;
+        if (version.equals("1.21.5")) return true;
+        if (level == ApiLevel.MORE_ABSTRACTION) return false;
+
+        if (version.equals("1.21.4") || version.equals("1.21.3") || version.equals("1.21.2") || version.equals("1.21.1") || version.equals("1.21"))
+            return true;
         if (level == ApiLevel.EFFECTS) return false;
 
         if (version.equals("1.20.6") || version.equals("1.20.5")) return true;
@@ -39,11 +40,6 @@ public class MultiVersion {
     }
 
     public enum ApiLevel {
-        BASE,
-        VILLAGER_PACKET,
-        API_COMMAND_V2,
-        TAGS,
-        COMPONENTS,
-        EFFECTS
+        BASE, VILLAGER_PACKET, API_COMMAND_V2, TAGS, COMPONENTS, EFFECTS, MORE_ABSTRACTION
     }
 }

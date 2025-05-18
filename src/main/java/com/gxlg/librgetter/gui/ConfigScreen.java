@@ -1,7 +1,7 @@
 package com.gxlg.librgetter.gui;
 
 import com.gxlg.librgetter.mixin.BookScreenAccessor;
-import com.gxlg.librgetter.utils.ConfigMenu;
+import com.gxlg.librgetter.utils.reflection.ConfigMenu;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
 
 @SuppressWarnings("ReferenceToMixin")

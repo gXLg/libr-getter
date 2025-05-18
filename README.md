@@ -42,11 +42,7 @@ LibrGetter `add` command has an edge case where you can add custom enchantments 
 of a minecraft id. To use this feature, your enchantment has to be put in double quotes like `"enchantmentsolution:sand_veil"`.
 Note, that when adding a custom enchantment to the goals list, the level argument is required too.
 
-Currently, the mod can parse enchantments from following plugins:
-* Enchantment Solution
-
-You can request support for more plugins in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues).
-Please make sure to follow the [<kbd>guide</kbd>](https://gxlg.github.io/multi-mod) to help me.
+You can read more about plugins compatibility [<kbd>further below</kbd>](#Compatibility)
 
 ### Warning
 Adding custom enchantments or levels exceeding the vanilla maximum sends a warning into the chat by default.
@@ -105,17 +101,61 @@ with `/librget start`.
   * Checks if the villager could interfere with the placing process by running over the lecterns position.
   * If the villager is inside a vehicle, the test if positive by default.
 * `/librget config timeout <int [0; 20]>` - Time in seconds to wait for a villager to update its profession before replacing the lectern
-  * If set to 0, this option is disabled
+  * If set to 0, this option is disabled (default)
   * If set to any other number, the mod will hang in a state, where it waits for the villager to accept the librarian profession
     for the specified amount of time, until it reaches the timeout, then it will break and replace the lectern again
+  * When manual mode is enabled, the lectern is to be replaced manually.
+* `/librget config fallback <true/false>` - Fallback option to search for unsupported enchantments (default: false)
+  * Takes all the data given about trades from the villager, convert it to text and search for all enchantment IDs currently in the goals list
+  * It is not guaranteed to make a match, and can cause false positives
+  * May cause lag with a large list of enchantments
+  * Use only as a temporary solution, if the plugin you are playing with is not supported
 
-# View Config
+## Compatibility config
+This list of configs enables/disables compatibility with different client-side mods, possibly modifying the process of finding an enchantment.
+All compatibility configs are set to `false` by default.
+To learn more about what each mod compatibility changes, read further below.
+
+* `/librget config _tradeCycling <true/false>` - Trade Cycling
+
+## View Config
 You can use `/librget config <config>` to print out the currently set value.
 In addition to that you can modify the config file manually. The file is located at `<minecraft folder>/config/librgetter.json`
 
-# Config Menu
+## Config Menu
 LibrGetter provides a keybind to open a book GUI with clickable configs
 and their short description. By default, the keybind is set to the letter <kbd>K</kbd>. 
+
+# Compatibility
+## Client Side Mods
+LibrGetter tries to be compatible with all other mods, by modifying the client as little as possible.
+
+Mods that previously were not compatible and were made explicitly compatible:
+* OffersHUD ([<kbd>Modrinth</kbd>](https://modrinth.com/mod/offershud))
+
+Mods that add/change functionality of LibrGetter:
+### Trade Cycling
+> ([<kbd>Modrinth</kbd>](https://modrinth.com/mod/trade-cycling))
+
+With Trade Cycling installed on the server, instead of replacing the lectern, LibrGetter will push the cycling button, until an enchantment is found.
+Since Trade Cycling requires you to have the Merchant screen open, the process can't be stopped using commands, instead you can close the trading screen to automatically stop.
+
+## Plugins
+In recent update, a system with fallback for dynamic plugin support was developed, which allows me to explicitly add new plugins as quick as possible.
+
+The finding of enchantments goes through following steps:
+1. Goes over every plugin added explicitly in LibrGetter (see below) and searches for plugin specific enchantments.
+2. Tries to find a vanilla enchantment.
+3. (optionally) Takes all the data available on the villager and searches for the enchantment string.
+
+Explicitly added plugins:
+* Enchantment Solution
+
+Plugins, that are known to be compatible without further adjustments:
+* ExcellentEnchants ([<kbd>Modrinth</kbd>](https://modrinth.com/plugin/excellentenchants))
+
+You can request support for more plugins in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues).
+Please make sure to follow the [<kbd>guide</kbd>](https://gxlg.github.io/multi-mod) to help me.
 
 # Localization
 LibrGetter supports localization and currently implements the following languages:
@@ -133,10 +173,10 @@ You may request further languages in the [<kbd>issues</kbd>](https://github.com/
 * Stops when villager accidentally picked another job during the process.
 * Checks if villager was already traded.
 * Stable against multiple lag types.
-* Compatible with [<kbd>OffersHUD</kbd>](https://modrinth.com/mod/offershud).
+* Compatible with .
 * Checks if enchantment can be obtained from a villager and complains if not.
 * Supports enchantments tags up from `1.19.3`.
-* Single mod for all versions from `1.17` up to `1.21.4`.
+* Single mod for all versions from `1.17` up to `1.21.5`.
 
 # About Me
 I am a computer science student in Germany and have a part-time job at a tech company.

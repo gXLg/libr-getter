@@ -1,7 +1,8 @@
-package com.gxlg.librgetter.utils;
+package com.gxlg.librgetter.utils.reflection;
 
 import com.gxlg.librgetter.Config;
 import com.gxlg.librgetter.command.LibrGetCommand;
+import com.gxlg.librgetter.utils.MultiVersion;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -47,7 +48,7 @@ public class Commands {
             Optional<?> opt = (Optional<?>) Reflection.invokeMethod(pred, argument, new Object[]{key}, new Class[]{rkc}, "method_45648", "tryCast");
 
             if (opt.isEmpty()) {
-                Messages.sendError(context, "librgetter.argument");
+                Texts.sendError(context, "librgetter.argument");
                 return false;
             }
 
@@ -59,7 +60,7 @@ public class Commands {
             Class<?> entryClass = Reflection.clazz("net.minecraft.class_6880$class_6883", "net.minecraft.registry.entry.RegistryEntry$Reference");
             if (optrefl.isEmpty()) {
                 if (optrefr.isEmpty()) {
-                    Messages.sendError(context, "librgetter.wrong");
+                    Texts.sendError(context, "librgetter.wrong");
                     return false;
                 }
                 Class<?> refClass = Reflection.clazz("net.minecraft.class_6885$class_6888", "net.minecraft.registry.entry.RegistryEntryList$Named");
@@ -184,25 +185,15 @@ public class Commands {
             base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{l}, new Class[]{ArgumentBuilder.class}, "then");
         }
 
-        base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{
-                literal(ccm, "clear").executes(LibrGetCommand::clear)
-        }, new Class[]{ArgumentBuilder.class}, "then");
+        base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{literal(ccm, "clear").executes(LibrGetCommand::clear)}, new Class[]{ArgumentBuilder.class}, "then");
 
-        base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{
-                literal(ccm, "list").executes(LibrGetCommand::list)
-        }, new Class[]{ArgumentBuilder.class}, "then");
+        base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{literal(ccm, "list").executes(LibrGetCommand::list)}, new Class[]{ArgumentBuilder.class}, "then");
 
-        base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{
-                literal(ccm, "stop").executes(LibrGetCommand::stop)
-        }, new Class[]{ArgumentBuilder.class}, "then");
+        base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{literal(ccm, "stop").executes(LibrGetCommand::stop)}, new Class[]{ArgumentBuilder.class}, "then");
 
-        base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{
-                literal(ccm, "start").executes(LibrGetCommand::start)
-        }, new Class[]{ArgumentBuilder.class}, "then");
+        base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{literal(ccm, "start").executes(LibrGetCommand::start)}, new Class[]{ArgumentBuilder.class}, "then");
 
-        base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{
-                literal(ccm, "auto").executes(runner(LibrGetCommand::autostart))
-        }, new Class[]{ArgumentBuilder.class}, "then");
+        base = Reflection.invokeMethod(ArgumentBuilder.class, base, new Object[]{literal(ccm, "auto").executes(runner(LibrGetCommand::autostart))}, new Class[]{ArgumentBuilder.class}, "then");
 
 
         // automatically create config commands for each simply configurable value in Config

@@ -22,7 +22,7 @@ public class PathFinding {
         }
 
         @Override
-        public int compareTo(@NotNull PathFinding.Tail tail) {
+        public int compareTo(@NotNull Tail tail) {
             return Integer.compare(getFCost(), tail.getFCost());
         }
 

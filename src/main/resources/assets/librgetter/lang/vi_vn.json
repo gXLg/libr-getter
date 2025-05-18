@@ -1,6 +1,6 @@
 {
   "librgetter.config": "'%s' cấu hình: %s",
-  "librgetter.internal": "lỗi nội bộ: %s == null, hãy gửi lại lỗi này để chúng tôi sửa",
+  "librgetter.internal": "Lỗi nội bộ: %s == null, hãy gửi lại lỗi này để chúng tôi sửa",
   "librgetter.find_lectern": "Không thể tìm thấy bục để sách ở gần bạn!",
   "librgetter.find_librarian": "Không thể tìm thấy thủ thư ở gần bạn!",
   "librgetter.level": "Cấp độ cho '%s' vượt quá tối đa. Cấp độ tối đa: %s",
@@ -26,7 +26,7 @@
   "librgetter.start": "LibrGetter bắt đầu hoạt động",
   "librgetter.price": "'%s' giá tối đa đã chuyển thành %s",
   "libgetter.add": "Đã thêm '%s' với giá tối đa %s",
-  "libgetter.add_custom": "đã thêm phù phép đặc biệt '%s' với giá tối đa %s",
+  "libgetter.add_custom": "Đã thêm phù phép đặc biệt '%s' với giá tối đa %s",
   "librgetter.not": "'%s' không ở trong mục tiêu",
   "librgetter.removed": "Đã xóa '%s'",
   "librgetter.cleared": "Đã xóa danh sách mục tiêu",
@@ -35,11 +35,10 @@
   "librgetter.update": "Giao dịch của thủ thư không thể bị thay đổi!",
   "librgetter.version": "Phiên bản mới của LibrGetter đã được phát hành:\n%s",
   "librgetter.list": "Danh sách mục tiêu:",
-  "librgetter.remove": "(Xóa)",
+  "librgetter.remove": "(xóa)",
   "librgetter.argument": "Loại giá trị này không được hỗ trợ!",
   "librgetter.wrong": "Đã cung cấp sai loại phù phép!",
-  "librgetter.unknown": "chưa biết loại dữ liệu cho plugin '%s'",
-  "librgetter.type": "chưa biết loại dữ liệu của phù phép",
+  "librgetter.unknown": "Chưa biết loại dữ liệu cho plugin '%s'",
   "librgetter.unsafe": "Dân làng có thể can thiệp vào việc đặt bục để sách, hãy đặt khối phía trên bục để ngăn cách",
 
   "librgetter.keys.category": "LibrGetter",
@@ -50,12 +49,15 @@
   "librgetter.config.autoTool": "Tự động chọn dùng cụ để đập bục để sách một cách hiệu quả",
   "librgetter.config.actionBar": "Gửi nhật kí giao dịch đến thanh hành động thay vì mục trò chuyện",
   "librgetter.config.lock": "Tự động khóa giao dịch khi tìm thấy",
-  "librgetter.config.removeGoal": "tự động xóa loại phù phép trong danh sách mục tiêu khi tìm thấy",
+  "librgetter.config.removeGoal": "Tự động xóa loại phù phép trong danh sách mục tiêu khi tìm thấy",
   "librgetter.config.checkUpdate": "Kiểm tra bản cập nhật và thông báo nó (nếu có) khi vào thế giới",
   "librgetter.config.warning": "Gửi cảnh báo cho định dạng của phù phép đặc biệt",
   "librgetter.config.offhand": "Đặt bục để sách vào tay phụ để đặt bục giảng nhanh hơn",
   "librgetter.config.manual": "Chế độ đặt và đập bục giảng thủ công",
   "librgetter.config.waitLose": "Đợi thủ thư từ bỏ nghề nghiệp; có thể chạy chậm hơn, nhưng sẽ không bị lỗi trong khi lag",
   "librgetter.config.safeChecker": "Kiểm tra dân làng có thể can thiệp vào việc đặt bục để sách hay không",
-  "librgetter.config.timeout": "Thời gian (giây) để đợi dân làng cập nhật nghề nghiệp trước khi thay bục đặt sách; đặt thành 0 để tắt"
+  "librgetter.config.timeout": "Thời gian (giây) để đợi dân làng cập nhật nghề nghiệp trước khi thay bục đặt sách; đặt thành 0 để tắt",
+  "librgetter.config.fallback": "Lựa chọn dự phòng để tìm kiếm phù phép không được hỗ trợ; không chắc chắn đúng; danh sách phù phép lớn có thể gây lag",
+
+  "librgetter.config._tradeCycling": "Trade Cycling"
 }

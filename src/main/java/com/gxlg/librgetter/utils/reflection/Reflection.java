@@ -1,4 +1,4 @@
-package com.gxlg.librgetter.utils;
+package com.gxlg.librgetter.utils.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -64,6 +64,19 @@ public class Reflection {
             try {
                 Field f = clazz.getField(field);
                 return f.get(instance);
+            } catch (NoSuchFieldException | IllegalAccessException ignored) {
+            }
+        }
+        throw new RuntimeException("Field not found from " + Arrays.toString(fields));
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    static void setField(Class<?> clazz, Object instance, Object value, String... fields) {
+        for (String field : fields) {
+            try {
+                Field f = clazz.getField(field);
+                f.set(instance, value);
+                return;
             } catch (NoSuchFieldException | IllegalAccessException ignored) {
             }
         }

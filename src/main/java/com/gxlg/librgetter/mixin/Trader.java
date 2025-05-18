@@ -1,7 +1,8 @@
 package com.gxlg.librgetter.mixin;
 
 import com.gxlg.librgetter.Worker;
-import com.gxlg.librgetter.utils.Minecraft;
+import com.gxlg.librgetter.utils.reflection.Minecraft;
+import com.gxlg.librgetter.utils.reflection.Support;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.c2s.play.CloseHandledScreenC2SPacket;
@@ -29,7 +30,7 @@ public class Trader {
 
     @Inject(at = @At("HEAD"), method = "onOpenScreen", cancellable = true)
     public void onOpenScreen(OpenScreenS2CPacket packet, CallbackInfo callback) {
-        if (Worker.getState() == Worker.State.GET_TRADES && packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT) {
+        if (Worker.getState() == Worker.State.GET_TRADES && packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT && !Support.useTradeCycling()) {
             callback.cancel();
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayNetworkHandler handler = client.getNetworkHandler();

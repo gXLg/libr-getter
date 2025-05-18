@@ -1,6 +1,7 @@
 package com.gxlg.librgetter.utils;
 
 import com.gxlg.librgetter.utils.plugins.Bukkit;
+import com.gxlg.librgetter.utils.reflection.Nbt;
 import org.apache.commons.lang3.tuple.Triple;
 
 public class Plugins {

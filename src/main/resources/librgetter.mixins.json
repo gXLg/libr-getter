@@ -3,10 +3,10 @@
   "package": "com.gxlg.librgetter.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "AbstractBlockAccessor",
     "BookScreenAccessor",
     "Manager",
-    "Trader",
-    "AbstractBlockAccessor"
+    "Trader"
   ],
   "injectors": {
     "defaultRequire": 1
