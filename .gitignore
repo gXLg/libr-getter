@@ -7,6 +7,7 @@ run
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
+.idea/gradle.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/uiDesigner.xml
@@ -47,3 +48,6 @@ bin/
 changelog.txt
 
 tmp/
+/.idea
+.idea/gradle.xml
+.idea/misc.xml
