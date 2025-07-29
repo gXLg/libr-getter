@@ -38,11 +38,11 @@ public class ConfigScreen extends BookScreen {
         super.goToNextPage();
     }
 
-    @Override
-    protected void closeScreen() { // used only with RUN_COMMAND
-        // update screen
-        ((BookScreenAccessor) this).setCachedPageIndex(-1);
-        ConfigMenu.updatePage(currentPage);
-        // by not calling super we avoid the book actually closing
-    }
+    // @Override
+    // protected void closeScreen() { // used only with RUN_COMMAND
+    //     // update screen
+    //     ((BookScreenAccessor) this).setCachedPageIndex(-1);
+    //     ConfigMenu.updatePage(currentPage);
+    //     // by not calling super we avoid the book actually closing
+    // }
 }

@@ -374,6 +374,6 @@ public class Minecraft {
         Class<?> clazzGameVersion = Reflection.clazz("com.mojang.bridge.game.GameVersion", "net.minecraft.class_6489", "net.minecraft.GameVersion");
         Class<?> clazzConstants = SharedConstants.class;
         Object gameVersion = Reflection.invokeMethod(clazzConstants, null, null, "method_16673", "getGameVersion");
-        return (String) Reflection.invokeMethod(clazzGameVersion, gameVersion, null, "method_48019", "getName");
+        return (String) Reflection.invokeMethod(clazzGameVersion, gameVersion, null, "method_48019", "getName", "comp_4025", "name");
     }
 }
