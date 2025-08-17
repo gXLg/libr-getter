@@ -1,7 +1,9 @@
 package com.gxlg.librgetter.utils.reflection;
 
 import com.gxlg.librgetter.LibrGetter;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.network.packet.CustomPayload;
 
 public class Support {
     private static final boolean tradeCycling;
@@ -12,9 +14,8 @@ public class Support {
     }
 
     public static void sendCycleTradesPacket() {
-        Class<?> c = Reflection.clazz("de.maxhenkel.tradecycling.FabricTradeCyclingClientMod");
-        Object i = Reflection.invokeMethod(c, null, null, "instance");
-        Reflection.invokeMethod(c, i, null, "sendCycleTradesPacket");
+        Class<?> c = Reflection.clazz("de.maxhenkel.tradecycling.net.CycleTradesPacket");
+        ClientPlayNetworking.send((CustomPayload) Reflection.construct(c, null));
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
