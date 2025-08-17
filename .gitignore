@@ -47,3 +47,7 @@ bin/
 changelog.txt
 
 tmp/
+.idea/misc.xml
+.idea/runConfigurations/Minecraft_Client.xml
+.idea/runConfigurations/Minecraft_Server.xml
+.idea/gradle.xml
