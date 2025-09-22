@@ -343,7 +343,7 @@ public class Minecraft {
         }
     }
 
-    public static boolean isVillagerLost(VillagerEntity villager) {
+    public static boolean isVillagerUnemployed(VillagerEntity villager) {
         VillagerData villagerData = villager.getVillagerData();
         Class<?> vpc = Reflection.clazz("net.minecraft.class_3852", "net.minecraft.village.VillagerProfession");
         Object lib = Reflection.field(vpc, null, "field_17051", "NONE");
@@ -374,6 +374,10 @@ public class Minecraft {
         Class<?> clazzGameVersion = Reflection.clazz("com.mojang.bridge.game.GameVersion", "net.minecraft.class_6489", "net.minecraft.GameVersion");
         Class<?> clazzConstants = SharedConstants.class;
         Object gameVersion = Reflection.invokeMethod(clazzConstants, null, null, "method_16673", "getGameVersion");
-        return (String) Reflection.invokeMethod(clazzGameVersion, gameVersion, null, "method_48019", "getName");
+        try {
+            return (String) Reflection.invokeMethod(clazzGameVersion, gameVersion, null, "method_48019", "getName");
+        } catch (Exception ignored) {
+            return (String) Reflection.invokeMethod(clazzGameVersion, gameVersion, null, "comp_4025", "name");
+        }
     }
 }

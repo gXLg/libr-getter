@@ -35,6 +35,9 @@ public class Config {
     public boolean safeChecker = true;
     public boolean fallback = false;
 
+    public boolean look = true;
+    public boolean rotation = false;
+
     // compatibility configs
     public boolean _tradeCycling = false;
 

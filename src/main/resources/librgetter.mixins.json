@@ -5,6 +5,7 @@
   "client": [
     "AbstractBlockAccessor",
     "BookScreenAccessor",
+    "BookScreenMixin",
     "Manager",
     "Trader"
   ],

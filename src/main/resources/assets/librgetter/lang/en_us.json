@@ -59,6 +59,8 @@
   "librgetter.config.safeChecker": "Check if the villager can interfere with the placing process",
   "librgetter.config.timeout": "Time in seconds to wait for a villager to update its profession before replacing the lectern; set to 0 to disable",
   "librgetter.config.fallback": "Fallback option to search for unsupported enchantments; not guaranteed to make a match; may cause lag with a large list of enchantments",
+  "librgetter.config.rotation": "Make head rotation more natural; slows down the process",
+  "librgetter.config.look": "Rotate the head before placing the lectern and talking to the librarian",
 
   "librgetter.config._tradeCycling": "Trade Cycling"
 }

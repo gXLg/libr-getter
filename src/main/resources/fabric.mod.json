@@ -3,14 +3,15 @@
   "id": "librgetter",
   "version": "${version}",
   "name": "LibrGetter",
-  "description": "A highly configurable fabric mod to automatically cycle a librarian villager for the desired enchantment by replacing his lectern.",
+  "description": "Over-engineered librarian trade finder",
   "authors": [
     "gXLg"
   ],
   "contact": {
     "homepage": "https://modrinth.com/mod/libr-getter",
     "sources": "https://github.com/gXLg/libr-getter",
-    "issues": "https://github.com/gXLg/libr-getter/issues"
+    "issues": "https://github.com/gXLg/libr-getter/issues",
+    "discord": "https://discord.gg/aYBrWe5Jtt"
   },
   "license": "MIT",
   "icon": "assets/librgetter/icon.png",
@@ -26,6 +27,6 @@
   "depends": {
     "fabric": ">=0.31.0",
     "fabric-key-binding-api-v1": "*",
-    "minecraft": ">=1.17 <=1.21.5"
+    "minecraft": ">=1.17 <=1.21.8"
   }
 }

@@ -5,6 +5,7 @@ import com.gxlg.librgetter.utils.reflection.Minecraft;
 import com.gxlg.librgetter.utils.reflection.Support;
 import com.gxlg.librgetter.utils.reflection.Texts;
 import com.mojang.datafixers.util.Either;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -20,8 +21,6 @@ import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.packet.c2s.play.CloseHandledScreenC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.Formatting;
@@ -29,12 +28,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.TradeOfferList;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class Worker {
     @Nullable
@@ -54,39 +55,94 @@ public class Worker {
     private static LockType lockType;
     private static int timeout = 0;
 
+    // head rotation
+    private static Vec3d goalPos = null;
+    private static State nextState = null;
+    private static final Random rng = new Random();
+
+    static {
+        ClientPlayConnectionEvents.JOIN.register((h, s, c) -> {
+            state = State.STANDBY;
+            block = null;
+            villager = null;
+        });
+
+        ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> {
+            state = State.STANDBY;
+            block = null;
+            villager = null;
+        });
+    }
+
     public static State getState() {
         return state;
+    }
+
+    private static void error(String msg, String... args) {
+        Texts.sendError(source, msg, (Object[]) args);
+        state = State.STANDBY;
     }
 
     public static void tick() {
         if (state == State.STANDBY) return;
         if (block == null || villager == null) {
-            Texts.sendError(source, "librgetter.specify");
-            state = State.STANDBY;
+            error("librgetter.specify");
             return;
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            Texts.sendError(source, "librgetter.internal", "player");
-            state = State.STANDBY;
+            error("librgetter.internal", "player");
             return;
         }
         if (!block.isWithinDistance(player.getPos(), 3.4f) || villager.distanceTo(player) > 3.4f) {
-            Texts.sendError(source, "librgetter.far");
-            state = State.STANDBY;
+            error("librgetter.far");
             return;
         }
         if (state == State.MANUAL_WAIT_FINISH) return;
+
+        if (state == State.ROTATION) {
+            double d = goalPos.getX();
+            double e = goalPos.getY();
+            double f = goalPos.getZ();
+            double g = Math.sqrt(d * d + f * f);
+            float goalPitch = MathHelper.wrapDegrees((float) (-(MathHelper.atan2(e, g) * 180.0D / Math.PI)));
+            float goalYaw = MathHelper.wrapDegrees((float) (MathHelper.atan2(f, d) * 180.0D / Math.PI) - 90.0F);
+
+            float currentYaw = player.getYaw();
+            float currentPitch = player.getPitch();
+
+            float yawDelta = (goalYaw - currentYaw) % 360.0F;
+            if (yawDelta < -180.0F) yawDelta += 360.0F;
+            if (yawDelta >= 180.0F) yawDelta -= 360.0F;
+
+            float pitchDelta = goalPitch - currentPitch;
+
+            // random lerping
+            float newPitch = currentPitch + 0.35F * pitchDelta + (rng.nextFloat() - 0.5F) * 0.2F;
+            float newYaw =  currentYaw + 0.35F * yawDelta + (rng.nextFloat() - 0.5F) * 0.2F;
+
+            player.setPitch(newPitch);
+            player.setYaw(newYaw);
+            player.setHeadYaw(player.getYaw());
+            player.lastPitch = player.getPitch();
+            player.lastYaw = player.getYaw();
+            player.lastHeadYaw = player.headYaw;
+            player.bodyYaw = player.headYaw;
+            player.lastBodyYaw = player.bodyYaw;
+
+            if (Math.abs(pitchDelta) < 0.8F && Math.abs(yawDelta) < 0.8F) {
+                state = nextState;
+            } else return;
+        }
 
         if (state == State.SELECT_AXE) {
             counter++;
 
             PlayerInventory inventory = player.getInventory();
             if (inventory == null) {
-                Texts.sendError(source, "librgetter.internal", "inventory");
-                state = State.STANDBY;
+                error("librgetter.internal", "inventory" );
                 return;
             }
             int slot = -1;
@@ -119,14 +175,12 @@ public class Worker {
             }
             ClientPlayerInteractionManager manager = client.interactionManager;
             if (manager == null) {
-                Texts.sendError(source, "librgetter.internal", "manager");
-                state = State.STANDBY;
+                error("librgetter.internal", "manager0");
                 return;
             }
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
             if (handler == null) {
-                Texts.sendError(source, "librgetter.internal", "handler");
-                state = State.STANDBY;
+                error("librgetter.internal", "handler0");
                 return;
             }
             if (slot != -1) {
@@ -140,103 +194,104 @@ public class Worker {
                 UpdateSelectedSlotC2SPacket packetSelect = new UpdateSelectedSlotC2SPacket(slot);
                 Minecraft.getConnection(handler).send(packetSelect);
             }
-            state = State.BREAK_LECTERN;
 
-        } else if (state == State.BREAK_LECTERN) {
+            prepareRotation(player, new Vec3d(block.getX() + 0.5, block.getY(), block.getZ() + 0.5), State.BREAK_LECTERN);
+        }
 
+        if (state == State.BREAK_LECTERN) {
             ClientWorld world = client.world;
             if (world == null) {
-                Texts.sendError(source, "librgetter.internal", "world");
-                state = State.STANDBY;
+                error("librgetter.internal", "world");
                 return;
             }
+
             BlockState targetBlock = world.getBlockState(block);
-            if (targetBlock.isAir()) {
-                state = LibrGetter.config.waitLose ? State.WAIT_VILLAGER_LOSE_PROFESSION : State.SELECT_LECTERN_AND_PLACE;
+            if (!targetBlock.isAir()) {
+                if (LibrGetter.config.manual) return;
+
+                ClientPlayerInteractionManager manager = client.interactionManager;
+                if (manager == null) {
+                    error("librgetter.internal", "manager1");
+                    return;
+                }
+                manager.updateBlockBreakingProgress(block, Direction.UP);
                 return;
             }
 
-            if (LibrGetter.config.manual) return;
+            state = LibrGetter.config.waitLose ? State.WAIT_VILLAGER_LOSE_PROFESSION : State.SELECT_LECTERN_AND_PLACE;
+        }
 
-            ClientPlayerInteractionManager manager = client.interactionManager;
-            if (manager == null) {
-                Texts.sendError(source, "librgetter.internal", "manager");
-                state = State.STANDBY;
-                return;
-            }
-            manager.updateBlockBreakingProgress(block, Direction.UP);
-
-        } else if (state == State.WAIT_VILLAGER_LOSE_PROFESSION) {
+        if (state == State.WAIT_VILLAGER_LOSE_PROFESSION) {
             // If the villager doesn't update his profession because of lag,
             // we wait until the profession is lost based on the config.
-            if (!Minecraft.isVillagerLost(villager)) return;
+            if (!Minecraft.isVillagerUnemployed(villager)) return;
             state = State.SELECT_LECTERN_AND_PLACE;
+        }
 
-        } else if (state == State.SELECT_LECTERN_AND_PLACE) {
+        if (state == State.SELECT_LECTERN_AND_PLACE) {
             ClientWorld world = Minecraft.getWorld(player);
-            if (world.getBlockState(block).isOf(Blocks.LECTERN)) {
-                state = State.WAIT_VILLAGER_ACCEPT_PROFESSION;
-                return;
-            }
-            if (LibrGetter.config.manual) return;
+            if (!world.getBlockState(block).isOf(Blocks.LECTERN)) {
+                if (LibrGetter.config.manual) return;
 
-            // select
-            PlayerInventory inventory = player.getInventory();
-            if (inventory == null) {
-                Texts.sendError(source, "librgetter.internal", "inventory");
-                state = State.STANDBY;
-                return;
-            }
-
-            int slot;
-            boolean mainhand = true;
-            if (ItemStack.areItemsEqual(inventory.getStack(PlayerInventory.OFF_HAND_SLOT), Items.LECTERN.getDefaultStack())) {
-                slot = PlayerInventory.OFF_HAND_SLOT;
-            } else {
-                slot = inventory.getSlotWithStack(Items.LECTERN.getDefaultStack());
-            }
-            if (slot == -1) return;
-
-            ClientPlayerInteractionManager manager = client.interactionManager;
-            if (manager == null) {
-                Texts.sendError(source, "librgetter.internal", "manager");
-                state = State.STANDBY;
-                return;
-            }
-            ClientPlayNetworkHandler handler = client.getNetworkHandler();
-            if (handler == null) {
-                Texts.sendError(source, "librgetter.internal", "handler");
-                state = State.STANDBY;
-                return;
-            }
-            if (slot != PlayerInventory.OFF_HAND_SLOT) {
-                if (LibrGetter.config.offhand) {
-                    if (PlayerInventory.isValidHotbarIndex(slot)) slot += 36;
-                    manager.clickSlot(player.currentScreenHandler.syncId, slot, PlayerInventory.OFF_HAND_SLOT, SlotActionType.SWAP, player);
-                    mainhand = false;
-                } else {
-                    if (!PlayerInventory.isValidHotbarIndex(slot)) {
-                        int syncId = player.playerScreenHandler.syncId;
-                        int swap = inventory.getSwappableHotbarSlot();
-                        manager.clickSlot(syncId, slot, swap, SlotActionType.SWAP, player);
-                        slot = swap;
-                    }
-                    Minecraft.setSelectedSlot(inventory, slot);
-                    UpdateSelectedSlotC2SPacket packetSelect = new UpdateSelectedSlotC2SPacket(slot);
-                    Minecraft.getConnection(handler).send(packetSelect);
+                // select
+                PlayerInventory inventory = player.getInventory();
+                if (inventory == null) {
+                    error("librgetter.internal", "inventory");
+                    return;
                 }
-            } else {
-                mainhand = false;
+
+                int slot;
+                boolean mainhand = true;
+                if (ItemStack.areItemsEqual(inventory.getStack(PlayerInventory.OFF_HAND_SLOT), Items.LECTERN.getDefaultStack())) {
+                    slot = PlayerInventory.OFF_HAND_SLOT;
+                } else {
+                    slot = inventory.getSlotWithStack(Items.LECTERN.getDefaultStack());
+                }
+                if (slot == -1) return;
+
+                ClientPlayerInteractionManager manager = client.interactionManager;
+                if (manager == null) {
+                    error("librgetter.internal", "manager2");
+                    return;
+                }
+                ClientPlayNetworkHandler handler = client.getNetworkHandler();
+                if (handler == null) {
+                    error("librgetter.internal", "handler1");
+                    return;
+                }
+                if (slot != PlayerInventory.OFF_HAND_SLOT) {
+                    if (LibrGetter.config.offhand) {
+                        if (PlayerInventory.isValidHotbarIndex(slot)) slot += 36;
+                        manager.clickSlot(player.currentScreenHandler.syncId, slot, PlayerInventory.OFF_HAND_SLOT, SlotActionType.SWAP, player);
+                        mainhand = false;
+                    } else {
+                        if (!PlayerInventory.isValidHotbarIndex(slot)) {
+                            int syncId = player.playerScreenHandler.syncId;
+                            int swap = inventory.getSwappableHotbarSlot();
+                            manager.clickSlot(syncId, slot, swap, SlotActionType.SWAP, player);
+                            slot = swap;
+                        }
+                        Minecraft.setSelectedSlot(inventory, slot);
+                        UpdateSelectedSlotC2SPacket packetSelect = new UpdateSelectedSlotC2SPacket(slot);
+                        Minecraft.getConnection(handler).send(packetSelect);
+                    }
+                } else {
+                    mainhand = false;
+                }
+
+                // place
+                Vec3d lowBlockPos = new Vec3d(block.getX(), block.getY() - 1, block.getZ());
+                BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, block.down(), false);
+                Minecraft.interactBlock(manager, player, lowBlock, mainhand);
+
+                prepareRotation(player, EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(villager), State.WAIT_VILLAGER_ACCEPT_PROFESSION);
+                return;
             }
+            state = State.WAIT_VILLAGER_ACCEPT_PROFESSION;
+        }
 
-            // place
-            Vec3d lowBlockPos = new Vec3d(block.getX(), block.getY() - 1, block.getZ());
-            player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lowBlockPos.add(0.5, 1, 0.5));
-            BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, block.down(), false);
-            Minecraft.interactBlock(manager, player, lowBlock, mainhand);
-
-        } else if (state == State.WAIT_VILLAGER_ACCEPT_PROFESSION) {
-            if (Minecraft.isVillagerLost(villager)) {
+        if (state == State.WAIT_VILLAGER_ACCEPT_PROFESSION) {
+            if (Minecraft.isVillagerUnemployed(villager)) {
                 if (LibrGetter.config.timeout != 0) {
                     timeout++;
                     if (timeout >= LibrGetter.config.timeout * 20) {
@@ -246,39 +301,39 @@ public class Worker {
                 }
                 return;
             }
+            if (!Minecraft.isVillagerLibrarian(villager)) {
+                error("librgetter.pick");
+                return;
+            }
+
             timeout = 0;
             trades = null;
             state = State.GET_TRADES;
+        }
 
-        } else if (state == State.GET_TRADES) {
+        if (state == State.GET_TRADES) {
             // wait until the villager accepts profession and click him as long as trades == null
-            if (trades != null) {
-                state = State.PARSE_TRADES;
+            if (trades == null) {
+                if (LibrGetter.config.manual) return;
+
+                ClientPlayNetworkHandler handler = client.getNetworkHandler();
+                if (handler == null) {
+                    error("librgetter.internal", "handler2");
+                    return;
+                }
+
+                ClientPlayerInteractionManager manager = client.interactionManager;
+                if (manager == null) {
+                    error("librgetter.internal", "manager3");
+                    return;
+                }
+                manager.interactEntity(player, villager, Hand.MAIN_HAND);
                 return;
             }
+            state = State.PARSE_TRADES;
+        }
 
-            if (!Minecraft.isVillagerLibrarian(villager)) {
-                Texts.sendError(source, "librgetter.pick");
-                state = State.STANDBY;
-                return;
-            }
-
-            ClientPlayNetworkHandler handler = client.getNetworkHandler();
-            if (handler == null) {
-                Texts.sendError(source, "librgetter.internal", "handler");
-                state = State.STANDBY;
-                return;
-            }
-
-            ClientPlayerInteractionManager manager = client.interactionManager;
-            if (manager == null) {
-                Texts.sendError(source, "librgetter.internal", "manager");
-                state = State.STANDBY;
-                return;
-            }
-            manager.interactEntity(player, villager, Hand.MAIN_HAND);
-
-        } else if (state == State.PARSE_TRADES) {
+        if (state == State.PARSE_TRADES) {
             // parsing the trades
             getEnchant();
 
@@ -287,6 +342,14 @@ public class Worker {
                 for (Config.Enchantment l : LibrGetter.config.goals) {
                     if (l.meets(enchant)) {
                         Texts.sendFound(source, enchant, counter);
+                        if (LibrGetter.config.notify) {
+                            if (client.world == null) {
+                                Texts.sendError(source, "librgetter.internal", "world");
+                            } else {
+                                Minecraft.playSound(client.world, player);
+                            }
+                        }
+
                         if (LibrGetter.config.manual) {
                             state = State.MANUAL_WAIT_FINISH;
                             return;
@@ -295,31 +358,27 @@ public class Worker {
                         if (LibrGetter.config.lock) {
                             ClientPlayNetworkHandler handler = client.getNetworkHandler();
                             if (handler == null) {
-                                Texts.sendError(source, "librgetter.internal", "handler");
-                                state = State.STANDBY;
+                                error("librgetter.internal", "handler3");
                                 return;
                             }
                             lockType = getLockType(player);
                             state = State.LOCK_TRADES;
                             trades = null;
 
-                            if (Support.useTradeCycling()) {
-                                CloseHandledScreenC2SPacket packetClose = new CloseHandledScreenC2SPacket(player.currentScreenHandler.syncId);
-                                Minecraft.getConnection(handler).send(packetClose);
+                            if (!Support.useTradeCycling()) {
+                                // TradeCycling process keeps the screen open
+                                ClientPlayerInteractionManager manager = client.interactionManager;
+                                if (manager == null) {
+                                    error("librgetter.internal", "manager4");
+                                    return;
+                                }
+                                manager.interactEntity(player, villager, Hand.MAIN_HAND);
                             }
 
-                            PlayerInteractEntityC2SPacket packet = Minecraft.interactPacket(villager);
-                            Minecraft.getConnection(handler).send(packet);
                         } else {
                             state = State.STANDBY;
                         }
-                        if (LibrGetter.config.notify) {
-                            if (client.world == null) {
-                                Texts.sendError(source, "librgetter.internal", "world");
-                            } else {
-                                Minecraft.playSound(client.world, player);
-                            }
-                        }
+
                         if (LibrGetter.config.removeGoal) remove(enchant.id, enchant.lvl);
                         break;
                     }
@@ -332,20 +391,19 @@ public class Worker {
                     state = State.TRADECYCLING_CLICK;
                 }
             }
+        }
 
-        } else if (state == State.LOCK_TRADES) {
+        if (state == State.LOCK_TRADES) {
             if (trades == null) return;
             if (enchant == null) return;
             if (lockType == LockType.CANNOT) {
-                Texts.sendError(source, "librgetter.lock");
-                state = State.STANDBY;
+                error("librgetter.lock");
                 return;
             }
 
             ClientPlayerInteractionManager manager = client.interactionManager;
             if (manager == null) {
-                Texts.sendError(source, "librgetter.internal", "manager");
-                state = State.STANDBY;
+                error("librgetter.internal", "manager5");
                 return;
             }
 
@@ -379,8 +437,10 @@ public class Worker {
             }
             manager.clickSlot(player.currentScreenHandler.syncId, 2, 0, SlotActionType.PICKUP, player);
             state = State.STANDBY;
+            return;
+        }
 
-        } else if (state == State.TRADECYCLING_CLICK) {
+        if (state == State.TRADECYCLING_CLICK) {
             // if the TradeCycling mod is present, send the cycle packet
             trades = null;
             Screen s = client.currentScreen;
@@ -456,6 +516,25 @@ public class Worker {
 
         } else {
             enchant = null;
+        }
+    }
+
+    private static void prepareRotation(ClientPlayerEntity player, Vec3d target, State skip) {
+        if (LibrGetter.config.look && !LibrGetter.config.manual) {
+            if (LibrGetter.config.rotation) {
+                Vec3d vec3d = EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(player);
+                double d = target.getX() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.x;
+                double e = target.getY() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.y;
+                double f = target.getZ() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.z;
+                goalPos = new Vec3d(d, e, f);
+                state = State.ROTATION;
+                nextState = skip;
+            } else {
+                player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target);
+                state = skip;
+            }
+        } else {
+            state = skip;
         }
     }
 
@@ -596,8 +675,9 @@ public class Worker {
     }
 
     public enum State {
-        STANDBY, SELECT_AXE, BREAK_LECTERN, SELECT_LECTERN_AND_PLACE, WAIT_VILLAGER_LOSE_PROFESSION, WAIT_VILLAGER_ACCEPT_PROFESSION, GET_TRADES, PARSE_TRADES, LOCK_TRADES, MANUAL_WAIT_FINISH,
+        STANDBY, SELECT_AXE, BREAK_LECTERN, WAIT_VILLAGER_LOSE_PROFESSION, SELECT_LECTERN_AND_PLACE, WAIT_VILLAGER_ACCEPT_PROFESSION, GET_TRADES, PARSE_TRADES, LOCK_TRADES, MANUAL_WAIT_FINISH,
 
+        ROTATION,
         TRADECYCLING_CLICK,
     }
 

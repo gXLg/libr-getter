@@ -26,6 +26,7 @@ public class LibrGetter implements ClientModInitializer {
             throw new RuntimeException("This version is not supported by LibrGetter!");
         }
         LOGGER.info("Hello World from LibrGetter! Running on {}", MultiVersion.getVersion());
+        LOGGER.info("Supported MultiVersion APIs: {}", MultiVersion.getAPIList());
 
         // initialize configuration
         config = Config.init();

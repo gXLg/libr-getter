@@ -59,6 +59,8 @@
   "librgetter.config.safeChecker": "Prüft, ob der Dorfbewohner den Platzierungsprozess verhindern könnte",
   "librgetter.config.timeout": "Zeit in Sekunden, die gewartet wird, bis ein Dorfbewohner seinen Beruf aktualisiert, bevor das Lesepult ersetzt wird; auf 0 setzen, um zu deaktivieren",
   "librgetter.config.fallback": "Rückfall Option, um für nicht unterstützte Verzauberungen zu suchen; garantiert nicht das Finden; kann bei großen Suchlisten Lag verursachen",
+  "librgetter.config.rotation": "Macht Kopfbewegung natürlicher; verlangsamt den Prozess",
+  "librgetter.config.look": "Dreht den Kopf, bevor der Lesepult platziert wird oder mit dem Bibliothekar gesprochen wird",
 
   "librgetter.config._tradeCycling": "Trade Cycling"
 }

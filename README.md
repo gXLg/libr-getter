@@ -1,20 +1,18 @@
 # LibrGetter
-<img width="100" src="https://repository-images.githubusercontent.com/494582079/ff4c06f7-2c03-4f56-bf4d-6ec8d95e0345" alt="logo"/>
+> <img width="100" src="https://repository-images.githubusercontent.com/494582079/ff4c06f7-2c03-4f56-bf4d-6ec8d95e0345" alt="logo"/><br>
+> Over-engineered librarian trade finder for fabric.
 
-A fabric mod which allows you to bruteforce
-a librarian villager for the desired enchantment.
+A highly configurable fabric mod to automatically cycle a librarian villager for the desired enchantment by replacing his lectern.
 
 [![Modrinth](https://img.shields.io/badge/dynamic/json?labelColor=black&color=grey&label=&suffix=%20downloads&query=downloads&url=https://api.modrinth.com/v2/project/6Ts2vJ13&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAJPUExURQAAABvZahWnUha1WAYzGQlHIxvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZav///9ScwmYAAADDdFJOUwAAAAAAAA8zW3uOYwIBK3rB6Pn+ml18KiGL5HEDquOIH07R/UzKz2zu+uLHIibtafWkVCMNBRqg7/RQuT8EQbvT+5ETDBSU/NAgCSdZlcQKii7mtxJY5fF/7D1SRkB+EcWh4UilOOtPMdTCR1PqN969vmGDCw7G4DSSsAcGHrSPr3bds5CEwDKoXumcZdwcG4KmjayX32A79pjOqRjIFoXynVYVgPi6qxDnL78p2obVJFquNbGZCPdyvHPZ1yhuh8s+iRzcsrEAAAABYktHRMQUDBvhAAAAB3RJTUUH5wQXDwgZWDUtiQAAAqRJREFUOMttU/k7lFEU/k4L4hsxtNAnhRgiJZOiSfbI2oJpmRFCi2kV0aaNVLTIEpVISmnf97r/WO+534yZnqfzw73vOe+559xz7rmKIoVYvLx95vj6qUSqVBW3sGrwnxsQaAwSwcDz5i9g0wxPfmFIqJCyiEgLE4vDl7iD8PGlETotIqOQahlAdJTLA5sWY5JsbNzysHiihEBWViRqRDOlgyFmJVtMq5JWJ5vhvyZlLevrEmUILKl8PihtvYWcYt6QLmNwFjjEb4SSkZnlZLO5yJzcPBg35bODwZfPZxYwWbC5sKjYzwBUkssxSg1wKNsCtHUb89vTy3GwopBxDmcJ9YdDJYB1B9t2WmUtcbtkqt18Mxsp9irsezS2VEu+uka/mqUWSrFd2VsnhLEetoZ9TFv3HwCexdUdjBWi0aH4YTuEvtoPM3/EO1nnuTpEjD2qHIM54DhR0wmA5hZySzIntyknsbZyi8IB0tp07tRpBDKfgeWsdDjHDlFGRIjnl3O0t573gcMFUBeVS1gvlxB1dOZxv0pIu9IF01UDZRdjr1SuZQhxvbvnRrmsMePmrdsrGPRaKP8OLtmn9KM7A4N3xb8yNExUb5RlZt2btpZbXajzPoYkBaDKrtADp3HkYdloo56ndgx37UcHxSP0tIWBGH9cg1nx6TJFTNhS7eCfcA1PJ+GgDbLDs2GuX3V05Ohj0xYSBGumyq/yfApw4EWTRxPJqxQvIF6+ks9Gr0d4nN+8Nbhoi+NdJEwVSc6hVNvHOUvg+5qeDxoP3GQz6x8/qXLuZ6Op7SPy+gNTnydSELabk1Z8Mbs/hlr4dbobfUgxJMS3UdXza9H33jqnA3/OH41FCZ7/l7HW8vOXiWc9GvPf06D953/T2O/EP8HBNtcH0Zm/lqFNUgTAex4AAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMDQtMjNUMTU6MDg6MjQrMDA6MDAE5dOaAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTA0LTIzVDE1OjA4OjI0KzAwOjAwdbhrJgAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyMy0wNC0yM1QxNTowODoyNSswMDowMITaQU0AAAAASUVORK5CYII=&style=for-the-badge)](https://modrinth.com/mod/libr-getter)
 
+Check out our [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt)!
+
 # Installation
-## GitHub
-You can download the mod on the [<kbd>releases page</kbd>](https://github.com/gXLg/libr-getter/releases/latest) on GitHub.
+You can download the mod on the [<kbd>releases page</kbd>](https://github.com/gXLg/libr-getter/releases/latest) on GitHub
+or from Modrinth: [<kbd>Modrinth page</kbd>](https://modrinth.com/mod/libr-getter)
 
-## Modrinth
-The mod is also available on Modrinth: [<kbd>Modrinth page</kbd>](https://modrinth.com/mod/libr-getter)
-
-## Build
-You can build the project yourself, for this just clone the repository and run `./gradlew build`.
+You can also build the project yourself, for this just clone the repository and run `./gradlew build`.
 The compiled jar should be under `build/libs/`.
 
 # Usage
@@ -88,7 +86,8 @@ with `/librget start`.
   * Note: you can also place the lectern in the offhand without the `offhand` config and it will remain there.
   * This config has no effect when manual mode is enabled
 * `/librget config manual <true/false>` - enable/disable manual mode (default: false).
-  * Manual mode disables the automatic breaking and replacing of lecterns as well as trade locking, and gives you more control about the functionality.
+  * Manual mode disables the automatic breaking and replacing of lecterns as well as trade locking and clicking the librarian for you, and gives you more control about the functionality.
+  * Even though automatic clicking is disabled, you will only have to click the villager but the trades will be automatically parsed and the merchant screen will be automatically closed.
   * When enabled, upon finding an enchantment from the goals list, the mod will switch to a state, where you can not break any lecterns.
     To finish the process you will have to use `/librget stop`.
 * `/librget config waitLose <true/false>` - enable/disable waiting for villager to lose profession (default: false).
@@ -106,10 +105,16 @@ with `/librget start`.
     for the specified amount of time, until it reaches the timeout, then it will break and replace the lectern again
   * When manual mode is enabled, the lectern is to be replaced manually.
 * `/librget config fallback <true/false>` - Fallback option to search for unsupported enchantments (default: false)
-  * Takes all the data given about trades from the villager, convert it to text and search for all enchantment IDs currently in the goals list
-  * It is not guaranteed to make a match, and can cause false positives
-  * May cause lag with a large list of enchantments
-  * Use only as a temporary solution, if the plugin you are playing with is not supported
+  * Takes all the data given about trades from the villager, convert it to text and search for all enchantment IDs currently in the goals list.
+  * It is not guaranteed to make a match, and can cause false positives.
+  * May cause lag with a large list of enchantments.
+  * Use only as a temporary solution, if the plugin you are playing with is not supported.
+* `/librget config look <true/false>` - Change head rotation between breaking the lectern and talking to the villager (default: true)
+  * When enabled, LibrGetter will send "look at" packets to the server and update the player head rotation.
+  * This config has no effect when manual mode is enabled.
+* `/librget config rotation <true/false>` - Imitate natural player head rotation (default: false)
+  * When enabled, LibrGetter will smoothly rotate the head between breaking the lectern and talking to the villager, which slows down the process
+  * This config has no effect when manual mode is enabled or when `look` is disabled
 
 ## Compatibility config
 This list of configs enables/disables compatibility with different client-side mods, possibly modifying the process of finding an enchantment.
@@ -162,8 +167,11 @@ LibrGetter supports localization and currently implements the following language
 * German 🇩🇪
 * Russian 🇷🇺
 * Vitenamese 🇻🇳 (thanks [@ToanAnh312](https://github.com/ToanAnh312))
+* Japanese 🇯🇵 (thanks [@H1ggsK](https://github.com/H1ggsK))
+* Spanish 🇪🇸
 
-You may request further languages in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues).
+You may request further languages or suggest improvements in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues) or
+the [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt).
 
 # Features
 * Stops the process, when an enchantment from the goals list is found.
@@ -172,10 +180,9 @@ You may request further languages in the [<kbd>issues</kbd>](https://github.com/
 * Stops when villager accidentally picked another job during the process.
 * Checks if villager was already traded.
 * Stable against multiple lag types.
-* Compatible with .
 * Checks if enchantment can be obtained from a villager and complains if not.
 * Supports enchantments tags up from `1.19.3`.
-* Single mod for all versions from `1.17` up to `1.21.5`.
+* Single mod for all versions from `1.17` up to `1.21.8`.
 
 # About Me
 I am a computer science student in Germany and have a part-time job at a tech company.

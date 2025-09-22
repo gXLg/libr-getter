@@ -2,11 +2,32 @@ package com.gxlg.librgetter.utils;
 
 import com.gxlg.librgetter.utils.reflection.Minecraft;
 
+import java.util.*;
+
 public class MultiVersion {
     private static final String version;
+    private static final Set<ApiLevel> apis = new HashSet<>();
 
     static {
         version = Minecraft.getVersion();
+
+        Map<ApiLevel, List<String>> map = Map.of(
+                ApiLevel.BASE, List.of("1.17"),
+                ApiLevel.VILLAGER_PACKET, List.of("1.17.1", "1.18", "1.18.1", "1.18.2"),
+                ApiLevel.API_COMMAND_V2, List.of("1.19", "1.19.1", "1.19.2"),
+                ApiLevel.TAGS, List.of("1.19.3", "1.19.4", "1.20", "1.20.1"),
+                ApiLevel.CUSTOM_PAYLOAD, List.of("1.20.2", "1.20.3", "1.20.4"),
+                ApiLevel.COMPONENTS, List.of("1.20.5", "1.20.6"),
+                ApiLevel.EFFECTS, List.of("1.21", "1.21.1", "1.21.2", "1.21.3", "1.21.4"),
+                ApiLevel.MORE_ABSTRACTION, List.of("1.21.5", "1.21.6", "1.21.7", "1.21.8")
+        );
+
+        for (ApiLevel api : ApiLevel.values()) {
+            if (map.get(api).contains(version)) {
+                apis.addAll(EnumSet.range(ApiLevel.BASE, api));
+                break;
+            }
+        }
     }
 
     public static String getVersion() {
@@ -14,32 +35,14 @@ public class MultiVersion {
     }
 
     public static boolean isApiLevel(ApiLevel level) {
-        if (version.equals("1.21.5")) return true;
-        if (level == ApiLevel.MORE_ABSTRACTION) return false;
+        return apis.contains(level);
+    }
 
-        if (version.equals("1.21.4") || version.equals("1.21.3") || version.equals("1.21.2") || version.equals("1.21.1") || version.equals("1.21"))
-            return true;
-        if (level == ApiLevel.EFFECTS) return false;
-
-        if (version.equals("1.20.6") || version.equals("1.20.5")) return true;
-        if (level == ApiLevel.COMPONENTS) return false;
-
-        if (version.equals("1.20.4") || version.equals("1.20.3") || version.equals("1.20.2") || version.equals("1.20.1") || version.equals("1.20") || version.equals("1.19.4") || version.equals("1.19.3"))
-            return true;
-        if (level == ApiLevel.TAGS) return false;
-
-        if (version.equals("1.19.2") || version.equals("1.19.1") || version.equals("1.19")) return true;
-        if (level == ApiLevel.API_COMMAND_V2) return false;
-
-        if (version.equals("1.18.2") || version.equals("1.18.1") || version.equals("1.18") || version.equals("1.17.1"))
-            return true;
-        if (level == ApiLevel.VILLAGER_PACKET) return false;
-
-        if (version.equals("1.17")) return true;
-        return level != ApiLevel.BASE;
+    public static List<String> getAPIList() {
+        return apis.stream().sorted().map(Enum::name).toList();
     }
 
     public enum ApiLevel {
-        BASE, VILLAGER_PACKET, API_COMMAND_V2, TAGS, COMPONENTS, EFFECTS, MORE_ABSTRACTION
+        BASE, VILLAGER_PACKET, API_COMMAND_V2, TAGS, CUSTOM_PAYLOAD, COMPONENTS, EFFECTS, MORE_ABSTRACTION
     }
 }
