@@ -41,7 +41,7 @@
   "librgetter.unknown": "Chưa biết loại dữ liệu cho plugin '%s'",
   "librgetter.unsafe": "Dân làng có thể can thiệp vào việc đặt bục để sách, hãy đặt khối phía trên bục để ngăn cách",
 
-  "librgetter.keys.category": "LibrGetter",
+  "key.category.librgetter.category": "LibrGetter",
   "librgetter.keys.open": "Mở menu cấu hình",
 
   "librgetter.menu": "Menu cấu hình",
@@ -58,8 +58,8 @@
   "librgetter.config.safeChecker": "Kiểm tra dân làng có thể can thiệp vào việc đặt bục để sách hay không",
   "librgetter.config.timeout": "Thời gian (giây) để đợi dân làng cập nhật nghề nghiệp trước khi thay bục đặt sách; đặt thành 0 để tắt",
   "librgetter.config.fallback": "Lựa chọn dự phòng để tìm kiếm phù phép không được hỗ trợ; không chắc chắn đúng; danh sách phù phép lớn có thể gây lag",
-  "librgetter.config.rotation": "Làm xoay đầu tự nhiên hơn; quá trình sẽ chậm lại",
-  "librgetter.config.look": "Xoay đầu trước khi đặt giá sách và nói chuyện với thủ thư",
+  "librgetter.config.rotation": "Xoay đầu tự nhiên hơn; quá trình sẽ chậm hơn",
+  "librgetter.config.look": "Xoay đầu khi đặt bục để sách và trao đổi với thủ thư",
 
   "librgetter.config._tradeCycling": "Trade Cycling"
 }

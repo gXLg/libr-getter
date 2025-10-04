@@ -182,7 +182,7 @@ the [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt).
 * Stable against multiple lag types.
 * Checks if enchantment can be obtained from a villager and complains if not.
 * Supports enchantments tags up from `1.19.3`.
-* Single mod for all versions from `1.17` up to `1.21.8`.
+* Single JAR for all versions from `1.17` up to `1.21.9`.
 
 # About Me
 I am a computer science student in Germany and have a part-time job at a tech company.

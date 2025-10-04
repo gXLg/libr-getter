@@ -39,7 +39,7 @@ public abstract class Manager {
             Texts.sendError(Worker.getSource(), "librgetter.internal", "player");
             return;
         }
-        ClientWorld world = client.player.clientWorld;
+        ClientWorld world = Minecraft.getWorld(client.player);
         if (!world.getBlockState(pos).isOf(Blocks.LECTERN)) return;
         for (Worker.State state : new Worker.State[]{Worker.State.MANUAL_WAIT_FINISH, Worker.State.GET_TRADES, Worker.State.PARSE_TRADES, Worker.State.WAIT_VILLAGER_ACCEPT_PROFESSION}) {
             if (Worker.getState() == state) {

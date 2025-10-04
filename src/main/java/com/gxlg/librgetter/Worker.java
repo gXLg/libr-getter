@@ -96,7 +96,8 @@ public class Worker {
             error("librgetter.internal", "player");
             return;
         }
-        if (!block.isWithinDistance(player.getPos(), 3.4f) || villager.distanceTo(player) > 3.4f) {
+
+        if (!block.isWithinDistance(player.getBlockPos(), 3.4f) || villager.distanceTo(player) > 3.4f) {
             error("librgetter.far");
             return;
         }
@@ -283,11 +284,9 @@ public class Worker {
                 Vec3d lowBlockPos = new Vec3d(block.getX(), block.getY() - 1, block.getZ());
                 BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, block.down(), false);
                 Minecraft.interactBlock(manager, player, lowBlock, mainhand);
-
-                prepareRotation(player, EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(villager), State.WAIT_VILLAGER_ACCEPT_PROFESSION);
                 return;
             }
-            state = State.WAIT_VILLAGER_ACCEPT_PROFESSION;
+            prepareRotation(player, EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(villager), State.WAIT_VILLAGER_ACCEPT_PROFESSION);
         }
 
         if (state == State.WAIT_VILLAGER_ACCEPT_PROFESSION) {

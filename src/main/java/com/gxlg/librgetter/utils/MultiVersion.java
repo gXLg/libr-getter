@@ -19,7 +19,8 @@ public class MultiVersion {
                 ApiLevel.CUSTOM_PAYLOAD, List.of("1.20.2", "1.20.3", "1.20.4"),
                 ApiLevel.COMPONENTS, List.of("1.20.5", "1.20.6"),
                 ApiLevel.EFFECTS, List.of("1.21", "1.21.1", "1.21.2", "1.21.3", "1.21.4"),
-                ApiLevel.MORE_ABSTRACTION, List.of("1.21.5", "1.21.6", "1.21.7", "1.21.8")
+                ApiLevel.MORE_ABSTRACTION, List.of("1.21.5", "1.21.6", "1.21.7", "1.21.8"),
+                ApiLevel.CLIENT_WORLD, List.of("1.21.9")
         );
 
         for (ApiLevel api : ApiLevel.values()) {
@@ -43,6 +44,6 @@ public class MultiVersion {
     }
 
     public enum ApiLevel {
-        BASE, VILLAGER_PACKET, API_COMMAND_V2, TAGS, CUSTOM_PAYLOAD, COMPONENTS, EFFECTS, MORE_ABSTRACTION
+        BASE, VILLAGER_PACKET, API_COMMAND_V2, TAGS, CUSTOM_PAYLOAD, COMPONENTS, EFFECTS, MORE_ABSTRACTION, CLIENT_WORLD
     }
 }

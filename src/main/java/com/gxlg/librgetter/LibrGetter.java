@@ -1,6 +1,6 @@
 package com.gxlg.librgetter;
 
-import com.gxlg.librgetter.utils.Keybinds;
+import com.gxlg.librgetter.utils.reflection.Keybinds;
 import com.gxlg.librgetter.utils.MultiVersion;
 import com.gxlg.librgetter.utils.Updater;
 import com.gxlg.librgetter.utils.reflection.Commands;

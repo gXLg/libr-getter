@@ -41,7 +41,7 @@
   "librgetter.unknown": "Unbekannter Datentyp für den Plugin '%s'",
   "librgetter.unsafe": "Der Dorfbewohner könnte den Platzierungsprozess verhindern, verbauen Sie den Lesepult besser",
 
-  "librgetter.keys.category": "LibrGetter",
+  "key.category.librgetter.category": "LibrGetter",
   "librgetter.keys.open": "Das Einstellungsmenü öffnen",
 
   "librgetter.menu": "Einstellungsmenü",

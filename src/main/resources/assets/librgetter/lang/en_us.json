@@ -41,7 +41,7 @@
   "librgetter.unknown": "Unknown type of data for the plugin '%s'",
   "librgetter.unsafe": "The villager could interfere with the placing process, please obstruct the lectern",
 
-  "librgetter.keys.category": "LibrGetter",
+  "key.category.librgetter.category": "LibrGetter",
   "librgetter.keys.open": "Open the config menu",
 
   "librgetter.menu": "Config menu",

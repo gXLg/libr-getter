@@ -41,7 +41,7 @@
   "librgetter.unknown": "プラグイン '%s' に対して不明なデータ型です",
   "librgetter.unsafe": "村人が設置作業に干渉する恐れがあります。書見台を塞いでください。",
 
-  "librgetter.keys.category": "LibrGetter",
+  "key.category.librgetter.category": "LibrGetter",
   "librgetter.keys.open": "設定メニューを開く",
 
   "librgetter.menu": "設定メニュー",

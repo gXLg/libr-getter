@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.10-SNAPSHOT'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
 }
 
 version = project.mod_version
@@ -49,13 +49,13 @@ jar {
 }
 
 // pre-processor
-interface InjectedExecOps {
+interface InjExOps {
     @Inject
     ExecOperations getExecOps()
 }
 
 tasks.register("preprocessJava") {
-    def injected = project.objects.newInstance(InjectedExecOps)
+    def injected = project.objects.newInstance(InjExOps)
     doLast {
         copy {
             from "src/main/java"

@@ -15,13 +15,11 @@ import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -48,7 +46,9 @@ public class Minecraft {
     }
 
     public static ClientWorld getWorld(ClientPlayerEntity player) {
-        if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.API_COMMAND_V2)) {
+        if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.CLIENT_WORLD)) {
+            return (ClientWorld) Reflection.invokeMethod(ClientPlayerEntity.class, player, null, "method_73183", "getEntityWorld");
+        } else if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.API_COMMAND_V2)) {
             return (ClientWorld) Reflection.invokeMethod(ClientPlayerEntity.class, player, null, "method_37908", "getWorld");
         } else {
             return (ClientWorld) Reflection.field(ClientPlayerEntity.class, player, "field_17892", "clientWorld");
@@ -89,14 +89,6 @@ public class Minecraft {
             Class<?> registry = Reflection.clazz("net.minecraft.class_2378", "net.minecraft.util.registry.Registry");
             Object ench = Reflection.field(registry, null, "field_11160", "ENCHANTMENT");
             return (Identifier) Reflection.invokeMethod(registry, ench, new Object[]{enchantment}, new Class[]{Object.class}, "method_10221", "getId");
-        }
-    }
-
-    public static PlayerInteractEntityC2SPacket interactPacket(VillagerEntity villager) {
-        if (MultiVersion.isApiLevel(MultiVersion.ApiLevel.VILLAGER_PACKET)) {
-            return (PlayerInteractEntityC2SPacket) Reflection.invokeMethod(PlayerInteractEntityC2SPacket.class, null, new Object[]{villager, false, Hand.MAIN_HAND}, new Class[]{Entity.class, boolean.class, Hand.class}, "method_34207", "interact");
-        } else {
-            return (PlayerInteractEntityC2SPacket) Reflection.construct(PlayerInteractEntityC2SPacket.class, new Object[]{villager, Hand.MAIN_HAND, false}, Entity.class, Hand.class, boolean.class);
         }
     }
 

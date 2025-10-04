@@ -41,7 +41,7 @@
   "librgetter.unknown": "Неизвестный тип данных для плагина '%s'",
   "librgetter.unsafe": "Житель может помешать процессу, застройте кафедру получше",
 
-  "librgetter.keys.category": "LibrGetter",
+  "key.category.librgetter.category": "LibrGetter",
   "librgetter.keys.open": "Открыть меню конфигураций",
 
   "librgetter.menu": "Меню конфигураций",

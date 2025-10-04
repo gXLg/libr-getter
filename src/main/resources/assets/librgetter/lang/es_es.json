@@ -41,7 +41,7 @@
   "librgetter.unknown": "Tipo de datos desconocido para el plugin '%s'",
   "librgetter.unsafe": "El aldeano podría interferir con el proceso de colocación, por favor obstruye el atril",
 
-  "librgetter.keys.category": "LibrGetter",
+  "key.category.librgetter.category": "LibrGetter",
   "librgetter.keys.open": "Abrir el menú de configuración",
 
   "librgetter.menu": "Menú de configuración",
