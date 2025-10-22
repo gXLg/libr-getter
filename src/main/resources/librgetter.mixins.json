@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.gxlg.librgetter.mixin",
+  "package": "dev.gxlg.librgetter.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
     "AbstractBlockAccessor",

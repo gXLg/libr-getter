@@ -18,7 +18,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.gxlg.librgetter.LibrGetter"
+      "dev.gxlg.librgetter.LibrGetter"
     ]
   },
   "mixins": [
@@ -27,6 +27,6 @@
   "depends": {
     "fabric": ">=0.31.0",
     "fabric-key-binding-api-v1": "*",
-    "minecraft": ">=1.17 <=1.21.9"
+    "minecraft": ">=1.17 <=1.21.10"
   }
 }

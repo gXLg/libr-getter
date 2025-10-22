@@ -1,0 +1,3 @@
+[submodule "MultiVersion"]
+	path = MultiVersion
+	url = https://github.com/gXLg/MultiVersion

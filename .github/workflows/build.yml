@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "src/**"
+      - "gradle.properties"
+      - "build.gradle"
+      - "MultiVersion"
+      - ".gitmodules"
+    tags-ignore: ["**"]
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.1
+        with:
+          submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v4.0.0
+        with:
+          distribution: "temurin"
+          java-version: 21
+
+      - name: Mark Executable
+        run: chmod +x ./gradlew
+
+      - name: Build
+        run: ./gradlew clean build

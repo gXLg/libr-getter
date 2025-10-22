@@ -48,38 +48,6 @@ jar {
     }
 }
 
-// pre-processor
-interface InjExOps {
-    @Inject
-    ExecOperations getExecOps()
-}
 
-tasks.register("preprocessJava") {
-    def injected = project.objects.newInstance(InjExOps)
-    doLast {
-        copy {
-            from "src/main/java"
-            into "tmp"
-        }
-        fileTree("src/main/java") each { file ->
-            injected.execOps.exec {
-                commandLine "node", "preprocess.js", file
-            }
-        }
-    }
-}
 
-tasks.register("cleanup") {
-    doLast {
-        copy {
-            from "tmp"
-            into "src/main/java"
-        }
-        delete "tmp"
-    }
-}
-
-compileJava {
-    dependsOn preprocessJava
-    finalizedBy cleanup
-}
+apply from: './MultiVersion/multi-version.gradle'
