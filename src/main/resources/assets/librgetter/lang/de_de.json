@@ -42,13 +42,13 @@
   "librgetter.unsafe": "Der Dorfbewohner könnte den Platzierungsprozess verhindern, verbauen Sie den Lesepult besser",
 
   "key.category.librgetter.category": "LibrGetter",
-  "librgetter.keys.open": "Das Einstellungsmenü öffnen",
+  "librgetter.keys.open": "Das Konfigurationsmenü öffnen",
 
-  "librgetter.menu": "Einstellungsmenü",
+  "librgetter.menu": "Konfigurationsmenü",
 
   "librgetter.config.notify": "Spielt ein Ton ab, wenn erfolgreich gefunden",
   "librgetter.config.autoTool": "Sucht automatisch das beste Werkzeug zum zerstören des Lesepults",
-  "librgetter.config.actionBar": "Sendet Logs der Vorschläge in die Action Bar statt dem Chat",
+  "librgetter.config.logMode": "Handels Logs senden:\nNONE - nicht senden\nCHAT - in den Chat\nACTIONBAR - in die Aktionsleiste",
   "librgetter.config.lock": "Fixiert den Handel automatisch, wenn erfolgreich gefunden",
   "librgetter.config.removeGoal": "Entfernt die Verzauberung automatisch aus der Suchliste, wenn erfolgreich gefunden",
   "librgetter.config.checkUpdate": "Überprüft auf Mod Updates und sendet eine Nachricht beim ersten Weltöffnen",
@@ -59,8 +59,8 @@
   "librgetter.config.safeChecker": "Prüft, ob der Dorfbewohner den Platzierungsprozess verhindern könnte",
   "librgetter.config.timeout": "Zeit in Sekunden, die gewartet wird, bis ein Dorfbewohner seinen Beruf aktualisiert, bevor das Lesepult ersetzt wird; auf 0 setzen, um zu deaktivieren",
   "librgetter.config.fallback": "Rückfall Option, um für nicht unterstützte Verzauberungen zu suchen; garantiert nicht das Finden; kann bei großen Suchlisten Lag verursachen",
-  "librgetter.config.rotation": "Macht Kopfbewegung natürlicher; verlangsamt den Prozess",
-  "librgetter.config.look": "Dreht den Kopf, bevor der Lesepult platziert wird oder mit dem Bibliothekar gesprochen wird",
+  "librgetter.config.rotationMode": "Kopf drehen, bevor das Lesepult platziert und mit dem Bibliothekar gesprochen wird:\nNONE - nicht drehen\nINSTANT - sofortige Drehung\nSMOOTH - natürlichere Drehung; verlangsamt den Ablauf",
+  "librgetter.config.matchMode": "Wann mit der Suche aufhören:\nVANILLA - regulärer Trade stimmt überein\nALL - alle Trades stimmen mit der Suchliste überein\nLIST - die ganze Suchliste ist in der Trades enthalten\nANY - mindestens ein Trade muss übereinstimmen",
 
   "librgetter.config._tradeCycling": "Trade Cycling"
 }

@@ -5,10 +5,11 @@ import dev.gxlg.librgetter.Reflection;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class Support {
+    private static final FabricLoader instance;
     private static final boolean tradeCycling;
 
     static {
-        FabricLoader instance = FabricLoader.getInstance();
+        instance = FabricLoader.getInstance();
         tradeCycling = instance.getModContainer("trade_cycling").isPresent();
     }
 
@@ -23,5 +24,9 @@ public class Support {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean useTradeCycling() {
         return tradeCycling && LibrGetter.config._tradeCycling;
+    }
+
+    public static boolean isEffective(String modID) {
+        return instance.getModContainer(modID).isPresent();
     }
 }

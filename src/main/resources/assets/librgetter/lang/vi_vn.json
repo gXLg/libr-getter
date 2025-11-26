@@ -47,7 +47,7 @@
   "librgetter.menu": "Menu cấu hình",
   "librgetter.config.notify": "Phát âm thanh khi hoàn thành",
   "librgetter.config.autoTool": "Tự động chọn dùng cụ để đập bục để sách một cách hiệu quả",
-  "librgetter.config.actionBar": "Gửi nhật kí giao dịch đến thanh hành động thay vì mục trò chuyện",
+  "librgetter.config.logMode": "Gửi nhật ký giao dịch:\nNONE - không gửi\nCHAT - gửi vào chat\nACTIONBAR - gửi vào thanh hành động",
   "librgetter.config.lock": "Tự động khóa giao dịch khi tìm thấy",
   "librgetter.config.removeGoal": "Tự động xóa loại phù phép trong danh sách mục tiêu khi tìm thấy",
   "librgetter.config.checkUpdate": "Kiểm tra bản cập nhật và thông báo nó (nếu có) khi vào thế giới",
@@ -58,8 +58,8 @@
   "librgetter.config.safeChecker": "Kiểm tra dân làng có thể can thiệp vào việc đặt bục để sách hay không",
   "librgetter.config.timeout": "Thời gian (giây) để đợi dân làng cập nhật nghề nghiệp trước khi thay bục đặt sách; đặt thành 0 để tắt",
   "librgetter.config.fallback": "Lựa chọn dự phòng để tìm kiếm phù phép không được hỗ trợ; không chắc chắn đúng; danh sách phù phép lớn có thể gây lag",
-  "librgetter.config.rotation": "Xoay đầu tự nhiên hơn; quá trình sẽ chậm hơn",
-  "librgetter.config.look": "Xoay đầu khi đặt bục để sách và trao đổi với thủ thư",
+  "librgetter.config.rotationMode": "Xoay đầu trước khi đặt bục sách và nói chuyện với thủ thư:\nNONE - không xoay\nINSTANT - xoay ngay lập tức\nSMOOTH - xoay tự nhiên hơn; làm chậm quá trình",
+  "librgetter.config.matchMode": "Khi nào dừng việc xoay vòng:\nVANILLA - khớp giao dịch thông thường\nALL - tất cả các giao dịch được cung cấp khớp với danh sách mục tiêu\nLIST - toàn bộ danh sách mục tiêu nằm trong các giao dịch được cung cấp\nANY - ít nhất một giao dịch phải khớp với danh sách mục tiêu",
 
   "librgetter.config._tradeCycling": "Trade Cycling"
 }

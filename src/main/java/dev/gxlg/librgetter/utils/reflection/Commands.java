@@ -11,6 +11,7 @@ import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.Reflection;
 import dev.gxlg.librgetter.command.LibrGetCommand;
+import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.enchantment.Enchantment;
 
 import java.lang.reflect.Proxy;
@@ -120,7 +121,7 @@ public class Commands {
         return function::apply;
     }
 
-    private static <T, U> Command<T> runner(BiFunction<CommandContext<T>, Config.Configurable<U>, Integer> function, Config.Configurable<U> config) {
+    private static <T, U> Command<T> runner(BiFunction<CommandContext<T>, Configurable<U>, Integer> function, Configurable<U> config) {
         return t -> function.apply(t, config);
     }
 
@@ -194,12 +195,15 @@ public class Commands {
         l = literal(ccm, "start").executes(LibrGetCommand::start);
         base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
 
+        l = literal(ccm, "continue").executes(LibrGetCommand::continueWork);
+        base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
+
         l = literal(ccm, "auto").executes(LibrGetCommand::autostart);
         base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
 
         // automatically create config commands for each simply configurable value in Config
         l = literal(ccm, "config");
-        for (Config.Configurable<?> configurable : Config.getConfigurables()) {
+        for (Configurable<?> configurable : Config.getConfigurables()) {
             String name = configurable.name();
             a = literal(ccm, name);
             r = argument(ccm, "value", configurable.argument());

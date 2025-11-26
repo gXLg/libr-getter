@@ -41,6 +41,6 @@ public class ConfigScreen extends BookScreen {
     public void updateScreen() {
         // update screen
         ((BookScreenAccessor) this).setCachedPageIndex(-1);
-        ConfigMenu.updatePage(currentPage);
+        ConfigMenu.updateAll();
     }
 }

@@ -1,13 +1,13 @@
 package dev.gxlg.librgetter.utils.reflection;
 
-import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.Reflection;
+import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
+import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import dev.gxlg.librgetter.utils.types.Enchantment;
+import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 
 public class Texts {
@@ -39,12 +39,17 @@ public class Texts {
         return copy;
     }
 
+    private static Object literal(String message) {
+        Object m = Text.of(message);
+        return Reflection.wrap("tc:m method_27662/copy", tc, m);
+    }
+
     public static void sendError(Object source, String message, Object... args) {
         Object text = translatable(message, args);
         Reflection.wrapi("fcs:source sendError§m tc:text", fcs, source, tc, text);
     }
 
-    public static void sendFound(Object source, Config.Enchantment enchant, int counter) {
+    public static void sendFound(Object source, Enchantment enchant, int counter) {
         Object text = translatable("librgetter.found", enchant, counter, enchant.price);
         text = Reflection.wrap("mc:text method_27692/formatted Formatting.GREEN", mc, text);
 
@@ -67,7 +72,9 @@ public class Texts {
         Reflection.wrapi("fcs:source sendFeedback§m tc:text", fcs, source, tc, text);
     }
 
-    public static void sendMessage(ClientPlayerEntity player, String message, boolean ab, Object... args) {
+    public static void sendMessage(ClientPlayerEntity player, String message, Object... args) {
+        if (LibrGetter.config.logMode == LogMode.NONE) return;
+        boolean ab = LibrGetter.config.logMode == LogMode.ACTIONBAR;
         Object text = translatable(message, args);
         Reflection.wrapi("@player method_7353/sendMessage tc:text boolean:ab", player, tc, text, ab);
     }
@@ -83,7 +90,7 @@ public class Texts {
     public static void list(Object source) {
         Object text = translatable("librgetter.list");
         Object rem = translatable("librgetter.remove");
-        for (Config.Enchantment l : LibrGetter.config.goals) {
+        for (Enchantment l : LibrGetter.config.goals) {
             String line = "\n- " + l + " (" + l.price + ") ";
             text = Reflection.wrap("mc:text method_27693/append line", mc, text, line);
             Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + l.id + "\" " + l.lvl)).withColor(Formatting.YELLOW);
@@ -103,12 +110,16 @@ public class Texts {
         return Reflection.wrap("mc:text method_10852/append tc:menu", mc, text, tc, menu);
     }
 
-    public static Object bookEntry(Object text, Config.Configurable<?> configurable) {
+    public static Object bookEntry(Object text, Configurable<?> configurable) {
         String config = configurable.name();
         String showName = config.startsWith("_") ? "+ " + config.substring(1) : config;
         Object name = translatable("librgetter.config." + config);
 
-        Style cStyle = Style.EMPTY.withHoverEvent(hoverable(name));
+        Formatting green = configurable.hasEffect() ? Formatting.GREEN : Formatting.GRAY;
+        Formatting black = configurable.hasEffect() ? Formatting.BLACK : Formatting.GRAY;
+        Formatting red = configurable.hasEffect() ? Formatting.RED : Formatting.GRAY;
+
+        Style cStyle = Style.EMPTY.withHoverEvent(hoverable(name)).withColor(black);
         Object c = applyStyle(Text.of(showName), cStyle);
 
         String nl = "\n";
@@ -116,35 +127,40 @@ public class Texts {
         text = Reflection.wrap("mc:text method_10852/append tc:c", mc, text, tc, c);
         text = Reflection.wrap("mc:text method_27693/append nl", mc, text, nl);
 
-        Object t, f;
-        String m;
-
+        Object x, y, z;
         if (configurable.type() == Boolean.class) {
             boolean value = (boolean) configurable.get();
-            Style tStyle = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " true")).withColor(Formatting.GREEN).withUnderline(value);
-            Style fStyle = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " false")).withColor(Formatting.RED).withUnderline(!value);
+            Style style = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (!value))).withColor(value ? green : red);
 
-            t = applyStyle(Text.of("[true]"), tStyle);
-            f = applyStyle(Text.of("[false]"), fStyle);
-            m = " ";
+            x = applyStyle(Text.of("[" + value + "]"), style);
+            y = literal(" ");
+            z = literal("");
 
         } else if (configurable.type() == Integer.class) {
             int value = (int) configurable.get();
-            Style mStyle = configurable.inRange(value - 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value - 1))).withColor(Formatting.RED) : Style.EMPTY.withColor(Formatting.GRAY);
-            Style pStyle = configurable.inRange(value + 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value + 1))).withColor(Formatting.GREEN) : Style.EMPTY.withColor(Formatting.GRAY);
+            Style mStyle = configurable.inRange(value - 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value - 1))).withColor(red) : Style.EMPTY.withColor(Formatting.GRAY);
+            Style nStyle = Style.EMPTY.withColor(black);
+            Style pStyle = configurable.inRange(value + 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value + 1))).withColor(green) : Style.EMPTY.withColor(Formatting.GRAY);
 
-            t = applyStyle(Text.of("[-]"), mStyle);
-            f = applyStyle(Text.of("[+]"), pStyle);
+            x = applyStyle(Text.of("[-]"), mStyle);
+            y = applyStyle(Text.of(" " + value + " "), nStyle);
+            z = applyStyle(Text.of("[+]"), pStyle);
 
-            m = " " + value + " ";
+        } else if (configurable.type() == OptionsConfig.class) {
+            OptionsConfig<?> value = (OptionsConfig<?>) configurable.get();
+            Style style = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + value.next().asString())).withColor(value.asString().equals("NONE") ? red : green);
+
+            x = applyStyle(Text.of("[" + value.asString() + "]"), style);
+            y = literal("");
+            z = literal("");
 
         } else {
             throw new RuntimeException("Unexpected type of configurable!");
         }
 
-        text = Reflection.wrap("mc:text method_10852/append tc:t", mc, text, tc, t);
-        text = Reflection.wrap("mc:text method_27693/append m", mc, text, m);
-        return Reflection.wrap("mc:text method_10852/append tc:f", mc, text, tc, f);
+        text = Reflection.wrap("mc:text method_10852/append tc:x", mc, text, tc, x);
+        text = Reflection.wrap("mc:text method_10852/append tc:y", mc, text, tc, y);
+        return Reflection.wrap("mc:text method_10852/append tc:z", mc, text, tc, z);
     }
 
     public static ClickEvent runnable(String command) {
