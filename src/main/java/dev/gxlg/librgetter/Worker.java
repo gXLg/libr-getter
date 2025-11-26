@@ -1,10 +1,13 @@
 package dev.gxlg.librgetter;
 
+import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.Support;
 import dev.gxlg.librgetter.utils.reflection.Texts;
-import com.mojang.datafixers.util.Either;
+import dev.gxlg.librgetter.utils.types.Enchantment;
+import dev.gxlg.librgetter.utils.types.config.enums.MatchMode;
+import dev.gxlg.librgetter.utils.types.config.enums.RotationMode;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -18,7 +21,6 @@ import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.AxeItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
@@ -30,9 +32,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOfferList;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -49,8 +53,7 @@ public class Worker {
     private static State state = State.STANDBY;
     private static Object source;
     private static int counter;
-    @Nullable
-    private static Config.Enchantment enchant;
+    private final static List<Enchantment> offeredEnchantments = new ArrayList<>();
     private static int otherTrade = 0;
     private static LockType lockType;
     private static int timeout = 0;
@@ -122,16 +125,11 @@ public class Worker {
 
             // random lerping
             float newPitch = currentPitch + 0.35F * pitchDelta + (rng.nextFloat() - 0.5F) * 0.2F;
-            float newYaw =  currentYaw + 0.35F * yawDelta + (rng.nextFloat() - 0.5F) * 0.2F;
+            float newYaw = currentYaw + 0.35F * yawDelta + (rng.nextFloat() - 0.5F) * 0.2F;
 
             player.setPitch(newPitch);
             player.setYaw(newYaw);
             player.setHeadYaw(player.getYaw());
-            player.lastPitch = player.getPitch();
-            player.lastYaw = player.getYaw();
-            player.lastHeadYaw = player.headYaw;
-            player.bodyYaw = player.headYaw;
-            player.lastBodyYaw = player.bodyYaw;
 
             if (Math.abs(pitchDelta) < 0.8F && Math.abs(yawDelta) < 0.8F) {
                 state = nextState;
@@ -143,7 +141,7 @@ public class Worker {
 
             PlayerInventory inventory = player.getInventory();
             if (inventory == null) {
-                error("librgetter.internal", "inventory" );
+                error("librgetter.internal", "inventory");
                 return;
             }
             int slot = -1;
@@ -336,51 +334,106 @@ public class Worker {
             // parsing the trades
             getEnchant();
 
-            Texts.sendMessage(player, "librgetter.offer", LibrGetter.config.actionBar, enchant);
-            if (enchant != null) {
-                for (Config.Enchantment l : LibrGetter.config.goals) {
-                    if (l.meets(enchant)) {
-                        Texts.sendFound(source, enchant, counter);
-                        if (LibrGetter.config.notify) {
-                            if (client.world == null) {
-                                Texts.sendError(source, "librgetter.internal", "world");
-                            } else {
-                                Minecraft.playSound(client.world, player);
+            Texts.sendMessage(player, "librgetter.offer", offeredEnchantments);
+            if (!offeredEnchantments.isEmpty()) {
+                boolean match = false;
+                List<Enchantment> success = new ArrayList<>();
+                if (LibrGetter.config.matchMode == MatchMode.VANILLA) {
+                    // only match the first found enchantment
+                    for (Enchantment l : LibrGetter.config.goals) {
+                        if (l.meets(offeredEnchantments.get(0))) {
+                            match = true;
+                            success.add(offeredEnchantments.get(0));
+                            break;
+                        }
+                    }
+
+                } else if (LibrGetter.config.matchMode == MatchMode.ALL) {
+                    // only match if all offered are in goals list
+                    match = true;
+                    for (Enchantment offer : offeredEnchantments) {
+                        boolean thisMatch = false;
+                        for (Enchantment l : LibrGetter.config.goals) {
+                            if (l.meets(offer)) {
+                                thisMatch = true;
+                                success.add(offer);
+                                break;
                             }
                         }
+                        if (!thisMatch) {
+                            match = false;
+                            break;
+                        }
+                    }
+                } else if (LibrGetter.config.matchMode == MatchMode.LIST) {
+                    // only match if whole goals list is in offered
+                    match = true;
+                    for (Enchantment l : LibrGetter.config.goals) {
+                        boolean thisMatch = false;
+                        for (Enchantment offer : offeredEnchantments) {
+                            if (l.meets(offer)) {
+                                thisMatch = true;
+                                success.add(offer);
+                                break;
+                            }
+                        }
+                        if (!thisMatch) {
+                            match = false;
+                            break;
+                        }
+                    }
+                } else {
+                    // match if any offer is in goals list
+                    for (Enchantment offer : offeredEnchantments) {
+                        for (Enchantment l : LibrGetter.config.goals) {
+                            if (l.meets(offer)) {
+                                match = true;
+                                success.add(offer);
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (match) {
+                    success.forEach(f -> Texts.sendFound(source, f, counter));
+                    if (LibrGetter.config.notify) {
+                        if (client.world == null) {
+                            Texts.sendError(source, "librgetter.internal", "world");
+                        } else {
+                            Minecraft.playSound(client.world, player);
+                        }
+                    }
 
-                        if (LibrGetter.config.manual) {
-                            state = State.MANUAL_WAIT_FINISH;
+                    if (LibrGetter.config.manual) {
+                        state = State.MANUAL_WAIT_FINISH;
+                        return;
+                    }
+
+                    if (LibrGetter.config.lock) {
+                        ClientPlayNetworkHandler handler = client.getNetworkHandler();
+                        if (handler == null) {
+                            error("librgetter.internal", "handler3");
                             return;
                         }
+                        lockType = getLockType(player);
+                        state = State.LOCK_TRADES;
+                        trades = null;
 
-                        if (LibrGetter.config.lock) {
-                            ClientPlayNetworkHandler handler = client.getNetworkHandler();
-                            if (handler == null) {
-                                error("librgetter.internal", "handler3");
+                        if (!Support.useTradeCycling()) {
+                            // TradeCycling process keeps the screen open, else we have to open it again
+                            ClientPlayerInteractionManager manager = client.interactionManager;
+                            if (manager == null) {
+                                error("librgetter.internal", "manager4");
                                 return;
                             }
-                            lockType = getLockType(player);
-                            state = State.LOCK_TRADES;
-                            trades = null;
-
-                            if (!Support.useTradeCycling()) {
-                                // TradeCycling process keeps the screen open
-                                ClientPlayerInteractionManager manager = client.interactionManager;
-                                if (manager == null) {
-                                    error("librgetter.internal", "manager4");
-                                    return;
-                                }
-                                manager.interactEntity(player, villager, Hand.MAIN_HAND);
-                            }
-
-                        } else {
-                            state = State.STANDBY;
+                            manager.interactEntity(player, villager, Hand.MAIN_HAND);
                         }
 
-                        if (LibrGetter.config.removeGoal) remove(enchant.id, enchant.lvl);
-                        break;
+                    } else {
+                        state = State.STANDBY;
                     }
+
+                    if (LibrGetter.config.removeGoal) success.forEach(f -> remove(f.id, f.lvl));
                 }
             }
             if (state == State.PARSE_TRADES) {
@@ -394,7 +447,7 @@ public class Worker {
 
         if (state == State.LOCK_TRADES) {
             if (trades == null) return;
-            if (enchant == null) return;
+            if (offeredEnchantments.isEmpty()) return;
             if (lockType == LockType.CANNOT) {
                 error("librgetter.lock");
                 return;
@@ -415,7 +468,7 @@ public class Worker {
                     manager.clickSlot(player.currentScreenHandler.syncId, 0, 0, SlotActionType.PICKUP, player);
                     return;
                 }
-                if (player.currentScreenHandler.getSlot(0).inventory.getStack(1).getCount() < enchant.price) {
+                if (player.currentScreenHandler.getSlot(0).inventory.getStack(1).getCount() < offeredEnchantments.get(0).price) {
                     int slot = player.getInventory().getSlotWithStack(Items.EMERALD.getDefaultStack());
                     if (slot < 9) slot += 27;
                     else slot -= 9;
@@ -465,11 +518,11 @@ public class Worker {
             if (stack.getItem() == Items.PAPER) paper += stack.getCount();
         }
         int max;
-        if (enchant == null) {
+        if (offeredEnchantments.isEmpty()) {
             max = 0;
-            for (Config.Enchantment enchantment : LibrGetter.config.goals)
+            for (Enchantment enchantment : LibrGetter.config.goals)
                 if (enchantment.price > max) max = enchantment.price;
-        } else max = enchant.price;
+        } else max = offeredEnchantments.get(0).price;
 
         if (book == 0 || emerald < max) {
             if (emerald < 9 || paper < 24) {
@@ -482,62 +535,68 @@ public class Worker {
 
     private static void getEnchant() {
         if (trades == null) return;
+        offeredEnchantments.clear();
 
         int trade;
-        Item f = trades.get(0).getSellItem().getItem();
-        Item s = trades.get(1).getSellItem().getItem();
-        if (f == Items.BOOK || f == Items.ENCHANTED_BOOK) {
+        if (isEnchant(trades.get(0))) {
             trade = 0;
             otherTrade = 1;
-        } else if (s == Items.BOOK || s == Items.ENCHANTED_BOOK) {
+        } else if (isEnchant(trades.get(1))) {
             trade = 1;
             otherTrade = 0;
         } else trade = -1;
 
         if (trade != -1) {
-            Either<Config.Enchantment, String[]> either = Minecraft.parseTrade(trades, trade);
-            Optional<Config.Enchantment> en = either.left();
-            Optional<String[]> err = either.right();
-            if (err.isPresent()) {
-                String[] ret = err.get();
-                Object[] args = new String[ret.length - 1];
-                System.arraycopy(ret, 1, args, 0, ret.length - 1);
-
-                Texts.sendError(source, ret[0], args);
-                state = State.STANDBY;
-                return;
-            }
-            if (en.isPresent()) {
-                Config.Enchantment e = en.get();
-                if (e.same(Config.Enchantment.EMPTY)) enchant = null;
-                else enchant = e;
-            }
-
-        } else {
-            enchant = null;
+            if (!addEnchant(trades, trade)) return;
         }
+        if (LibrGetter.config.matchMode != MatchMode.VANILLA) {
+            for (int i = 2; i < trades.size(); i++) {
+                if (isEnchant(trades.get(i))) addEnchant(trades, i);
+            }
+        }
+    }
+
+    private static boolean isEnchant(TradeOffer offer) {
+        return offer.getSellItem().isOf(Items.ENCHANTED_BOOK) || offer.getSellItem().isOf(Items.BOOK);
+    }
+
+    private static boolean addEnchant(TradeOfferList trades, int trade) {
+        Either<Enchantment, String[]> either = Minecraft.parseTrade(trades, trade);
+        Optional<Enchantment> en = either.left();
+        Optional<String[]> err = either.right();
+        if (err.isPresent()) {
+            String[] ret = err.get();
+            Object[] args = new String[ret.length - 1];
+            System.arraycopy(ret, 1, args, 0, ret.length - 1);
+            Texts.sendError(source, ret[0], args);
+            state = State.STANDBY;
+            return false;
+        }
+        if (en.isPresent()) {
+            Enchantment e = en.get();
+            if (!e.same(Enchantment.EMPTY)) offeredEnchantments.add(e);
+        }
+        return true;
     }
 
     private static void prepareRotation(ClientPlayerEntity player, Vec3d target, State skip) {
-        if (LibrGetter.config.look && !LibrGetter.config.manual) {
-            if (LibrGetter.config.rotation) {
-                Vec3d vec3d = EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(player);
-                double d = target.getX() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.x;
-                double e = target.getY() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.y;
-                double f = target.getZ() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.z;
-                goalPos = new Vec3d(d, e, f);
-                state = State.ROTATION;
-                nextState = skip;
-            } else {
-                player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target);
-                state = skip;
-            }
-        } else {
+        if (LibrGetter.config.manual || LibrGetter.config.rotationMode == RotationMode.NONE) {
             state = skip;
+        } else if (LibrGetter.config.rotationMode == RotationMode.INSTANT) {
+            player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target);
+            state = skip;
+        } else if (LibrGetter.config.rotationMode == RotationMode.SMOOTH) {
+            Vec3d vec3d = EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(player);
+            double d = target.getX() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.x;
+            double e = target.getY() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.y;
+            double f = target.getZ() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.z;
+            goalPos = new Vec3d(d, e, f);
+            state = State.ROTATION;
+            nextState = skip;
         }
     }
 
-    public static void start() {
+    public static void start(boolean resetCounter) {
         if (state != State.STANDBY) {
             Texts.sendError(source, "librgetter.running");
             return;
@@ -588,14 +647,14 @@ public class Worker {
         }
 
         Texts.sendFeedback(source, "librgetter.start", Formatting.GREEN);
-        counter = 0;
+        if (resetCounter) counter = 0;
         state = State.WAIT_VILLAGER_ACCEPT_PROFESSION;
     }
 
     public static void add(String name, int level, int price, boolean custom) {
-        Config.Enchantment newLooking = new Config.Enchantment(name, level, price);
-        Config.Enchantment already = null;
-        for (Config.Enchantment l : LibrGetter.config.goals) {
+        Enchantment newLooking = new Enchantment(name, level, price);
+        Enchantment already = null;
+        for (Enchantment l : LibrGetter.config.goals) {
             if (l.same(newLooking)) {
                 already = l;
                 break;
@@ -612,9 +671,9 @@ public class Worker {
     }
 
     public static void remove(String name, int level) {
-        Config.Enchantment newLooking = new Config.Enchantment(name, level, 64);
-        Config.Enchantment already = null;
-        for (Config.Enchantment l : LibrGetter.config.goals) {
+        Enchantment newLooking = new Enchantment(name, level, 64);
+        Enchantment already = null;
+        for (Enchantment l : LibrGetter.config.goals) {
             if (l.same(newLooking)) {
                 already = l;
                 break;

@@ -17,7 +17,7 @@
   "librgetter.specify": "Lectern or librarian have not been set!",
   "librgetter.far": "Too far away, stopping",
   "librgetter.pick": "Villager picked another profession during process!",
-  "librgetter.offer": "Enchantment offered: %s",
+  "librgetter.offer": "Enchantments offered: %s",
   "librgetter.found": "Successfully found '%s' after %s tries for a price of %s emeralds!",
   "librgetter.lock": "Not enough items to lock the trade!",
   "librgetter.no_lectern": "The lectern has not been set!",
@@ -48,7 +48,7 @@
 
   "librgetter.config.notify": "Plays a sound once finished",
   "librgetter.config.autoTool": "Automatically select a tool to break the lectern efficiently",
-  "librgetter.config.actionBar": "Send trade logs to the actionbar instead of the chat",
+  "librgetter.config.logMode": "Send trade logs:\nNONE - don't send\nCHAT - to the chat\nACTIONBAR - to the action bar",
   "librgetter.config.lock": "Automatically lock the trade once found",
   "librgetter.config.removeGoal": "Automatically remove an enchantment from the goals list once found",
   "librgetter.config.checkUpdate": "Check for version update and notify about it on a first world join",
@@ -59,8 +59,8 @@
   "librgetter.config.safeChecker": "Check if the villager can interfere with the placing process",
   "librgetter.config.timeout": "Time in seconds to wait for a villager to update its profession before replacing the lectern; set to 0 to disable",
   "librgetter.config.fallback": "Fallback option to search for unsupported enchantments; not guaranteed to make a match; may cause lag with a large list of enchantments",
-  "librgetter.config.rotation": "Make head rotation more natural; slows down the process",
-  "librgetter.config.look": "Rotate the head before placing the lectern and talking to the librarian",
+  "librgetter.config.rotationMode": "Rotate the head before placing the lectern and talking to the librarian:\nNONE - don't rotate\nINSTANT - instant head rotation\nSMOOTH - more natural head rotation; slows down the process",
+  "librgetter.config.matchMode": "When to stop cycling:\nVANILLA - regular trade matches\nALL - all offered trades match the goals list\nLIST - whole goals list contained in offered trades\nANY - at least one trade must match the goals list",
 
   "librgetter.config._tradeCycling": "Trade Cycling"
 }

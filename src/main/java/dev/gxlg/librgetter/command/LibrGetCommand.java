@@ -1,13 +1,13 @@
 package dev.gxlg.librgetter.command;
 
-import dev.gxlg.librgetter.Config;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.Worker;
 import dev.gxlg.librgetter.utils.reflection.Commands;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.Texts;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.datafixers.util.Either;
+import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -41,7 +41,7 @@ public class LibrGetCommand {
         return 0;
     }
 
-    public static <T> int config(CommandContext<?> context, Config.Configurable<T> config) {
+    public static <T> int config(CommandContext<?> context, Configurable<T> config) {
         T value = config.get();
         try {
             value = context.getArgument("value", config.type());
@@ -111,7 +111,7 @@ public class LibrGetCommand {
         Worker.setSource(context.getSource());
         Worker.setBlock(lec);
         Worker.setVillager(vi);
-        Worker.start();
+        Worker.start(true);
 
         return 0;
     }
@@ -191,7 +191,13 @@ public class LibrGetCommand {
 
     public static int start(CommandContext<?> context) {
         Worker.setSource(context.getSource());
-        Worker.start();
+        Worker.start(true);
+        return 0;
+    }
+
+    public static int continueWork(CommandContext<?> context) {
+        Worker.setSource(context.getSource());
+        Worker.start(false);
         return 0;
     }
 

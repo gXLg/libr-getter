@@ -13,7 +13,7 @@ public class Keybinds {
     public static void registerKeybinds() {
         KeyBinding kOpen;
         if (Reflection.version(">= 1.21.9")) {
-            Identifier id = Identifier.of("librgetter", "category");
+            Identifier id = (Identifier) Reflection.wrap("Identifier method_43902/of @\"librgetter\" @\"category\"");
             Class<?> cat = (Class<?>) Reflection.wrap(".class_304$class_11900/.client.option.KeyBinding$Category");
             kOpen = (KeyBinding) Reflection.wrapn("KeyBinding @\"librgetter.keys.open\" @InputUtil.Type.KEYSYM int:GLFW.GLFW_KEY_K cat:[cat method_74698/create id]", InputUtil.class, GLFW.class, cat, id);
         } else {

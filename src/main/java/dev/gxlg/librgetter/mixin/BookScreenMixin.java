@@ -1,9 +1,7 @@
 package dev.gxlg.librgetter.mixin;
 
 import dev.gxlg.librgetter.gui.ConfigScreen;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -11,10 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @SuppressWarnings("UnresolvedMixinReference")
 @Mixin(BookScreen.class)
-public class BookScreenMixin extends Screen {
-    protected BookScreenMixin(Text title) {
-        super(title);
-    }
+public class BookScreenMixin {
 
     // used only with RUN_COMMAND in 1.21.5 and before
     /// <%

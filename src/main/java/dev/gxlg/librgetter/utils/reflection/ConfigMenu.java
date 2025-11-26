@@ -2,6 +2,7 @@ package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.Reflection;
+import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
 import net.minecraft.text.StringVisitable;
 
@@ -43,10 +44,16 @@ public class ConfigMenu {
         Object text = Texts.bookTitle();
         int finish = Math.min(index * 4 + 4, Config.getConfigurables().size());
         for (int i = index * 4; i < finish; i++) {
-            Config.Configurable<?> config = Config.getConfigurables().get(i);
+            Configurable<?> config = Config.getConfigurables().get(i);
             text = Texts.bookEntry(text, config);
         }
 
         list.set(index, text);
+    }
+
+    public static void updateAll() {
+        for (int i = 0; i < pageCount; i++) {
+            updatePage(i);
+        }
     }
 }

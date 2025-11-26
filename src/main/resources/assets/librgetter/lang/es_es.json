@@ -48,7 +48,7 @@
 
   "librgetter.config.notify": "Reproducir un sonido al finalizar",
   "librgetter.config.autoTool": "Seleccionar automáticamente la herramienta adecuada para romper el atril de manera eficiente",
-  "librgetter.config.actionBar": "Enviar registros de comercio a la barra de acción en lugar del chat",
+  "librgetter.config.logMode": "Enviar registros de comercio:\nNONE - no enviar\nCHAT - al chat\nACTIONBAR - a la barra de acción",
   "librgetter.config.lock": "Bloquear automáticamente el comercio cuando se encuentre",
   "librgetter.config.removeGoal": "Eliminar automáticamente un encantamiento de la lista de objetivos cuando se encuentre",
   "librgetter.config.checkUpdate": "Comprobar actualizaciones de versión y notificar al unirse por primera vez al mundo",
@@ -59,8 +59,8 @@
   "librgetter.config.safeChecker": "Comprobar si el aldeano puede interferir con el proceso de colocación",
   "librgetter.config.timeout": "Tiempo en segundos para esperar a que un aldeano actualice su profesión antes de reemplazar el atril; establecer en 0 para desactivar",
   "librgetter.config.fallback": "Opción de respaldo para buscar encantamientos no soportados; no garantiza coincidencias; puede causar lag con listas grandes de encantamientos",
-  "librgetter.config.rotation": "Hacer que la rotación de la cabeza sea más natural; ralentiza el proceso",
-  "librgetter.config.look": "Girar la cabeza antes de colocar el atril y hablar con el bibliotecario",
+  "librgetter.config.rotationMode": "Girar la cabeza antes de colocar el atril y hablar con el bibliotecario:\nNONE - no girar\nINSTANT - giro instantáneo\nSMOOTH - giro más natural; ralentiza el proceso",
+  "librgetter.config.matchMode": "Cuándo detener el ciclo:\nVANILLA - coinciden los comercios normales\nALL - todas las ofertas coinciden con la lista de objetivos\nLIST - toda la lista de objetivos está contenida en las ofertas\nANY - al menos una oferta debe coincidir con la lista de objetivos",
 
   "librgetter.config._tradeCycling": "Trade Cycling"
 }

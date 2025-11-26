@@ -1,10 +1,10 @@
 package dev.gxlg.librgetter.utils.reflection;
 
 import com.mojang.datafixers.util.Either;
-import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.Reflection;
 import dev.gxlg.librgetter.utils.Plugins;
+import dev.gxlg.librgetter.utils.types.Enchantment;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,14 +12,12 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -30,7 +28,6 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOfferList;
-import net.minecraft.village.TradedItem;
 import net.minecraft.village.VillagerData;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
@@ -63,13 +60,12 @@ public class Minecraft {
         }
     }
 
-    public static Identifier enchantmentId(Enchantment enchantment) {
+    public static Identifier enchantmentId(net.minecraft.enchantment.Enchantment enchantment) {
         if (Reflection.version(">= 1.21")) {
             ClientWorld w = MinecraftClient.getInstance().world;
             if (w == null) return null;
-            DynamicRegistryManager rm = w.getRegistryManager();
-
-            Object r = Reflection.wrap("DynamicRegistryManager:rm method_30530/get/getOrThrow [.class_5321/.registry.RegistryKey]:[[.class_7924/.registry.RegistryKeys] field_41265/ENCHANTMENT]", rm);
+            Object rm = w.getRegistryManager();
+            Object r = Reflection.wrap("[.class_5455/.registry.DynamicRegistryManager]:rm method_30530/get/getOrThrow [.class_5321/.registry.RegistryKey]:[[.class_7924/.registry.RegistryKeys] field_41265/ENCHANTMENT]", rm);
             Object e = Reflection.wrap("[.class_2378/.registry.Registry]:r method_47983/getEntry Object:enchantment", r);
             return (Identifier) Reflection.wrap("Identifier method_60654/of String:[[.class_6880/.registry.entry.RegistryEntry]:e method_55840/getIdAsString]", e);
 
@@ -81,7 +77,7 @@ public class Minecraft {
         }
     }
 
-    public static Either<Config.Enchantment, String[]> parseTrade(TradeOfferList trades, int trade) {
+    public static Either<Enchantment, String[]> parseTrade(TradeOfferList trades, int trade) {
         ItemStack stack = trades.get(trade).getSellItem();
 
         Object tag;
@@ -98,7 +94,7 @@ public class Minecraft {
 
         } else {
             tag = Reflection.wrap("ItemStack:stack method_7969/getNbt/getTag", stack);
-            if (tag == null) return Either.left(Config.Enchantment.EMPTY);
+            if (tag == null) return Either.left(Enchantment.EMPTY);
         }
 
         String id = null;
@@ -173,7 +169,7 @@ public class Minecraft {
         if (id == null) {
             // Nothing was found, so try fallback or return empty
             Pair<String, Integer> fb = fallback(tag);
-            if (fb == null) return Either.left(Config.Enchantment.EMPTY);
+            if (fb == null) return Either.left(Enchantment.EMPTY);
 
             id = fb.getLeft();
             lvl = fb.getRight();
@@ -188,7 +184,7 @@ public class Minecraft {
             return Either.right(new String[]{"librgetter.internal", "f"});
         }
 
-        return Either.left(new Config.Enchantment(id, lvl, f.getCount()));
+        return Either.left(new Enchantment(id, lvl, f.getCount()));
     }
 
     public static Pair<String, Integer> fallback(Object tag) {
@@ -196,7 +192,7 @@ public class Minecraft {
 
         String string = tag.toString();
         Map<String, Set<Integer>> searching = new HashMap<>();
-        for (Config.Enchantment search : LibrGetter.config.goals) {
+        for (Enchantment search : LibrGetter.config.goals) {
             if (!searching.containsKey(search.id)) searching.put(search.id, new HashSet<>());
             searching.get(search.id).add(search.lvl);
         }
@@ -237,8 +233,8 @@ public class Minecraft {
         if (Reflection.version(">= 1.20.5")) {
             Optional<?> optional = (Optional<?>) Reflection.wrapn("TradeOffer:offer method_57557/getSecondBuyItem", offer);
             if (optional.isEmpty()) return ItemStack.EMPTY;
-            TradedItem item = (TradedItem) optional.get();
-            return item.itemStack();
+            Object item = optional.get();
+            return (ItemStack) Reflection.wrapn("[.class_9306/.village.TradedItem]:item comp_2427/itemStack", item);
         } else {
             return (ItemStack) Reflection.wrap("TradeOffer:offer method_8247/getSecondBuyItem/getDisplayedSecondBuyItem", offer);
         }
@@ -265,12 +261,12 @@ public class Minecraft {
         }
     }
 
-    public static boolean canBeTraded(Enchantment enchantment) {
+    public static boolean canBeTraded(net.minecraft.enchantment.Enchantment enchantment) {
         if (Reflection.version(">= 1.21")) {
             ClientWorld w = MinecraftClient.getInstance().world;
             if (w == null) return false;
-            DynamicRegistryManager rm = w.getRegistryManager();
-            Object r = Reflection.wrap("DynamicRegistryManager:rm method_30530/get/getOrThrow [.class_5321/.registry.RegistryKey]:[[.class_7924/.registry.RegistryKeys] field_41265/ENCHANTMENT]", rm);
+            Object rm = w.getRegistryManager();
+            Object r = Reflection.wrap("[.class_5455/.registry.DynamicRegistryManager]:rm method_30530/get/getOrThrow [.class_5321/.registry.RegistryKey]:[[.class_7924/.registry.RegistryKeys] field_41265/ENCHANTMENT]", rm);
             Object e = Reflection.wrap("[.class_2378/.registry.Registry]:r method_47983/getEntry Object:enchantment", r, enchantment);
             return (boolean) Reflection.wrapn("[.class_6880/.registry.entry.RegistryEntry]:e method_40220/isIn [.class_6862/.registry.tag.TagKey]:[[.class_9636/.registry.tag.EnchantmentTags] field_51545/TRADEABLE]", e);
         } else {
