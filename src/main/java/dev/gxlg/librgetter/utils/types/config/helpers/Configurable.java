@@ -4,9 +4,11 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import dev.gxlg.librgetter.Config;
-import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.reflection.Support;
-import dev.gxlg.librgetter.utils.types.config.*;
+import dev.gxlg.librgetter.utils.types.config.Compatibility;
+import dev.gxlg.librgetter.utils.types.config.IntRange;
+import dev.gxlg.librgetter.utils.types.config.OnlyEffective;
+import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -89,7 +91,6 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
             } else {
                 current = conf.get().toString();
             }
-            LibrGetter.LOGGER.info("-> {} contains? {}", Arrays.toString(oe.equals()), current);
             if (!Arrays.asList(oe.equals()).contains(current)) return false;
         }
 
