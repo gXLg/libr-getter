@@ -1,18 +1,30 @@
 package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.Config;
+import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.Reflection;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
 import net.minecraft.text.StringVisitable;
 
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ConfigMenu {
+    public static final int CONFIGS_PER_PAGE = 4;
+    public static final int pageCount;
+
     private static final List<Object> list = new ArrayList<>();
-    public static int pageCount = (int) Math.ceil(Config.getConfigurables().size() / 4.0);
+    private static final Map<String, Integer> categories = new HashMap<>();
+
+    static {
+        int pages = 1;
+        for (String cat : Config.CATEGORIES) {
+            categories.put(cat, pages);
+            pages += Math.ceil(LibrGetter.config.getConfigurablesForCategory(cat).size() / ((float) CONFIGS_PER_PAGE));
+        }
+        pageCount = pages;
+    }
 
     public static BookScreen.Contents getContent() {
         if (list.isEmpty()) {
@@ -41,19 +53,23 @@ public class ConfigMenu {
     }
 
     public static void updatePage(int index) {
-        Object text = Texts.bookTitle();
-        int finish = Math.min(index * 4 + 4, Config.getConfigurables().size());
-        for (int i = index * 4; i < finish; i++) {
-            Configurable<?> config = Config.getConfigurables().get(i);
-            text = Texts.bookEntry(text, config);
-        }
+        Object text;
+        if (index == 0) {
+            text = Texts.bookMainPage(categories);
 
+        } else {
+            List<String> reversed = new ArrayList<>(Config.CATEGORIES);
+            Collections.reverse(reversed);
+            String category = reversed.stream().filter(c -> categories.get(c) <= index).findFirst().orElseThrow(() -> new RuntimeException("Invalid index " + index));
+            text = Texts.bookTitle(category);
+
+            int j = index - categories.get(category);
+            int finish = Math.min(j * CONFIGS_PER_PAGE + CONFIGS_PER_PAGE, LibrGetter.config.getConfigurablesForCategory(category).size());
+            for (int i = j * CONFIGS_PER_PAGE; i < finish; i++) {
+                Configurable<?> config = LibrGetter.config.getConfigurablesForCategory(category).get(i);
+                text = Texts.bookEntry(text, config);
+            }
+        }
         list.set(index, text);
-    }
-
-    public static void updateAll() {
-        for (int i = 0; i < pageCount; i++) {
-            updatePage(i);
-        }
     }
 }

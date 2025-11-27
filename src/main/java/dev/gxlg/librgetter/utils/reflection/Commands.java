@@ -8,7 +8,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.datafixers.util.Either;
-import dev.gxlg.librgetter.Config;
+import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.Reflection;
 import dev.gxlg.librgetter.command.LibrGetCommand;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
@@ -203,7 +203,7 @@ public class Commands {
 
         // automatically create config commands for each simply configurable value in Config
         l = literal(ccm, "config");
-        for (Configurable<?> configurable : Config.getConfigurables()) {
+        for (Configurable<?> configurable : LibrGetter.config.getConfigurables()) {
             String name = configurable.name();
             a = literal(ccm, name);
             r = argument(ccm, "value", configurable.argument());

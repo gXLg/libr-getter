@@ -23,7 +23,7 @@ public class Support {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean useTradeCycling() {
-        return tradeCycling && LibrGetter.config._tradeCycling;
+        return tradeCycling && LibrGetter.config.tradeCycling;
     }
 
     public static boolean isEffective(String modID) {

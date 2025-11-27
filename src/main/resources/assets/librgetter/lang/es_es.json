@@ -45,6 +45,11 @@
   "librgetter.keys.open": "Abrir el menú de configuración",
 
   "librgetter.menu": "Menú de configuración",
+  "librgetter.category.process": "Proceso",
+  "librgetter.category.success": "Acciones en caso de éxito",
+  "librgetter.category.messages": "Mensajes",
+  "librgetter.category.matching": "Coincidencia de objetivos",
+  "librgetter.category.compatibility": "Compatibilidad",
 
   "librgetter.config.notify": "Reproducir un sonido al finalizar",
   "librgetter.config.autoTool": "Seleccionar automáticamente la herramienta adecuada para romper el atril de manera eficiente",
@@ -60,7 +65,7 @@
   "librgetter.config.timeout": "Tiempo en segundos para esperar a que un aldeano actualice su profesión antes de reemplazar el atril; establecer en 0 para desactivar",
   "librgetter.config.fallback": "Opción de respaldo para buscar encantamientos no soportados; no garantiza coincidencias; puede causar lag con listas grandes de encantamientos",
   "librgetter.config.rotationMode": "Girar la cabeza antes de colocar el atril y hablar con el bibliotecario:\nNONE - no girar\nINSTANT - giro instantáneo\nSMOOTH - giro más natural; ralentiza el proceso",
-  "librgetter.config.matchMode": "Cuándo detener el ciclo:\nVANILLA - coinciden los comercios normales\nALL - todas las ofertas coinciden con la lista de objetivos\nLIST - toda la lista de objetivos está contenida en las ofertas\nANY - al menos una oferta debe coincidir con la lista de objetivos",
-
-  "librgetter.config._tradeCycling": "Trade Cycling"
+  "librgetter.config.matchMode": "Cuándo detener el ciclo:\nVANILLA - coincide el comercio normal\nPERFECT - todas las ofertas coinciden con la lista de objetivos\nATLEAST - al menos N ofertas deben coincidir con la lista de objetivos",
+  "librgetter.config.matchAtLeast": "Número de ofertas únicas que deben coincidir con la lista de objetivos para considerar el intento exitoso",
+  "librgetter.config.tradeCycling": "Integración con Trade Cycling"
 }

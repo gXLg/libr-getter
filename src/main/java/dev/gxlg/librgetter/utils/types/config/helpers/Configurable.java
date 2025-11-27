@@ -9,12 +9,13 @@ import dev.gxlg.librgetter.utils.reflection.Support;
 import dev.gxlg.librgetter.utils.types.config.*;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
-public record Configurable<T>(String name, Class<T> type) {
+public record Configurable<T>(String name, Class<T> type, Config instance) {
     public T get() {
         try {
             Field f = Config.class.getField(name);
-            T t = type.cast(f.get(LibrGetter.config));
+            T t = type.cast(f.get(instance));
             if (t != null) return t;
             return getDefault();
 
@@ -26,18 +27,14 @@ public record Configurable<T>(String name, Class<T> type) {
     public void set(T value) {
         try {
             Field f = Config.class.getField(name);
-            f.set(LibrGetter.config, value);
+            f.set(instance, value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
     public T getDefault() {
-        try {
-            return type.cast(Config.class.getField(name).get(Config.DEFAULT));
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
+        return type.cast(Config.DEFAULT.getConfigurableForName(name).get());
     }
 
     public ArgumentType<?> argument() {
@@ -83,33 +80,29 @@ public record Configurable<T>(String name, Class<T> type) {
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
-        NoEffect a = f.getDeclaredAnnotation(NoEffect.class);
-        if (a != null) {
-            for (String ifTrue : a.ifTrue()) {
-                Field i;
-                try {
-                    i = Config.class.getField(ifTrue);
-                    if (i.getType() != boolean.class)
-                        throw new RuntimeException("Effect dependency on a non-boolean field");
-                    if (i.getBoolean(LibrGetter.config)) return false;
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
+
+        for (OnlyEffective oe : f.getAnnotationsByType(OnlyEffective.class)) {
+            Configurable<?> conf = instance.getConfigurableForName(oe.when());
+            String current;
+            if (conf.type() == OptionsConfig.class) {
+                current = ((OptionsConfig<?>) conf.get()).asString();
+            } else {
+                current = conf.get().toString();
             }
-            for (String ifFalse : a.ifFalse()) {
-                Field i;
-                try {
-                    i = Config.class.getField(ifFalse);
-                    if (i.getType() != boolean.class)
-                        throw new RuntimeException("Effect dependency on a non-boolean field");
-                    if (!i.getBoolean(LibrGetter.config)) return false;
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            LibrGetter.LOGGER.info("-> {} contains? {}", Arrays.toString(oe.equals()), current);
+            if (!Arrays.asList(oe.equals()).contains(current)) return false;
         }
+
         Compatibility c = f.getDeclaredAnnotation(Compatibility.class);
-        if (c != null) return Support.isEffective(c.value());
+        //noinspection RedundantIfStatement
+        if (c != null && !Support.isEffective(c.value())) return false;
+
+        // some more criteria later possibly...
+
         return true;
+    }
+
+    public boolean isDefault() {
+        return get().equals(getDefault());
     }
 }

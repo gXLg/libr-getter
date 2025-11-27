@@ -45,6 +45,11 @@
   "librgetter.keys.open": "Открыть меню конфигураций",
 
   "librgetter.menu": "Меню конфигураций",
+  "librgetter.category.process": "Процесс",
+  "librgetter.category.success": "Действия при успехе",
+  "librgetter.category.messages": "Сообщения",
+  "librgetter.category.matching": "Сопоставление целей",
+  "librgetter.category.compatibility": "Совместимость",
 
   "librgetter.config.notify": "Проигрывает звук, когда успешно найдено",
   "librgetter.config.autoTool": "Автоматически выбирает самый еффективный инструмент для ломания кафедры",
@@ -60,7 +65,7 @@
   "librgetter.config.timeout": "Время ожидания обновления профессии жителя в секундах, перед заменой кафедры; установите 0, чтобы отключить",
   "librgetter.config.fallback": "Запасная опция для поиска неподдерживаемых зачарований; не гарантирует находку; может привести к лагам при большом списке целей",
   "librgetter.config.rotationMode": "Поворачивать голову перед установкой кафедры и разговором с библиотекарем:\nNONE - не поворачивать\nINSTANT - моментальный поворот\nSMOOTH - более плавный поворот; замедляет процесс",
-  "librgetter.config.matchMode": "Когда прекратить поиск:\nVANILLA - обычная сделка соответствует критериям\nALL - все сделки соответствуют списку целей\nLIST - весь список целей содержится в сделках\nANY - как минимум одна сделка соответствует критериям",
-
-  "librgetter.config._tradeCycling": "Trade Cycling"
+  "librgetter.config.matchMode": "Когда останавливать цикл:\nVANILLA - совпадает обычная торговля\nPERFECT - все предложенные сделки совпадают со списком целей\nATLEAST - как минимум N сделок должны совпадать со списком целей",
+  "librgetter.config.matchAtLeast": "Количество уникальных сделок, которые должны совпасть со списком целей, чтобы попытка считалась успешной",
+  "librgetter.config.tradeCycling": "Интеграция с Trade Cycling"
 }

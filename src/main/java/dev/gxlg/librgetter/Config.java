@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import dev.gxlg.librgetter.utils.types.Enchantment;
 import dev.gxlg.librgetter.utils.types.config.Compatibility;
 import dev.gxlg.librgetter.utils.types.config.IntRange;
-import dev.gxlg.librgetter.utils.types.config.NoEffect;
+import dev.gxlg.librgetter.utils.types.config.OnlyEffective;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.enums.MatchMode;
@@ -21,20 +21,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("CanBeFinal")
 public class Config {
     public boolean notify = false;
 
-    @NoEffect(ifTrue = "manual")
+    @OnlyEffective(when = "manual", equals = "false")
     public boolean autoTool = true;
 
     public LogMode logMode = LogMode.CHAT;
 
-    @NoEffect(ifTrue = "manual")
+    @OnlyEffective(when = "manual", equals = "false")
     public boolean lock = false;
 
     public boolean removeGoal = false;
@@ -43,7 +41,7 @@ public class Config {
 
     public boolean warning = true;
 
-    @NoEffect(ifTrue = "manual")
+    @OnlyEffective(when = "manual", equals = "false")
     public boolean offhand = false;
 
     public boolean manual = false;
@@ -54,20 +52,54 @@ public class Config {
 
     public boolean fallback = false;
 
-    @NoEffect(ifTrue = "manual")
+    @OnlyEffective(when = "manual", equals = "false")
     public RotationMode rotationMode = RotationMode.INSTANT;
 
     @IntRange(min = 0, max = 20)
     public int timeout = 0;
 
-    public List<Enchantment> goals = new ArrayList<>();
-
     @NotNull
     public MatchMode matchMode = MatchMode.VANILLA;
 
-    @Compatibility("trade_cycling")
-    public boolean _tradeCycling = false;
+    @OnlyEffective(when = "matchMode", equals = "ATLEAST")
+    @IntRange(min = 1)
+    public int matchAtLeast = 1;
 
+    @Compatibility("trade_cycling")
+    public boolean tradeCycling = false;
+
+
+    public List<Enchantment> goals = new ArrayList<>();
+
+    private transient final List<Configurable<?>> configurable = new ArrayList<>();
+    private transient final Map<String, Configurable<?>> configurableMap = new HashMap<>();
+    private transient final Map<String, List<Configurable<?>>> categoryMap = new HashMap<>();
+
+    public Config() {
+        for (Field f : Config.class.getFields()) {
+            Configurable<?> conf;
+            if (f.getType() == boolean.class) conf = new Configurable<>(f.getName(), Boolean.class, this);
+            else if (f.getType() == int.class) conf = new Configurable<>(f.getName(), Integer.class, this);
+            else if (OptionsConfig.class.isAssignableFrom(f.getType()))
+                conf = new Configurable<>(f.getName(), OptionsConfig.class, this);
+            else continue;
+            configurable.add(conf);
+            configurableMap.put(f.getName(), conf);
+            String key = categories.entrySet().stream().filter(e -> e.getValue().contains(f.getName())).findFirst().map(Map.Entry::getKey).orElseThrow(() -> new RuntimeException("Uncategorized config '" + f.getName() + "'"));
+            categoryMap.computeIfAbsent(key, k -> new ArrayList<>()).add(conf);
+        }
+        configurable.sort(Comparator.comparing(Configurable::name));
+        categoryMap.forEach((key, value) -> value.sort(Comparator.comparing(c -> categories.get(key).indexOf(c.name()))));
+    }
+
+    private static final Map<String, List<String>> categories = Map.of(
+            "process", List.of("autoTool", "offhand", "rotationMode", "manual", "waitLose", "safeChecker", "timeout"),
+            "success", List.of("notify", "removeGoal", "lock"),
+            "messages", List.of("logMode", "warning", "checkUpdate"),
+            "matching", List.of("fallback", "matchMode", "matchAtLeast"),
+            "compatibility", Arrays.stream(Config.class.getFields()).filter(f -> f.getAnnotation(Compatibility.class) != null).map(Field::getName).sorted().toList()
+    );
+    public static final List<String> CATEGORIES = List.of("process", "success", "messages", "matching", "compatibility");
 
     private static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("librgetter.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -102,7 +134,8 @@ public class Config {
             }
 
             Path tempPath = configPath.resolveSibling(configPath.getFileName() + ".tmp");
-            Files.createFile(tempPath);
+            if (!Files.exists(tempPath)) Files.createFile(tempPath);
+
             Files.write(tempPath, GSON.toJson(this).getBytes(), StandardOpenOption.WRITE);
             Files.move(tempPath, configPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -111,25 +144,16 @@ public class Config {
     }
 
     public static final Config DEFAULT = new Config();
-    private static final List<Configurable<?>> configurable = new ArrayList<>();
 
-    static {
-        List<Configurable<?>> normal = new ArrayList<>();
-        List<Configurable<?>> compat = new ArrayList<>();
-        for (Field f : Config.class.getFields()) {
-            List<Configurable<?>> candidate = f.getName().startsWith("_") ? compat : normal;
-            if (f.getType() == boolean.class) candidate.add(new Configurable<>(f.getName(), Boolean.class));
-            if (f.getType() == int.class) candidate.add(new Configurable<>(f.getName(), Integer.class));
-            if (OptionsConfig.class.isAssignableFrom(f.getType()))
-                candidate.add(new Configurable<>(f.getName(), OptionsConfig.class));
-        }
-        normal.sort(Comparator.comparing(Configurable::name));
-        compat.sort(Comparator.comparing(Configurable::name));
-        configurable.addAll(normal);
-        configurable.addAll(compat);
+    public List<Configurable<?>> getConfigurables() {
+        return configurable;
     }
 
-    public static List<Configurable<?>> getConfigurables() {
-        return configurable;
+    public List<Configurable<?>> getConfigurablesForCategory(String category) {
+        return categoryMap.getOrDefault(category, List.of());
+    }
+
+    public Configurable<?> getConfigurableForName(String field) {
+        return configurableMap.getOrDefault(field, null);
     }
 }

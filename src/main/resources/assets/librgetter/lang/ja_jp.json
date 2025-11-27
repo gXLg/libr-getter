@@ -45,6 +45,11 @@
   "librgetter.keys.open": "設定メニューを開く",
 
   "librgetter.menu": "設定メニュー",
+  "librgetter.category.process": "処理",
+  "librgetter.category.success": "成功時の動作",
+  "librgetter.category.messages": "メッセージ",
+  "librgetter.category.matching": "ゴール照合",
+  "librgetter.category.compatibility": "互換性",
 
   "librgetter.config.notify": "完了時に一度音を鳴らす",
   "librgetter.config.autoTool": "書見台を効率よく壊すために自動で道具を選択する",
@@ -60,7 +65,7 @@
   "librgetter.config.timeout": "書見台を置き換える前に村人が職業を更新するのを待つ時間（秒）。無効にするには0に設定してください",
   "librgetter.config.fallback": "未サポートのエンチャントを探すフォールバックオプション。一致を保証するものではありません。エンチャントが多いとラグを引き起こす可能性があります",
   "librgetter.config.rotationMode": "書見台を置いて司書と話す前に頭を回転させるかどうか:\nNONE - 回転しない\nINSTANT - 即時回転\nSMOOTH - より自然な回転；処理が遅くなる",
-  "librgetter.config.matchMode": "サイクルを止める条件:\nVANILLA - 通常の取引が一致したとき\nALL - 提示されたすべての取引がゴールリストと一致\nLIST - ゴールリスト全体が提示された取引に含まれている\nANY - 少なくとも1つの取引がゴールリストと一致する",
-
-  "librgetter.config._tradeCycling": "Trade Cycling"
+  "librgetter.config.matchMode": "サイクルを止める条件:\nVANILLA - 通常取引が一致\nPERFECT - 提示されたすべての取引がゴールリストと一致\nATLEAST - 少なくとも N 個の取引がゴールリストと一致する必要がある",
+  "librgetter.config.matchAtLeast": "成功とみなすためにゴールリストと一致しなければならない固有の取引数",
+  "librgetter.config.tradeCycling": "Trade Cycling 連携"
 }

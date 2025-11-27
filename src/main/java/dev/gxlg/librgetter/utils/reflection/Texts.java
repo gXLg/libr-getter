@@ -1,14 +1,20 @@
 package dev.gxlg.librgetter.utils.reflection;
 
+import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.Reflection;
-import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
-import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.Enchantment;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
+import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
+import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.*;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+
+import java.util.Map;
 
 public class Texts {
 
@@ -50,14 +56,14 @@ public class Texts {
     }
 
     public static void sendFound(Object source, Enchantment enchant, int counter) {
-        Object text = translatable("librgetter.found", enchant, counter, enchant.price);
+        Object text = translatable("librgetter.found", enchant, counter, enchant.price());
         text = Reflection.wrap("mc:text method_27692/formatted Formatting.GREEN", mc, text);
 
         if (!LibrGetter.config.removeGoal) {
             String mt = " ";
             text = Reflection.wrap("mc:text method_27693/append mt", mc, text, mt);
             Object rem = translatable("librgetter.remove");
-            Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + enchant.id + "\" " + enchant.lvl)).withColor(Formatting.YELLOW);
+            Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + enchant.id() + "\" " + enchant.lvl())).withColor(Formatting.YELLOW);
             Reflection.wrapi("mc:rem method_10862/setStyle style", mc, rem, style);
             text = Reflection.wrap("mc:text method_10852/append tc:rem", mc, text, tc, rem);
         }
@@ -91,23 +97,46 @@ public class Texts {
         Object text = translatable("librgetter.list");
         Object rem = translatable("librgetter.remove");
         for (Enchantment l : LibrGetter.config.goals) {
-            String line = "\n- " + l + " (" + l.price + ") ";
+            String line = "\n- " + l + " (" + l.price() + ") ";
             text = Reflection.wrap("mc:text method_27693/append line", mc, text, line);
-            Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + l.id + "\" " + l.lvl)).withColor(Formatting.YELLOW);
+            Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + l.id() + "\" " + l.lvl())).withColor(Formatting.YELLOW);
             Object remc = applyStyle(rem, style);
             text = Reflection.wrap("mc:text method_10852/append tc:remc", mc, text, tc, remc);
         }
         Reflection.wrapi("fcs:source sendFeedback§m tc:text", fcs, source, tc, text);
     }
 
-    public static Object bookTitle() {
+    public static Object bookMainPage(Map<String, Integer> categories) {
         Object text = Text.of("");
         Object lg = Text.of("LibrGetter " + LibrGetter.getVersion() + "\n");
         lg = Reflection.wrap("tc:lg method_27662/copy", tc, lg);
         lg = Reflection.wrap("mc:lg method_27692/formatted Formatting.DARK_GREEN", mc, lg);
         text = Reflection.wrap("mc:text method_10852/append tc:lg", mc, text, tc, lg);
-        Object menu = translatable("librgetter.menu");
-        return Reflection.wrap("mc:text method_10852/append tc:menu", mc, text, tc, menu);
+        Object s = translatable("librgetter.menu");
+        text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+        String nl = "\n";
+        String star = "\n* ";
+        text = Reflection.wrap("mc:text method_27693/append nl", mc, text, nl);
+        for (String cat : Config.CATEGORIES) {
+            text = Reflection.wrap("mc:text method_27693/append star", mc, text, star);
+            s = applyStyle(translatable("librgetter.category." + cat), Style.EMPTY.withClickEvent(paging(categories.get(cat) + 1)));
+            text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+        }
+        return text;
+    }
+
+    public static Object bookTitle(String category) {
+        Object text = Text.of("");
+        Object lg = Text.of("LibrGetter " + LibrGetter.getVersion() + "\n");
+        lg = Reflection.wrap("tc:lg method_27662/copy", tc, lg);
+        lg = Reflection.wrap("mc:lg method_27692/formatted Formatting.DARK_GREEN", mc, lg);
+        text = Reflection.wrap("mc:text method_10852/append tc:lg", mc, text, tc, lg);
+        Object s = applyStyle(Text.of("↩"), Style.EMPTY.withClickEvent(paging(1)));
+        text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+        s = literal(" ");
+        text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+        s = translatable("librgetter.category." + category);
+        return Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
     }
 
     public static Object bookEntry(Object text, Configurable<?> configurable) {
@@ -125,13 +154,14 @@ public class Texts {
         String nl = "\n";
         text = Reflection.wrap("mc:text method_27693/append nl+nl", mc, text, nl);
         text = Reflection.wrap("mc:text method_10852/append tc:c", mc, text, tc, c);
-        text = Reflection.wrap("mc:text method_27693/append nl", mc, text, nl);
 
+        Style r;
         Object x, y, z;
         if (configurable.type() == Boolean.class) {
             boolean value = (boolean) configurable.get();
             Style style = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (!value))).withColor(value ? green : red);
 
+            r = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + configurable.getDefault().toString()));
             x = applyStyle(Text.of("[" + value + "]"), style);
             y = literal(" ");
             z = literal("");
@@ -142,6 +172,7 @@ public class Texts {
             Style nStyle = Style.EMPTY.withColor(black);
             Style pStyle = configurable.inRange(value + 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value + 1))).withColor(green) : Style.EMPTY.withColor(Formatting.GRAY);
 
+            r = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + configurable.getDefault().toString()));
             x = applyStyle(Text.of("[-]"), mStyle);
             y = applyStyle(Text.of(" " + value + " "), nStyle);
             z = applyStyle(Text.of("[+]"), pStyle);
@@ -150,6 +181,7 @@ public class Texts {
             OptionsConfig<?> value = (OptionsConfig<?>) configurable.get();
             Style style = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + value.next().asString())).withColor(value.asString().equals("NONE") ? red : green);
 
+            r = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + ((OptionsConfig<?>) configurable.getDefault()).asString()));
             x = applyStyle(Text.of("[" + value.asString() + "]"), style);
             y = literal("");
             z = literal("");
@@ -157,6 +189,15 @@ public class Texts {
         } else {
             throw new RuntimeException("Unexpected type of configurable!");
         }
+
+        if (!configurable.isDefault()) {
+            Object s = literal(" ");
+            text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+            s = applyStyle(Text.of("↩"), r.withColor(black));
+            text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+        }
+        text = Reflection.wrap("mc:text method_27693/append nl", mc, text, nl);
+
 
         text = Reflection.wrap("mc:text method_10852/append tc:x", mc, text, tc, x);
         text = Reflection.wrap("mc:text method_10852/append tc:y", mc, text, tc, y);
@@ -169,6 +210,15 @@ public class Texts {
         } else {
             Class<?> action = (Class<?>) Reflection.wrap(".class_2558$class_2559/.text.ClickEvent$Action");
             return (ClickEvent) Reflection.wrap("ClickEvent action:[action field_11750/RUN_COMMAND] String:command", action, command);
+        }
+    }
+
+    public static ClickEvent paging(int page) {
+        if (Reflection.version(">= 1.21.5")) {
+            return (ClickEvent) Reflection.wrap("[.class_2558$class_10605/.text.ClickEvent$ChangePage] int:page", page);
+        } else {
+            Class<?> action = (Class<?>) Reflection.wrap(".class_2558$class_2559/.text.ClickEvent$Action");
+            return (ClickEvent) Reflection.wrap("ClickEvent action:[action field_11748/CHANGE_PAGE] int:page", action, page);
         }
     }
 

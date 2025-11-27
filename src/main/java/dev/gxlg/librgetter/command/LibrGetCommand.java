@@ -4,6 +4,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.Worker;
+import dev.gxlg.librgetter.gui.ConfigScreen;
 import dev.gxlg.librgetter.utils.reflection.Commands;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.Texts;
@@ -47,9 +48,13 @@ public class LibrGetCommand {
             value = context.getArgument("value", config.type());
         } catch (IllegalArgumentException ignored) {
         }
-        Texts.sendFeedback(context.getSource(), "librgetter.config", null, config.name(), value);
+
+        if (!ConfigScreen.isOpen()) {
+            Texts.sendFeedback(context.getSource(), "librgetter.config", null, config.name(), value);
+        }
+
         config.set(value);
-        LibrGetter.config.save();
+        config.instance().save();
         return 0;
     }
 

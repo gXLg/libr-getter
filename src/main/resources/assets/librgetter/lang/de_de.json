@@ -45,6 +45,11 @@
   "librgetter.keys.open": "Das Konfigurationsmenü öffnen",
 
   "librgetter.menu": "Konfigurationsmenü",
+  "librgetter.category.process": "Prozess",
+  "librgetter.category.success": "Aktionen bei Erfolg",
+  "librgetter.category.messages": "Nachrichten",
+  "librgetter.category.matching": "Zielabgleich",
+  "librgetter.category.compatibility": "Kompatibilität",
 
   "librgetter.config.notify": "Spielt ein Ton ab, wenn erfolgreich gefunden",
   "librgetter.config.autoTool": "Sucht automatisch das beste Werkzeug zum zerstören des Lesepults",
@@ -60,7 +65,7 @@
   "librgetter.config.timeout": "Zeit in Sekunden, die gewartet wird, bis ein Dorfbewohner seinen Beruf aktualisiert, bevor das Lesepult ersetzt wird; auf 0 setzen, um zu deaktivieren",
   "librgetter.config.fallback": "Rückfall Option, um für nicht unterstützte Verzauberungen zu suchen; garantiert nicht das Finden; kann bei großen Suchlisten Lag verursachen",
   "librgetter.config.rotationMode": "Kopf drehen, bevor das Lesepult platziert und mit dem Bibliothekar gesprochen wird:\nNONE - nicht drehen\nINSTANT - sofortige Drehung\nSMOOTH - natürlichere Drehung; verlangsamt den Ablauf",
-  "librgetter.config.matchMode": "Wann mit der Suche aufhören:\nVANILLA - regulärer Trade stimmt überein\nALL - alle Trades stimmen mit der Suchliste überein\nLIST - die ganze Suchliste ist in der Trades enthalten\nANY - mindestens ein Trade muss übereinstimmen",
-
-  "librgetter.config._tradeCycling": "Trade Cycling"
+  "librgetter.config.matchMode": "Wann der Zyklus gestoppt wird:\nVANILLA - regulärer Trade stimmt überein\nPERFECT - alle angebotenen Traqdes stimmen mit der Zielliste überein\nATLEAST - mindestens N Trades müssen mit der Zielliste übereinstimmen",
+  "librgetter.config.matchAtLeast": "Anzahl der eindeutigen Handelsoptionen, die mit der Zielliste übereinstimmen müssen, damit der Versuch als Erfolg gilt",
+  "librgetter.config.tradeCycling": "Integration für Trade Cycling"
 }

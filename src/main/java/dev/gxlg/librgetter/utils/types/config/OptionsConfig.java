@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.types.config;
 
 import com.mojang.brigadier.arguments.ArgumentType;
-import dev.gxlg.librgetter.utils.types.config.helpers.EnumArgumentTypeImpl;
+import dev.gxlg.librgetter.utils.types.config.helpers.EnumArgumentType;
 import net.minecraft.util.StringIdentifiable;
 
 public interface OptionsConfig<T extends Enum<T> & StringIdentifiable> extends StringIdentifiable {
@@ -17,6 +17,6 @@ public interface OptionsConfig<T extends Enum<T> & StringIdentifiable> extends S
     }
 
     default ArgumentType<T> argumentType() {
-        return EnumArgumentTypeImpl.of(this::getValues);
+        return EnumArgumentType.of(this::getValues);
     }
 }

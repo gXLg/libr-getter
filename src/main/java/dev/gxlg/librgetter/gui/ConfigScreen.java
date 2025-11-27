@@ -2,6 +2,7 @@ package dev.gxlg.librgetter.gui;
 
 import dev.gxlg.librgetter.mixin.BookScreenAccessor;
 import dev.gxlg.librgetter.utils.reflection.ConfigMenu;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
 
 @SuppressWarnings("ReferenceToMixin")
@@ -29,18 +30,24 @@ public class ConfigScreen extends BookScreen {
     @Override
     protected void goToPreviousPage() {
         if (currentPage > 0) currentPage--;
+        updateScreen();
         super.goToPreviousPage();
     }
 
     @Override
     protected void goToNextPage() {
         if (currentPage < ConfigMenu.pageCount - 1) currentPage++;
+        updateScreen();
         super.goToNextPage();
     }
 
     public void updateScreen() {
         // update screen
         ((BookScreenAccessor) this).setCachedPageIndex(-1);
-        ConfigMenu.updateAll();
+        ConfigMenu.updatePage(currentPage);
+    }
+
+    public static boolean isOpen() {
+        return MinecraftClient.getInstance().currentScreen instanceof ConfigScreen;
     }
 }

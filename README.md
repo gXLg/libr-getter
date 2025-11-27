@@ -4,6 +4,7 @@
 
 A highly configurable fabric mod to automatically cycle a librarian villager for the desired enchantment by replacing his lectern.
 
+<!--suppress HtmlDeprecatedAttribute -->
 <div align="center">
   <hr>
   <a href="https://modrinth.com/mod/libr-getter"><img alt="Modrinth badge" src="https://img.shields.io/badge/dynamic/json?labelColor=black&color=565&label=Modrinth&suffix=%20downloads&query=downloads&url=https://api.modrinth.com/v2/project/6Ts2vJ13&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAJPUExURQAAABvZahWnUha1WAYzGQlHIxvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZahvZav///9ScwmYAAADDdFJOUwAAAAAAAA8zW3uOYwIBK3rB6Pn+ml18KiGL5HEDquOIH07R/UzKz2zu+uLHIibtafWkVCMNBRqg7/RQuT8EQbvT+5ETDBSU/NAgCSdZlcQKii7mtxJY5fF/7D1SRkB+EcWh4UilOOtPMdTCR1PqN969vmGDCw7G4DSSsAcGHrSPr3bds5CEwDKoXumcZdwcG4KmjayX32A79pjOqRjIFoXynVYVgPi6qxDnL78p2obVJFquNbGZCPdyvHPZ1yhuh8s+iRzcsrEAAAABYktHRMQUDBvhAAAAB3RJTUUH5wQXDwgZWDUtiQAAAqRJREFUOMttU/k7lFEU/k4L4hsxtNAnhRgiJZOiSfbI2oJpmRFCi2kV0aaNVLTIEpVISmnf97r/WO+534yZnqfzw73vOe+559xz7rmKIoVYvLx95vj6qUSqVBW3sGrwnxsQaAwSwcDz5i9g0wxPfmFIqJCyiEgLE4vDl7iD8PGlETotIqOQahlAdJTLA5sWY5JsbNzysHiihEBWViRqRDOlgyFmJVtMq5JWJ5vhvyZlLevrEmUILKl8PihtvYWcYt6QLmNwFjjEb4SSkZnlZLO5yJzcPBg35bODwZfPZxYwWbC5sKjYzwBUkssxSg1wKNsCtHUb89vTy3GwopBxDmcJ9YdDJYB1B9t2WmUtcbtkqt18Mxsp9irsezS2VEu+uka/mqUWSrFd2VsnhLEetoZ9TFv3HwCexdUdjBWi0aH4YTuEvtoPM3/EO1nnuTpEjD2qHIM54DhR0wmA5hZySzIntyknsbZyi8IB0tp07tRpBDKfgeWsdDjHDlFGRIjnl3O0t573gcMFUBeVS1gvlxB1dOZxv0pIu9IF01UDZRdjr1SuZQhxvbvnRrmsMePmrdsrGPRaKP8OLtmn9KM7A4N3xb8yNExUb5RlZt2btpZbXajzPoYkBaDKrtADp3HkYdloo56ndgx37UcHxSP0tIWBGH9cg1nx6TJFTNhS7eCfcA1PJ+GgDbLDs2GuX3V05Ohj0xYSBGumyq/yfApw4EWTRxPJqxQvIF6+ks9Gr0d4nN+8Nbhoi+NdJEwVSc6hVNvHOUvg+5qeDxoP3GQz6x8/qXLuZ6Op7SPy+gNTnydSELabk1Z8Mbs/hlr4dbobfUgxJMS3UdXza9H33jqnA3/OH41FCZ7/l7HW8vOXiWc9GvPf06D953/T2O/EP8HBNtcH0Zm/lqFNUgTAex4AAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMDQtMjNUMTU6MDg6MjQrMDA6MDAE5dOaAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTA0LTIzVDE1OjA4OjI0KzAwOjAwdbhrJgAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyMy0wNC0yM1QxNTowODoyNSswMDowMITaQU0AAAAASUVORK5CYII=&style=flat-square" align="center"></a>&nbsp;
@@ -72,73 +73,95 @@ which works the same way as `/librget start`, but will not reset the counter.
 Restarting with `/librget auto` will not keep the counter as well.
 
 ## Config
-* `/librget config notify <true/false>` - enable/disable sound notification when finding an enchantment (default: false)
-* `/librget config autoTool <true/false>` - enable/disable automatic tool selection (default: true)
+### Process
+* `/librget config autoTool <true/false>` - enable/disable automatic tool selection (default: `true`)
   * When true: each time before breaking the lectern mod chooses most efficient tool, which has more than 10 durability points
   * When false: mod remembers which tool you are holding when starting the process and switches to exactly this tool each time before breaking
     If holding nothing or a non-tool item, no tool will be picked
   * This config has no effect when manual mode is enabled
-* `/librget config logMode <NONE/CHAT/ACTIONBAR>` - where to log found enchantments (default: CHAT)
-  * `NONE` - don't log anywhere
-  * `CHAT` - log in the client chat
-  * `ACTIONBAR` - log into the action bar
-* `/librget config lock <true/false>` - enable/disable locking the trades after match (default: false)
-  * In order to lock a trade you will need to have one of the following inventory configurations:
-    * 24 paper to sell and 9 emeralds to buy a bookshelf
-    * 1 book and an amount of emeralds equalling to the most expensive expected book
-  * This config has no effect when manual mode is enabled
-* `/librget config removeGoal <true/false>` - enable/disable removing the goal from goals list when being found (default: false)
-  * When false: when an enchantment is found, the `(remove)`-button will appear in the message
-* `/librget config checkUpdate <true/false>` - enable/disable checking if a new update has been released (default: true)
-  * An update message will appear in the chat once on the first world/server join. If you have [<kbd>Mod Menu</kbd>](https://modrinth.com/mod/modmenu),
-    it will show you a blue dot whenever a new version is available, regardless of this config
-* `/librget config warning <true/false>` - enable/disable warning when custom enchantments format is used (default: true)
-* `/librget config offhand <true/false>` - enable/disable putting the lectern in the offhand for higher efficiency (default: false)
+* `/librget config offhand <true/false>` - enable/disable putting the lectern in the offhand for higher efficiency (default: `false`)
   * The process becomes a bit more efficient if you don't have to switch slots in order to place the lectern
   * Note: you will need to have more than one lectern in your inventory in order to increase efficiency
   * Note: you can also place the lectern in the offhand without the `offhand` config and it will remain there
   * This config has no effect when manual mode is enabled
-* `/librget config manual <true/false>` - enable/disable manual mode (default: false)
+* `/librget config manual <true/false>` - enable/disable manual mode (default: `false`)
   * Manual mode disables the automatic breaking and replacing of lecterns as well as trade locking and clicking the librarian for you, and gives you more control about the functionality
   * Even though automatic clicking is disabled, you will only have to click the villager but the trades will be automatically parsed and the merchant screen will be automatically closed
   * When enabled, upon finding an enchantment from the goals list, the mod will switch to a state, where you can not break any lecterns
     To finish the process you will have to use `/librget stop`
-* `/librget config waitLose <true/false>` - enable/disable waiting for villager to lose profession (default: false)
+* `/librget config waitLose <true/false>` - enable/disable waiting for villager to lose profession (default: `false`)
   * Villagers will usually update the profession, when the lectern is replaced
     Although, in some situations, server-side lag may be so high, that this doesn't happen
     If you experience lags, this option is recommended to turn on
   * The waiting mode will slow down the process by around 1-2 ticks without lag, but will guarantee, that the villager updates its profession
   * When manual mode is enabled, during this waiting the placing of the lectern is disabled on the client
-* `/librget config safeChecker <true/false>` - enable/disable the safe checker (default: true)
+* `/librget config safeChecker <true/false>` - enable/disable the safe checker (default: `true`)
   * Checks if the villager could interfere with the placing process by running over the lecterns position
   * If the villager is inside a vehicle, the test if positive by default
 * `/librget config timeout <int [0; 20]>` - Time in seconds to wait for a villager to update its profession before replacing the lectern
-  * If set to 0, this option is disabled (default)
+  * If set to `0`, this option is disabled (default)
   * If set to any other number, the mod will hang in a state, where it waits for the villager to accept the librarian profession
     for the specified amount of time in seconds, until it reaches the timeout, then it will break and replace the lectern again
   * When manual mode is enabled, the lectern is to be replaced manually
-* `/librget config fallback <true/false>` - Fallback option to search for unsupported enchantments (default: false)
-  * Takes all the data given about trades from the villager, convert it to text and search for all enchantment IDs currently in the goals list
-  * It is not guaranteed to make a match, and can cause false positives
-  * May cause lag with a large list of enchantments
-  * Use only as a temporary solution, if the plugin you are playing with is not supported
-* `/librget config rotationMode <NONE/INSTANT/SMOOTH>` - How to change head rotation between breaking the lectern and talking to the villager (default: INSTANT) 
+* `/librget config rotationMode <NONE/INSTANT/SMOOTH>` - How to change head rotation between breaking the lectern and talking to the villager (default: `INSTANT`)
   * `NONE` - don't change head rotation; may trigger AntiCheats
   * `INSTANT` - rotate the head instantly; should bypass most simple AntiCheats
   * `SMOOTH` - imitate natural player head rotation; slows down the process drastically but should bypass even some advanced AntiCheats
   * This config has no effect when manual mode is enabled
-* `/librget config matchMode <VANILLA/ALL/LIST/ANY>` - When to stop cycling (default: VANILLA)
+
+### Actions on success
+* `/librget config notify <true/false>` - enable/disable sound notification when finding an enchantment (default: `false`)
+* `/librget config lock <true/false>` - enable/disable locking the trades after match (default: `false`)
+  * In order to lock a trade you will need to have one of the following inventory configurations:
+    * 24 paper to sell and 9 emeralds to buy a bookshelf
+    * 1 book and an amount of emeralds equalling to the most expensive expected book
+  * This config has no effect when manual mode is enabled
+* `/librget config removeGoal <true/false>` - enable/disable removing the goal from goals list when being found (default: `false`)
+  * When false: when an enchantment is found, the `(remove)`-button will appear in the message
+
+### Messages
+* `/librget config logMode <NONE/CHAT/ACTIONBAR>` - where to log found enchantments (default: `CHAT`)
+  * `NONE` - don't log anywhere
+  * `CHAT` - log in the client chat
+  * `ACTIONBAR` - log into the action bar
+* `/librget config checkUpdate <true/false>` - enable/disable checking if a new update has been released (default: `true`)
+  * An update message will appear in the chat once on the first world/server join. If you have [<kbd>Mod Menu</kbd>](https://modrinth.com/mod/modmenu),
+    it will show you a blue dot whenever a new version is available, regardless of this config
+* `/librget config warning <true/false>` - enable/disable warning when custom enchantments format is used (default: `true`)
+
+### Goal matching
+* `/librget config fallback <true/false>` - Fallback option to search for unsupported enchantments (default: `false`)
+  * Takes all the data given about trades from the villager, convert it to text and search for all enchantment IDs currently in the goals list
+  * It is not guaranteed to make a match, and can cause false positives
+  * May cause lag with a large list of enchantments
+  * Use only as a temporary solution, if the plugin you are playing with is not supported
+* `/librget config matchMode <VANILLA/PERFECT/NUMBER>` - When to stop cycling (default: `VANILLA`)
   * `VANILLA` - the first or the second trade matches the goals list
-  * `ALL` - all offered trades match the goals list
-  * `LIST` - whole goals list contained in offered trades; notice that for every item in the goals list the search time is expected to grow exponentially
-  * `ANY` - at least one trade must match the goals list
+  * `PERFECT` - all offered trades match the goals list
+  * `ATLEAST` - at least N trades must match the goals list, N is given by `matchAtLeast`
+* `/librget config matchAtLeast <int [1; inf)>` - Number of unique trades which must match the goals list to consider the attempt a success
+  * If `matchAtLeast` is greater than the amount of items in the goals list, LibrGetter will use that amount instead.
+  * Note: the search time is expected to grow exponentially with increase of this config
 
-## Compatibility config
+#### Match Mode
+While `VANILLA` is pretty intuitive, the other two Match Modes may be a bit confusing.
+You'd use `PERFECT`, whenever you want to get a perfect villager without any wasted trade offers.
+You'd use `ATLEAST`, whenever you want to effectively find all enchantments from your goals list, while tolerating wasted trade offers.
+
+Some example scenarios:
+* You'd like to get a villager with any matching offer.
+  Then you'd use `matchMode ATLEAST` and `matchAtLeast 1`
+* You'd like to get a villager with his offers ideally covering the whole goals list at once.
+  Then you'd use `matchMode ATLEAST` and `matchAtLeast N` where `N` is the amount of items in your goals list
+
+### Compatibility
+* `/librget config tradeCycling <true/false>` - Trade Cycling integration
+
 This list of configs enables/disables compatibility with different client-side mods, possibly modifying the process of finding an enchantment.
-All compatibility configs are set to `false` by default.
+All compatibility configs are disabled by default.
 To learn more about what each mod compatibility changes, read further below.
+Compatibility configs are grayed out when the corresponding mod is not installed.
 
-* `/librget config _tradeCycling <true/false>` - Trade Cycling
 
 ## View Config
 You can use `/librget config <config>` to print out the currently set value.
@@ -165,7 +188,7 @@ instead you can close the trading screen to automatically stop.
 
 ### Visible Traders
 With Visible Traders ([<kbd>Modrinth</kbd>](https://modrinth.com/mod/visible-traders)) or any similar mod,
-it is now possible to customize the search even further by adjusting the `matchMode` config.
+it is now possible to customize the search even further by adjusting the [`matchMode`](#match-mode) config.
 
 ## Plugins
 In a previous update, a system with fallback for dynamic plugin support was developed, which allows me to explicitly add new plugins as quick as possible.

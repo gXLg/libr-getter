@@ -36,10 +36,7 @@ import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOfferList;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class Worker {
     @Nullable
@@ -348,7 +345,7 @@ public class Worker {
                         }
                     }
 
-                } else if (LibrGetter.config.matchMode == MatchMode.ALL) {
+                } else if (LibrGetter.config.matchMode == MatchMode.PERFECT) {
                     // only match if all offered are in goals list
                     match = true;
                     for (Enchantment offer : offeredEnchantments) {
@@ -365,34 +362,19 @@ public class Worker {
                             break;
                         }
                     }
-                } else if (LibrGetter.config.matchMode == MatchMode.LIST) {
-                    // only match if whole goals list is in offered
-                    match = true;
-                    for (Enchantment l : LibrGetter.config.goals) {
-                        boolean thisMatch = false;
-                        for (Enchantment offer : offeredEnchantments) {
-                            if (l.meets(offer)) {
-                                thisMatch = true;
-                                success.add(offer);
-                                break;
-                            }
-                        }
-                        if (!thisMatch) {
-                            match = false;
-                            break;
-                        }
-                    }
-                } else {
-                    // match if any offer is in goals list
+                } else if (LibrGetter.config.matchMode == MatchMode.ATLEAST) {
+                    // match if at least N unique offers match
+                    Set<Enchantment> found = new HashSet<>();
                     for (Enchantment offer : offeredEnchantments) {
                         for (Enchantment l : LibrGetter.config.goals) {
                             if (l.meets(offer)) {
-                                match = true;
+                                found.add(l);
                                 success.add(offer);
-                                break;
                             }
                         }
                     }
+                    if (found.size() >= Math.min(LibrGetter.config.matchAtLeast, LibrGetter.config.goals.size()))
+                        match = true;
                 }
                 if (match) {
                     success.forEach(f -> Texts.sendFound(source, f, counter));
@@ -433,7 +415,7 @@ public class Worker {
                         state = State.STANDBY;
                     }
 
-                    if (LibrGetter.config.removeGoal) success.forEach(f -> remove(f.id, f.lvl));
+                    if (LibrGetter.config.removeGoal) success.forEach(f -> remove(f.id(), f.lvl()));
                 }
             }
             if (state == State.PARSE_TRADES) {
@@ -468,7 +450,7 @@ public class Worker {
                     manager.clickSlot(player.currentScreenHandler.syncId, 0, 0, SlotActionType.PICKUP, player);
                     return;
                 }
-                if (player.currentScreenHandler.getSlot(0).inventory.getStack(1).getCount() < offeredEnchantments.get(0).price) {
+                if (player.currentScreenHandler.getSlot(0).inventory.getStack(1).getCount() < offeredEnchantments.get(0).price()) {
                     int slot = player.getInventory().getSlotWithStack(Items.EMERALD.getDefaultStack());
                     if (slot < 9) slot += 27;
                     else slot -= 9;
@@ -521,8 +503,8 @@ public class Worker {
         if (offeredEnchantments.isEmpty()) {
             max = 0;
             for (Enchantment enchantment : LibrGetter.config.goals)
-                if (enchantment.price > max) max = enchantment.price;
-        } else max = offeredEnchantments.get(0).price;
+                if (enchantment.price() > max) max = enchantment.price();
+        } else max = offeredEnchantments.get(0).price();
 
         if (book == 0 || emerald < max) {
             if (emerald < 9 || paper < 24) {
@@ -662,11 +644,11 @@ public class Worker {
         }
         if (already != null) {
             Texts.sendFeedback(source, "librgetter.price", Formatting.GREEN, already, price);
-            already.price = price;
+            LibrGetter.config.goals.remove(already);
         } else {
-            LibrGetter.config.goals.add(newLooking);
-            Texts.sendFeedback(source, custom ? "libgetter.add_custom" : "libgetter.add", Formatting.GREEN, newLooking, newLooking.price);
+            Texts.sendFeedback(source, custom ? "libgetter.add_custom" : "libgetter.add", Formatting.GREEN, newLooking, newLooking.price());
         }
+        LibrGetter.config.goals.add(newLooking);
         LibrGetter.config.save();
     }
 

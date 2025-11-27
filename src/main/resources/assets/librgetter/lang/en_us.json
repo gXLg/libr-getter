@@ -45,6 +45,11 @@
   "librgetter.keys.open": "Open the config menu",
 
   "librgetter.menu": "Config menu",
+  "librgetter.category.process": "Process",
+  "librgetter.category.success": "Actions on success",
+  "librgetter.category.messages": "Messages",
+  "librgetter.category.matching": "Goal matching",
+  "librgetter.category.compatibility": "Compatibility",
 
   "librgetter.config.notify": "Plays a sound once finished",
   "librgetter.config.autoTool": "Automatically select a tool to break the lectern efficiently",
@@ -60,7 +65,7 @@
   "librgetter.config.timeout": "Time in seconds to wait for a villager to update its profession before replacing the lectern; set to 0 to disable",
   "librgetter.config.fallback": "Fallback option to search for unsupported enchantments; not guaranteed to make a match; may cause lag with a large list of enchantments",
   "librgetter.config.rotationMode": "Rotate the head before placing the lectern and talking to the librarian:\nNONE - don't rotate\nINSTANT - instant head rotation\nSMOOTH - more natural head rotation; slows down the process",
-  "librgetter.config.matchMode": "When to stop cycling:\nVANILLA - regular trade matches\nALL - all offered trades match the goals list\nLIST - whole goals list contained in offered trades\nANY - at least one trade must match the goals list",
-
-  "librgetter.config._tradeCycling": "Trade Cycling"
+  "librgetter.config.matchMode": "When to stop cycling:\nVANILLA - regular trade matches\nPERFECT - all offered trades must match the goals list\nATLEAST - at least N trades must match the goals list",
+  "librgetter.config.matchAtLeast": "Number of unique trades which must match the goals list to consider the attempt a success",
+  "librgetter.config.tradeCycling": "Trade Cycling integration"
 }

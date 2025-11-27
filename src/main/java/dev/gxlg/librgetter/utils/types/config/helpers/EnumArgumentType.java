@@ -18,16 +18,16 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 // Code adapted from Minecraft Java 1.21.10
-public class EnumArgumentTypeImpl<T extends Enum<T> & StringIdentifiable> implements ArgumentType<T> {
+public class EnumArgumentType<T extends Enum<T> & StringIdentifiable> implements ArgumentType<T> {
     private static final DynamicCommandExceptionType INVALID_ENUM_EXCEPTION = new DynamicCommandExceptionType((value) -> Text.of("Invalid enum value"));
     private final Supplier<T[]> valuesSupplier;
 
-    protected EnumArgumentTypeImpl(Supplier<T[]> valuesSupplier) {
+    protected EnumArgumentType(Supplier<T[]> valuesSupplier) {
         this.valuesSupplier = valuesSupplier;
     }
 
-    public static <S extends Enum<S> & StringIdentifiable> EnumArgumentTypeImpl<S> of(Supplier<S[]> valuesSupplier) {
-        return new EnumArgumentTypeImpl<>(valuesSupplier);
+    public static <S extends Enum<S> & StringIdentifiable> EnumArgumentType<S> of(Supplier<S[]> valuesSupplier) {
+        return new EnumArgumentType<>(valuesSupplier);
     }
 
     public T parse(StringReader stringReader) throws CommandSyntaxException {

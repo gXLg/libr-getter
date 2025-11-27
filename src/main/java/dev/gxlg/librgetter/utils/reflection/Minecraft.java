@@ -193,8 +193,8 @@ public class Minecraft {
         String string = tag.toString();
         Map<String, Set<Integer>> searching = new HashMap<>();
         for (Enchantment search : LibrGetter.config.goals) {
-            if (!searching.containsKey(search.id)) searching.put(search.id, new HashSet<>());
-            searching.get(search.id).add(search.lvl);
+            if (!searching.containsKey(search.id())) searching.put(search.id(), new HashSet<>());
+            searching.get(search.id()).add(search.lvl());
         }
 
         Map<String, Integer> found = new HashMap<>();

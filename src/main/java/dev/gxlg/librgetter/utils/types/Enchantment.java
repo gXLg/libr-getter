@@ -4,17 +4,8 @@ import dev.gxlg.librgetter.Reflection;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 
-public class Enchantment {
+public record Enchantment(String id, int lvl, int price) {
     public static final Enchantment EMPTY = new Enchantment("", -1, 0);
-    final public String id;
-    final public int lvl;
-    public int price;
-
-    public Enchantment(String id, int lvl, int price) {
-        this.id = id;
-        this.lvl = lvl;
-        this.price = price;
-    }
 
     public boolean meets(Enchantment e) {
         return e.id.equals(id) && e.lvl == lvl && e.price <= price;
