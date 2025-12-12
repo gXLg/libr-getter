@@ -1,4 +1,4 @@
-<img width="100%" src="/images/cover.png" alt="logo"/><br>
+<img width="100%" src="https://raw.githubusercontent.com/gXLg/libr-getter/master/images/cover.png" alt="logo"/><br>
 # Over-engineered librarian trade finder for fabric
 A highly configurable fabric mod to automatically cycle a librarian villager for the desired enchantment by replacing his lectern
 
