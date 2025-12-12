@@ -3,7 +3,7 @@ package dev.gxlg.librgetter.utils.reflection;
 import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.Reflection;
-import dev.gxlg.librgetter.utils.types.Enchantment;
+import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
@@ -55,7 +55,7 @@ public class Texts {
         Reflection.wrapi("fcs:source sendError§m tc:text", fcs, source, tc, text);
     }
 
-    public static void sendFound(Object source, Enchantment enchant, int counter) {
+    public static void sendFound(Object source, EnchantmentTrade enchant, int counter) {
         Object text = translatable("librgetter.found", enchant, counter, enchant.price());
         text = Reflection.wrap("mc:text method_27692/formatted Formatting.GREEN", mc, text);
 
@@ -96,7 +96,7 @@ public class Texts {
     public static void list(Object source) {
         Object text = translatable("librgetter.list");
         Object rem = translatable("librgetter.remove");
-        for (Enchantment l : LibrGetter.config.goals) {
+        for (EnchantmentTrade l : LibrGetter.config.goals) {
             String line = "\n- " + l + " (" + l.price() + ") ";
             text = Reflection.wrap("mc:text method_27693/append line", mc, text, line);
             Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + l.id() + "\" " + l.lvl())).withColor(Formatting.YELLOW);
@@ -218,7 +218,8 @@ public class Texts {
             return (ClickEvent) Reflection.wrap("[.class_2558$class_10605/.text.ClickEvent$ChangePage] int:page", page);
         } else {
             Class<?> action = (Class<?>) Reflection.wrap(".class_2558$class_2559/.text.ClickEvent$Action");
-            return (ClickEvent) Reflection.wrap("ClickEvent action:[action field_11748/CHANGE_PAGE] int:page", action, page);
+            String pageString = String.valueOf(page);
+            return (ClickEvent) Reflection.wrap("ClickEvent action:[action field_11748/CHANGE_PAGE] String:pageString", action, pageString);
         }
     }
 

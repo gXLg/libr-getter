@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
 }
 
 version = project.mod_version
@@ -9,13 +9,7 @@ base {
     archivesName = project.archives_base_name
 }
 
-repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
-}
+repositories { }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -44,10 +38,8 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.base.archivesName.get()}"}
+        rename { "${it}_${inputs.properties.archivesName}"}
     }
 }
-
-
 
 apply from: './MultiVersion/multi-version.gradle'

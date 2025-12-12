@@ -6,8 +6,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public class Nbt {
-    public static Class<?> compound = (Class<?>) Reflection.wrap(".class_2487/.nbt.CompoundTag/.nbt.NbtCompound");
-    public static Class<?> list = (Class<?>) Reflection.wrap(".class_2499/.nbt.ListTag/.nbt.NbtList");
+    public static final Class<?> compound = (Class<?>) Reflection.wrap(".class_2487/.nbt.CompoundTag/.nbt.NbtCompound");
+    public static final Class<?> list = (Class<?>) Reflection.wrap(".class_2499/.nbt.ListTag/.nbt.NbtList");
 
     public static String getString(Object element, String name) {
         if (Reflection.version(">= 1.21.5")) {

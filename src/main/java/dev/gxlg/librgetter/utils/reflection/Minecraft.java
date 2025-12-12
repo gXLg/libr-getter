@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.Reflection;
 import dev.gxlg.librgetter.utils.Plugins;
-import dev.gxlg.librgetter.utils.types.Enchantment;
+import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,6 +12,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -60,7 +61,7 @@ public class Minecraft {
         }
     }
 
-    public static Identifier enchantmentId(net.minecraft.enchantment.Enchantment enchantment) {
+    public static Identifier enchantmentId(Enchantment enchantment) {
         if (Reflection.version(">= 1.21")) {
             ClientWorld w = MinecraftClient.getInstance().world;
             if (w == null) return null;
@@ -77,7 +78,10 @@ public class Minecraft {
         }
     }
 
-    public static Either<Enchantment, String[]> parseTrade(TradeOfferList trades, int trade) {
+    // returns Either:
+    // - left: EnchantmentTrade (possibly EMPTY)
+    // - right: {message, ...args} if error
+    public static Either<EnchantmentTrade, String[]> parseTrade(TradeOfferList trades, int trade) {
         ItemStack stack = trades.get(trade).getSellItem();
 
         Object tag;
@@ -94,7 +98,7 @@ public class Minecraft {
 
         } else {
             tag = Reflection.wrap("ItemStack:stack method_7969/getNbt/getTag", stack);
-            if (tag == null) return Either.left(Enchantment.EMPTY);
+            if (tag == null) return Either.left(EnchantmentTrade.EMPTY);
         }
 
         String id = null;
@@ -169,7 +173,7 @@ public class Minecraft {
         if (id == null) {
             // Nothing was found, so try fallback or return empty
             Pair<String, Integer> fb = fallback(tag);
-            if (fb == null) return Either.left(Enchantment.EMPTY);
+            if (fb == null) return Either.left(EnchantmentTrade.EMPTY);
 
             id = fb.getLeft();
             lvl = fb.getRight();
@@ -184,7 +188,7 @@ public class Minecraft {
             return Either.right(new String[]{"librgetter.internal", "f"});
         }
 
-        return Either.left(new Enchantment(id, lvl, f.getCount()));
+        return Either.left(new EnchantmentTrade(id, lvl, f.getCount()));
     }
 
     public static Pair<String, Integer> fallback(Object tag) {
@@ -192,7 +196,7 @@ public class Minecraft {
 
         String string = tag.toString();
         Map<String, Set<Integer>> searching = new HashMap<>();
-        for (Enchantment search : LibrGetter.config.goals) {
+        for (EnchantmentTrade search : LibrGetter.config.goals) {
             if (!searching.containsKey(search.id())) searching.put(search.id(), new HashSet<>());
             searching.get(search.id()).add(search.lvl());
         }
@@ -257,11 +261,11 @@ public class Minecraft {
 
         } else {
             Object eff = Reflection.wrap("[.class_1893/.enchantment.Enchantments] field_9131/EFFICIENCY");
-            return (int) Reflection.wrapn("EnchantmentHelper method_8225/getLevel Enchantment:eff ItemStack:stack", EnchantmentHelper.class, eff, stack);
+            return (int) Reflection.wrapn("EnchantmentHelper method_8225/getLevel Enchantment:eff ItemStack:stack", EnchantmentHelper.class, Enchantment.class, eff, stack);
         }
     }
 
-    public static boolean canBeTraded(net.minecraft.enchantment.Enchantment enchantment) {
+    public static boolean canBeTraded(Enchantment enchantment) {
         if (Reflection.version(">= 1.21")) {
             ClientWorld w = MinecraftClient.getInstance().world;
             if (w == null) return false;

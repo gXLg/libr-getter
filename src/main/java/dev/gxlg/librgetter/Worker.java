@@ -5,7 +5,7 @@ import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.Support;
 import dev.gxlg.librgetter.utils.reflection.Texts;
-import dev.gxlg.librgetter.utils.types.Enchantment;
+import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.enums.MatchMode;
 import dev.gxlg.librgetter.utils.types.config.enums.RotationMode;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -50,7 +50,7 @@ public class Worker {
     private static State state = State.STANDBY;
     private static Object source;
     private static int counter;
-    private final static List<Enchantment> offeredEnchantments = new ArrayList<>();
+    private final static List<EnchantmentTrade> offeredEnchantments = new ArrayList<>();
     private static int otherTrade = 0;
     private static LockType lockType;
     private static int timeout = 0;
@@ -334,10 +334,10 @@ public class Worker {
             Texts.sendMessage(player, "librgetter.offer", offeredEnchantments);
             if (!offeredEnchantments.isEmpty()) {
                 boolean match = false;
-                List<Enchantment> success = new ArrayList<>();
+                List<EnchantmentTrade> success = new ArrayList<>();
                 if (LibrGetter.config.matchMode == MatchMode.VANILLA) {
                     // only match the first found enchantment
-                    for (Enchantment l : LibrGetter.config.goals) {
+                    for (EnchantmentTrade l : LibrGetter.config.goals) {
                         if (l.meets(offeredEnchantments.get(0))) {
                             match = true;
                             success.add(offeredEnchantments.get(0));
@@ -348,9 +348,9 @@ public class Worker {
                 } else if (LibrGetter.config.matchMode == MatchMode.PERFECT) {
                     // only match if all offered are in goals list
                     match = true;
-                    for (Enchantment offer : offeredEnchantments) {
+                    for (EnchantmentTrade offer : offeredEnchantments) {
                         boolean thisMatch = false;
-                        for (Enchantment l : LibrGetter.config.goals) {
+                        for (EnchantmentTrade l : LibrGetter.config.goals) {
                             if (l.meets(offer)) {
                                 thisMatch = true;
                                 success.add(offer);
@@ -364,9 +364,9 @@ public class Worker {
                     }
                 } else if (LibrGetter.config.matchMode == MatchMode.ATLEAST) {
                     // match if at least N unique offers match
-                    Set<Enchantment> found = new HashSet<>();
-                    for (Enchantment offer : offeredEnchantments) {
-                        for (Enchantment l : LibrGetter.config.goals) {
+                    Set<EnchantmentTrade> found = new HashSet<>();
+                    for (EnchantmentTrade offer : offeredEnchantments) {
+                        for (EnchantmentTrade l : LibrGetter.config.goals) {
                             if (l.meets(offer)) {
                                 found.add(l);
                                 success.add(offer);
@@ -502,7 +502,7 @@ public class Worker {
         int max;
         if (offeredEnchantments.isEmpty()) {
             max = 0;
-            for (Enchantment enchantment : LibrGetter.config.goals)
+            for (EnchantmentTrade enchantment : LibrGetter.config.goals)
                 if (enchantment.price() > max) max = enchantment.price();
         } else max = offeredEnchantments.get(0).price();
 
@@ -543,8 +543,8 @@ public class Worker {
     }
 
     private static boolean addEnchant(TradeOfferList trades, int trade) {
-        Either<Enchantment, String[]> either = Minecraft.parseTrade(trades, trade);
-        Optional<Enchantment> en = either.left();
+        Either<EnchantmentTrade, String[]> either = Minecraft.parseTrade(trades, trade);
+        Optional<EnchantmentTrade> en = either.left();
         Optional<String[]> err = either.right();
         if (err.isPresent()) {
             String[] ret = err.get();
@@ -555,8 +555,8 @@ public class Worker {
             return false;
         }
         if (en.isPresent()) {
-            Enchantment e = en.get();
-            if (!e.same(Enchantment.EMPTY)) offeredEnchantments.add(e);
+            EnchantmentTrade e = en.get();
+            if (!e.same(EnchantmentTrade.EMPTY)) offeredEnchantments.add(e);
         }
         return true;
     }
@@ -634,9 +634,9 @@ public class Worker {
     }
 
     public static void add(String name, int level, int price, boolean custom) {
-        Enchantment newLooking = new Enchantment(name, level, price);
-        Enchantment already = null;
-        for (Enchantment l : LibrGetter.config.goals) {
+        EnchantmentTrade newLooking = new EnchantmentTrade(name, level, price);
+        EnchantmentTrade already = null;
+        for (EnchantmentTrade l : LibrGetter.config.goals) {
             if (l.same(newLooking)) {
                 already = l;
                 break;
@@ -653,9 +653,9 @@ public class Worker {
     }
 
     public static void remove(String name, int level) {
-        Enchantment newLooking = new Enchantment(name, level, 64);
-        Enchantment already = null;
-        for (Enchantment l : LibrGetter.config.goals) {
+        EnchantmentTrade newLooking = new EnchantmentTrade(name, level, 64);
+        EnchantmentTrade already = null;
+        for (EnchantmentTrade l : LibrGetter.config.goals) {
             if (l.same(newLooking)) {
                 already = l;
                 break;

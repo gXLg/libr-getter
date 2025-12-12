@@ -12,7 +12,7 @@ public @interface OnlyEffective {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     @interface Container {
-        @SuppressWarnings("unused")
+        @SuppressWarnings({"unused", "UnusedReturnValue"})
         OnlyEffective[] value();
     }
 }

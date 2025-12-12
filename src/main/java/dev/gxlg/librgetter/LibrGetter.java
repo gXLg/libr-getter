@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
-@SuppressWarnings("BlockingMethodInNonBlockingContext")
 public class LibrGetter implements ClientModInitializer {
 
     public static final String MOD_ID = "librgetter";

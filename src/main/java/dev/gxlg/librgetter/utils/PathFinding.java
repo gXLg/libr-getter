@@ -35,7 +35,6 @@ public class PathFinding {
         return Math.abs(from.getX() - to.getX()) + Math.abs(from.getY() - to.getY()) + Math.abs(from.getZ() - to.getZ());
     }
 
-    @SuppressWarnings("ReferenceToMixin")
     private static boolean notEnoughHeight(BlockPos pos, ClientWorld world, int minHeight) {
         for (int i = 0; i < minHeight; i++) {
             if (((AbstractBlockAccessor) world.getBlockState(pos.up(i)).getBlock()).getCollidable()) {
@@ -45,7 +44,6 @@ public class PathFinding {
         return false;
     }
 
-    @SuppressWarnings("ReferenceToMixin")
     private static boolean isAirMove(BlockPos pos, ClientWorld world, Direction dir) {
         // Can always move down
         if (dir == Direction.DOWN) return false;

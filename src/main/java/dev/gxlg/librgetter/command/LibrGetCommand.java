@@ -49,12 +49,13 @@ public class LibrGetCommand {
         } catch (IllegalArgumentException ignored) {
         }
 
-        if (!ConfigScreen.isOpen()) {
+        config.set(value);
+        config.instance().save();
+
+        if (!ConfigScreen.configChange()) {
             Texts.sendFeedback(context.getSource(), "librgetter.config", null, config.name(), value);
         }
 
-        config.set(value);
-        config.instance().save();
         return 0;
     }
 

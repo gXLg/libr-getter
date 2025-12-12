@@ -5,7 +5,6 @@ import dev.gxlg.librgetter.utils.reflection.ConfigMenu;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
 
-@SuppressWarnings("ReferenceToMixin")
 public class ConfigScreen extends BookScreen {
     private static int currentPage = 0;
 
@@ -42,12 +41,15 @@ public class ConfigScreen extends BookScreen {
     }
 
     public void updateScreen() {
-        // update screen
-        ((BookScreenAccessor) this).setCachedPageIndex(-1);
         ConfigMenu.updatePage(currentPage);
+        ((BookScreenAccessor) this).setCachedPageIndex(-1);
     }
 
-    public static boolean isOpen() {
-        return MinecraftClient.getInstance().currentScreen instanceof ConfigScreen;
+    public static boolean configChange() {
+        if (MinecraftClient.getInstance().currentScreen instanceof ConfigScreen cs) {
+            cs.updateScreen();
+            return true;
+        }
+        return false;
     }
 }

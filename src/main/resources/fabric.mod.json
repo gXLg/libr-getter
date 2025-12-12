@@ -10,8 +10,7 @@
   "contact": {
     "homepage": "https://modrinth.com/mod/libr-getter",
     "sources": "https://github.com/gXLg/libr-getter",
-    "issues": "https://github.com/gXLg/libr-getter/issues",
-    "discord": "https://discord.gg/aYBrWe5Jtt"
+    "issues": "https://github.com/gXLg/libr-getter/issues"
   },
   "license": "MIT",
   "icon": "assets/librgetter/icon.png",
@@ -27,6 +26,15 @@
   "depends": {
     "fabric": ">=0.31.0",
     "fabric-key-binding-api-v1": "*",
-    "minecraft": ">=1.17 <=1.21.10"
+    "minecraft": ">=1.17 <=1.21.11"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/aYBrWe5Jtt",
+        "modmenu.donate": "https://www.paypal.com/donate/?hosted_button_id=DVC2UQP2AXR68",
+        "modmenu.youtube": "https://www.youtube.com/@gXLg"
+      }
+    }
   }
 }

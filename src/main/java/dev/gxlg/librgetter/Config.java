@@ -2,7 +2,7 @@ package dev.gxlg.librgetter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.gxlg.librgetter.utils.types.Enchantment;
+import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.Compatibility;
 import dev.gxlg.librgetter.utils.types.config.IntRange;
 import dev.gxlg.librgetter.utils.types.config.OnlyEffective;
@@ -69,7 +69,7 @@ public class Config {
     public boolean tradeCycling = false;
 
 
-    public List<Enchantment> goals = new ArrayList<>();
+    public List<EnchantmentTrade> goals = new ArrayList<>();
 
     private transient final List<Configurable<?>> configurable = new ArrayList<>();
     private transient final Map<String, Configurable<?>> configurableMap = new HashMap<>();

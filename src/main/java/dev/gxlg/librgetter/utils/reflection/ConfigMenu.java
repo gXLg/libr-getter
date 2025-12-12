@@ -21,7 +21,7 @@ public class ConfigMenu {
         int pages = 1;
         for (String cat : Config.CATEGORIES) {
             categories.put(cat, pages);
-            pages += Math.ceil(LibrGetter.config.getConfigurablesForCategory(cat).size() / ((float) CONFIGS_PER_PAGE));
+            pages += (int) Math.ceil(LibrGetter.config.getConfigurablesForCategory(cat).size() / ((float) CONFIGS_PER_PAGE));
         }
         pageCount = pages;
     }
@@ -35,7 +35,7 @@ public class ConfigMenu {
         }
 
         if (Reflection.version(">= 1.20.5")) {
-            return (BookScreen.Contents) Reflection.wrap("BookScreen.Contents List:list");
+            return (BookScreen.Contents) Reflection.wrap("BookScreen.Contents List:list", list);
         }
 
         return (BookScreen.Contents) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{BookScreen.Contents.class}, (proxy, method, args) -> {

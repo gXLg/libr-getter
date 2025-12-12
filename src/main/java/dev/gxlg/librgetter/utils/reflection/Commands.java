@@ -13,6 +13,7 @@ import dev.gxlg.librgetter.Reflection;
 import dev.gxlg.librgetter.command.LibrGetCommand;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.enchantment.Enchantment;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Proxy;
 import java.util.List;
@@ -33,13 +34,7 @@ public class Commands {
                 return true;
             }
 
-            Object key;
-            if (Reflection.version(">= 1.21")) {
-                key = Reflection.wrap("[.class_7924/.registry.RegistryKeys] field_41265/ENCHANTMENT");
-            } else {
-                key = Reflection.wrap("[.class_2378/.registry.Registry]:[[.class_7923/.registry.Registries] field_41176/ENCHANTMENT] method_30517/getKey");
-            }
-            Optional<?> opt = (Optional<?>) Reflection.wrapn("pred:argument method_45648/tryCast [.class_5321/.registry.RegistryKey]:key", argument, key);
+            Optional<?> opt = fromArgument(pred, argument);
 
             if (opt.isEmpty()) {
                 Texts.sendError(context, "librgetter.argument");
@@ -72,6 +67,16 @@ public class Commands {
             }
         }
         return true;
+    }
+
+    private static @NonNull Optional<?> fromArgument(Class<?> pred, Object argument) {
+        Object key;
+        if (Reflection.version(">= 1.21")) {
+            key = Reflection.wrap("[.class_7924/.registry.RegistryKeys] field_41265/ENCHANTMENT");
+        } else {
+            key = Reflection.wrap("[.class_2378/.registry.Registry]:[[.class_7923/.registry.Registries] field_41176/ENCHANTMENT] method_30517/getKey");
+        }
+        return (Optional<?>) Reflection.wrapn("pred:argument method_45648/tryCast [.class_5321/.registry.RegistryKey]:key", pred, argument, key);
     }
 
     private static ArgumentType<?> enchantmentArgument(Object registryAccess) {
