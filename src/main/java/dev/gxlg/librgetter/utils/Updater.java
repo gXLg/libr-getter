@@ -3,7 +3,7 @@ package dev.gxlg.librgetter.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.reflection.Texts;
+import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.network.ClientPlayerEntity;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -41,7 +41,7 @@ public class Updater {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             ClientPlayerEntity player = client.player;
             if (newVersion != null) {
-                Texts.newVersion(player, newVersion.getLeft(), newVersion.getRight());
+                Texts.getImpl().newVersion(player, newVersion.getLeft(), newVersion.getRight());
                 newVersion = null;
             }
         });

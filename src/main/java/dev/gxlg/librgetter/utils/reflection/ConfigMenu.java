@@ -4,6 +4,7 @@ import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.multiversion.R;
 import dev.gxlg.librgetter.multiversion.V;
+import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
 import net.minecraft.text.StringVisitable;
@@ -56,19 +57,19 @@ public class ConfigMenu {
     public static void updatePage(int index) {
         Object text;
         if (index == 0) {
-            text = Texts.bookMainPage(categories);
+            text = Texts.getImpl().bookMainPage(categories);
 
         } else {
             List<String> reversed = new ArrayList<>(Config.CATEGORIES);
             Collections.reverse(reversed);
             String category = reversed.stream().filter(c -> categories.get(c) <= index).findFirst().orElseThrow(() -> new RuntimeException("Invalid index " + index));
-            text = Texts.bookTitle(category);
+            text = Texts.getImpl().bookTitle(category);
 
             int j = index - categories.get(category);
             int finish = Math.min(j * CONFIGS_PER_PAGE + CONFIGS_PER_PAGE, LibrGetter.config.getConfigurablesForCategory(category).size());
             for (int i = j * CONFIGS_PER_PAGE; i < finish; i++) {
                 Configurable<?> config = LibrGetter.config.getConfigurablesForCategory(category).get(i);
-                text = Texts.bookEntry(text, config);
+                text = Texts.getImpl().bookEntry(text, config);
             }
         }
         list.set(index, text);

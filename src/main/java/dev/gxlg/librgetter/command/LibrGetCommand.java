@@ -7,7 +7,7 @@ import dev.gxlg.librgetter.Worker;
 import dev.gxlg.librgetter.gui.ConfigScreen;
 import dev.gxlg.librgetter.utils.reflection.Commands;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
-import dev.gxlg.librgetter.utils.reflection.Texts;
+import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -38,7 +38,7 @@ public class LibrGetCommand {
     }
 
     public static int list(CommandContext<?> context) {
-        Texts.list(context.getSource());
+        Texts.getImpl().list(context.getSource());
         return 0;
     }
 
@@ -53,7 +53,7 @@ public class LibrGetCommand {
         config.instance().save();
 
         if (!ConfigScreen.configChange()) {
-            Texts.sendFeedback(context.getSource(), "librgetter.config", null, config.name(), value);
+            Texts.getImpl().sendFeedback(context.getSource(), "librgetter.config", null, config.name(), value);
         }
 
         return 0;
@@ -63,12 +63,12 @@ public class LibrGetCommand {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            Texts.sendError(context.getSource(), "librgetter.internal", "player");
+            Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "player");
             return 1;
         }
         ClientWorld world = client.world;
         if (world == null) {
-            Texts.sendError(context.getSource(), "librgetter.internal", "world");
+            Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "world");
             return 1;
         }
 
@@ -92,7 +92,7 @@ public class LibrGetCommand {
             if (lec != null) break;
         }
         if (lec == null) {
-            Texts.sendError(context.getSource(), "librgetter.find_lectern");
+            Texts.getImpl().sendError(context.getSource(), "librgetter.find_lectern");
             return 1;
         }
         Iterable<Entity> all = world.getEntities();
@@ -110,7 +110,7 @@ public class LibrGetCommand {
             }
         }
         if (vi == null) {
-            Texts.sendError(context.getSource(), "librgetter.find_librarian");
+            Texts.getImpl().sendError(context.getSource(), "librgetter.find_librarian");
             return 1;
         }
 
@@ -145,17 +145,17 @@ public class LibrGetCommand {
                 Identifier id = Minecraft.enchantmentId(enchantment);
 
                 if (lvl > enchantment.getMaxLevel() && LibrGetter.config.warning) {
-                    Texts.sendFeedback(context.getSource(), "librgetter.level", Formatting.YELLOW, id, enchantment.getMaxLevel());
+                    Texts.getImpl().sendFeedback(context.getSource(), "librgetter.level", Formatting.YELLOW, id, enchantment.getMaxLevel());
                 }
                 int level = lvl;
                 if (lvl == -1) level = enchantment.getMaxLevel();
 
                 if (!Minecraft.canBeTraded(enchantment) && LibrGetter.config.warning) {
-                    Texts.sendFeedback(context.getSource(), "librgetter.notrade", Formatting.YELLOW, id);
+                    Texts.getImpl().sendFeedback(context.getSource(), "librgetter.notrade", Formatting.YELLOW, id);
                 }
 
                 if (id == null) {
-                    Texts.sendError(context.getSource(), "librgetter.internal", "id");
+                    Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "id");
                     return 1;
                 }
 
@@ -167,12 +167,12 @@ public class LibrGetCommand {
 
                 Identifier enchantment = Identifier.tryParse(custom);
                 if (enchantment == null) {
-                    Texts.sendError(context.getSource(), "librgetter.parse");
+                    Texts.getImpl().sendError(context.getSource(), "librgetter.parse");
                     return 1;
                 }
 
                 if (!remove && LibrGetter.config.warning)
-                    Texts.sendFeedback(context.getSource(), "librgetter.custom", Formatting.YELLOW, enchantment);
+                    Texts.getImpl().sendFeedback(context.getSource(), "librgetter.custom", Formatting.YELLOW, enchantment);
 
                 Worker.setSource(context.getSource());
                 if (remove) Worker.remove(enchantment.toString(), lvl);
@@ -211,54 +211,54 @@ public class LibrGetCommand {
 
         Worker.setSource(context.getSource());
         if (Worker.getState() != Worker.State.STANDBY) {
-            Texts.sendError(context.getSource(), "librgetter.running");
+            Texts.getImpl().sendError(context.getSource(), "librgetter.running");
             return 1;
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
         if (world == null) {
-            Texts.sendError(context.getSource(), "librgetter.internal", "world");
+            Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "world");
             return 1;
         }
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            Texts.sendError(context.getSource(), "librgetter.internal", "player");
+            Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "player");
             return 1;
         }
         HitResult hit = client.crosshairTarget;
         if (hit == null) {
-            Texts.sendError(context.getSource(), "librgetter.internal", "hit");
+            Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "hit");
             return 1;
         }
         HitResult.Type hitType = hit.getType();
         if (hitType == HitResult.Type.MISS) {
-            Texts.sendError(context.getSource(), "librgetter.nothing");
+            Texts.getImpl().sendError(context.getSource(), "librgetter.nothing");
             return 1;
         }
 
         if (hitType == HitResult.Type.BLOCK) {
             BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
             if (!world.getBlockState(blockPos).isOf(Blocks.LECTERN)) {
-                Texts.sendError(context.getSource(), "librgetter.not_lectern");
+                Texts.getImpl().sendError(context.getSource(), "librgetter.not_lectern");
                 return 1;
             }
 
             Worker.setBlock(blockPos);
-            Texts.sendFeedback(context.getSource(), "librgetter.lectern", null);
+            Texts.getImpl().sendFeedback(context.getSource(), "librgetter.lectern", null);
 
         } else if (hitType == HitResult.Type.ENTITY) {
             EntityHitResult entityHitResult = (EntityHitResult) hit;
             Entity entity = entityHitResult.getEntity();
             if (!(entity instanceof VillagerEntity villager)) {
-                Texts.sendError(context.getSource(), "librgetter.not_villager");
+                Texts.getImpl().sendError(context.getSource(), "librgetter.not_villager");
                 return 1;
             }
             if (!Minecraft.isVillagerLibrarian(villager)) {
-                Texts.sendError(context.getSource(), "librgetter.not_librarian");
+                Texts.getImpl().sendError(context.getSource(), "librgetter.not_librarian");
                 return 1;
             }
-            Texts.sendFeedback(context.getSource(), "librgetter.librarian", null);
+            Texts.getImpl().sendFeedback(context.getSource(), "librgetter.librarian", null);
             Worker.setVillager(villager);
 
         }

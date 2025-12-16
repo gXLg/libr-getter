@@ -2,8 +2,8 @@ package dev.gxlg.librgetter.mixin;
 
 import dev.gxlg.librgetter.Worker;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
-import dev.gxlg.librgetter.utils.reflection.Texts;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -36,7 +36,7 @@ public abstract class Manager {
     @Inject(at = @At("HEAD"), method = "attackBlock", cancellable = true)
     private void attackBlock(CallbackInfoReturnable<Boolean> info, @Local(argsOnly = true) BlockPos pos) {
         if (client.player == null) {
-            Texts.sendError(Worker.getSource(), "librgetter.internal", "player");
+            Texts.getImpl().sendError(Worker.getSource(), "librgetter.internal", "player");
             return;
         }
         ClientWorld world = Minecraft.getWorld(client.player);
@@ -67,7 +67,7 @@ public abstract class Manager {
         BlockPos pos = hitResult.getBlockPos().offset(hitResult.getSide());
 
         if (client.player == null) {
-            Texts.sendError(Worker.getSource(), "librgetter.internal", "player");
+            Texts.getImpl().sendError(Worker.getSource(), "librgetter.internal", "player");
             return;
         }
 
