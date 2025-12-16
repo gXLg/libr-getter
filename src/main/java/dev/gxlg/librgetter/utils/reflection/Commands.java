@@ -6,11 +6,14 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.Reflection;
 import dev.gxlg.librgetter.command.LibrGetCommand;
+import dev.gxlg.librgetter.multiversion.C;
+import dev.gxlg.librgetter.multiversion.R;
+import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.enchantment.Enchantment;
 import org.jspecify.annotations.NonNull;
@@ -24,38 +27,39 @@ import java.util.stream.Stream;
 
 public class Commands {
     public static boolean getEnchantments(List<Either<Enchantment, String>> list, CommandContext<?> context) {
-        if (Reflection.version(">= 1.19.3")) {
-            Class<?> pred = (Class<?>) Reflection.wrapn(".class_7737$class_7741/.command.argument.RegistryEntryPredicateArgumentType$EntryPredicate");
+        if (!V.lower("1.19.3")) {
+            R.RClass pred = R.clz("net.minecraft.class_7737$class_7741/net.minecraft.command.argument.RegistryEntryPredicateArgumentType$EntryPredicate");
             Object argument;
             try {
-                argument = pred.cast(context.getArgument("enchantment", pred));
+                argument = context.getArgument("enchantment", pred.self());
             } catch (IllegalArgumentException ignored) {
                 list.add(Either.right(context.getArgument("enchantment_custom", String.class)));
                 return true;
             }
 
-            Optional<?> opt = fromArgument(pred, argument);
-
+            Optional<?> opt = fromArgument(pred.inst(argument));
             if (opt.isEmpty()) {
                 Texts.sendError(context, "librgetter.argument");
                 return false;
             }
 
+
             Object predicate = opt.get();
-            Either<?, ?> entry = (Either<?, ?>) Reflection.wrapn("pred:predicate method_45647/getEntry", predicate);
+            Either<?, ?> entry = (Either<?, ?>) pred.inst(predicate).mthd("method_45647/getEntry").invk();
             Optional<?> optrefl = entry.left();
             Optional<?> optrefr = entry.right();
 
-            Class<?> entryClass = (Class<?>) Reflection.wrap(".class_6880$class_6883/.registry.entry.RegistryEntry$Reference");
+            R.RClass entryClass = R.clz("net.minecraft.class_6880$class_6883/net.minecraft.registry.entry.RegistryEntry$Reference");
             if (optrefl.isEmpty()) {
                 if (optrefr.isEmpty()) {
                     Texts.sendError(context, "librgetter.wrong");
                     return false;
                 }
-                Stream<?> stream = (Stream<?>) Reflection.wrapn("[.class_6885$class_6888/.registry.entry.RegistryEntryList$Named]:optrefr.get() method_40239/stream");
-                stream.forEach(ref -> list.add(Either.left((Enchantment) Reflection.wrap("entryClass:ref comp_349/value", entryClass))));
+
+                Stream<?> stream = (Stream<?>) R.clz("net.minecraft.class_6885$class_6888/net.minecraft.registry.entry.RegistryEntryList$Named").inst(optrefr.get()).mthd("method_40239/stream").invk();
+                stream.forEach(ref -> list.add(Either.left((Enchantment) entryClass.inst(ref).mthd("comp_349/value").invk())));
             } else {
-                Enchantment enchantment = (Enchantment) Reflection.wrap("entryClass:optrefl.get() comp_349/value", entryClass);
+                Enchantment enchantment = (Enchantment) entryClass.inst(optrefl.get()).mthd("comp_349/value").invk();
                 list.add(Either.left(enchantment));
             }
         } else {
@@ -69,58 +73,69 @@ public class Commands {
         return true;
     }
 
-    private static @NonNull Optional<?> fromArgument(Class<?> pred, Object argument) {
+    private static @NonNull Optional<?> fromArgument(R.RInstance argument) {
         Object key;
-        if (Reflection.version(">= 1.21")) {
-            key = Reflection.wrap("[.class_7924/.registry.RegistryKeys] field_41265/ENCHANTMENT");
+        if (!V.lower("1.21")) {
+            key = C.RegistryKeys.fld("field_41265/ENCHANTMENT").get();
         } else {
-            key = Reflection.wrap("[.class_2378/.registry.Registry]:[[.class_7923/.registry.Registries] field_41176/ENCHANTMENT] method_30517/getKey");
+            key = C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_30517/getKey").invk();
         }
-        return (Optional<?>) Reflection.wrapn("pred:argument method_45648/tryCast [.class_5321/.registry.RegistryKey]:key", pred, argument, key);
+
+        R.RClass keyCls = C.RegistryKey;
+        return (Optional<?>) argument.mthd("method_45648/tryCast", keyCls).invk(key);
     }
 
     private static ArgumentType<?> enchantmentArgument(Object registryAccess) {
-        if (Reflection.version(">= 1.19.3")) {
+        if (!V.lower("1.19.3")) {
             Object key;
-            if (Reflection.version(">= 1.21")) {
-                key = Reflection.wrap("[.class_7924/.registry.RegistryKeys] field_41265/ENCHANTMENT");
+            if (!V.lower("1.21")) {
+                key = C.RegistryKeys.fld("field_41265/ENCHANTMENT").get();
             } else {
-                key = Reflection.wrap("[.class_2378/.registry.Registry]:[[.class_7923/.registry.Registries] field_41176/ENCHANTMENT] method_30517/getKey");
+                key = C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_30517/getKey").invk();
             }
-            return (ArgumentType<?>) Reflection.wrap("[.class_7737/.command.argument.RegistryEntryPredicateArgumentType] method_45637/registryEntryPredicate [.class_7157/.command.CommandRegistryAccess]:registryAccess [.class_5321/.registry.RegistryKey]:key", key, registryAccess);
+
+            return (ArgumentType<?>) R.clz("net.minecraft.class_7737/net.minecraft.command.argument.RegistryEntryPredicateArgumentType").mthd("method_45637/registryEntryPredicate", R.clz("net.minecraft.class_7157/net.minecraft.command.CommandRegistryAccess"), C.RegistryKey).invk(registryAccess, key);
         } else {
-            return (ArgumentType<?>) Reflection.wrap("[.class_2194/.command.argument.EnchantmentArgumentType/.command.argument.ItemEnchantmentArgumentType] method_9336/enchantment/itemEnchantment");
+            return (ArgumentType<?>) R.clz("net.minecraft.class_2194/net.minecraft.command.argument.EnchantmentArgumentType/net.minecraft.command.argument.ItemEnchantmentArgumentType").mthd("method_9336/enchantment/itemEnchantment").invk();
         }
     }
 
     public static void registerCommand() {
-        if (Reflection.version(">= 1.19")) {
-            Class<?> cb = (Class<?>) Reflection.wrap("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
-            Class<?> cra = (Class<?>) Reflection.wrapn(".class_7157/.command.CommandRegistryAccess");
-            Class<?> ccm = (Class<?>) Reflection.wrap("net.fabricmc.fabric.api.client.command.v2.ClientCommandManager");
+        if (!V.lower("1.19")) {
+            R.RClass cb = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
+            R.RClass ccm = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandManager");
 
-            Object listener = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{cb}, (proxy, method, args) -> {
+            Object listener = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{cb.self()}, (proxy, method, args) -> {
                 if (method.getName().equals("register")) {
-                    Object registryAccess = cra.cast(args[1]);
+                    Object registryAccess = args[1];
                     command(ccm, (CommandDispatcher<?>) args[0], registryAccess);
                     return null;
                 }
                 return method.invoke(proxy, args);
             });
-            Reflection.wrapi("net.fabricmc.fabric.api.event.Event:[cb EVENT§f] register§m Object:listener", listener);
+            R.clz("net.fabricmc.fabric.api.event.Event").inst(cb.fld("EVENT").get()).mthd("register", Object.class).invk(listener);
         } else {
-            Class<?> ccm = (Class<?>) Reflection.wrap("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
-            command(ccm, (CommandDispatcher<?>) Reflection.wrap("ccm DISPATCHER§f"), null);
+            R.RClass ccm = R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
+            command(ccm, (CommandDispatcher<?>) ccm.fld("DISPATCHER").get(), null);
         }
     }
 
-    private static ArgumentBuilder<?, ?> literal(Class<?> ccm, String command) {
-        return (ArgumentBuilder<?, ?>) Reflection.wrap("ccm literal§m command", ccm, command);
+    private static ArgumentBuilder<?, ?> literal(R.RClass ccm, String command) {
+        return (ArgumentBuilder<?, ?>) ccm.mthd("literal", String.class).invk(command);
     }
 
-    private static ArgumentBuilder<?, ?> argument(Class<?> ccm, String command, ArgumentType<?> argumentType) {
-        return (ArgumentBuilder<?, ?>) Reflection.wrap("ccm argument§m String:command ArgumentType:argumentType", ccm, command, argumentType);
+    private static ArgumentBuilder<?, ?> argument(R.RClass ccm, String command, ArgumentType<?> argumentType) {
+        return (ArgumentBuilder<?, ?>) ccm.mthd("argument", String.class, ArgumentType.class).invk(command, argumentType);
     }
+
+    private static ArgumentBuilder<?, ?> executes(Object builder, Object cmd) {
+        return (ArgumentBuilder<?, ?>) R.clz(ArgumentBuilder.class).inst(builder).mthd("executes", Command.class).invk(cmd);
+    }
+
+    private static ArgumentBuilder<?, ?> then(Object builder, Object builder2) {
+        return (ArgumentBuilder<?, ?>) R.clz(ArgumentBuilder.class).inst(builder).mthd("then", ArgumentBuilder.class).invk(builder2);
+    }
+
 
     private static <T> Command<T> runner(Function<CommandContext<T>, Integer> function) {
         return function::apply;
@@ -130,7 +145,7 @@ public class Commands {
         return t -> function.apply(t, config);
     }
 
-    public static void command(Class<?> ccm, CommandDispatcher<?> dispatcher, Object registryAccess) {
+    public static void command(R.RClass ccm, CommandDispatcher<?> dispatcher, Object registryAccess) {
         Object base = literal(ccm, "librget");
         Object a, l, r, d;
 
@@ -139,31 +154,31 @@ public class Commands {
             l = literal(ccm, "add");
 
             a = argument(ccm, "enchantment", enchantmentArgument(registryAccess));
-            a = Reflection.wrap("ArgumentBuilder:a executes§m Command:add", a, add);
+            a = executes(a, add);
 
             r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = Reflection.wrap("ArgumentBuilder:r executes§m Command:add", r, add);
+            r = executes(r, add);
 
             d = argument(ccm, "maxprice", IntegerArgumentType.integer(1, 64));
-            d = Reflection.wrap("ArgumentBuilder:d executes§m Command:add", d, add);
+            d = executes(d, add);
 
-            r = Reflection.wrap("ArgumentBuilder:r then§m ArgumentBuilder:d", r, d);
-            a = Reflection.wrap("ArgumentBuilder:a then§m ArgumentBuilder:r", a, r);
-            l = Reflection.wrap("ArgumentBuilder:l then§m ArgumentBuilder:a", l, a);
+            r = then(r, d);
+            a = then(a, r);
+            l = then(l, a);
 
             a = argument(ccm, "enchantment_custom", StringArgumentType.string());
 
             r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = Reflection.wrap("ArgumentBuilder:r executes§m Command:add", r, add);
+            r = executes(r, add);
 
             d = argument(ccm, "maxprice", IntegerArgumentType.integer(1, 64));
-            d = Reflection.wrap("ArgumentBuilder:d executes§m Command:add", d, add);
+            d = executes(d, add);
 
-            r = Reflection.wrap("ArgumentBuilder:r then§m ArgumentBuilder:d", r, d);
-            a = Reflection.wrap("ArgumentBuilder:a then§m ArgumentBuilder:r", a, r);
-            l = Reflection.wrap("ArgumentBuilder:l then§m ArgumentBuilder:a", l, a);
+            r = then(r, d);
+            a = then(a, r);
+            l = then(l, a);
 
-            base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
+            base = then(base, l);
         }
         {
             Object remove = runner(LibrGetCommand::remove);
@@ -172,39 +187,39 @@ public class Commands {
             a = argument(ccm, "enchantment", enchantmentArgument(registryAccess));
 
             r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = Reflection.wrap("ArgumentBuilder:r executes§m Command:remove", r, remove);
+            r = executes(r, remove);
 
-            a = Reflection.wrap("ArgumentBuilder:a then§m ArgumentBuilder:r", a, r);
-            l = Reflection.wrap("ArgumentBuilder:l then§m ArgumentBuilder:a", l, a);
+            a = then(a, r);
+            l = then(l, a);
 
             a = argument(ccm, "enchantment_custom", StringArgumentType.string());
 
             r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = Reflection.wrap("ArgumentBuilder:r executes§m Command:remove", r, remove);
+            r = executes(r, remove);
 
-            a = Reflection.wrap("ArgumentBuilder:a then§m ArgumentBuilder:r", a, r);
-            l = Reflection.wrap("ArgumentBuilder:l then§m ArgumentBuilder:a", l, a);
+            a = then(a, r);
+            l = then(l, a);
 
-            base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
+            base = then(base, l);
         }
 
         l = literal(ccm, "clear").executes(LibrGetCommand::clear);
-        base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
+        base = then(base, l);
 
         l = literal(ccm, "list").executes(LibrGetCommand::list);
-        base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
+        base = then(base, l);
 
         l = literal(ccm, "stop").executes(LibrGetCommand::stop);
-        base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
+        base = then(base, l);
 
         l = literal(ccm, "start").executes(LibrGetCommand::start);
-        base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
+        base = then(base, l);
 
         l = literal(ccm, "continue").executes(LibrGetCommand::continueWork);
-        base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
+        base = then(base, l);
 
         l = literal(ccm, "auto").executes(LibrGetCommand::autostart);
-        base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
+        base = then(base, l);
 
         // automatically create config commands for each simply configurable value in Config
         l = literal(ccm, "config");
@@ -215,19 +230,18 @@ public class Commands {
 
             Object runner = runner(LibrGetCommand::config, configurable);
 
-            r = Reflection.wrap("ArgumentBuilder:r executes§m Command:runner", r, runner);
-            a = Reflection.wrap("ArgumentBuilder:a then§m ArgumentBuilder:r", a, r);
-            a = Reflection.wrap("ArgumentBuilder:a executes§m Command:runner", a, runner);
+            r = executes(r, runner);
+            a = then(a, r);
+            a = executes(a, runner);
 
-            l = Reflection.wrap("ArgumentBuilder:l then§m ArgumentBuilder:a", l, a);
+            l = then(l, a);
         }
-
-        base = Reflection.wrap("ArgumentBuilder:base then§m ArgumentBuilder:l", base, l);
+        base = then(base, l);
 
         Object selector = runner(LibrGetCommand::selector);
-        base = Reflection.wrap("ArgumentBuilder:base executes§m Command:selector", base, selector);
+        base = executes(base, selector);
 
-        Reflection.wrapi("CommandDispatcher:dispatcher register§m base", base, dispatcher);
+        R.clz(CommandDispatcher.class).inst(dispatcher).mthd("register", LiteralArgumentBuilder.class).invk(base);
     }
 
 }

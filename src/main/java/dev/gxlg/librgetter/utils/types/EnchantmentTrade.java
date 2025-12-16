@@ -1,6 +1,7 @@
 package dev.gxlg.librgetter.utils.types;
 
-import dev.gxlg.librgetter.Reflection;
+import dev.gxlg.librgetter.multiversion.R;
+import dev.gxlg.librgetter.multiversion.V;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import org.jspecify.annotations.NonNull;
@@ -34,11 +35,7 @@ public class EnchantmentTrade {
         if (iid == null) return id + " " + lvl;
         Language lang = Language.getInstance();
         String full = "enchantment." + iid.getNamespace() + "." + iid.getPath();
-        String name = (String) (
-                Reflection.version("< 1.19.4") ?
-                        Reflection.wrapn("Language:lang method_4679/get String:full", lang, full) :
-                        Reflection.wrapn("Language:lang method_48307/get String:full", lang, full)
-        );
+        String name = (String) R.clz(Language.class).inst(lang).mthd(V.lower("1.19.4") ? "method_4679/get" : "method_48307/get", String.class).invk(full);
         return name + " " + lvl;
     }
 

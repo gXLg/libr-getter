@@ -2,7 +2,9 @@ package dev.gxlg.librgetter.utils.reflection;
 
 import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.Reflection;
+import dev.gxlg.librgetter.multiversion.C;
+import dev.gxlg.librgetter.multiversion.R;
+import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.Plugins;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -39,42 +41,42 @@ import java.util.function.Consumer;
 
 public class Minecraft {
     public static ClientConnection getConnection(ClientPlayNetworkHandler handler) {
-        return (ClientConnection) Reflection.wrap("ClientPlayNetworkHandler:handler method_48296/method_2872/getConnection", handler);
+        return (ClientConnection) R.clz(ClientPlayNetworkHandler.class).inst(handler).mthd("method_48296/method_2872/getConnection").invk();
     }
 
     public static ClientWorld getWorld(ClientPlayerEntity player) {
-        if (Reflection.version(">= 1.21.9")) {
-            return (ClientWorld) Reflection.wrap("ClientPlayerEntity:player method_73183/getEntityWorld", player);
-        } else if (Reflection.version(">= 1.19")) {
-            return (ClientWorld) Reflection.wrap("ClientPlayerEntity:player method_37908/getWorld", player);
+        if (!V.lower("1.21.9")) {
+            return (ClientWorld) R.clz(ClientPlayerEntity.class).inst(player).mthd("method_73183/getEntityWorld").invk();
+        } else if (!V.lower("1.19")) {
+            return (ClientWorld) R.clz(ClientPlayerEntity.class).inst(player).mthd("method_37908/getWorld").invk();
         } else {
-            return (ClientWorld) Reflection.wrap("ClientPlayerEntity:player field_17892/clientWorld", player);
+            return (ClientWorld) R.clz(ClientPlayerEntity.class).inst(player).fld("field_17892/clientWorld").get();
         }
     }
 
     public static void interactBlock(ClientPlayerInteractionManager manager, ClientPlayerEntity player, BlockHitResult lowBlock, boolean main) {
         Hand hand = main ? Hand.MAIN_HAND : Hand.OFF_HAND;
-        if (Reflection.version(">= 1.19")) {
-            Reflection.wrapi("ClientPlayerInteractionManager:manager method_2896/interactBlock player hand lowBlock", manager, player, hand, lowBlock);
+        if (!V.lower("1.19")) {
+            R.clz(ClientPlayerInteractionManager.class).inst(manager).mthd("method_2896/interactBlock", ClientPlayerEntity.class, Hand.class, BlockHitResult.class).invk(player, hand, lowBlock);
         } else {
-            Reflection.wrapi("ClientPlayerInteractionManager:manager method_2896/interactBlock player getWorld(player) hand lowBlock", manager, player, hand, lowBlock);
+            R.clz(ClientPlayerInteractionManager.class).inst(manager).mthd("method_2896/interactBlock", ClientPlayerEntity.class, ClientWorld.class, Hand.class, BlockHitResult.class).invk(player, getWorld(player), hand, lowBlock);
         }
     }
 
     public static Identifier enchantmentId(Enchantment enchantment) {
-        if (Reflection.version(">= 1.21")) {
+        if (!V.lower("1.21")) {
             ClientWorld w = MinecraftClient.getInstance().world;
             if (w == null) return null;
             Object rm = w.getRegistryManager();
-            Object r = Reflection.wrap("[.class_5455/.registry.DynamicRegistryManager]:rm method_30530/get/getOrThrow [.class_5321/.registry.RegistryKey]:[[.class_7924/.registry.RegistryKeys] field_41265/ENCHANTMENT]", rm);
-            Object e = Reflection.wrap("[.class_2378/.registry.Registry]:r method_47983/getEntry Object:enchantment", r);
-            return (Identifier) Reflection.wrap("Identifier method_60654/of String:[[.class_6880/.registry.entry.RegistryEntry]:e method_55840/getIdAsString]", e);
 
-        } else if (Reflection.version(">= 1.19.3")) {
-            return (Identifier) Reflection.wrap("[.class_2378/.registry.Registry]:[[.class_7923/.registry.Registries] field_41176/ENCHANTMENT] method_10221/getId Object:enchantment", enchantment);
+            Object r = C.DynamicRegistryManager.inst(rm).mthd("method_30530/get/getOrThrow", C.RegistryKey).invk(C.RegistryKeys.fld("field_41265/ENCHANTMENT").get());
+            Object e = C.Registry.inst(r).mthd("method_47983/getEntry", Object.class).invk(enchantment);
+            return (Identifier) R.clz(Identifier.class).mthd("method_60654/of", String.class).invk(C.RegistryEntry.inst(e).mthd("method_55840/getIdAsString").invk());
+
+        } else if (!V.lower("1.19.3")) {
+            return (Identifier) C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_10221/getId", Object.class).invk(enchantment);
         } else {
-            Class<?> reg = (Class<?>) Reflection.wrap(".class_2378/.registry.Registry");
-            return (Identifier) Reflection.wrap("reg:[reg field_11160/ENCHANTMENT] method_10221/getId Object:enchantment", reg, enchantment);
+            return (Identifier) C.Registry.inst(C.Registry.fld("field_11160/ENCHANTMENT").get()).mthd("method_10221/getId", Object.class).invk(enchantment);
         }
     }
 
@@ -85,19 +87,19 @@ public class Minecraft {
         ItemStack stack = trades.get(trade).getSellItem();
 
         Object tag;
-        if (Reflection.version(">= 1.20.5")) {
-            Object cmap = Reflection.wrap("[.class_9322/.component.ComponentHolder]:stack method_57353/getComponents");
-            Object nbt = Reflection.wrap("[.class_9323/.component.ComponentMap]:cmap method_57829/method_58694/get [.class_9331/.component.ComponentType/.component.DataComponentType]:[[.class_9334/.component.DataComponentTypes] field_49628/CUSTOM_DATA]", cmap);
+        if (!V.lower("1.20.5")) {
+            Object cmap = C.ComponentHolder.inst(stack).mthd("method_57353/getComponents").invk();
+            Object nbt = C.ComponentMap.inst(cmap).mthd("method_57829/method_58694/get", C.DataComponentType).invk(C.DataComponentTypes.fld("field_49628/CUSTOM_DATA").get());
 
             Object[] t = new Object[1];
             if (nbt != null) {
                 Consumer<?> c = (Consumer<Object>) o -> t[0] = o;
-                Reflection.wrapi("[.class_9279/.component.type.NbtComponent]:nbt method_57451/apply Consumer:c", c);
+                R.clz("net.minecraft.class_9279/net.minecraft.component.type.NbtComponent").inst(nbt).mthd("method_57451/apply", Consumer.class).invk(c);
             }
             tag = t[0];
 
         } else {
-            tag = Reflection.wrap("ItemStack:stack method_7969/getNbt/getTag", stack);
+            tag = R.clz(ItemStack.class).inst(stack).mthd("method_7969/getNbt/getTag").invk();
             if (tag == null) return Either.left(EnchantmentTrade.EMPTY);
         }
 
@@ -112,30 +114,31 @@ public class Minecraft {
             lvl = parsed.getMiddle();
 
         } else {
-            if (Reflection.version(">= 1.20.5")) {
-                Class<?> cm = (Class<?>) Reflection.wrap(".class_9323/.component.ComponentMap");
-                Class<?> dsc = (Class<?>) Reflection.wrap(".class_9334/.component.DataComponentTypes");
-                Class<?> dc = (Class<?>) Reflection.wrap(".class_9331/.component.ComponentType/.component.DataComponentType");
-                Class<?> ic = (Class<?>) Reflection.wrap(".class_9304/.component.type.ItemEnchantmentsComponent");
-                Object cmap = Reflection.wrap("[.class_9322/.component.ComponentHolder]:stack method_57353/getComponents");
+            if (!V.lower("1.20.5")) {
+
+                R.RClass cm = C.ComponentMap;
+                R.RClass dsc = C.DataComponentTypes;
+                R.RClass dc = C.DataComponentType;
+                R.RClass ic = C.ItemEnchantmentsComponent;
+                Object cmap = C.ComponentHolder.inst(stack).mthd("method_57353/getComponents").invk();
 
                 // Legacy enchantment books
-                Object ecom = Reflection.wrap("cm:cmap method_57829/method_58694/get dc:[dsc field_49633/ENCHANTMENTS]", cm, cmap, dc, dsc);
+                Object ecom = cm.inst(cmap).mthd("method_57829/method_58694/get", dc).invk(dsc.fld("field_49633/ENCHANTMENTS").get());
                 Set<?> s = null;
                 boolean tryNext = false;
                 if (ecom != null) {
-                    s = (Set<?>) Reflection.wrapn("ic:ecom method_57539/getEnchantmentsMap/getEnchantmentEntries", ic, ecom);
+                    s = (Set<?>) ic.inst(ecom).mthd("method_57539/getEnchantmentsMap/getEnchantmentEntries").invk();
                     if (s.isEmpty()) tryNext = true;
                 } else tryNext = true;
 
                 // Vanilla
                 if (tryNext) {
-                    ecom = Reflection.wrap("cm:cmap method_57829/method_58694/get dc:[dsc field_49643/STORED_ENCHANTMENTS]", cm, cmap, dc, dsc);
+                    ecom = cm.inst(cmap).mthd("method_57829/method_58694/get", dc).invk(dsc.fld("field_49643/STORED_ENCHANTMENTS").get());
 
 
                     tryNext = false;
                     if (ecom != null) {
-                        s = (Set<?>) Reflection.wrapn("ic:ecom method_57539/getEnchantmentsMap/getEnchantmentEntries", ic, ecom);
+                        s = (Set<?>) ic.inst(ecom).mthd("method_57539/getEnchantmentsMap/getEnchantmentEntries").invk();
                         if (s.isEmpty()) tryNext = true;
                     } else tryNext = true;
                 }
@@ -147,7 +150,7 @@ public class Minecraft {
                     // found something
                     for (Object r : s) {
                         Object2IntMap.Entry<?> e = (Object2IntMap.Entry<?>) r;
-                        id = (String) Reflection.wrap("[.class_6880/.registry.entry.RegistryEntry]:e.getKey() method_55840/getIdAsString", e);
+                        id = (String) C.RegistryEntry.inst(e.getKey()).mthd("method_55840/getIdAsString").invk();
                         lvl = e.getIntValue();
                         break;
                     }
@@ -230,91 +233,92 @@ public class Minecraft {
     }
 
     public static ItemStack getFirstBuyItem(TradeOffer offer) {
-        return (ItemStack) Reflection.wrap("TradeOffer:offer method_19272/getAdjustedFirstBuyItem/getDisplayedFirstBuyItem", offer);
+        return (ItemStack) R.clz(TradeOffer.class).inst(offer).mthd("method_19272/getAdjustedFirstBuyItem/getDisplayedFirstBuyItem").invk();
     }
 
     public static ItemStack getSecondBuyItem(TradeOffer offer) {
-        if (Reflection.version(">= 1.20.5")) {
-            Optional<?> optional = (Optional<?>) Reflection.wrapn("TradeOffer:offer method_57557/getSecondBuyItem", offer);
+        if (!V.lower("1.20.5")) {
+            Optional<?> optional = (Optional<?>) R.clz(TradeOffer.class).inst(offer).mthd("method_57557/getSecondBuyItem").invk();
             if (optional.isEmpty()) return ItemStack.EMPTY;
             Object item = optional.get();
-            return (ItemStack) Reflection.wrapn("[.class_9306/.village.TradedItem]:item comp_2427/itemStack", item);
+            return (ItemStack) R.clz("net.minecraft.class_9306/net.minecraft.village.TradedItem").inst(item).mthd("comp_2427/itemStack").invk();
         } else {
-            return (ItemStack) Reflection.wrap("TradeOffer:offer method_8247/getSecondBuyItem/getDisplayedSecondBuyItem", offer);
+            return (ItemStack) R.clz(TradeOffer.class).inst(offer).mthd("method_8247/getSecondBuyItem/getDisplayedSecondBuyItem").invk();
         }
     }
 
     public static int getEfficiencyLevel(ItemStack stack) {
-        if (Reflection.version(">= 1.21")) {
-            Class<?> ic = (Class<?>) Reflection.wrap(".class_9304/.component.type.ItemEnchantmentsComponent");
-            Class<?> rc = (Class<?>) Reflection.wrap(".class_6880/.registry.entry.RegistryEntry");
+        if (!V.lower("1.21")) {
 
-            Object com = Reflection.wrap("ItemStack:stack method_58657/getEnchantments", stack);
-            Set<?> s = (Set<?>) Reflection.wrapn("ic:com method_57534/getEnchantments", ic, com);
+            R.RClass ic = C.ItemEnchantmentsComponent;
+            R.RClass rc = C.RegistryEntry;
+
+            Object com = R.clz(ItemStack.class).inst(stack).mthd("method_58657/getEnchantments").invk();
+            Set<?> s = (Set<?>) ic.inst(com).mthd("method_57534/getEnchantments").invk();
             for (Object r : s) {
-                String id = (String) Reflection.wrapn("rc:r method_55840/getIdAsString", rc, r);
+                String id = (String) rc.inst(r).mthd("method_55840/getIdAsString").invk();
                 if (id.equals("minecraft:efficiency")) {
-                    return (int) Reflection.wrapn("ic:com method_57536/getLevel rc:r", ic, com, rc, r);
+                    return (int) ic.inst(com).mthd("method_57536/getLevel", rc).invk(r);
                 }
             }
             return 0;
 
         } else {
-            Object eff = Reflection.wrap("[.class_1893/.enchantment.Enchantments] field_9131/EFFICIENCY");
-            return (int) Reflection.wrapn("EnchantmentHelper method_8225/getLevel Enchantment:eff ItemStack:stack", EnchantmentHelper.class, Enchantment.class, eff, stack);
+            Object eff = R.clz("net.minecraft.class_1893/net.minecraft.enchantment.Enchantments").fld("field_9131/EFFICIENCY").get();
+            return (int) R.clz(EnchantmentHelper.class).mthd("method_8225/getLevel", Enchantment.class, ItemStack.class).invk(eff, stack);
         }
     }
 
     public static boolean canBeTraded(Enchantment enchantment) {
-        if (Reflection.version(">= 1.21")) {
+        if (!V.lower("1.21")) {
             ClientWorld w = MinecraftClient.getInstance().world;
             if (w == null) return false;
             Object rm = w.getRegistryManager();
-            Object r = Reflection.wrap("[.class_5455/.registry.DynamicRegistryManager]:rm method_30530/get/getOrThrow [.class_5321/.registry.RegistryKey]:[[.class_7924/.registry.RegistryKeys] field_41265/ENCHANTMENT]", rm);
-            Object e = Reflection.wrap("[.class_2378/.registry.Registry]:r method_47983/getEntry Object:enchantment", r, enchantment);
-            return (boolean) Reflection.wrapn("[.class_6880/.registry.entry.RegistryEntry]:e method_40220/isIn [.class_6862/.registry.tag.TagKey]:[[.class_9636/.registry.tag.EnchantmentTags] field_51545/TRADEABLE]", e);
+            Object r = C.DynamicRegistryManager.inst(rm).mthd("method_30530/get/getOrThrow", C.RegistryKey).invk(C.RegistryKeys.fld("field_41265/ENCHANTMENT").get());
+            Object e = C.Registry.inst(r).mthd("method_47983/getEntry", Object.class).invk(enchantment);
+            return (boolean) C.RegistryEntry.inst(e).mthd("method_40220/isIn", R.clz("net.minecraft.class_6862/net.minecraft.registry.tag.TagKey")).invk(R.clz("net.minecraft.class_9636/net.minecraft.registry.tag.EnchantmentTags").fld("field_51545/TRADEABLE").get());
         } else {
-            return (boolean) Reflection.wrapn("Enchantment:enchantment method_25949/isAvailableForEnchantedBookOffer", enchantment);
+            return (boolean) R.clz(Enchantment.class).inst(enchantment).mthd("method_25949/isAvailableForEnchantedBookOffer").invk();
         }
     }
 
     public static void playSound(ClientWorld world, ClientPlayerEntity player) {
-        Reflection.wrapi("World:world method_8486/playSound/playSoundClient double:player.getX() double:player.getY() double:player.getZ() SoundEvent:SoundEvents.ENTITY_PLAYER_LEVELUP SoundCategory:SoundCategory.NEUTRAL float:10.0F float:0.7F boolean:false", World.class, world, player, SoundEvent.class, SoundEvents.class, SoundCategory.class);
+        R.clz(World.class).inst(world).mthd("method_8486/playSound/playSoundClient", double.class, double.class, double.class, SoundEvent.class, SoundCategory.class, float.class, float.class, boolean.class).invk(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.NEUTRAL, 10F, 0.7F, false);
     }
 
     public static void setActionResultFail(CallbackInfoReturnable<ActionResult> info) {
-        info.setReturnValue((ActionResult) Reflection.wrap("ActionResult field_5814/FAIL"));
+        info.setReturnValue((ActionResult) R.clz(ActionResult.class).fld("field_5814/FAIL").get());
     }
 
     public static boolean isVillagerLibrarian(VillagerEntity villager) {
         VillagerData villagerData = villager.getVillagerData();
-        Object lib = Reflection.wrap("[.class_3852/.village.VillagerProfession] field_17060/LIBRARIAN");
-        if (Reflection.version(">= 1.21.5")) {
-            return (boolean) Reflection.wrapn("[.class_6880/.registry.entry.RegistryEntry]:[VillagerData:villagerData comp_3521/profession] method_40225/matchesKey [.class_5321/.registry.RegistryKey]:lib", villagerData, lib);
+        Object prof = C.VillagerProfession.fld("field_17060/LIBRARIAN").get();
+        if (!V.lower("1.21.5")) {
+            return (boolean) C.RegistryEntry.inst(R.clz(VillagerData.class).inst(villagerData).mthd("comp_3521/profession").invk()).mthd("method_40225/matchesKey", C.RegistryKey).invk(prof);
         } else {
-            return Reflection.wrapn("VillagerData:villagerData method_16924/getProfession", villagerData).equals(lib);
+            return R.clz(VillagerData.class).inst(villagerData).mthd("method_16924/getProfession").invk().equals(prof);
         }
     }
 
     public static boolean isVillagerUnemployed(VillagerEntity villager) {
         VillagerData villagerData = villager.getVillagerData();
-        Object lib = Reflection.wrap("[.class_3852/.village.VillagerProfession] field_17051/NONE");
-        if (Reflection.version(">= 1.21.5")) {
-            return (boolean) Reflection.wrapn("[.class_6880/.registry.entry.RegistryEntry]:[VillagerData:villagerData comp_3521/profession] method_40225/matchesKey [.class_5321/.registry.RegistryKey]:lib", villagerData, lib);
+        Object prof = C.VillagerProfession.fld("field_17051/NONE").get();
+        if (!V.lower("1.21.5")) {
+            return (boolean) C.RegistryEntry.inst(R.clz(VillagerData.class).inst(villagerData).mthd("comp_3521/profession").invk()).mthd("method_40225/matchesKey", C.RegistryKey).invk(prof);
         } else {
-            return Reflection.wrapn("VillagerData:villagerData method_16924/getProfession", villagerData).equals(lib);
+            return R.clz(VillagerData.class).inst(villagerData).mthd("method_16924/getProfession").invk().equals(prof);
         }
     }
 
     public static void setSelectedSlot(PlayerInventory inventory, int slot) {
-        if (Reflection.version(">= 1.21.5")) {
-            Reflection.wrapi("PlayerInventory:inventory method_61496/setSelectedSlot int:slot", inventory, slot);
+        if (!V.lower("1.21.5")) {
+            R.clz(PlayerInventory.class).inst(inventory).mthd("method_61496/setSelectedSlot", int.class).invk(slot);
         } else {
-            Reflection.wrapi("PlayerInventory:inventory field_7545/selectedSlot slot", inventory, slot);
+            R.clz(PlayerInventory.class).inst(inventory).fld("field_7545/selectedSlot").set(slot);
         }
     }
 
     public static void setScreen(MinecraftClient client, Screen screen) {
-        Reflection.wrapi("MinecraftClient:client method_1507/setScreen/openScreen Screen:screen", client, screen);
+        R.clz(MinecraftClient.class).inst(client).mthd("method_1507/setScreen/openScreen", Screen.class).invk(screen);
     }
 }
