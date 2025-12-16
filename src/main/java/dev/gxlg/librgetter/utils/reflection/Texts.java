@@ -2,7 +2,9 @@ package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.Reflection;
+import dev.gxlg.librgetter.multiversion.C;
+import dev.gxlg.librgetter.multiversion.R;
+import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
@@ -18,79 +20,77 @@ import java.util.Map;
 
 public class Texts {
 
-    private static final Class<?> tc = (Class<?>) Reflection.wrap(".class_2561/.text.Text");
-    private static final Class<?> mc = (Class<?>) Reflection.wrap(".class_5250/.text.MutableText");
-    private static final Class<?> fcs;
+    private static final R.RClass fcs;
 
     static {
-        if (Reflection.version(">= 1.19")) {
-            fcs = (Class<?>) Reflection.wrap("net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource");
+        if (!V.lower("1.19")) {
+            fcs = R.clz("net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource");
         } else {
-            fcs = (Class<?>) Reflection.wrap("net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource");
+            fcs = R.clz("net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource");
         }
     }
 
     private static Object translatable(String message, Object... args) {
         Class<?> arr = Object[].class;
-        if (Reflection.version(">= 1.19")) {
-            return Reflection.wrap("tc method_43469/translatable String:message arr:args", message, arr, args);
+        if (!V.lower("1.19")) {
+            return C.Text.mthd("method_43469/translatable", String.class, arr).invk(message, args);
         } else {
-            return Reflection.wrap("[.class_2588/.text.TranslatableText] String:message arr:args", message, arr, args);
+            return R.clz("net.minecraft.class_2588/net.minecraft.text.TranslatableText").constr(String.class, arr).newInst(message, args).self();
         }
     }
 
     private static Object applyStyle(Object text, Style style) {
-        Object copy = Reflection.wrap("tc:text method_27662/copy", tc, text);
-        Reflection.wrapi("mc:copy method_10862/setStyle style", mc, copy, style);
+        Object copy = C.Text.inst(text).mthd("method_27662/copy").invk();
+        C.MutableText.inst(copy).mthd("method_10862/setStyle", Style.class).invk(style);
         return copy;
     }
 
     private static Object literal(String message) {
         Object m = Text.of(message);
-        return Reflection.wrap("tc:m method_27662/copy", tc, m);
+        return C.Text.inst(m).mthd("method_27662/copy").invk();
     }
 
     public static void sendError(Object source, String message, Object... args) {
         Object text = translatable(message, args);
-        Reflection.wrapi("fcs:source sendError§m tc:text", fcs, source, tc, text);
+        fcs.inst(source).mthd("sendError", C.Text).invk(text);
     }
 
     public static void sendFound(Object source, EnchantmentTrade enchant, int counter) {
         Object text = translatable("librgetter.found", enchant, counter, enchant.price());
-        text = Reflection.wrap("mc:text method_27692/formatted Formatting.GREEN", mc, text);
+        text = C.MutableText.inst(text).mthd("method_27692/formatted", Formatting.class).invk(Formatting.GREEN);
 
         if (!LibrGetter.config.removeGoal) {
-            String mt = " ";
-            text = Reflection.wrap("mc:text method_27693/append mt", mc, text, mt);
+            text = C.MutableText.inst(text).mthd("method_27693/append", String.class).invk(" ");
             Object rem = translatable("librgetter.remove");
             Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + enchant.id() + "\" " + enchant.lvl())).withColor(Formatting.YELLOW);
-            Reflection.wrapi("mc:rem method_10862/setStyle style", mc, rem, style);
-            text = Reflection.wrap("mc:text method_10852/append tc:rem", mc, text, tc, rem);
+            C.MutableText.inst(rem).mthd("method_10862/setStyle", Style.class).invk(style);
+            text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(rem);
         }
-        Reflection.wrapi("fcs:source sendFeedback§m tc:text", fcs, source, tc, text);
+        fcs.inst(source).mthd("sendFeedback", C.Text).invk(text);
     }
 
     public static void sendFeedback(Object source, String message, Formatting format, Object... args) {
         Object text = translatable(message, args);
         if (format != null) {
-            text = Reflection.wrap("mc:text method_27692/formatted format", mc, text, format);
+            text = C.MutableText.inst(text).mthd("method_27692/formatted", Formatting.class).invk(format);
         }
-        Reflection.wrapi("fcs:source sendFeedback§m tc:text", fcs, source, tc, text);
+        fcs.inst(source).mthd("sendFeedback", C.Text).invk(text);
     }
 
     public static void sendMessage(ClientPlayerEntity player, String message, Object... args) {
         if (LibrGetter.config.logMode == LogMode.NONE) return;
         boolean ab = LibrGetter.config.logMode == LogMode.ACTIONBAR;
         Object text = translatable(message, args);
-        Reflection.wrapi("@player method_7353/sendMessage tc:text boolean:ab", player, tc, text, ab);
+        R.clz(ClientPlayerEntity.class).inst(player).mthd("method_7353/sendMessage", C.Text, boolean.class).invk(text, ab);
     }
 
     public static void newVersion(ClientPlayerEntity player, String message, String hover) {
         Object text = translatable(message);
         Text hov = Text.of(hover);
         Style style = Style.EMPTY.withHoverEvent(hoverable(hov));
-        Reflection.wrapi("mc:text method_10862/setStyle style", mc, text, style);
-        Reflection.wrapi("@player method_7353/sendMessage tc:text boolean:false", player, tc, text);
+
+        C.MutableText.inst(text).mthd("method_10862/setStyle", Style.class).invk(style);
+        R.clz(ClientPlayerEntity.class).inst(player).mthd("method_7353/sendMessage", C.Text, boolean.class).invk(text, false);
     }
 
     public static void list(Object source) {
@@ -98,29 +98,29 @@ public class Texts {
         Object rem = translatable("librgetter.remove");
         for (EnchantmentTrade l : LibrGetter.config.goals) {
             String line = "\n- " + l + " (" + l.price() + ") ";
-            text = Reflection.wrap("mc:text method_27693/append line", mc, text, line);
+            text = C.MutableText.inst(text).mthd("method_27693/append", String.class).invk(line);
             Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + l.id() + "\" " + l.lvl())).withColor(Formatting.YELLOW);
             Object remc = applyStyle(rem, style);
-            text = Reflection.wrap("mc:text method_10852/append tc:remc", mc, text, tc, remc);
+            text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(remc);
         }
-        Reflection.wrapi("fcs:source sendFeedback§m tc:text", fcs, source, tc, text);
+        fcs.inst(source).mthd("sendFeedback", C.Text).invk(text);
     }
 
     public static Object bookMainPage(Map<String, Integer> categories) {
         Object text = Text.of("");
         Object lg = Text.of("LibrGetter " + LibrGetter.getVersion() + "\n");
-        lg = Reflection.wrap("tc:lg method_27662/copy", tc, lg);
-        lg = Reflection.wrap("mc:lg method_27692/formatted Formatting.DARK_GREEN", mc, lg);
-        text = Reflection.wrap("mc:text method_10852/append tc:lg", mc, text, tc, lg);
+        lg = C.Text.inst(lg).mthd("method_27662/copy").invk();
+        lg = C.MutableText.inst(lg).mthd("method_27692/formatted", Formatting.class).invk(Formatting.GREEN);
+        text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(lg);
         Object s = translatable("librgetter.menu");
-        text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+        text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(s);
         String nl = "\n";
         String star = "\n* ";
-        text = Reflection.wrap("mc:text method_27693/append nl", mc, text, nl);
+        text = C.MutableText.inst(text).mthd("method_27693/append", String.class).invk(nl);
         for (String cat : Config.CATEGORIES) {
-            text = Reflection.wrap("mc:text method_27693/append star", mc, text, star);
+            text = C.MutableText.inst(text).mthd("method_27693/append", String.class).invk(star);
             s = applyStyle(translatable("librgetter.category." + cat), Style.EMPTY.withClickEvent(paging(categories.get(cat) + 1)));
-            text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+            text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(s);
         }
         return text;
     }
@@ -128,15 +128,15 @@ public class Texts {
     public static Object bookTitle(String category) {
         Object text = Text.of("");
         Object lg = Text.of("LibrGetter " + LibrGetter.getVersion() + "\n");
-        lg = Reflection.wrap("tc:lg method_27662/copy", tc, lg);
-        lg = Reflection.wrap("mc:lg method_27692/formatted Formatting.DARK_GREEN", mc, lg);
-        text = Reflection.wrap("mc:text method_10852/append tc:lg", mc, text, tc, lg);
+        lg = C.Text.inst(lg).mthd("method_27662/copy").invk();
+        lg = C.MutableText.inst(lg).mthd("method_27692/formatted", Formatting.class).invk(Formatting.DARK_GREEN);
+        text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(lg);
         Object s = applyStyle(Text.of("↩"), Style.EMPTY.withClickEvent(paging(1)));
-        text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+        text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(s);
         s = literal(" ");
-        text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+        text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(s);
         s = translatable("librgetter.category." + category);
-        return Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+        return C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(s);
     }
 
     public static Object bookEntry(Object text, Configurable<?> configurable) {
@@ -152,8 +152,8 @@ public class Texts {
         Object c = applyStyle(Text.of(showName), cStyle);
 
         String nl = "\n";
-        text = Reflection.wrap("mc:text method_27693/append nl+nl", mc, text, nl);
-        text = Reflection.wrap("mc:text method_10852/append tc:c", mc, text, tc, c);
+        text = C.MutableText.inst(text).mthd("method_27693/append", String.class).invk(nl + nl);
+        text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(c);
 
         Style r;
         Object x, y, z;
@@ -192,43 +192,40 @@ public class Texts {
 
         if (!configurable.isDefault()) {
             Object s = literal(" ");
-            text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+            text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(s);
             s = applyStyle(Text.of("↩"), r.withColor(black));
-            text = Reflection.wrap("mc:text method_10852/append tc:s", mc, text, tc, s);
+            text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(s);
         }
-        text = Reflection.wrap("mc:text method_27693/append nl", mc, text, nl);
+        text = C.MutableText.inst(text).mthd("method_27693/append", String.class).invk(nl);
 
 
-        text = Reflection.wrap("mc:text method_10852/append tc:x", mc, text, tc, x);
-        text = Reflection.wrap("mc:text method_10852/append tc:y", mc, text, tc, y);
-        return Reflection.wrap("mc:text method_10852/append tc:z", mc, text, tc, z);
+        text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(x);
+        text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(y);
+        return C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(z);
     }
 
     public static ClickEvent runnable(String command) {
-        if (Reflection.version(">= 1.21.5")) {
-            return (ClickEvent) Reflection.wrap("[.class_2558$class_10609/.text.ClickEvent$RunCommand] String:command", command);
+        if (!V.lower("1.21.5")) {
+            return (ClickEvent) R.clz("net.minecraft.class_2558$class_10609/net.minecraft.text.ClickEvent$RunCommand").constr(String.class).newInst(command).self();
         } else {
-            Class<?> action = (Class<?>) Reflection.wrap(".class_2558$class_2559/.text.ClickEvent$Action");
-            return (ClickEvent) Reflection.wrap("ClickEvent action:[action field_11750/RUN_COMMAND] String:command", action, command);
+            return (ClickEvent) R.clz(ClickEvent.class).constr(C.ClickEvent$Action, String.class).newInst(C.ClickEvent$Action.fld("field_11750/RUN_COMMAND").get(), command).self();
         }
     }
 
     public static ClickEvent paging(int page) {
-        if (Reflection.version(">= 1.21.5")) {
-            return (ClickEvent) Reflection.wrap("[.class_2558$class_10605/.text.ClickEvent$ChangePage] int:page", page);
+        if (!V.lower("1.21.5")) {
+            return (ClickEvent) R.clz("net.minecraft.class_2558$class_10605/net.minecraft.text.ClickEvent$ChangePage").constr(int.class).newInst(page).self();
         } else {
-            Class<?> action = (Class<?>) Reflection.wrap(".class_2558$class_2559/.text.ClickEvent$Action");
             String pageString = String.valueOf(page);
-            return (ClickEvent) Reflection.wrap("ClickEvent action:[action field_11748/CHANGE_PAGE] String:pageString", action, pageString);
+            return (ClickEvent) R.clz(ClickEvent.class).constr(C.ClickEvent$Action, String.class).newInst(C.ClickEvent$Action.fld("field_11748/CHANGE_PAGE").get(), pageString).self();
         }
     }
 
     public static HoverEvent hoverable(Object text) {
-        if (Reflection.version(">= 1.21.5")) {
-            return (HoverEvent) Reflection.wrap("[.class_2568$class_10613/.text.HoverEvent$ShowText] tc:text", tc, text);
+        if (!V.lower("1.21.5")) {
+            return (HoverEvent) R.clz("net.minecraft.class_2568$class_10613/net.minecraft.text.HoverEvent$ShowText").constr(C.Text).newInst(text).self();
         } else {
-            Class<?> action = (Class<?>) Reflection.wrap(".class_2568$class_5247/.text.HoverEvent$Action");
-            return (HoverEvent) Reflection.wrap("HoverEvent action:[action field_24342/SHOW_TEXT] Object:text", action, text);
+            return (HoverEvent) R.clz(HoverEvent.class).constr(C.HoverEvent$Action, Object.class).newInst(C.HoverEvent$Action.fld("field_24342/SHOW_TEXT").get(), text).self();
         }
     }
 }
