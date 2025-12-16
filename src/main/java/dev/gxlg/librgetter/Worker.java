@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.Support;
-import dev.gxlg.librgetter.utils.reflection.Texts;
+import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.enums.MatchMode;
 import dev.gxlg.librgetter.utils.types.config.enums.RotationMode;
@@ -79,7 +79,7 @@ public class Worker {
     }
 
     private static void error(String msg, String... args) {
-        Texts.sendError(source, msg, (Object[]) args);
+        Texts.getImpl().sendError(source, msg, (Object[]) args);
         state = State.STANDBY;
     }
 
@@ -93,7 +93,7 @@ public class Worker {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            error("librgetter.internal", "player");
+            error("librgetter.internal", "player0");
             return;
         }
 
@@ -138,7 +138,7 @@ public class Worker {
 
             PlayerInventory inventory = player.getInventory();
             if (inventory == null) {
-                error("librgetter.internal", "inventory");
+                error("librgetter.internal", "inventory0");
                 return;
             }
             int slot = -1;
@@ -158,7 +158,7 @@ public class Worker {
                 }
             } else {
                 if (defaultAxe == null || !defaultAxe.isDamageable()) {
-                    state = State.BREAK_LECTERN;
+                    prepareRotation(player, new Vec3d(block.getX() + 0.5, block.getY(), block.getZ() + 0.5), State.BREAK_LECTERN);
                     return;
                 }
                 for (int i = 0; i < PlayerInventory.MAIN_SIZE; i++) {
@@ -197,7 +197,7 @@ public class Worker {
         if (state == State.BREAK_LECTERN) {
             ClientWorld world = client.world;
             if (world == null) {
-                error("librgetter.internal", "world");
+                error("librgetter.internal", "world0");
                 return;
             }
 
@@ -232,7 +232,7 @@ public class Worker {
                 // select
                 PlayerInventory inventory = player.getInventory();
                 if (inventory == null) {
-                    error("librgetter.internal", "inventory");
+                    error("librgetter.internal", "inventory1");
                     return;
                 }
 
@@ -331,7 +331,7 @@ public class Worker {
             // parsing the trades
             getEnchant();
 
-            Texts.sendMessage(player, "librgetter.offer", offeredEnchantments);
+            Texts.getImpl().sendMessage(player, "librgetter.offer", offeredEnchantments);
             if (!offeredEnchantments.isEmpty()) {
                 boolean match = false;
                 List<EnchantmentTrade> success = new ArrayList<>();
@@ -377,10 +377,10 @@ public class Worker {
                         match = true;
                 }
                 if (match) {
-                    success.forEach(f -> Texts.sendFound(source, f, counter));
+                    success.forEach(f -> Texts.getImpl().sendFound(source, f, counter));
                     if (LibrGetter.config.notify) {
                         if (client.world == null) {
-                            Texts.sendError(source, "librgetter.internal", "world");
+                            Texts.getImpl().sendError(source, "librgetter.internal", "world1");
                         } else {
                             Minecraft.playSound(client.world, player);
                         }
@@ -550,7 +550,7 @@ public class Worker {
             String[] ret = err.get();
             Object[] args = new String[ret.length - 1];
             System.arraycopy(ret, 1, args, 0, ret.length - 1);
-            Texts.sendError(source, ret[0], args);
+            Texts.getImpl().sendError(source, ret[0], args);
             state = State.STANDBY;
             return false;
         }
@@ -580,40 +580,40 @@ public class Worker {
 
     public static void start(boolean resetCounter) {
         if (state != State.STANDBY) {
-            Texts.sendError(source, "librgetter.running");
+            Texts.getImpl().sendError(source, "librgetter.running");
             return;
         }
         if (block == null) {
-            Texts.sendError(source, "librgetter.no_lectern");
+            Texts.getImpl().sendError(source, "librgetter.no_lectern");
             return;
         }
         if (villager == null) {
-            Texts.sendError(source, "librgetter.no_librarian");
+            Texts.getImpl().sendError(source, "librgetter.no_librarian");
             return;
         }
         if (LibrGetter.config.goals.isEmpty()) {
-            Texts.sendError(source, "librgetter.goals");
+            Texts.getImpl().sendError(source, "librgetter.goals");
             return;
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            Texts.sendError(source, "librgetter.internal", "player");
+            Texts.getImpl().sendError(source, "librgetter.internal", "player1");
             return;
         }
 
         if (LibrGetter.config.safeChecker) {
             ClientWorld world = client.world;
             if (world == null) {
-                Texts.sendError(source, "librgetter.internal", "world");
+                Texts.getImpl().sendError(source, "librgetter.internal", "world2");
                 return;
             }
             // If the villager is sitting, assume it cannot move
             if (!villager.hasVehicle()) {
                 List<BlockPos> path = PathFinding.findPath(villager.getBlockPos(), block, world, 2);
                 if (path != null) {
-                    Texts.sendError(source, "librgetter.unsafe");
+                    Texts.getImpl().sendError(source, "librgetter.unsafe");
                     return;
                 }
             }
@@ -623,12 +623,12 @@ public class Worker {
 
         if (LibrGetter.config.lock) {
             if (getLockType(player) == LockType.CANNOT) {
-                Texts.sendError(source, "librgetter.lock");
+                Texts.getImpl().sendError(source, "librgetter.lock");
                 return;
             }
         }
 
-        Texts.sendFeedback(source, "librgetter.start", Formatting.GREEN);
+        Texts.getImpl().sendFeedback(source, "librgetter.start", Formatting.GREEN);
         if (resetCounter) counter = 0;
         state = State.WAIT_VILLAGER_ACCEPT_PROFESSION;
     }
@@ -643,10 +643,10 @@ public class Worker {
             }
         }
         if (already != null) {
-            Texts.sendFeedback(source, "librgetter.price", Formatting.GREEN, already, price);
+            Texts.getImpl().sendFeedback(source, "librgetter.price", Formatting.GREEN, already, price);
             LibrGetter.config.goals.remove(already);
         } else {
-            Texts.sendFeedback(source, custom ? "libgetter.add_custom" : "libgetter.add", Formatting.GREEN, newLooking, newLooking.price());
+            Texts.getImpl().sendFeedback(source, custom ? "libgetter.add_custom" : "libgetter.add", Formatting.GREEN, newLooking, newLooking.price());
         }
         LibrGetter.config.goals.add(newLooking);
         LibrGetter.config.save();
@@ -662,26 +662,26 @@ public class Worker {
             }
         }
         if (already == null) {
-            Texts.sendError(source, "librgetter.not", newLooking);
+            Texts.getImpl().sendError(source, "librgetter.not", newLooking);
             return;
         }
         LibrGetter.config.goals.remove(already);
         LibrGetter.config.save();
-        Texts.sendFeedback(source, "librgetter.removed", Formatting.YELLOW, newLooking);
+        Texts.getImpl().sendFeedback(source, "librgetter.removed", Formatting.YELLOW, newLooking);
     }
 
     public static void clear() {
         LibrGetter.config.goals.clear();
         LibrGetter.config.save();
-        Texts.sendFeedback(source, "librgetter.cleared", Formatting.YELLOW);
+        Texts.getImpl().sendFeedback(source, "librgetter.cleared", Formatting.YELLOW);
     }
 
     public static void stop() {
         if (state == State.STANDBY) {
-            Texts.sendError(source, "librgetter.not_running");
+            Texts.getImpl().sendError(source, "librgetter.not_running");
             return;
         }
-        Texts.sendFeedback(source, "librgetter.stop", Formatting.YELLOW);
+        Texts.getImpl().sendFeedback(source, "librgetter.stop", Formatting.YELLOW);
         state = State.STANDBY;
     }
 
@@ -710,7 +710,7 @@ public class Worker {
     }
 
     public static void noRefresh() {
-        Texts.sendError(source, "librgetter.update");
+        Texts.getImpl().sendError(source, "librgetter.update");
         state = State.STANDBY;
     }
 

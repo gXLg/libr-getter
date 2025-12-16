@@ -14,6 +14,7 @@ import dev.gxlg.librgetter.command.LibrGetCommand;
 import dev.gxlg.librgetter.multiversion.C;
 import dev.gxlg.librgetter.multiversion.R;
 import dev.gxlg.librgetter.multiversion.V;
+import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.enchantment.Enchantment;
 import org.jspecify.annotations.NonNull;
@@ -39,7 +40,7 @@ public class Commands {
 
             Optional<?> opt = fromArgument(pred.inst(argument));
             if (opt.isEmpty()) {
-                Texts.sendError(context, "librgetter.argument");
+                Texts.getImpl().sendError(context, "librgetter.argument");
                 return false;
             }
 
@@ -52,7 +53,7 @@ public class Commands {
             R.RClass entryClass = R.clz("net.minecraft.class_6880$class_6883/net.minecraft.registry.entry.RegistryEntry$Reference");
             if (optrefl.isEmpty()) {
                 if (optrefr.isEmpty()) {
-                    Texts.sendError(context, "librgetter.wrong");
+                    Texts.getImpl().sendError(context, "librgetter.wrong");
                     return false;
                 }
 
