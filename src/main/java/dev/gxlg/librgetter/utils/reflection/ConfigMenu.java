@@ -2,7 +2,8 @@ package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.Reflection;
+import dev.gxlg.librgetter.multiversion.R;
+import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
 import net.minecraft.text.StringVisitable;
@@ -34,8 +35,8 @@ public class ConfigMenu {
             }
         }
 
-        if (Reflection.version(">= 1.20.5")) {
-            return (BookScreen.Contents) Reflection.wrap("BookScreen.Contents List:list", list);
+        if (!V.lower("1.20.5")) {
+            return (BookScreen.Contents) R.clz(BookScreen.Contents.class).constr(List.class).newInst(list).self();
         }
 
         return (BookScreen.Contents) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{BookScreen.Contents.class}, (proxy, method, args) -> {

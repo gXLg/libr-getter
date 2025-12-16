@@ -1,7 +1,8 @@
 package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.Reflection;
+import dev.gxlg.librgetter.multiversion.R;
+import dev.gxlg.librgetter.multiversion.V;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class Support {
@@ -14,10 +15,10 @@ public class Support {
     }
 
     public static void sendCycleTradesPacket() {
-        if (Reflection.version(">= 1.20.2")) {
-            Reflection.wrapi("[net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking] send§m [.class_8710/.network.packet.CustomPayload]:[de.maxhenkel.tradecycling.net.CycleTradesPacket <>]");
+        if (!V.lower("1.20.2")) {
+            R.clz("net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking").mthd("send", R.clz("net.minecraft.class_8710/net.minecraft.network.packet.CustomPayload")).invk(R.clz("de.maxhenkel.tradecycling.net.CycleTradesPacket").constr().newInst().self());
         } else {
-            Reflection.wrapi("[de.maxhenkel.tradecycling.TradeCyclingClientMod] sendCycleTradesPacket§m");
+            R.clz("de.maxhenkel.tradecycling.TradeCyclingClientMod").mthd("sendCycleTradesPacket").invk();
         }
     }
 
