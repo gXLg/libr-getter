@@ -31,6 +31,10 @@ public class SelectAndPlaceLecternTask extends Worker.Task {
         if (player == null) return internalError("player");
         ClientWorld world = Minecraft.getWorld(player);
 
+        if (!taskContext.selectedLectern().isWithinDistance(player.getBlockPos(), 3.4f)) {
+            return error("librgetter.far");
+        }
+
         if (world.getBlockState(taskContext.selectedLectern()).isOf(Blocks.LECTERN)) {
             // the lectern is placed down now
             return switchSameTick(

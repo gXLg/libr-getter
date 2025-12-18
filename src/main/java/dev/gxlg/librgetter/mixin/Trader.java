@@ -1,9 +1,8 @@
 package dev.gxlg.librgetter.mixin;
 
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
-import dev.gxlg.librgetter.utils.reflection.Support;
 import dev.gxlg.librgetter.worker.Worker;
-import dev.gxlg.librgetter.worker.tasks.GetTradesTask;
+import dev.gxlg.librgetter.worker.tasks.WaitTradesTask;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.c2s.play.CloseHandledScreenC2SPacket;
@@ -19,19 +18,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class Trader {
     @Inject(at = @At("HEAD"), method = "onSetTradeOffers")
     public void onSetTradeOffers(SetTradeOffersS2CPacket packet, CallbackInfo callback) {
-        if (Worker.getCurrentTask() instanceof GetTradesTask getTradesTask) {
+        if (Worker.getCurrentTask() instanceof WaitTradesTask waitTradesTask) {
             if (packet.getExperience() > 0) {
-                getTradesTask.setNoRefresh();
+                waitTradesTask.setNoRefresh();
                 return;
             }
-            getTradesTask.setOffers(packet.getOffers());
+            waitTradesTask.setOffers(packet.getOffers());
         }
     }
 
     @Inject(at = @At("HEAD"), method = "onOpenScreen", cancellable = true)
     public void onOpenScreen(OpenScreenS2CPacket packet, CallbackInfo callback) {
-        if (!(Worker.getCurrentTask() instanceof GetTradesTask)) return;
-        if (packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT && !Support.useTradeCycling()) {
+        if (packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT && Worker.getCurrentTask().shouldCloseScreen()) {
             callback.cancel();
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayNetworkHandler handler = client.getNetworkHandler();

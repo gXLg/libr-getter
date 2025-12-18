@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.worker.Worker;
-import dev.gxlg.librgetter.worker.tasks.WaitVillagerLoseProfession;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -70,7 +69,7 @@ public abstract class Manager {
         }
 
         if (!pos.equals(Worker.getCurrentTask().getTaskContext().selectedLectern())) return;
-        if (Worker.getCurrentTask() instanceof WaitVillagerLoseProfession)
+        if (!Worker.getCurrentTask().allowsPlacing())
             Minecraft.setActionResultFail(info);
     }
 }

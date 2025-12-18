@@ -15,4 +15,9 @@ public class WaitVillagerLoseProfession extends Worker.Task {
         if (Minecraft.isVillagerEmployed(taskContext.selectedVillager())) return noSwitch();
         return switchSameTick(new SelectAndPlaceLecternTask(taskContext));
     }
+
+    @Override
+    public boolean allowsPlacing() {
+        return false;
+    }
 }

@@ -17,7 +17,7 @@ public class WaitVillagerAcceptProfessionTask extends Worker.Task {
             if (!Minecraft.isVillagerLibrarian(taskContext.selectedVillager())) {
                 return error("librgetter.pick");
             }
-            return switchSameTick(new GetTradesTask(taskContext));
+            return switchSameTick(new RequestTradesTask(taskContext));
         }
         if (LibrGetter.config.timeout != 0) {
             timeout++;
@@ -25,10 +25,5 @@ public class WaitVillagerAcceptProfessionTask extends Worker.Task {
             if (timeout >= LibrGetter.config.timeout * 20) return switchSameTick(new BreakLecternTask(taskContext));
         }
         return noSwitch();
-    }
-
-    @Override
-    public boolean allowsBreaking() {
-        return false;
     }
 }

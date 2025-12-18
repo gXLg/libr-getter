@@ -16,6 +16,6 @@ public class TradeCyclingClickTask extends Worker.Task {
         Screen s = client.currentScreen;
         if (s == null) return finish();
         Support.sendCycleTradesPacket();
-        return switchNextTick(new GetTradesTask(taskContext.withIncreasedAttemptsCounter()));
+        return switchSameTick(new WaitTradesTask(taskContext.withIncreasedAttemptsCounter()));
     }
 }

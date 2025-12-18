@@ -66,11 +66,6 @@ public class ParseAndMatchTradesTask extends Worker.Task {
         return switchSameTick(new FinalizeSearchTask(taskContext, offers));
     }
 
-    @Override
-    public boolean allowsBreaking() {
-        return false;
-    }
-
     private boolean isEnchantmentTrade(TradeOffer offer) {
         return offer.getSellItem().isOf(Items.ENCHANTED_BOOK) || offer.getSellItem().isOf(Items.BOOK);
     }

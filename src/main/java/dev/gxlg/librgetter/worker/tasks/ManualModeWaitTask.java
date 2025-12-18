@@ -8,7 +8,7 @@ public class ManualModeWaitTask extends Worker.Task {
     }
 
     @Override
-    public boolean allowsBreaking() {
-        return false;
+    public Worker.TaskSwitch work() {
+        return noSwitch();
     }
 }

@@ -36,4 +36,9 @@ public class StandbyTask extends Worker.Task {
         if (taskSwitcher != null) throw new IllegalStateException("Can't switch to a task more than once");
         taskSwitcher = switcher;
     }
+
+    @Override
+    public boolean allowsBreaking() {
+        return true;
+    }
 }

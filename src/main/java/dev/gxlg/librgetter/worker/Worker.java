@@ -79,17 +79,24 @@ public class Worker {
             this.taskContext = taskContext;
         }
 
-        public TaskSwitch work() {
-            return noSwitch();
-        }
+        public abstract TaskSwitch work();
 
         public TaskContext getTaskContext() {
             return taskContext;
         }
 
         public boolean allowsBreaking() {
+            return false;
+        }
+
+        public boolean shouldCloseScreen() {
+            return false;
+        }
+
+        public boolean allowsPlacing() {
             return true;
         }
+
 
         protected TaskSwitch internalError(String varName) {
             return error("librgetter.internal", varName, this.getClass().getName());

@@ -32,4 +32,9 @@ public class BreakLecternTask extends Worker.Task {
         manager.updateBlockBreakingProgress(taskContext.selectedLectern(), Direction.UP);
         return noSwitch();
     }
+
+    @Override
+    public boolean allowsBreaking() {
+        return true;
+    }
 }
