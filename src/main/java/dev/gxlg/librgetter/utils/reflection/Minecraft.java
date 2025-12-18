@@ -1,12 +1,12 @@
 package dev.gxlg.librgetter.utils.reflection;
 
-import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.multiversion.C;
 import dev.gxlg.librgetter.multiversion.R;
 import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.Plugins;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
+import dev.gxlg.librgetter.utils.types.ParsedEnchantmentTrade;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -80,10 +80,7 @@ public class Minecraft {
         }
     }
 
-    // returns Either:
-    // - left: EnchantmentTrade (possibly EMPTY)
-    // - right: {message, ...args} if error
-    public static Either<EnchantmentTrade, String[]> parseTrade(TradeOfferList trades, int trade) {
+    public static ParsedEnchantmentTrade parseTrade(TradeOfferList trades, int trade) {
         ItemStack stack = trades.get(trade).getSellItem();
 
         Object tag;
@@ -100,7 +97,7 @@ public class Minecraft {
 
         } else {
             tag = R.clz(ItemStack.class).inst(stack).mthd("method_7969/getNbt/getTag").invk();
-            if (tag == null) return Either.left(EnchantmentTrade.EMPTY);
+            if (tag == null) return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
         }
 
         String id = null;
@@ -109,7 +106,7 @@ public class Minecraft {
         // Parse plugins
         Triple<String, Integer, String[]> parsed = Plugins.parse(tag);
         if (parsed != null) {
-            if (parsed.getRight() != null) return Either.right(parsed.getRight());
+            if (parsed.getRight() != null) return ParsedEnchantmentTrade.error(parsed.getRight());
             id = parsed.getLeft();
             lvl = parsed.getMiddle();
 
@@ -176,7 +173,7 @@ public class Minecraft {
         if (id == null) {
             // Nothing was found, so try fallback or return empty
             Pair<String, Integer> fb = fallback(tag);
-            if (fb == null) return Either.left(EnchantmentTrade.EMPTY);
+            if (fb == null) return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
 
             id = fb.getLeft();
             lvl = fb.getRight();
@@ -188,10 +185,10 @@ public class Minecraft {
         if (s.getItem() == Items.EMERALD) f = s;
 
         if (f == null) {
-            return Either.right(new String[]{"librgetter.internal", "f"});
+            return ParsedEnchantmentTrade.error("librgetter.internal", "f", "Minecraft#parseTrade");
         }
 
-        return Either.left(new EnchantmentTrade(id, lvl, f.getCount()));
+        return ParsedEnchantmentTrade.success(new EnchantmentTrade(id, lvl, f.getCount()));
     }
 
     public static Pair<String, Integer> fallback(Object tag) {
@@ -282,7 +279,8 @@ public class Minecraft {
         }
     }
 
-    public static void playSound(ClientWorld world, ClientPlayerEntity player) {
+    public static void playNotification(ClientWorld world, ClientPlayerEntity player) {
+        if (!LibrGetter.config.notify) return;
         R.clz(World.class).inst(world).mthd("method_8486/playSound/playSoundClient", double.class, double.class, double.class, SoundEvent.class, SoundCategory.class, float.class, float.class, boolean.class).invk(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.NEUTRAL, 10F, 0.7F, false);
     }
 
@@ -300,13 +298,13 @@ public class Minecraft {
         }
     }
 
-    public static boolean isVillagerUnemployed(VillagerEntity villager) {
+    public static boolean isVillagerEmployed(VillagerEntity villager) {
         VillagerData villagerData = villager.getVillagerData();
         Object prof = C.VillagerProfession.fld("field_17051/NONE").get();
         if (!V.lower("1.21.5")) {
-            return (boolean) C.RegistryEntry.inst(R.clz(VillagerData.class).inst(villagerData).mthd("comp_3521/profession").invk()).mthd("method_40225/matchesKey", C.RegistryKey).invk(prof);
+            return !((boolean) C.RegistryEntry.inst(R.clz(VillagerData.class).inst(villagerData).mthd("comp_3521/profession").invk()).mthd("method_40225/matchesKey", C.RegistryKey).invk(prof));
         } else {
-            return R.clz(VillagerData.class).inst(villagerData).mthd("method_16924/getProfession").invk().equals(prof);
+            return !R.clz(VillagerData.class).inst(villagerData).mthd("method_16924/getProfession").invk().equals(prof);
         }
     }
 
