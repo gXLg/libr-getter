@@ -101,7 +101,7 @@ public class Commands {
         }
     }
 
-    public static void registerCommand() {
+    public static void registerCommands() {
         if (!V.lower("1.19")) {
             R.RClass cb = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
             R.RClass ccm = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandManager");
