@@ -19,6 +19,8 @@ public class Updater {
     private static Pair<String, String> newVersion;
 
     public static void checkUpdates() {
+        if (!LibrGetter.config.checkUpdate) return;
+
         CompletableFuture.runAsync(() -> {
             try {
                 URL url = URI.create("https://api.github.com/repos/gXLg/libr-getter/releases/latest").toURL();

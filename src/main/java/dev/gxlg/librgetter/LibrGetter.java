@@ -32,9 +32,7 @@ public class LibrGetter implements ClientModInitializer {
         Keybinds.registerKeybinds();
 
         // checking for a new update
-        if (config.checkUpdate) {
-            Updater.checkUpdates();
-        }
+        Updater.checkUpdates();
     }
 
     public static String getVersion() {
