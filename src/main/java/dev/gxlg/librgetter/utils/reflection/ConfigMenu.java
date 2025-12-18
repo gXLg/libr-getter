@@ -32,7 +32,7 @@ public class ConfigMenu {
         if (list.isEmpty()) {
             for (int i = 0; i < pageCount; i++) {
                 list.add(null);
-                updatePage(i);
+                updatePage(i); // pre-fill pages
             }
         }
 
