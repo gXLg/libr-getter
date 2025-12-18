@@ -36,7 +36,7 @@ public abstract class Manager {
     @Inject(at = @At("HEAD"), method = "attackBlock", cancellable = true)
     private void attackBlock(CallbackInfoReturnable<Boolean> info, @Local(argsOnly = true) BlockPos pos) {
         if (client.player == null) {
-            Texts.getImpl().sendError(Worker.getSource(), "librgetter.internal", "player");
+            Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "ClientPlayerInteractionManagerMixin#attackBlock");
             return;
         }
         ClientWorld world = Minecraft.getWorld(client.player);
@@ -67,7 +67,7 @@ public abstract class Manager {
         BlockPos pos = hitResult.getBlockPos().offset(hitResult.getSide());
 
         if (client.player == null) {
-            Texts.getImpl().sendError(Worker.getSource(), "librgetter.internal", "player");
+            Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "ClientPlayerInteractionManagerMixin#interactBlock");
             return;
         }
 

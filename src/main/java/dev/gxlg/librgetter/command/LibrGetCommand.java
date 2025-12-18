@@ -8,6 +8,7 @@ import dev.gxlg.librgetter.gui.ConfigScreen;
 import dev.gxlg.librgetter.utils.reflection.Commands;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -37,8 +38,8 @@ public class LibrGetCommand {
         return enchanter(context, false);
     }
 
-    public static int list(CommandContext<?> context) {
-        Texts.getImpl().list(context.getSource());
+    public static int list() {
+        Texts.getImpl().listGoals();
         return 0;
     }
 
@@ -53,7 +54,7 @@ public class LibrGetCommand {
         config.instance().save();
 
         if (!ConfigScreen.configChange()) {
-            Texts.getImpl().sendFeedback(context.getSource(), "librgetter.config", null, config.name(), value);
+            Texts.getImpl().sendTranslatableFeedback("librgetter.config", config.name(), value);
         }
 
         return 0;
@@ -63,12 +64,12 @@ public class LibrGetCommand {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "player");
+            Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "LibrGetCommand#autostart");
             return 1;
         }
         ClientWorld world = client.world;
         if (world == null) {
-            Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "world");
+            Texts.getImpl().sendTranslatableError("librgetter.internal", "world", "LibrGetCommand#autostart");
             return 1;
         }
 
@@ -92,7 +93,7 @@ public class LibrGetCommand {
             if (lec != null) break;
         }
         if (lec == null) {
-            Texts.getImpl().sendError(context.getSource(), "librgetter.find_lectern");
+            Texts.getImpl().sendTranslatableError("librgetter.find_lectern");
             return 1;
         }
         Iterable<Entity> all = world.getEntities();
@@ -110,7 +111,7 @@ public class LibrGetCommand {
             }
         }
         if (vi == null) {
-            Texts.getImpl().sendError(context.getSource(), "librgetter.find_librarian");
+            Texts.getImpl().sendTranslatableError("librgetter.find_librarian");
             return 1;
         }
 
@@ -145,17 +146,17 @@ public class LibrGetCommand {
                 Identifier id = Minecraft.enchantmentId(enchantment);
 
                 if (lvl > enchantment.getMaxLevel() && LibrGetter.config.warning) {
-                    Texts.getImpl().sendFeedback(context.getSource(), "librgetter.level", Formatting.YELLOW, id, enchantment.getMaxLevel());
+                    Texts.getImpl().sendTranslatableWarning("librgetter.level", id, enchantment.getMaxLevel());
                 }
                 int level = lvl;
                 if (lvl == -1) level = enchantment.getMaxLevel();
 
                 if (!Minecraft.canBeTraded(enchantment) && LibrGetter.config.warning) {
-                    Texts.getImpl().sendFeedback(context.getSource(), "librgetter.notrade", Formatting.YELLOW, id);
+                    Texts.getImpl().sendTranslatableWarning("librgetter.notrade", id);
                 }
 
                 if (id == null) {
-                    Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "id");
+                    Texts.getImpl().sendTranslatableError("librgetter.internal", "id", "LibrGetCommand#enchanter");
                     return 1;
                 }
 
@@ -167,12 +168,12 @@ public class LibrGetCommand {
 
                 Identifier enchantment = Identifier.tryParse(custom);
                 if (enchantment == null) {
-                    Texts.getImpl().sendError(context.getSource(), "librgetter.parse");
+                    Texts.getImpl().sendTranslatableError("librgetter.parse");
                     return 1;
                 }
 
                 if (!remove && LibrGetter.config.warning)
-                    Texts.getImpl().sendFeedback(context.getSource(), "librgetter.custom", Formatting.YELLOW, enchantment);
+                    Texts.getImpl().sendTranslatableWarning("librgetter.custom", enchantment);
 
                 Worker.setSource(context.getSource());
                 if (remove) Worker.remove(enchantment.toString(), lvl);
@@ -218,44 +219,45 @@ public class LibrGetCommand {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
         if (world == null) {
-            Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "world");
+            Texts.getImpl().sendTranslatableError("librgetter.internal", "world", "LibrGetCommand#selector");
             return 1;
         }
         ClientPlayerEntity player = client.player;
         if (player == null) {
-            Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "player");
+            Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "LibrGetCommand#selector");
             return 1;
         }
         HitResult hit = client.crosshairTarget;
         if (hit == null) {
-            Texts.getImpl().sendError(context.getSource(), "librgetter.internal", "hit");
+            Texts.getImpl().sendTranslatableError("librgetter.internal", "hit", "LibrGetCommand#selector");
             return 1;
         }
         HitResult.Type hitType = hit.getType();
         if (hitType == HitResult.Type.MISS) {
-            Texts.getImpl().sendError(context.getSource(), "librgetter.nothing");
+            Texts.getImpl().sendTranslatableError("librgetter.nothing");
             return 1;
         }
 
         if (hitType == HitResult.Type.BLOCK) {
             BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
             if (!world.getBlockState(blockPos).isOf(Blocks.LECTERN)) {
-                Texts.getImpl().sendError(context.getSource(), "librgetter.not_lectern");
+                Texts.getImpl().sendTranslatableError("librgetter.not_lectern");
                 return 1;
             }
 
             Worker.setBlock(blockPos);
             Texts.getImpl().sendFeedback(context.getSource(), "librgetter.lectern", null);
+            Texts.getImpl().sendTranslatableFeedback("librgetter.lectern");
 
         } else if (hitType == HitResult.Type.ENTITY) {
             EntityHitResult entityHitResult = (EntityHitResult) hit;
             Entity entity = entityHitResult.getEntity();
             if (!(entity instanceof VillagerEntity villager)) {
-                Texts.getImpl().sendError(context.getSource(), "librgetter.not_villager");
+                Texts.getImpl().sendTranslatableError("librgetter.not_villager");
                 return 1;
             }
             if (!Minecraft.isVillagerLibrarian(villager)) {
-                Texts.getImpl().sendError(context.getSource(), "librgetter.not_librarian");
+                Texts.getImpl().sendTranslatableError("librgetter.not_librarian");
                 return 1;
             }
             Texts.getImpl().sendFeedback(context.getSource(), "librgetter.librarian", null);

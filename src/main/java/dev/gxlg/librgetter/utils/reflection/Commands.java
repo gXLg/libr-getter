@@ -40,7 +40,7 @@ public class Commands {
 
             Optional<?> opt = fromArgument(pred.inst(argument));
             if (opt.isEmpty()) {
-                Texts.getImpl().sendError(context, "librgetter.argument");
+                Texts.getImpl().sendTranslatableError("librgetter.argument");
                 return false;
             }
 
@@ -53,7 +53,7 @@ public class Commands {
             R.RClass entryClass = R.clz("net.minecraft.class_6880$class_6883/net.minecraft.registry.entry.RegistryEntry$Reference");
             if (optrefl.isEmpty()) {
                 if (optrefr.isEmpty()) {
-                    Texts.getImpl().sendError(context, "librgetter.wrong");
+                    Texts.getImpl().sendTranslatableError("librgetter.wrong");
                     return false;
                 }
 
@@ -204,22 +204,22 @@ public class Commands {
             base = then(base, l);
         }
 
-        l = literal(ccm, "clear").executes(LibrGetCommand::clear);
+        l = literal(ccm, "clear").executes(ctx -> LibrGetCommand.clearGoals());
         base = then(base, l);
 
-        l = literal(ccm, "list").executes(LibrGetCommand::list);
+        l = literal(ccm, "list").executes(ctx -> LibrGetCommand.list());
         base = then(base, l);
 
-        l = literal(ccm, "stop").executes(LibrGetCommand::stop);
+        l = literal(ccm, "stop").executes(ctx -> LibrGetCommand.stopWorking());
         base = then(base, l);
 
-        l = literal(ccm, "start").executes(LibrGetCommand::start);
+        l = literal(ccm, "start").executes(ctx -> LibrGetCommand.startWorking());
         base = then(base, l);
 
-        l = literal(ccm, "continue").executes(LibrGetCommand::continueWork);
+        l = literal(ccm, "continue").executes(ctx -> LibrGetCommand.continueWorking());
         base = then(base, l);
 
-        l = literal(ccm, "auto").executes(LibrGetCommand::autostart);
+        l = literal(ccm, "auto").executes(ctx -> LibrGetCommand.autostart());
         base = then(base, l);
 
         // automatically create config commands for each simply configurable value in Config
@@ -239,7 +239,7 @@ public class Commands {
         }
         base = then(base, l);
 
-        Object selector = runner(LibrGetCommand::selector);
+        Object selector = runner(ctx -> LibrGetCommand.selector());
         base = executes(base, selector);
 
         R.clz(CommandDispatcher.class).inst(dispatcher).mthd("register", LiteralArgumentBuilder.class).invk(base);
