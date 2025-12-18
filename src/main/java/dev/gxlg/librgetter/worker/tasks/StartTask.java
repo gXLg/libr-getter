@@ -45,6 +45,6 @@ public class StartTask extends Worker.Task {
         Texts.getImpl().sendTranslatableSuccess("librgetter.start");
         if (resetCounter) newContext = newContext.withResetAttemptsCounter();
 
-        return switchNextTick(new RequestTradesTask(newContext));
+        return switchNextTick(new SelectAndPlaceLecternTask(newContext));
     }
 }
