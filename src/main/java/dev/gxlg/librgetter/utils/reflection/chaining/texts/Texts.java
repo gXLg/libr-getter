@@ -15,7 +15,7 @@ public abstract class Texts {
 
     abstract public void sendFeedback(Object source, String message, Formatting format, Object... args);
 
-    abstract public void sendMessage(ClientPlayerEntity player, String message, Object... args);
+    abstract public void sendTradeLog(ClientPlayerEntity player, String message, Object... args);
 
     abstract public void newVersion(ClientPlayerEntity player, String message, String hover);
 

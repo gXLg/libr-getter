@@ -49,7 +49,7 @@ public class Texts_1_17_0 extends Texts {
     }
 
     @Override
-    public void sendMessage(ClientPlayerEntity player, String message, Object... args) {
+    public void sendTradeLog(ClientPlayerEntity player, String message, Object... args) {
         if (LibrGetter.config.logMode == LogMode.NONE) return;
         boolean ab = LibrGetter.config.logMode == LogMode.ACTIONBAR;
         Object text = translatable(message, args);
