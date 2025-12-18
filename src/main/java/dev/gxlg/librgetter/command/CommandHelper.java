@@ -73,7 +73,7 @@ public class CommandHelper {
         return 0;
     }
 
-    private static void addGoal(String name, int level, int price, boolean custom) {
+    public static void addGoal(String name, int level, int price, boolean custom) {
         EnchantmentTrade newLooking = new EnchantmentTrade(name, level, price);
         EnchantmentTrade already = null;
         for (EnchantmentTrade l : LibrGetter.config.goals) {
@@ -92,7 +92,7 @@ public class CommandHelper {
         LibrGetter.config.save();
     }
 
-    private static void removeGoal(String name, int level) {
+    public static void removeGoal(String name, int level) {
         EnchantmentTrade newLooking = new EnchantmentTrade(name, level, 64);
         EnchantmentTrade already = null;
         for (EnchantmentTrade l : LibrGetter.config.goals) {

@@ -1,9 +1,10 @@
 package dev.gxlg.librgetter.mixin;
 
-import dev.gxlg.librgetter.Worker;
-import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
+import dev.gxlg.librgetter.worker.Worker;
+import dev.gxlg.librgetter.worker.tasks.WaitVillagerLoseProfession;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -30,7 +31,7 @@ public abstract class Manager {
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void tick(CallbackInfo info) {
-        Worker.tick();
+        Worker.work();
     }
 
     @Inject(at = @At("HEAD"), method = "attackBlock", cancellable = true)
@@ -41,11 +42,8 @@ public abstract class Manager {
         }
         ClientWorld world = Minecraft.getWorld(client.player);
         if (!world.getBlockState(pos).isOf(Blocks.LECTERN)) return;
-        for (Worker.State state : new Worker.State[]{Worker.State.MANUAL_WAIT_FINISH, Worker.State.GET_TRADES, Worker.State.PARSE_TRADES, Worker.State.WAIT_VILLAGER_ACCEPT_PROFESSION}) {
-            if (Worker.getState() == state) {
-                info.setReturnValue(false);
-                return;
-            }
+        if (!Worker.getCurrentTask().allowsBreaking()) {
+            info.setReturnValue(false);
         }
     }
 
@@ -71,7 +69,8 @@ public abstract class Manager {
             return;
         }
 
-        if (!pos.equals(Worker.getBlock())) return;
-        if (Worker.getState() == Worker.State.WAIT_VILLAGER_LOSE_PROFESSION) Minecraft.setActionResultFail(info);
+        if (!pos.equals(Worker.getCurrentTask().getTaskContext().selectedLectern())) return;
+        if (Worker.getCurrentTask() instanceof WaitVillagerLoseProfession)
+            Minecraft.setActionResultFail(info);
     }
 }
