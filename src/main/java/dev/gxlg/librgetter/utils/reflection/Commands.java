@@ -74,33 +74,6 @@ public class Commands {
         return true;
     }
 
-    private static @NonNull Optional<?> fromArgument(R.RInstance argument) {
-        Object key;
-        if (!V.lower("1.21")) {
-            key = C.RegistryKeys.fld("field_41265/ENCHANTMENT").get();
-        } else {
-            key = C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_30517/getKey").invk();
-        }
-
-        R.RClass keyCls = C.RegistryKey;
-        return (Optional<?>) argument.mthd("method_45648/tryCast", keyCls).invk(key);
-    }
-
-    private static ArgumentType<?> enchantmentArgument(Object registryAccess) {
-        if (!V.lower("1.19.3")) {
-            Object key;
-            if (!V.lower("1.21")) {
-                key = C.RegistryKeys.fld("field_41265/ENCHANTMENT").get();
-            } else {
-                key = C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_30517/getKey").invk();
-            }
-
-            return (ArgumentType<?>) R.clz("net.minecraft.class_7737/net.minecraft.command.argument.RegistryEntryPredicateArgumentType").mthd("method_45637/registryEntryPredicate", R.clz("net.minecraft.class_7157/net.minecraft.command.CommandRegistryAccess"), C.RegistryKey).invk(registryAccess, key);
-        } else {
-            return (ArgumentType<?>) R.clz("net.minecraft.class_2194/net.minecraft.command.argument.EnchantmentArgumentType/net.minecraft.command.argument.ItemEnchantmentArgumentType").mthd("method_9336/enchantment/itemEnchantment").invk();
-        }
-    }
-
     public static void registerCommands() {
         if (!V.lower("1.19")) {
             R.RClass cb = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
@@ -121,35 +94,11 @@ public class Commands {
         }
     }
 
-    private static ArgumentBuilder<?, ?> literal(R.RClass ccm, String command) {
-        return (ArgumentBuilder<?, ?>) ccm.mthd("literal", String.class).invk(command);
-    }
-
-    private static ArgumentBuilder<?, ?> argument(R.RClass ccm, String command, ArgumentType<?> argumentType) {
-        return (ArgumentBuilder<?, ?>) ccm.mthd("argument", String.class, ArgumentType.class).invk(command, argumentType);
-    }
-
-    private static ArgumentBuilder<?, ?> executes(Object builder, Object cmd) {
-        return (ArgumentBuilder<?, ?>) R.clz(ArgumentBuilder.class).inst(builder).mthd("executes", Command.class).invk(cmd);
-    }
-
-    private static ArgumentBuilder<?, ?> then(Object builder, Object builder2) {
-        return (ArgumentBuilder<?, ?>) R.clz(ArgumentBuilder.class).inst(builder).mthd("then", ArgumentBuilder.class).invk(builder2);
-    }
-
-
-    private static <T> Command<T> runner(Function<CommandContext<T>, Integer> function) {
-        return function::apply;
-    }
-
-    private static <T, U> Command<T> runner(BiFunction<CommandContext<T>, Configurable<U>, Integer> function, Configurable<U> config) {
-        return t -> function.apply(t, config);
-    }
-
-    public static void command(R.RClass ccm, CommandDispatcher<?> dispatcher, Object registryAccess) {
+    private static void command(R.RClass ccm, CommandDispatcher<?> dispatcher, Object registryAccess) {
         Object base = literal(ccm, "librget");
         Object a, l, r, d;
 
+        // add subcommand
         {
             Object add = runner(LibrGetCommand::add);
             l = literal(ccm, "add");
@@ -181,6 +130,8 @@ public class Commands {
 
             base = then(base, l);
         }
+
+        // remove subcommand
         {
             Object remove = runner(LibrGetCommand::remove);
             l = literal(ccm, "remove");
@@ -204,23 +155,26 @@ public class Commands {
             base = then(base, l);
         }
 
-        l = literal(ccm, "clear").executes(ctx -> LibrGetCommand.clearGoals());
-        base = then(base, l);
+        // no-arg subcommands
+        {
+            l = literal(ccm, "clear").executes(ctx -> LibrGetCommand.clearGoals());
+            base = then(base, l);
 
-        l = literal(ccm, "list").executes(ctx -> LibrGetCommand.list());
-        base = then(base, l);
+            l = literal(ccm, "list").executes(ctx -> LibrGetCommand.list());
+            base = then(base, l);
 
-        l = literal(ccm, "stop").executes(ctx -> LibrGetCommand.stopWorking());
-        base = then(base, l);
+            l = literal(ccm, "stop").executes(ctx -> LibrGetCommand.stopWorking());
+            base = then(base, l);
 
-        l = literal(ccm, "start").executes(ctx -> LibrGetCommand.startWorking());
-        base = then(base, l);
+            l = literal(ccm, "start").executes(ctx -> LibrGetCommand.startWorking());
+            base = then(base, l);
 
-        l = literal(ccm, "continue").executes(ctx -> LibrGetCommand.continueWorking());
-        base = then(base, l);
+            l = literal(ccm, "continue").executes(ctx -> LibrGetCommand.continueWorking());
+            base = then(base, l);
 
-        l = literal(ccm, "auto").executes(ctx -> LibrGetCommand.autostart());
-        base = then(base, l);
+            l = literal(ccm, "auto").executes(ctx -> LibrGetCommand.autostart());
+            base = then(base, l);
+        }
 
         // automatically create config commands for each simply configurable value in Config
         l = literal(ccm, "config");
@@ -245,4 +199,55 @@ public class Commands {
         R.clz(CommandDispatcher.class).inst(dispatcher).mthd("register", LiteralArgumentBuilder.class).invk(base);
     }
 
+    private static @NonNull Optional<?> fromArgument(R.RInstance argument) {
+        Object key;
+        if (!V.lower("1.21")) {
+            key = C.RegistryKeys.fld("field_41265/ENCHANTMENT").get();
+        } else {
+            key = C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_30517/getKey").invk();
+        }
+
+        R.RClass keyCls = C.RegistryKey;
+        return (Optional<?>) argument.mthd("method_45648/tryCast", keyCls).invk(key);
+    }
+
+    private static ArgumentType<?> enchantmentArgument(Object registryAccess) {
+        if (!V.lower("1.19.3")) {
+            Object key;
+            if (!V.lower("1.21")) {
+                key = C.RegistryKeys.fld("field_41265/ENCHANTMENT").get();
+            } else {
+                key = C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_30517/getKey").invk();
+            }
+
+            return (ArgumentType<?>) R.clz("net.minecraft.class_7737/net.minecraft.command.argument.RegistryEntryPredicateArgumentType").mthd("method_45637/registryEntryPredicate", R.clz("net.minecraft.class_7157/net.minecraft.command.CommandRegistryAccess"), C.RegistryKey).invk(registryAccess, key);
+        } else {
+            return (ArgumentType<?>) R.clz("net.minecraft.class_2194/net.minecraft.command.argument.EnchantmentArgumentType/net.minecraft.command.argument.ItemEnchantmentArgumentType").mthd("method_9336/enchantment/itemEnchantment").invk();
+        }
+    }
+
+    private static ArgumentBuilder<?, ?> literal(R.RClass ccm, String command) {
+        return (ArgumentBuilder<?, ?>) ccm.mthd("literal", String.class).invk(command);
+    }
+
+    private static ArgumentBuilder<?, ?> argument(R.RClass ccm, String command, ArgumentType<?> argumentType) {
+        return (ArgumentBuilder<?, ?>) ccm.mthd("argument", String.class, ArgumentType.class).invk(command, argumentType);
+    }
+
+    private static ArgumentBuilder<?, ?> executes(Object builder, Object cmd) {
+        return (ArgumentBuilder<?, ?>) R.clz(ArgumentBuilder.class).inst(builder).mthd("executes", Command.class).invk(cmd);
+    }
+
+    private static ArgumentBuilder<?, ?> then(Object builder, Object builder2) {
+        return (ArgumentBuilder<?, ?>) R.clz(ArgumentBuilder.class).inst(builder).mthd("then", ArgumentBuilder.class).invk(builder2);
+    }
+
+
+    private static <T> Command<T> runner(Function<CommandContext<T>, Integer> function) {
+        return function::apply;
+    }
+
+    private static <T, U> Command<T> runner(BiFunction<CommandContext<T>, Configurable<U>, Integer> function, Configurable<U> config) {
+        return t -> function.apply(t, config);
+    }
 }

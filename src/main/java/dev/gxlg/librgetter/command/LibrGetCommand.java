@@ -31,11 +31,11 @@ import java.util.List;
 public class LibrGetCommand {
 
     public static int remove(CommandContext<?> context) {
-        return enchanter(context, true);
+        return CommandHelper.manageGoals(context, true);
     }
 
     public static int add(CommandContext<?> context) {
-        return enchanter(context, false);
+        return CommandHelper.manageGoals(context, false);
     }
 
     public static int list() {
