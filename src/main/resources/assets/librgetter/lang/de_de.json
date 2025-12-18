@@ -1,6 +1,6 @@
 {
   "librgetter.config": "Konfiguration '%s': %s",
-  "librgetter.internal": "Interner Fehler: %s == null, bitte melden Sie den Fehler, damit dieser behoben werden kann",
+  "librgetter.internal": "Interner Fehler: %s == null (%s), bitte melden Sie den Fehler, damit dieser behoben werden kann",
   "librgetter.find_lectern": "Kein Lesepult in der Nähe gefunden!",
   "librgetter.find_librarian": "Kein Bibliothekar in der Nähe gefunden!",
   "librgetter.level": "Level für '%s' über dem Maximum. Höchster Level: %s",

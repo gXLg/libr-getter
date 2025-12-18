@@ -1,6 +1,6 @@
 {
   "librgetter.config": "'%s' cấu hình: %s",
-  "librgetter.internal": "Lỗi nội bộ: %s == null, hãy gửi lại lỗi này để chúng tôi sửa",
+  "librgetter.internal": "Lỗi nội bộ: %s == null (%s), hãy gửi lại lỗi này để chúng tôi sửa",
   "librgetter.find_lectern": "Không thể tìm thấy bục để sách ở gần bạn!",
   "librgetter.find_librarian": "Không thể tìm thấy thủ thư ở gần bạn!",
   "librgetter.level": "Cấp độ cho '%s' vượt quá tối đa. Cấp độ tối đa: %s",

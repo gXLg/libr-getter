@@ -1,6 +1,6 @@
 {
   "librgetter.config": "'%s' コンフィグ: %s",
-  "librgetter.internal": "内部のエラー: %s == null, このエラーを報告してください、だから直せます。",
+  "librgetter.internal": "内部のエラー: %s == null (%s), このエラーを報告してください、だから直せます。",
   "librgetter.find_lectern": "お近くに書見台を見つかりませんでした！",
   "librgetter.find_librarian": "お近くに司書を見つかりませんでした！",
   "librgetter.level": "'%s' のレベルは最大値より大きいです。最大レベル: %s。",
