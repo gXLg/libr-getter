@@ -16,10 +16,10 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
         @Override
         public GoalMatching match(List<EnchantmentTrade> offeredEnchantments) {
             if (offeredEnchantments.isEmpty()) return GoalMatching.noMatch();
-
-            for (EnchantmentTrade l : LibrGetter.config.goals) {
-                if (l.meets(offeredEnchantments.get(0))) {
-                    return GoalMatching.match(List.of(offeredEnchantments.get(0)));
+            EnchantmentTrade firstOffer = offeredEnchantments.get(0);
+            for (EnchantmentTrade goal : LibrGetter.config.goals) {
+                if (goal.meets(firstOffer)) {
+                    return GoalMatching.match(List.of(firstOffer));
                 }
             }
             return GoalMatching.noMatch();
@@ -32,21 +32,21 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
         public GoalMatching match(List<EnchantmentTrade> offeredEnchantments) {
             if (offeredEnchantments.isEmpty()) return GoalMatching.noMatch();
 
-            List<EnchantmentTrade> matched = new ArrayList<>();
+            List<EnchantmentTrade> matchedOffers = new ArrayList<>();
             for (EnchantmentTrade offer : offeredEnchantments) {
-                boolean thisMatch = false;
-                for (EnchantmentTrade l : LibrGetter.config.goals) {
-                    if (l.meets(offer)) {
-                        thisMatch = true;
-                        matched.add(offer);
+                boolean offerMatches = false;
+                for (EnchantmentTrade goal : LibrGetter.config.goals) {
+                    if (goal.meets(offer)) {
+                        offerMatches = true;
+                        matchedOffers.add(offer);
                         break;
                     }
                 }
-                if (!thisMatch) {
+                if (!offerMatches) {
                     return GoalMatching.noMatch();
                 }
             }
-            return GoalMatching.match(matched);
+            return GoalMatching.match(matchedOffers);
         }
     },
 
@@ -54,20 +54,21 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
     ATLEAST {
         @Override
         public GoalMatching match(List<EnchantmentTrade> offeredEnchantments) {
-            List<EnchantmentTrade> matched = new ArrayList<>();
-            Set<EnchantmentTrade> found = new HashSet<>();
+            List<EnchantmentTrade> matchedOffers = new ArrayList<>();
+            Set<EnchantmentTrade> foundGoals = new HashSet<>();
             for (EnchantmentTrade offer : offeredEnchantments) {
-                for (EnchantmentTrade l : LibrGetter.config.goals) {
-                    if (l.meets(offer)) {
-                        found.add(l);
-                        matched.add(offer);
+                for (EnchantmentTrade goal : LibrGetter.config.goals) {
+                    if (goal.meets(offer)) {
+                        matchedOffers.add(offer);
+                        foundGoals.add(goal);
                     }
                 }
             }
-            if (found.size() < Math.min(LibrGetter.config.matchAtLeast, LibrGetter.config.goals.size())) {
+            int matchSize = Math.min(LibrGetter.config.matchAtLeast, LibrGetter.config.goals.size());
+            if (foundGoals.size() < matchSize) {
                 return GoalMatching.noMatch();
             }
-            return GoalMatching.match(matched);
+            return GoalMatching.match(matchedOffers);
         }
     };
 
