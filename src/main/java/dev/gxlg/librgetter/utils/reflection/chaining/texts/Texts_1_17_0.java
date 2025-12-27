@@ -79,7 +79,7 @@ public class Texts_1_17_0 extends Texts {
     }
 
     @Override
-    public void newVersion(String message, String hover) {
+    public void sendNewVersion(String message, String hover) {
         Object text = translatable(message);
         Text hov = Text.of(hover);
         Style style = Style.EMPTY.withHoverEvent(hoverable(hov));
@@ -88,7 +88,7 @@ public class Texts_1_17_0 extends Texts {
     }
 
     @Override
-    public void listGoals() {
+    public void sendListOfGoals() {
         Object text = translatable("librgetter.list");
         Object rem = translatable("librgetter.remove");
         for (EnchantmentTrade l : LibrGetter.config.goals) {

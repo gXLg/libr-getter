@@ -41,7 +41,7 @@ public class Updater {
         // notifying about update
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             if (newVersion != null) {
-                Texts.getImpl().newVersion(newVersion.getLeft(), newVersion.getRight());
+                Texts.getImpl().sendNewVersion(newVersion.getLeft(), newVersion.getRight());
                 newVersion = null;
             }
         });

@@ -25,9 +25,9 @@ public abstract class Texts {
 
     abstract public void sendTradeLog(List<EnchantmentTrade> offeredEnchantments);
 
-    abstract public void newVersion(String message, String hover);
+    abstract public void sendNewVersion(String message, String hover);
 
-    abstract public void listGoals();
+    abstract public void sendListOfGoals();
 
     abstract public Object bookMainPage(Map<String, Integer> categories);
 

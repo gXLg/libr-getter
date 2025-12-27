@@ -32,7 +32,7 @@ public class LibrGetCommand {
     }
 
     public static int list() {
-        Texts.getImpl().listGoals();
+        Texts.getImpl().sendListOfGoals();
         return 0;
     }
 
