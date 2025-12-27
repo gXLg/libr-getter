@@ -31,42 +31,58 @@ public class CommandHelper {
         }
 
         for (Either<Enchantment, String> item : list) {
+            Identifier enchantmentId;
+            int level;
+            boolean custom = false;
+
             if (item.left().isPresent()) {
                 Enchantment enchantment = item.left().get();
-
-                Identifier id = Minecraft.enchantmentId(enchantment);
-
-                if (lvl > enchantment.getMaxLevel() && LibrGetter.config.warning) {
-                    Texts.getImpl().sendTranslatableWarning("librgetter.level", id, enchantment.getMaxLevel());
-                }
-                int level = lvl;
-                if (lvl == -1) level = enchantment.getMaxLevel();
+                enchantmentId = Minecraft.enchantmentId(enchantment);
 
                 if (!Minecraft.canBeTraded(enchantment) && LibrGetter.config.warning) {
-                    Texts.getImpl().sendTranslatableWarning("librgetter.notrade", id);
+                    Texts.getImpl().sendTranslatableWarning("librgetter.notrade", enchantmentId);
                 }
 
-                if (id == null) {
+                int max = enchantment.getMaxLevel();
+                if (lvl > max && LibrGetter.config.warning) {
+                    Texts.getImpl().sendTranslatableWarning("librgetter.level", enchantmentId, enchantment.getMaxLevel());
+                }
+
+                if (lvl == -1) {
+                  // default to the max level for each enchantment
+                  level = max;
+                } else {
+                  level = lvl;
+                }
+
+                if (enchantmentId == null) {
                     Texts.getImpl().sendTranslatableError("librgetter.internal", "id", "LibrGetCommand#enchanter");
                     return 1;
                 }
 
-                if (remove) removeGoal(id.toString(), level);
-                else addGoal(id.toString(), level, price, false);
             } else if (item.right().isPresent()) {
-                String custom = item.right().get();
+                String customId = item.right().get();
+                enchantmentId = Identifier.tryParse(customId);
+                level = lvl;
+                custom = true;
 
-                Identifier enchantment = Identifier.tryParse(custom);
-                if (enchantment == null) {
+                if (enchantmentId == null) {
                     Texts.getImpl().sendTranslatableError("librgetter.parse");
                     return 1;
                 }
 
-                if (!remove && LibrGetter.config.warning)
-                    Texts.getImpl().sendTranslatableWarning("librgetter.custom", enchantment);
+                if (!remove && LibrGetter.config.warning) {
+                    Texts.getImpl().sendTranslatableWarning("librgetter.custom", enchantmentId);
+                }
 
-                if (remove) removeGoal(enchantment.toString(), lvl);
-                else addGoal(enchantment.toString(), lvl, price, true);
+            } else {
+              continue;
+            }
+
+            if (remove) {
+              removeGoal(enchantmentId.toString(), lvl);
+            } else {
+              addGoal(enchantmentId.toString(), lvl, price, custom);
             }
         }
 
