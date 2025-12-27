@@ -13,7 +13,7 @@ public class WaitVillagerAcceptProfessionTask extends Worker.Task {
 
     @Override
     public Worker.TaskSwitch work() {
-        if (Minecraft.isVillagerEmployed(taskContext.selectedVillager())) {
+        if (!Minecraft.isVillagerUnemployed(taskContext.selectedVillager())) {
             if (!Minecraft.isVillagerLibrarian(taskContext.selectedVillager())) {
                 return error("librgetter.pick");
             }

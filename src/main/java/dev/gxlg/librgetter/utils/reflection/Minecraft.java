@@ -298,13 +298,13 @@ public class Minecraft {
         }
     }
 
-    public static boolean isVillagerEmployed(VillagerEntity villager) {
+    public static boolean isVillagerUnemployed(VillagerEntity villager) {
         VillagerData villagerData = villager.getVillagerData();
         Object prof = C.VillagerProfession.fld("field_17051/NONE").get();
         if (!V.lower("1.21.5")) {
-            return !((boolean) C.RegistryEntry.inst(R.clz(VillagerData.class).inst(villagerData).mthd("comp_3521/profession").invk()).mthd("method_40225/matchesKey", C.RegistryKey).invk(prof));
+            return ((boolean) C.RegistryEntry.inst(R.clz(VillagerData.class).inst(villagerData).mthd("comp_3521/profession").invk()).mthd("method_40225/matchesKey", C.RegistryKey).invk(prof));
         } else {
-            return !R.clz(VillagerData.class).inst(villagerData).mthd("method_16924/getProfession").invk().equals(prof);
+            return R.clz(VillagerData.class).inst(villagerData).mthd("method_16924/getProfession").invk().equals(prof);
         }
     }
 

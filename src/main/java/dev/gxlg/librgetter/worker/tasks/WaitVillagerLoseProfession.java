@@ -12,7 +12,7 @@ public class WaitVillagerLoseProfession extends Worker.Task {
     @Override
     public Worker.TaskSwitch work() {
         if (!LibrGetter.config.waitLose) return switchSameTick(new SelectAndPlaceLecternTask(taskContext));
-        if (Minecraft.isVillagerEmployed(taskContext.selectedVillager())) return noSwitch();
+        if (!Minecraft.isVillagerUnemployed(taskContext.selectedVillager())) return noSwitch();
         return switchSameTick(new SelectAndPlaceLecternTask(taskContext));
     }
 
