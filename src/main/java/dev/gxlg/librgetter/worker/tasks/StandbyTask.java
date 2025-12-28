@@ -33,6 +33,7 @@ public class StandbyTask extends Worker.Task {
     }
 
     public void switchTask(Function<Worker.TaskContext, Worker.Task> switcher) {
+        // TODO: centralized exceptions
         if (taskSwitcher != null) throw new IllegalStateException("Can't switch to a task more than once");
         taskSwitcher = switcher;
     }

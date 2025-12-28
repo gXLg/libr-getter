@@ -185,6 +185,7 @@ public class Texts_1_17_0 extends Texts {
             z = literal("");
 
         } else {
+            // TODO: centralized exceptions
             throw new RuntimeException("Unexpected type of configurable!");
         }
 

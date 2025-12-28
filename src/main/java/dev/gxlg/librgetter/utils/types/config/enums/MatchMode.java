@@ -93,6 +93,7 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
         }
 
         public List<EnchantmentTrade> getMatchedEnchantments() {
+            // TODO: centralized exceptions
             if (!match) throw new UnsupportedOperationException("Can't get matched enchantments, since it's not a match");
             return matchedEnchantments;
         }
