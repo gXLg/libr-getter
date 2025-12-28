@@ -88,113 +88,97 @@ public class Commands {
             R.clz("net.fabricmc.fabric.api.event.Event").inst(cb.fld("EVENT").get()).mthd("register", Object.class).invk(listener);
         } else {
             R.RClass ccm = R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
-            command(ccm, (CommandDispatcher<?>) ccm.fld("DISPATCHER").get(), null);
+            registerCommand((CommandDispatcher<?>) ccm.fld("DISPATCHER").get(), null);
         }
     }
 
-    private static void command(R.RClass ccm, CommandDispatcher<?> dispatcher, Object registryAccess) {
-        Object base = literal(ccm, "librget");
-        Object a, l, r, d;
+    private static void registerCommand(CommandDispatcher<?> dispatcher, Object registryAccess) {
+        Object baseCommand = literal("librget");
+
+        Object subCommand;
+
+        // TODO: chained commands instead of re-assigned
 
         // add subcommand
         {
-            Object add = runner(LibrGetCommand::add);
-            l = literal(ccm, "add");
+            Object addRunner = runner(LibrGetCommand::add);
+            subCommand = literal("add");
+            Object enchantmentArgument, levelArgument, priceArgument;
 
-            a = argument(ccm, "enchantment", enchantmentArgument(registryAccess));
-            a = executes(a, add);
+            enchantmentArgument = executes(argument("enchantment", enchantmentArgument(registryAccess)), addRunner);
+            levelArgument = executes(argument("level", IntegerArgumentType.integer(1)), addRunner);
+            priceArgument = executes(argument("maxprice", IntegerArgumentType.integer(1, 64)), addRunner);
+            subCommand = then(subCommand, then(enchantmentArgument, then(levelArgument, priceArgument)));
 
-            r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = executes(r, add);
+            enchantmentArgument = argument("enchantment_custom", enchantmentArgument(registryAccess));
+            enchantmentArgument = executes(argument("enchantment", enchantmentArgument(registryAccess)), addRunner);
+            levelArgument = executes(argument("level", IntegerArgumentType.integer(1)), addRunner);
+            priceArgument = executes(argument("maxprice", IntegerArgumentType.integer(1, 64)), addRunner);
+            subCommand = then(subCommand, then(enchantmentArgument, then(levelArgument, priceArgument)));
 
-            d = argument(ccm, "maxprice", IntegerArgumentType.integer(1, 64));
-            d = executes(d, add);
-
-            r = then(r, d);
-            a = then(a, r);
-            l = then(l, a);
-
-            a = argument(ccm, "enchantment_custom", StringArgumentType.string());
-
-            r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = executes(r, add);
-
-            d = argument(ccm, "maxprice", IntegerArgumentType.integer(1, 64));
-            d = executes(d, add);
-
-            r = then(r, d);
-            a = then(a, r);
-            l = then(l, a);
-
-            base = then(base, l);
+            baseCommand = then(baseCommand, subCommand);
         }
 
         // remove subcommand
         {
-            Object remove = runner(LibrGetCommand::remove);
-            l = literal(ccm, "remove");
+            Object removeRunner = runner(LibrGetCommand::remove);
+            subCommand = literal("remove");
+            Object enchantmentArgument, levelArgument;
 
-            a = argument(ccm, "enchantment", enchantmentArgument(registryAccess));
+            enchantmentArgument = executes(argument("enchantment", enchantmentArgument(registryAccess)), removeRunner);
+            levelArgument = executes(argument("level", IntegerArgumentType.integer(1)), removeRunner);
+            subCommand = then(subCommand, then(enchantmentArgument, levelArgument));
 
-            r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = executes(r, remove);
+            enchantmentArgument = argument("enchantment_custom", enchantmentArgument(registryAccess));
+            levelArgument = executes(argument("level", IntegerArgumentType.integer(1)), removeRunner);
+            subCommand = then(subCommand, then(enchantmentArgument, levelArgument));
 
-            a = then(a, r);
-            l = then(l, a);
-
-            a = argument(ccm, "enchantment_custom", StringArgumentType.string());
-
-            r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = executes(r, remove);
-
-            a = then(a, r);
-            l = then(l, a);
-
-            base = then(base, l);
+            baseCommand = then(baseCommand, subCommand);
         }
 
         // no-arg subcommands
         {
-            l = literal(ccm, "clear").executes(ctx -> LibrGetCommand.clearGoals());
-            base = then(base, l);
+            subCommand = literal("clear").executes(ctx -> LibrGetCommand.clearGoals());
+            baseCommand = then(baseCommand, subCommand);
 
-            l = literal(ccm, "list").executes(ctx -> LibrGetCommand.list());
-            base = then(base, l);
+            subCommand = literal("list").executes(ctx -> LibrGetCommand.list());
+            baseCommand = then(baseCommand, subCommand);
 
-            l = literal(ccm, "stop").executes(ctx -> LibrGetCommand.stopWorking());
-            base = then(base, l);
+            subCommand = literal("stop").executes(ctx -> LibrGetCommand.stopWorking());
+            baseCommand = then(baseCommand, subCommand);
 
-            l = literal(ccm, "start").executes(ctx -> LibrGetCommand.startWorking());
-            base = then(base, l);
+            subCommand = literal("start").executes(ctx -> LibrGetCommand.startWorking());
+            baseCommand = then(baseCommand, subCommand);
 
-            l = literal(ccm, "continue").executes(ctx -> LibrGetCommand.continueWorking());
-            base = then(base, l);
+            subCommand = literal("continue").executes(ctx -> LibrGetCommand.continueWorking());
+            baseCommand = then(baseCommand, subCommand);
 
-            l = literal(ccm, "auto").executes(ctx -> LibrGetCommand.autostart());
-            base = then(base, l);
+            subCommand = literal("auto").executes(ctx -> LibrGetCommand.autostart());
+            baseCommand = then(baseCommand, subCommand);
         }
 
         // automatically create config commands for each simply configurable value in Config
-        l = literal(ccm, "config");
-        for (Configurable<?> configurable : LibrGetter.config.getConfigurables()) {
-            String name = configurable.name();
-            a = literal(ccm, name);
-            r = argument(ccm, "value", configurable.argument());
+        {
+          subCommand = literal("config");
+          for (Configurable<?> configurable : LibrGetter.config.getConfigurables()) {
+              String name = configurable.name();
+              Object configRunner = runner(LibrGetCommand::config, configurable);
 
-            Object runner = runner(LibrGetCommand::config, configurable);
+              Object configArgument = executes(literal(name), configRunner);
+              Object valueArgument = executes(argument("value", configurable.argument()), configRunner);
 
-            r = executes(r, runner);
-            a = then(a, r);
-            a = executes(a, runner);
-
-            l = then(l, a);
+              subCommand = then(subCommand, then(configArgument, valueArgument));
+          }
+          baseCommand = then(baseCommand, subCommand);
         }
-        base = then(base, l);
 
-        Object selector = runner(ctx -> LibrGetCommand.selector());
-        base = executes(base, selector);
+        // selector
+        {
+          Object selectRunner = runner(ctx -> LibrGetCommand.selector());
+          baseCommand = executes(baseCommand, selectRunner);
+        }
 
-        R.clz(CommandDispatcher.class).inst(dispatcher).mthd("register", LiteralArgumentBuilder.class).invk(base);
+        R.clz(CommandDispatcher.class).inst(dispatcher).mthd("register", LiteralArgumentBuilder.class).invk(baseCommand);
     }
 
     private static @NonNull Optional<?> fromArgument(R.RInstance argument) {
