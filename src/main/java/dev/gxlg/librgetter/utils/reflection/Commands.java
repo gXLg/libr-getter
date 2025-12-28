@@ -77,12 +77,10 @@ public class Commands {
     public static void registerCommands() {
         if (!V.lower("1.19")) {
             R.RClass cb = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
-            R.RClass ccm = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandManager");
-
             Object listener = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{cb.self()}, (proxy, method, args) -> {
                 if (method.getName().equals("register")) {
                     Object registryAccess = args[1];
-                    command(ccm, (CommandDispatcher<?>) args[0], registryAccess);
+                    registerCommand((CommandDispatcher<?>) args[0], registryAccess);
                     return null;
                 }
                 return method.invoke(proxy, args);
@@ -226,12 +224,12 @@ public class Commands {
         }
     }
 
-    private static ArgumentBuilder<?, ?> literal(R.RClass ccm, String command) {
-        return (ArgumentBuilder<?, ?>) ccm.mthd("literal", String.class).invk(command);
+    private static ArgumentBuilder<?, ?> literal(String command) {
+        return (ArgumentBuilder<?, ?>) getClientCommandManager().mthd("literal", String.class).invk(command);
     }
 
-    private static ArgumentBuilder<?, ?> argument(R.RClass ccm, String command, ArgumentType<?> argumentType) {
-        return (ArgumentBuilder<?, ?>) ccm.mthd("argument", String.class, ArgumentType.class).invk(command, argumentType);
+    private static ArgumentBuilder<?, ?> argument(String command, ArgumentType<?> argumentType) {
+        return (ArgumentBuilder<?, ?>) getClientCommandManager().mthd("argument", String.class, ArgumentType.class).invk(command, argumentType);
     }
 
     private static ArgumentBuilder<?, ?> executes(Object builder, Object cmd) {
@@ -249,5 +247,13 @@ public class Commands {
 
     private static <T, U> Command<T> runner(BiFunction<CommandContext<T>, Configurable<U>, Integer> function, Configurable<U> config) {
         return t -> function.apply(t, config);
+    }
+
+    private static R.RClass getClientCommandManager() {
+        if (!V.lower("1.19")) {
+            return R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandManager");
+        } else {
+            return R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
+        }
     }
 }
