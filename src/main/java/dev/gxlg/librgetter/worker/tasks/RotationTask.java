@@ -14,20 +14,20 @@ import java.util.Random;
 public class RotationTask extends Worker.Task {
     private static final Random rng = new Random();
 
-    private final Vec3d goalRotation;
-    private final Vec3d targetPos;
+    private final Vec3d absoluteTarget;
+    private final Vec3d relativeTarget;
     private final Worker.Task nextTask;
 
     public RotationTask(Worker.TaskContext taskContext, ClientPlayerEntity player, Vec3d target, Worker.Task nextTask) {
         super(taskContext);
 
-        Vec3d vec3d = EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(player);
-        double d = target.getX() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.x;
-        double e = target.getY() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.y;
-        double f = target.getZ() + (rng.nextFloat() - 0.5F) * 0.4F - vec3d.z;
+        Vec3d origin = EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(player);
+        double relativeX = target.getX() + (rng.nextFloat() - 0.5F) * 0.4F - origin.x;
+        double relativeY = target.getY() + (rng.nextFloat() - 0.5F) * 0.4F - origin.y;
+        double relativeZ = target.getZ() + (rng.nextFloat() - 0.5F) * 0.4F - origin.z;
 
-        this.targetPos = target;
-        this.goalRotation = new Vec3d(d, e, f);
+        this.absoluteTarget = target;
+        this.relativeTarget = new Vec3d(relativeX, relativeY, relativeZ);
         this.nextTask = nextTask;
     }
 
@@ -40,16 +40,16 @@ public class RotationTask extends Worker.Task {
         if (player == null) return internalError("player");
 
         if (LibrGetter.config.rotationMode == RotationMode.INSTANT) {
-            player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, targetPos);
+            player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, absoluteTarget);
             return switchSameTick(nextTask);
         }
 
-        double d = goalRotation.getX();
-        double e = goalRotation.getY();
-        double f = goalRotation.getZ();
-        double g = Math.sqrt(d * d + f * f);
-        float goalPitch = MathHelper.wrapDegrees((float) (-(MathHelper.atan2(e, g) * 180.0D / Math.PI)));
-        float goalYaw = MathHelper.wrapDegrees((float) (MathHelper.atan2(f, d) * 180.0D / Math.PI) - 90.0F);
+        double relativeX = relativeTarget.getX();
+        double relativeY = relativeTarget.getY();
+        double relativeZ = relativeTarget.getZ();
+        double distance = Math.hypot(relativeX, relativeZ);
+        float goalPitch = MathHelper.wrapDegrees((float) (-(MathHelper.atan2(relativeY, distance) * 180.0D / Math.PI)));
+        float goalYaw = MathHelper.wrapDegrees((float) (MathHelper.atan2(relativeZ, relativeX) * 180.0D / Math.PI) - 90.0F);
 
         float currentYaw = player.getYaw();
         float currentPitch = player.getPitch();
