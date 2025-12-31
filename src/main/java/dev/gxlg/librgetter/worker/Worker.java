@@ -14,6 +14,7 @@ public class Worker {
 
     public static void work() {
         while (true) {
+            // TODO: ~~error~~ -> exceptions, handle here
             TaskSwitch taskSwitch = currentTask.work();
             currentTask = taskSwitch.nextTask();
             if (taskSwitch.tickBehaviour() == TaskSwitch.TickBehaviour.NEXT_TICK) break;
