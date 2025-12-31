@@ -45,7 +45,6 @@ public class SelectAndPlaceLecternTask extends Worker.Task {
                             new WaitVillagerAcceptProfessionTask(taskContext)
                     )
             );
-
         }
 
         if (LibrGetter.config.manual) return noSwitch();

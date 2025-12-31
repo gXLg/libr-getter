@@ -7,6 +7,7 @@ import dev.gxlg.librgetter.worker.Worker;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
@@ -45,6 +46,13 @@ public class StartTask extends Worker.Task {
         Texts.getImpl().sendTranslatableSuccess("librgetter.start");
         if (resetCounter) newContext = newContext.withResetAttemptsCounter();
 
-        return switchNextTick(new SelectAndPlaceLecternTask(newContext));
+        return switchNextTick(
+                new RotationTask(
+                        newContext,
+                        player,
+                        EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(taskContext.selectedVillager()),
+                        new WaitVillagerAcceptProfessionTask(taskContext)
+                )
+        );
     }
 }
