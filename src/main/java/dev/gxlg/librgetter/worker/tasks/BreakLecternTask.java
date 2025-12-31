@@ -22,7 +22,7 @@ public class BreakLecternTask extends Worker.Task {
         BlockState targetBlock = world.getBlockState(taskContext.selectedLectern());
         if (targetBlock.isAir()) {
             // lectern is broken now
-            return switchSameTick(new WaitVillagerLoseProfession(taskContext.withIncreasedAttemptsCounter()));
+            return switchSameTick(new WaitVillagerLoseProfessionTask(taskContext.withIncreasedAttemptsCounter()));
         }
 
         if (LibrGetter.config.manual) return noSwitch();
