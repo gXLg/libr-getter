@@ -9,13 +9,14 @@ on:
       - "build.gradle"
       - "MultiVersion"
       - ".gitmodules"
+      - ".github/workflows/build.yml"
     tags-ignore: ["**"]
 
 jobs:
   lint-and-build:
     permissions:
       contents: write
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
