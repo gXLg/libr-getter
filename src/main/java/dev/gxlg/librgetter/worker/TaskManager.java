@@ -43,10 +43,10 @@ public class TaskManager {
             } catch (StopTaskSignal signal) {
                 signal.switchTask();
             }
-        } while (handleUpdates());
+        } while (updateContextAndTaskAndReturnIsNextTick());
     }
 
-    private static boolean handleUpdates() {
+    private static boolean updateContextAndTaskAndReturnIsNextTick() {
         Function<TaskContext, TaskSwitch> taskSwitcher = taskSwitcherReference.getAndSet(null);
         while (!contextUpdates.isEmpty()) {
             try {
