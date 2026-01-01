@@ -4,7 +4,7 @@ import dev.gxlg.librgetter.multiversion.R;
 import dev.gxlg.librgetter.multiversion.V;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("ClassCanBeRecord") // GSON can't handle records in earlier versions
 public class EnchantmentTrade {
@@ -30,7 +30,7 @@ public class EnchantmentTrade {
     }
 
     @Override
-    public @NonNull String toString() {
+    public @NotNull String toString() {
         Identifier iid = Identifier.tryParse(id);
         if (iid == null) return id + " " + lvl;
         Language lang = Language.getInstance();

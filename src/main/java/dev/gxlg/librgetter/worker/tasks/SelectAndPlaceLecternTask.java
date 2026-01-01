@@ -2,7 +2,10 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
-import dev.gxlg.librgetter.worker.Worker;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
+import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -19,39 +22,34 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
-public class SelectAndPlaceLecternTask extends Worker.Task {
-    public SelectAndPlaceLecternTask(Worker.TaskContext taskContext) {
-        super(taskContext);
-    }
-
+public class SelectAndPlaceLecternTask extends TaskManager.Task {
     @Override
-    public Worker.TaskSwitch work() {
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) return internalError("player");
+        if (player == null) throw new InternalTaskException("player", this);
         ClientWorld world = Minecraft.getWorld(player);
 
-        if (!taskContext.selectedLectern().isWithinDistance(player.getBlockPos(), 3.4f)) {
-            return error("librgetter.far");
-        }
+        if (!taskContext.selectedLectern().isWithinDistance(player.getBlockPos(), 3.4f))
+            throw new TaskException("librgetter.far");
 
         if (world.getBlockState(taskContext.selectedLectern()).isOf(Blocks.LECTERN)) {
             // the lectern is placed down now
-            return switchSameTick(
+            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(
                     new RotationTask(
-                            taskContext,
                             player,
-                            EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(taskContext.selectedVillager()),
-                            new WaitVillagerAcceptProfessionTask(taskContext)
-                    )
-            );
+                            EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(ctx.selectedVillager()),
+                            new WaitVillagerAcceptProfessionTask()
+                    ),
+                    ctx
+            ));
         }
 
-        if (LibrGetter.config.manual) return noSwitch();
+        if (LibrGetter.config.manual) return;
 
         // select
         PlayerInventory inventory = player.getInventory();
-        if (inventory == null) return internalError("inventory");
+        if (inventory == null) throw new InternalTaskException("inventory", this);
 
         int slot;
         boolean mainhand = true;
@@ -60,12 +58,12 @@ public class SelectAndPlaceLecternTask extends Worker.Task {
         } else {
             slot = inventory.getSlotWithStack(Items.LECTERN.getDefaultStack());
         }
-        if (slot == -1) return noSwitch();
+        if (slot == -1) return;
 
         ClientPlayerInteractionManager manager = client.interactionManager;
-        if (manager == null) return internalError("manager");
+        if (manager == null) throw new InternalTaskException("manager", this);
         ClientPlayNetworkHandler handler = client.getNetworkHandler();
-        if (handler == null) return internalError("handler");
+        if (handler == null) throw new InternalTaskException("handler", this);
 
         if (slot != PlayerInventory.OFF_HAND_SLOT) {
             if (LibrGetter.config.offhand) {
@@ -91,6 +89,10 @@ public class SelectAndPlaceLecternTask extends Worker.Task {
         Vec3d lowBlockPos = taskContext.selectedLectern().toBottomCenterPos();
         BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, taskContext.selectedLectern().down(), false);
         Minecraft.interactBlock(manager, player, lowBlock, mainhand);
-        return noSwitch();
+    }
+
+    @Override
+    public boolean allowsPlacing() {
+        return true;
     }
 }

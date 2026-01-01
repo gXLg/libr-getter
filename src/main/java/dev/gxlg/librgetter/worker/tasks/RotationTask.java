@@ -2,7 +2,9 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.types.config.enums.RotationMode;
-import dev.gxlg.librgetter.worker.Worker;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
@@ -11,16 +13,14 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.Random;
 
-public class RotationTask extends Worker.Task {
+public class RotationTask extends TaskManager.Task {
     private static final Random rng = new Random();
 
     private final Vec3d absoluteTarget;
     private final Vec3d relativeTarget;
-    private final Worker.Task nextTask;
+    private final TaskManager.Task nextTask;
 
-    public RotationTask(Worker.TaskContext taskContext, ClientPlayerEntity player, Vec3d target, Worker.Task nextTask) {
-        super(taskContext);
-
+    public RotationTask(ClientPlayerEntity player, Vec3d target, TaskManager.Task nextTask) {
         Vec3d origin = EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(player);
         double relativeX = target.getX() + (rng.nextFloat() - 0.5F) * 0.4F - origin.x;
         double relativeY = target.getY() + (rng.nextFloat() - 0.5F) * 0.4F - origin.y;
@@ -32,16 +32,17 @@ public class RotationTask extends Worker.Task {
     }
 
     @Override
-    public Worker.TaskSwitch work() {
-        if (LibrGetter.config.manual || LibrGetter.config.rotationMode == RotationMode.NONE) return switchSameTick(nextTask);
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+        if (LibrGetter.config.manual || LibrGetter.config.rotationMode == RotationMode.NONE)
+            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(nextTask, ctx));
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) return internalError("player");
+        if (player == null) throw new InternalTaskException("player", this);
 
         if (LibrGetter.config.rotationMode == RotationMode.INSTANT) {
             player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, absoluteTarget);
-            return switchSameTick(nextTask);
+            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(nextTask, ctx));
         }
 
         double relativeX = relativeTarget.getX();
@@ -68,6 +69,7 @@ public class RotationTask extends Worker.Task {
         player.setYaw(newYaw);
         player.setHeadYaw(player.getYaw());
 
-        return (Math.abs(pitchDelta) < 0.8F && Math.abs(yawDelta) < 0.8F) ? switchSameTick(nextTask) : noSwitch();
+        if (Math.abs(pitchDelta) < 0.8F && Math.abs(yawDelta) < 0.8F)
+            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(nextTask, ctx));
     }
 }

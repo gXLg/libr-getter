@@ -3,7 +3,7 @@ package dev.gxlg.librgetter.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
-import dev.gxlg.librgetter.worker.Worker;
+import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -30,7 +30,7 @@ public abstract class Manager {
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void tick(CallbackInfo info) {
-        Worker.work();
+        TaskManager.work();
     }
 
     @Inject(at = @At("HEAD"), method = "attackBlock", cancellable = true)
@@ -41,7 +41,7 @@ public abstract class Manager {
         }
         ClientWorld world = Minecraft.getWorld(client.player);
         if (!world.getBlockState(pos).isOf(Blocks.LECTERN)) return;
-        if (!Worker.getCurrentTask().allowsBreaking()) {
+        if (!TaskManager.getCurrentTask().allowsBreaking()) {
             info.setReturnValue(false);
         }
     }
@@ -68,8 +68,8 @@ public abstract class Manager {
             return;
         }
 
-        if (!pos.equals(Worker.getCurrentTask().getTaskContext().selectedLectern())) return;
-        if (!Worker.getCurrentTask().allowsPlacing())
+        if (!pos.equals(TaskManager.getTaskContext().selectedLectern())) return;
+        if (!TaskManager.getCurrentTask().allowsPlacing())
             Minecraft.setActionResultFail(info);
     }
 }

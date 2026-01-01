@@ -1,36 +1,17 @@
 package dev.gxlg.librgetter.worker.tasks;
 
-import dev.gxlg.librgetter.utils.reflection.Support;
-import dev.gxlg.librgetter.worker.Worker;
-import net.minecraft.village.TradeOfferList;
-import org.jetbrains.annotations.Nullable;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
+import dev.gxlg.librgetter.worker.TaskManager;
 
-public class WaitTradesTask extends Worker.Task {
-    @Nullable
-    private TradeOfferList offers = null;
-    private boolean canRefresh = true;
-
-    public WaitTradesTask(Worker.TaskContext taskContext) {
-        super(taskContext);
-    }
-
+public class WaitTradesTask extends TaskManager.Task {
     @Override
-    public Worker.TaskSwitch work() {
-        if (!canRefresh) return error("librgetter.update");
-        if (offers != null) return switchSameTick(new ParseAndMatchTradesTask(taskContext, offers));
-        return noSwitch();
-    }
-
-    @Override
-    public boolean shouldCloseScreen() {
-        return !Support.useTradeCycling();
-    }
-
-    public void setOffers(@Nullable TradeOfferList offers) {
-        this.offers = offers;
-    }
-
-    public void setNoRefresh() {
-        canRefresh = false;
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+        if (taskContext.tradeOfferData() == null) return;
+        if (!taskContext.tradeOfferData().canRefresh()) throw new TaskException("librgetter.update");
+        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(
+                new ParseAndMatchTradesTask(ctx.tradeOfferData().getTradeOfferList()),
+                ctx.withTradeOfferData(null)
+        ));
     }
 }

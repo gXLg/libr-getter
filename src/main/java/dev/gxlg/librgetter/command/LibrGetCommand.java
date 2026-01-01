@@ -6,8 +6,7 @@ import dev.gxlg.librgetter.gui.ConfigScreen;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import dev.gxlg.librgetter.worker.Worker;
-import dev.gxlg.librgetter.worker.tasks.StandbyTask;
+import dev.gxlg.librgetter.worker.TaskManager;
 import dev.gxlg.librgetter.worker.tasks.StartTask;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -54,7 +53,7 @@ public class LibrGetCommand {
     }
 
     public static int autostart() {
-        if (!(Worker.getCurrentTask() instanceof StandbyTask standbyTask)) {
+        if (TaskManager.isWorking()) {
             Texts.getImpl().sendTranslatableError("librgetter.running");
             return 1;
         }
@@ -115,7 +114,7 @@ public class LibrGetCommand {
 
         BlockPos finalLec = lec;
         VillagerEntity finalVi = vi;
-        standbyTask.switchTask(ctx -> new StartTask(ctx.withLectern(finalLec).withVillager(finalVi), true));
+        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(true), ctx.withLectern(finalLec).withVillager(finalVi)));
 
         return 0;
     }
@@ -128,32 +127,30 @@ public class LibrGetCommand {
     }
 
     public static int stopWorking() {
-        Worker.stop();
+        TaskManager.stop();
         return 0;
     }
 
     public static int startWorking() {
-        if (!(Worker.getCurrentTask() instanceof StandbyTask standbyTask)) {
+        if (TaskManager.isWorking()) {
             Texts.getImpl().sendTranslatableError("librgetter.running");
             return 1;
         }
-        standbyTask.switchTask(ctx -> new StartTask(ctx, true));
-
+        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(true), ctx));
         return 0;
     }
 
     public static int continueWorking() {
-        if (!(Worker.getCurrentTask() instanceof StandbyTask standbyTask)) {
+        if (TaskManager.isWorking()) {
             Texts.getImpl().sendTranslatableError("librgetter.running");
             return 1;
         }
-        standbyTask.switchTask(ctx -> new StartTask(ctx, false));
-
+        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(false), ctx));
         return 0;
     }
 
     public static int selector() {
-        if (!(Worker.getCurrentTask() instanceof StandbyTask standbyTask)) {
+        if (TaskManager.isWorking()) {
             Texts.getImpl().sendTranslatableError("librgetter.running");
             return 1;
         }
@@ -187,7 +184,7 @@ public class LibrGetCommand {
                 return 1;
             }
 
-            standbyTask.updateContext(ctx -> ctx.withLectern(blockPos));
+            TaskManager.updateContext(ctx -> ctx.withLectern(blockPos));
             Texts.getImpl().sendTranslatableFeedback("librgetter.lectern");
 
         } else if (hitType == HitResult.Type.ENTITY) {
@@ -202,7 +199,7 @@ public class LibrGetCommand {
                 return 1;
             }
 
-            standbyTask.updateContext(ctx -> ctx.withVillager(villager));
+            TaskManager.updateContext(ctx -> ctx.withVillager(villager));
             Texts.getImpl().sendTranslatableFeedback("librgetter.librarian");
         }
 

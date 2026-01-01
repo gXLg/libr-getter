@@ -4,7 +4,6 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -17,7 +16,7 @@ import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.enchantment.Enchantment;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Proxy;
 import java.util.List;
@@ -111,7 +110,6 @@ public class Commands {
             subCommand = then(subCommand, then(enchantmentArgument, then(levelArgument, priceArgument)));
 
             enchantmentArgument = argument("enchantment_custom", enchantmentArgument(registryAccess));
-            enchantmentArgument = executes(argument("enchantment", enchantmentArgument(registryAccess)), addRunner);
             levelArgument = executes(argument("level", IntegerArgumentType.integer(1)), addRunner);
             priceArgument = executes(argument("maxprice", IntegerArgumentType.integer(1, 64)), addRunner);
             subCommand = then(subCommand, then(enchantmentArgument, then(levelArgument, priceArgument)));
@@ -181,7 +179,7 @@ public class Commands {
         R.clz(CommandDispatcher.class).inst(dispatcher).mthd("register", LiteralArgumentBuilder.class).invk(baseCommand);
     }
 
-    private static @NonNull Optional<?> fromArgument(R.RInstance argument) {
+    private static @NotNull Optional<?> fromArgument(R.RInstance argument) {
         Object key;
         if (!V.lower("1.21")) {
             key = C.RegistryKeys.fld("field_41265/ENCHANTMENT").get();

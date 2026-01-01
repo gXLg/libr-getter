@@ -17,13 +17,13 @@ public class ParsedEnchantmentTrade {
 
     public EnchantmentTrade getTrade() {
         // TODO: centralized exceptions
-        if (isError) throw new UnsupportedOperationException("Can't get the trade from an errored parse");
+        if (isError) throw new IllegalStateException("Can't get the trade from an errored parse");
         return contents.left().orElseThrow();
     }
 
     public String[] getError() {
         // TODO: centralized exceptions
-        if (!isError) throw new UnsupportedOperationException("Can't get the error from a successfull parse");
+        if (!isError) throw new IllegalStateException("Can't get the error from a successfull parse");
         return contents.right().orElseThrow();
     }
 

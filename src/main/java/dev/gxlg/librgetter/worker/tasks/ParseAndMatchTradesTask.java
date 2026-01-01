@@ -8,28 +8,31 @@ import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.ParsedEnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.enums.MatchMode;
-import dev.gxlg.librgetter.worker.Worker;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
+import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOfferList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ParseAndMatchTradesTask extends Worker.Task {
+public class ParseAndMatchTradesTask extends TaskManager.Task {
     private final TradeOfferList offers;
 
-    public ParseAndMatchTradesTask(Worker.TaskContext taskContext, TradeOfferList trades) {
-        super(taskContext);
+    public ParseAndMatchTradesTask(TradeOfferList trades) {
         this.offers = trades;
     }
 
     @Override
-    public Worker.TaskSwitch work() {
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) return internalError("player");
+        if (player == null) throw new InternalTaskException("player", this);
 
         List<EnchantmentTrade> offeredEnchantments = new ArrayList<>();
         for (int i = 0; i < offers.size(); i++) {
@@ -41,7 +44,7 @@ public class ParseAndMatchTradesTask extends Worker.Task {
                 String[] ret = parsed.getError();
                 Object[] args = new String[ret.length - 1];
                 System.arraycopy(ret, 1, args, 0, ret.length - 1);
-                return error(ret[0], (String[]) args);
+                throw new TaskException(ret[0], (String[]) args);
             }
             offeredEnchantments.add(parsed.getTrade());
             if (LibrGetter.config.matchMode == MatchMode.VANILLA) break;
@@ -49,9 +52,10 @@ public class ParseAndMatchTradesTask extends Worker.Task {
         Texts.getImpl().sendTradeLog(offeredEnchantments);
         MatchMode.GoalMatching matching = LibrGetter.config.matchMode.match(offeredEnchantments);
         if (!matching.isMatch()) {
-            return Support.useTradeCycling() ?
-                    switchNextTick(new TradeCyclingClickTask(taskContext)) :
-                    switchSameTick(new SelectAxeTask(taskContext));
+            throw new StopTaskSignal(ctx -> Support.useTradeCycling() ?
+                    TaskManager.TaskSwitch.nextTick(new TradeCyclingClickTask(), ctx) :
+                    TaskManager.TaskSwitch.sameTick(new SelectAxeTask(), ctx)
+            );
         }
 
         Minecraft.playNotification(Minecraft.getWorld(player), player);
@@ -63,7 +67,7 @@ public class ParseAndMatchTradesTask extends Worker.Task {
             matching.getMatchedEnchantments().forEach(e -> CommandHelper.removeGoal(e.id(), e.lvl()));
         }
 
-        return switchSameTick(new FinalizeSearchTask(taskContext, offers));
+        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new FinalizeSearchTask(offers), ctx));
     }
 
     private boolean isEnchantmentTrade(TradeOffer offer) {

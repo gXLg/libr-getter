@@ -2,7 +2,9 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
-import dev.gxlg.librgetter.worker.Worker;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -14,21 +16,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.screen.slot.SlotActionType;
 
-public class SelectAxeTask extends Worker.Task {
-    public SelectAxeTask(Worker.TaskContext taskContext) {
-        super(taskContext);
-    }
-
+public class SelectAxeTask extends TaskManager.Task {
     @Override
-    public Worker.TaskSwitch work() {
-        if (LibrGetter.config.manual) return switchSameTick(new BreakLecternTask(taskContext));
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+        if (LibrGetter.config.manual)
+            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new BreakLecternTask(), ctx));
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) return internalError("player");
-
+        if (player == null) throw new InternalTaskException("player", this);
         PlayerInventory inventory = player.getInventory();
-        if (inventory == null) return internalError("inventory");
+        if (inventory == null) throw new InternalTaskException("inventory", this);
 
         int slot = -1;
         if (LibrGetter.config.autoTool) {
@@ -57,10 +55,10 @@ public class SelectAxeTask extends Worker.Task {
         }
         if (slot != -1) {
             ClientPlayerInteractionManager manager = client.interactionManager;
-            if (manager == null) return internalError("manager");
+            if (manager == null)  throw new InternalTaskException("manager", this);
 
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
-            if (handler == null) return internalError("handler");
+            if (handler == null)  throw new InternalTaskException("handler", this);
 
             if (!PlayerInventory.isValidHotbarIndex(slot)) {
                 int syncId = player.playerScreenHandler.syncId;
@@ -73,13 +71,13 @@ public class SelectAxeTask extends Worker.Task {
             Minecraft.getConnection(handler).send(packetSelect);
         }
 
-        return switchSameTick(
+        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(
                 new RotationTask(
-                        taskContext,
                         player,
-                        taskContext.selectedLectern().toCenterPos(),
-                        new BreakLecternTask(taskContext)
-                )
-        );
+                        ctx.selectedLectern().toCenterPos(),
+                        new BreakLecternTask()
+                ),
+                ctx
+        ));
     }
 }

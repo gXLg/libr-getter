@@ -1,21 +1,19 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.utils.reflection.Support;
-import dev.gxlg.librgetter.worker.Worker;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopCyclingSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 
-public class TradeCyclingClickTask extends Worker.Task {
-    public TradeCyclingClickTask(Worker.TaskContext taskContext) {
-        super(taskContext);
-    }
-
+public class TradeCyclingClickTask extends TaskManager.Task {
     @Override
-    public Worker.TaskSwitch work() {
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
         MinecraftClient client = MinecraftClient.getInstance();
         Screen s = client.currentScreen;
-        if (s == null) return finish();
+        if (s == null) throw new StopCyclingSignal();
         Support.sendCycleTradesPacket();
-        return switchSameTick(new WaitTradesTask(taskContext.withIncreasedAttemptsCounter()));
+        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx.withIncreasedAttemptsCounter()));
     }
 }

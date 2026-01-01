@@ -2,28 +2,25 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
-import dev.gxlg.librgetter.worker.Worker;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
+import dev.gxlg.librgetter.worker.TaskManager;
 
-public class WaitVillagerAcceptProfessionTask extends Worker.Task {
+public class WaitVillagerAcceptProfessionTask extends TaskManager.Task {
     private int timeout = 0;
 
-    public WaitVillagerAcceptProfessionTask(Worker.TaskContext taskContext) {
-        super(taskContext);
-    }
-
     @Override
-    public Worker.TaskSwitch work() {
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
         if (!Minecraft.isVillagerUnemployed(taskContext.selectedVillager())) {
-            if (!Minecraft.isVillagerLibrarian(taskContext.selectedVillager())) {
-                return error("librgetter.pick");
-            }
-            return switchSameTick(new RequestTradesTask(taskContext));
+            if (!Minecraft.isVillagerLibrarian(taskContext.selectedVillager()))
+                throw new TaskException("librgetter.pick");
+            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RequestTradesTask(), ctx));
         }
         if (LibrGetter.config.timeout != 0) {
             timeout++;
             // break and place the lectern again after a timeout
-            if (timeout >= LibrGetter.config.timeout * 20) return switchSameTick(new BreakLecternTask(taskContext));
+            if (timeout >= LibrGetter.config.timeout * 20)
+                throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new SelectAxeTask(), ctx));
         }
-        return noSwitch();
     }
 }

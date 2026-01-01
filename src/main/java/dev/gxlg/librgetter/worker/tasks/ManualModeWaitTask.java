@@ -1,14 +1,9 @@
 package dev.gxlg.librgetter.worker.tasks;
 
-import dev.gxlg.librgetter.worker.Worker;
+import dev.gxlg.librgetter.worker.TaskManager;
 
-public class ManualModeWaitTask extends Worker.Task {
-    public ManualModeWaitTask(Worker.TaskContext taskContext) {
-        super(taskContext);
-    }
-
+public class ManualModeWaitTask extends TaskManager.Task {
     @Override
-    public Worker.TaskSwitch work() {
-        return noSwitch();
+    public void work(TaskManager.TaskContext taskContext) {
     }
 }
