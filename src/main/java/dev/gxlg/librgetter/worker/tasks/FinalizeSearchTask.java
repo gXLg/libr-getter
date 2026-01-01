@@ -30,7 +30,7 @@ public class FinalizeSearchTask extends TaskManager.Task {
         ClientPlayerEntity player = client.player;
         if (player == null) throw new InternalTaskException("player", this);
 
-        if (!Support.useTradeCycling()) {
+        if (!Support.isUsingTradeCycling()) {
             // TradeCycling process keeps the screen open, else we have to open it again
             ClientPlayerInteractionManager manager = client.interactionManager;
             if (manager == null) throw new InternalTaskException("manager", this);

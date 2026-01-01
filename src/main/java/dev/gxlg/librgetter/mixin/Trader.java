@@ -31,7 +31,7 @@ public class Trader {
     @Inject(at = @At("HEAD"), method = "onOpenScreen", cancellable = true, order = 900)
     public void onOpenScreen(OpenScreenS2CPacket packet, CallbackInfo callback) {
         if (packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT && TaskManager.isWorking()) {
-            if (Support.useTradeCycling()) return;
+            if (Support.isUsingTradeCycling()) return;
 
             callback.cancel();
             MinecraftClient client = MinecraftClient.getInstance();

@@ -52,7 +52,7 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
         Texts.getImpl().sendTradeLog(offeredEnchantments);
         MatchMode.GoalMatching matching = LibrGetter.config.matchMode.match(offeredEnchantments);
         if (!matching.isMatch()) {
-            throw new StopTaskSignal(ctx -> Support.useTradeCycling() ?
+            throw new StopTaskSignal(ctx -> Support.isUsingTradeCycling() ?
                     TaskManager.TaskSwitch.nextTick(new TradeCyclingClickTask(), ctx) :
                     TaskManager.TaskSwitch.sameTick(new SelectAxeTask(), ctx)
             );
