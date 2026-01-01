@@ -64,7 +64,7 @@ public class TaskManager {
     }
 
     public static void stop() {
-        if (currentTask instanceof StandbyTask) {
+        if (!isWorking()) {
             Texts.getImpl().sendTranslatableError("librgetter.not_running");
             return;
         }
