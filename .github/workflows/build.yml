@@ -25,11 +25,6 @@ jobs:
           fetch-depth: 0
           submodules: true
 
-      - name: Super-linter
-        uses: super-linter/super-linter@v8.3.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Setup Java
         uses: actions/setup-java@v4.0.0
         with:
@@ -40,6 +35,15 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "18.17.0"
+
+      - name: Google Java Format
+        uses: axel-op/googlejavaformat-action@v4.0.0
+        with:
+          args: "--replace"
+          skip-commit: true
+
+      - name: Print diffs
+        run: git --no-pager diff --exit-code
 
       - name: Mark Executable
         run: chmod +x ./gradlew
