@@ -1,4 +1,4 @@
-name: Build
+name: Lint and Build
 
 on:
   push:
@@ -12,21 +12,33 @@ on:
     tags-ignore: ["**"]
 
 jobs:
-  build:
+  lint-and-build:
     permissions:
       contents: write
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v5
         with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
           submodules: true
+
+      - name: Super-linter
+        uses: super-linter/super-linter@v8.3.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Java
         uses: actions/setup-java@v4.0.0
         with:
           distribution: "temurin"
           java-version: 21
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "18.17.0"
 
       - name: Mark Executable
         run: chmod +x ./gradlew
