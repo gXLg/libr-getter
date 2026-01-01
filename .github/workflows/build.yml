@@ -18,7 +18,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           ref: ${{ github.head_ref }}
@@ -39,13 +39,14 @@ jobs:
       - name: Google Java Format
         uses: axel-op/googlejavaformat-action@v4.0.0
         with:
-          args: "--replace"
+          args: "--replace --aosp --skip-sorting-imports --skip-javadoc-formatting"
           skip-commit: true
+          files-excluded: "src/main/java/multiversion/*"
 
       - name: Print diffs
         run: git --no-pager diff --exit-code
 
-      - name: Mark Executable
+      - name: Mark executable
         run: chmod +x ./gradlew
 
       - name: Build
