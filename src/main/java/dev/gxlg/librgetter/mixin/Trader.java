@@ -20,8 +20,11 @@ public class Trader {
     @Inject(at = @At("HEAD"), method = "onSetTradeOffers", order = 900)
     public void onSetTradeOffers(SetTradeOffersS2CPacket packet, CallbackInfo callback) {
         if (TaskManager.isWorking()) {
-            if (!packet.isRefreshable()) TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.noRefresh()));
-            else TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.offers(packet.getOffers())));
+            if (packet.isRefreshable()) {
+                TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.offers(packet.getOffers())));
+            } else {
+                TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.noRefresh()));
+            }
         }
     }
 
