@@ -28,6 +28,9 @@
     "fabric-key-binding-api-v1": "*",
     "minecraft": ">=1.17 <=1.21.11"
   },
+  "conflicts": {
+    "offershud": "*"
+  },
   "custom": {
     "modmenu": {
       "links": {

@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class Trader {
-    @Inject(at = @At("HEAD"), method = "onSetTradeOffers")
+    @Inject(at = @At("HEAD"), method = "onSetTradeOffers", order = 900)
     public void onSetTradeOffers(SetTradeOffersS2CPacket packet, CallbackInfo callback) {
         if (TaskManager.isWorking()) {
             if (!packet.isRefreshable()) TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.noRefresh()));
@@ -25,7 +25,7 @@ public class Trader {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "onOpenScreen", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "onOpenScreen", cancellable = true, order = 900)
     public void onOpenScreen(OpenScreenS2CPacket packet, CallbackInfo callback) {
         if (packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT && TaskManager.isWorking()) {
             if (Support.useTradeCycling()) return;
