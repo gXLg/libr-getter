@@ -4,7 +4,6 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -17,7 +16,7 @@ import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import net.minecraft.enchantment.Enchantment;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Proxy;
 import java.util.List;
@@ -40,7 +39,7 @@ public class Commands {
 
             Optional<?> opt = fromArgument(pred.inst(argument));
             if (opt.isEmpty()) {
-                Texts.getImpl().sendError(context, "librgetter.argument");
+                Texts.getImpl().sendTranslatableError("librgetter.argument");
                 return false;
             }
 
@@ -53,7 +52,7 @@ public class Commands {
             R.RClass entryClass = R.clz("net.minecraft.class_6880$class_6883/net.minecraft.registry.entry.RegistryEntry$Reference");
             if (optrefl.isEmpty()) {
                 if (optrefr.isEmpty()) {
-                    Texts.getImpl().sendError(context, "librgetter.wrong");
+                    Texts.getImpl().sendTranslatableError("librgetter.wrong");
                     return false;
                 }
 
@@ -74,7 +73,113 @@ public class Commands {
         return true;
     }
 
-    private static @NonNull Optional<?> fromArgument(R.RInstance argument) {
+    public static void registerCommands() {
+        if (!V.lower("1.19")) {
+            R.RClass cb = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
+            Object listener = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{cb.self()}, (proxy, method, args) -> {
+                if (method.getName().equals("register")) {
+                    Object registryAccess = args[1];
+                    registerCommand((CommandDispatcher<?>) args[0], registryAccess);
+                    return null;
+                }
+                return method.invoke(proxy, args);
+            });
+            R.clz("net.fabricmc.fabric.api.event.Event").inst(cb.fld("EVENT").get()).mthd("register", Object.class).invk(listener);
+        } else {
+            R.RClass ccm = R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
+            registerCommand((CommandDispatcher<?>) ccm.fld("DISPATCHER").get(), null);
+        }
+    }
+
+    private static void registerCommand(CommandDispatcher<?> dispatcher, Object registryAccess) {
+        Object baseCommand = literal("librget");
+
+        Object subCommand;
+
+        // TODO: chained commands instead of re-assigned
+
+        // add subcommand
+        {
+            Object addRunner = runner(LibrGetCommand::add);
+            subCommand = literal("add");
+            Object enchantmentArgument, levelArgument, priceArgument;
+
+            enchantmentArgument = executes(argument("enchantment", enchantmentArgument(registryAccess)), addRunner);
+            levelArgument = executes(argument("level", IntegerArgumentType.integer(1)), addRunner);
+            priceArgument = executes(argument("maxprice", IntegerArgumentType.integer(1, 64)), addRunner);
+            subCommand = then(subCommand, then(enchantmentArgument, then(levelArgument, priceArgument)));
+
+            enchantmentArgument = argument("enchantment_custom", enchantmentArgument(registryAccess));
+            levelArgument = executes(argument("level", IntegerArgumentType.integer(1)), addRunner);
+            priceArgument = executes(argument("maxprice", IntegerArgumentType.integer(1, 64)), addRunner);
+            subCommand = then(subCommand, then(enchantmentArgument, then(levelArgument, priceArgument)));
+
+            baseCommand = then(baseCommand, subCommand);
+        }
+
+        // remove subcommand
+        {
+            Object removeRunner = runner(LibrGetCommand::remove);
+            subCommand = literal("remove");
+            Object enchantmentArgument, levelArgument;
+
+            enchantmentArgument = executes(argument("enchantment", enchantmentArgument(registryAccess)), removeRunner);
+            levelArgument = executes(argument("level", IntegerArgumentType.integer(1)), removeRunner);
+            subCommand = then(subCommand, then(enchantmentArgument, levelArgument));
+
+            enchantmentArgument = argument("enchantment_custom", enchantmentArgument(registryAccess));
+            levelArgument = executes(argument("level", IntegerArgumentType.integer(1)), removeRunner);
+            subCommand = then(subCommand, then(enchantmentArgument, levelArgument));
+
+            baseCommand = then(baseCommand, subCommand);
+        }
+
+        // no-arg subcommands
+        {
+            subCommand = literal("clear").executes(ctx -> LibrGetCommand.clearGoals());
+            baseCommand = then(baseCommand, subCommand);
+
+            subCommand = literal("list").executes(ctx -> LibrGetCommand.list());
+            baseCommand = then(baseCommand, subCommand);
+
+            subCommand = literal("stop").executes(ctx -> LibrGetCommand.stopWorking());
+            baseCommand = then(baseCommand, subCommand);
+
+            subCommand = literal("start").executes(ctx -> LibrGetCommand.startWorking());
+            baseCommand = then(baseCommand, subCommand);
+
+            subCommand = literal("continue").executes(ctx -> LibrGetCommand.continueWorking());
+            baseCommand = then(baseCommand, subCommand);
+
+            subCommand = literal("auto").executes(ctx -> LibrGetCommand.autostart());
+            baseCommand = then(baseCommand, subCommand);
+        }
+
+        // automatically create config commands for each simply configurable value in Config
+        {
+          subCommand = literal("config");
+          for (Configurable<?> configurable : LibrGetter.config.getConfigurables()) {
+              String name = configurable.name();
+              Object configRunner = runner(LibrGetCommand::config, configurable);
+
+              Object configArgument = executes(literal(name), configRunner);
+              Object valueArgument = executes(argument("value", configurable.argument()), configRunner);
+
+              subCommand = then(subCommand, then(configArgument, valueArgument));
+          }
+          baseCommand = then(baseCommand, subCommand);
+        }
+
+        // selector
+        {
+          Object selectRunner = runner(ctx -> LibrGetCommand.selector());
+          baseCommand = executes(baseCommand, selectRunner);
+        }
+
+        R.clz(CommandDispatcher.class).inst(dispatcher).mthd("register", LiteralArgumentBuilder.class).invk(baseCommand);
+    }
+
+    private static @NotNull Optional<?> fromArgument(R.RInstance argument) {
         Object key;
         if (!V.lower("1.21")) {
             key = C.RegistryKeys.fld("field_41265/ENCHANTMENT").get();
@@ -101,32 +206,12 @@ public class Commands {
         }
     }
 
-    public static void registerCommand() {
-        if (!V.lower("1.19")) {
-            R.RClass cb = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
-            R.RClass ccm = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandManager");
-
-            Object listener = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{cb.self()}, (proxy, method, args) -> {
-                if (method.getName().equals("register")) {
-                    Object registryAccess = args[1];
-                    command(ccm, (CommandDispatcher<?>) args[0], registryAccess);
-                    return null;
-                }
-                return method.invoke(proxy, args);
-            });
-            R.clz("net.fabricmc.fabric.api.event.Event").inst(cb.fld("EVENT").get()).mthd("register", Object.class).invk(listener);
-        } else {
-            R.RClass ccm = R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
-            command(ccm, (CommandDispatcher<?>) ccm.fld("DISPATCHER").get(), null);
-        }
+    private static ArgumentBuilder<?, ?> literal(String command) {
+        return (ArgumentBuilder<?, ?>) getClientCommandManager().mthd("literal", String.class).invk(command);
     }
 
-    private static ArgumentBuilder<?, ?> literal(R.RClass ccm, String command) {
-        return (ArgumentBuilder<?, ?>) ccm.mthd("literal", String.class).invk(command);
-    }
-
-    private static ArgumentBuilder<?, ?> argument(R.RClass ccm, String command, ArgumentType<?> argumentType) {
-        return (ArgumentBuilder<?, ?>) ccm.mthd("argument", String.class, ArgumentType.class).invk(command, argumentType);
+    private static ArgumentBuilder<?, ?> argument(String command, ArgumentType<?> argumentType) {
+        return (ArgumentBuilder<?, ?>) getClientCommandManager().mthd("argument", String.class, ArgumentType.class).invk(command, argumentType);
     }
 
     private static ArgumentBuilder<?, ?> executes(Object builder, Object cmd) {
@@ -146,103 +231,11 @@ public class Commands {
         return t -> function.apply(t, config);
     }
 
-    public static void command(R.RClass ccm, CommandDispatcher<?> dispatcher, Object registryAccess) {
-        Object base = literal(ccm, "librget");
-        Object a, l, r, d;
-
-        {
-            Object add = runner(LibrGetCommand::add);
-            l = literal(ccm, "add");
-
-            a = argument(ccm, "enchantment", enchantmentArgument(registryAccess));
-            a = executes(a, add);
-
-            r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = executes(r, add);
-
-            d = argument(ccm, "maxprice", IntegerArgumentType.integer(1, 64));
-            d = executes(d, add);
-
-            r = then(r, d);
-            a = then(a, r);
-            l = then(l, a);
-
-            a = argument(ccm, "enchantment_custom", StringArgumentType.string());
-
-            r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = executes(r, add);
-
-            d = argument(ccm, "maxprice", IntegerArgumentType.integer(1, 64));
-            d = executes(d, add);
-
-            r = then(r, d);
-            a = then(a, r);
-            l = then(l, a);
-
-            base = then(base, l);
+    private static R.RClass getClientCommandManager() {
+        if (!V.lower("1.19")) {
+            return R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandManager");
+        } else {
+            return R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
         }
-        {
-            Object remove = runner(LibrGetCommand::remove);
-            l = literal(ccm, "remove");
-
-            a = argument(ccm, "enchantment", enchantmentArgument(registryAccess));
-
-            r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = executes(r, remove);
-
-            a = then(a, r);
-            l = then(l, a);
-
-            a = argument(ccm, "enchantment_custom", StringArgumentType.string());
-
-            r = argument(ccm, "level", IntegerArgumentType.integer(1));
-            r = executes(r, remove);
-
-            a = then(a, r);
-            l = then(l, a);
-
-            base = then(base, l);
-        }
-
-        l = literal(ccm, "clear").executes(LibrGetCommand::clear);
-        base = then(base, l);
-
-        l = literal(ccm, "list").executes(LibrGetCommand::list);
-        base = then(base, l);
-
-        l = literal(ccm, "stop").executes(LibrGetCommand::stop);
-        base = then(base, l);
-
-        l = literal(ccm, "start").executes(LibrGetCommand::start);
-        base = then(base, l);
-
-        l = literal(ccm, "continue").executes(LibrGetCommand::continueWork);
-        base = then(base, l);
-
-        l = literal(ccm, "auto").executes(LibrGetCommand::autostart);
-        base = then(base, l);
-
-        // automatically create config commands for each simply configurable value in Config
-        l = literal(ccm, "config");
-        for (Configurable<?> configurable : LibrGetter.config.getConfigurables()) {
-            String name = configurable.name();
-            a = literal(ccm, name);
-            r = argument(ccm, "value", configurable.argument());
-
-            Object runner = runner(LibrGetCommand::config, configurable);
-
-            r = executes(r, runner);
-            a = then(a, r);
-            a = executes(a, runner);
-
-            l = then(l, a);
-        }
-        base = then(base, l);
-
-        Object selector = runner(LibrGetCommand::selector);
-        base = executes(base, selector);
-
-        R.clz(CommandDispatcher.class).inst(dispatcher).mthd("register", LiteralArgumentBuilder.class).invk(base);
     }
-
 }

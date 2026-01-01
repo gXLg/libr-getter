@@ -96,7 +96,7 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
 
         Compatibility c = f.getDeclaredAnnotation(Compatibility.class);
         //noinspection RedundantIfStatement
-        if (c != null && !Support.isEffective(c.value())) return false;
+        if (c != null && !Support.isExisting(c.value())) return false;
 
         // some more criteria later possibly...
 

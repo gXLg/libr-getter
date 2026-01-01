@@ -3,23 +3,31 @@ package dev.gxlg.librgetter.utils.reflection.chaining.texts;
 import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Formatting;
 
+import java.util.List;
 import java.util.Map;
 
 public abstract class Texts {
-    abstract public void sendError(Object source, String message, Object... args);
+    abstract public void sendMessage(Object text, boolean actionbar);
 
-    abstract public void sendFound(Object source, EnchantmentTrade enchant, int counter);
+    abstract public void sendTranslatable(Formatting format, String message, Object... args);
 
-    abstract public void sendFeedback(Object source, String message, Formatting format, Object... args);
+    abstract public void sendTranslatableFeedback(String message, Object... args);
 
-    abstract public void sendMessage(ClientPlayerEntity player, String message, Object... args);
+    abstract public void sendTranslatableSuccess(String message, Object... args);
 
-    abstract public void newVersion(ClientPlayerEntity player, String message, String hover);
+    abstract public void sendTranslatableError(String message, Object... args);
 
-    abstract public void list(Object source);
+    abstract public void sendTranslatableWarning(String message, Object... args);
+
+    abstract public void sendFound(EnchantmentTrade enchant, int counter);
+
+    abstract public void sendTradeLog(List<EnchantmentTrade> offeredEnchantments);
+
+    abstract public void sendNewVersion(String message, String hover);
+
+    abstract public void sendListOfGoals();
 
     abstract public Object bookMainPage(Map<String, Integer> categories);
 

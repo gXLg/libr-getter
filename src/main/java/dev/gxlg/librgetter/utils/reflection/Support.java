@@ -23,11 +23,11 @@ public class Support {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean useTradeCycling() {
+    public static boolean isUsingTradeCycling() {
         return tradeCycling && LibrGetter.config.tradeCycling;
     }
 
-    public static boolean isEffective(String modID) {
+    public static boolean isExisting(String modID) {
         return instance.getModContainer(modID).isPresent();
     }
 }

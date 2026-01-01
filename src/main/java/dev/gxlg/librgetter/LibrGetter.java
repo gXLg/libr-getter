@@ -26,15 +26,13 @@ public class LibrGetter implements ClientModInitializer {
         config = Config.init();
 
         // register commands
-        Commands.registerCommand();
+        Commands.registerCommands();
 
         // register keybinds
         Keybinds.registerKeybinds();
 
         // checking for a new update
-        if (config.checkUpdate) {
-            Updater.checkUpdates();
-        }
+        Updater.checkUpdates();
     }
 
     public static String getVersion() {

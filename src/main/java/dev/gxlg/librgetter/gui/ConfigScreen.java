@@ -23,6 +23,7 @@ public class ConfigScreen extends BookScreen {
     @Override
     protected boolean jumpToPage(int page) {
         currentPage = page;
+        updateScreen();
         return super.jumpToPage(page);
     }
 

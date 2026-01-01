@@ -1,6 +1,6 @@
 {
   "librgetter.config": "Configuración de '%s': %s",
-  "librgetter.internal": "Error interno: %s == null, por favor reporta este error para que pueda ser corregido",
+  "librgetter.internal": "Error interno: %s == null (%s), por favor reporta este error para que pueda ser corregido",
   "librgetter.find_lectern": "¡No se pudo encontrar un atril cerca de ti!",
   "librgetter.find_librarian": "¡No se pudo encontrar un bibliotecario cerca de ti!",
   "librgetter.level": "El nivel de '%s' supera el máximo. Nivel máximo: %s",

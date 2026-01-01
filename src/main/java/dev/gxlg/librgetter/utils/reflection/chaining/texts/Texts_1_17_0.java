@@ -8,6 +8,7 @@ import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
@@ -15,17 +16,48 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.util.List;
 import java.util.Map;
 
 public class Texts_1_17_0 extends Texts {
     @Override
-    public void sendError(Object source, String message, Object... args) {
+    public void sendMessage(Object text, boolean actionbar) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
+        if (player == null) return;
+        R.clz(ClientPlayerEntity.class).inst(player).mthd("method_7353/sendMessage", C.Text, boolean.class).invk(text, actionbar);
+    }
+
+    public void sendTranslatable(Formatting format, String message, Object... args) {
         Object text = translatable(message, args);
-        getCmdSrcClass().inst(source).mthd("sendError", C.Text).invk(text);
+        if (format != null) {
+            text = C.MutableText.inst(text).mthd("method_27692/formatted", Formatting.class).invk(format);
+        }
+        sendMessage(text, false);
     }
 
     @Override
-    public void sendFound(Object source, EnchantmentTrade enchant, int counter) {
+    public void sendTranslatableError(String message, Object... args) {
+        sendTranslatable(Formatting.RED, message, args);
+    }
+
+    @Override
+    public void sendTranslatableWarning(String message, Object... args) {
+        sendTranslatable(Formatting.YELLOW, message, args);
+    }
+
+    @Override
+    public void sendTranslatableFeedback(String message, Object... args) {
+        sendTranslatable(null, message, args);
+    }
+
+    @Override
+    public void sendTranslatableSuccess(String message, Object... args) {
+        sendTranslatable(Formatting.GREEN, message, args);
+    }
+
+    @Override
+    public void sendFound(EnchantmentTrade enchant, int counter) {
         Object text = translatable("librgetter.found", enchant, counter, enchant.price());
         text = C.MutableText.inst(text).mthd("method_27692/formatted", Formatting.class).invk(Formatting.GREEN);
 
@@ -36,38 +68,27 @@ public class Texts_1_17_0 extends Texts {
             C.MutableText.inst(rem).mthd("method_10862/setStyle", Style.class).invk(style);
             text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(rem);
         }
-        getCmdSrcClass().inst(source).mthd("sendFeedback", C.Text).invk(text);
+        sendMessage(text, false);
     }
 
-    @Override
-    public void sendFeedback(Object source, String message, Formatting format, Object... args) {
-        Object text = translatable(message, args);
-        if (format != null) {
-            text = C.MutableText.inst(text).mthd("method_27692/formatted", Formatting.class).invk(format);
-        }
-        getCmdSrcClass().inst(source).mthd("sendFeedback", C.Text).invk(text);
-    }
-
-    @Override
-    public void sendMessage(ClientPlayerEntity player, String message, Object... args) {
+    public void sendTradeLog(List<EnchantmentTrade> offeredEnchantments) {
         if (LibrGetter.config.logMode == LogMode.NONE) return;
         boolean ab = LibrGetter.config.logMode == LogMode.ACTIONBAR;
-        Object text = translatable(message, args);
-        R.clz(ClientPlayerEntity.class).inst(player).mthd("method_7353/sendMessage", C.Text, boolean.class).invk(text, ab);
+        Object text = translatable("librgetter.offer", offeredEnchantments);
+        sendMessage(text, ab);
     }
 
     @Override
-    public void newVersion(ClientPlayerEntity player, String message, String hover) {
+    public void sendNewVersion(String message, String hover) {
         Object text = translatable(message);
         Text hov = Text.of(hover);
         Style style = Style.EMPTY.withHoverEvent(hoverable(hov));
-
         C.MutableText.inst(text).mthd("method_10862/setStyle", Style.class).invk(style);
-        R.clz(ClientPlayerEntity.class).inst(player).mthd("method_7353/sendMessage", C.Text, boolean.class).invk(text, false);
+        sendMessage(text, false);
     }
 
     @Override
-    public void list(Object source) {
+    public void sendListOfGoals() {
         Object text = translatable("librgetter.list");
         Object rem = translatable("librgetter.remove");
         for (EnchantmentTrade l : LibrGetter.config.goals) {
@@ -77,7 +98,7 @@ public class Texts_1_17_0 extends Texts {
             Object remc = applyStyle(rem, style);
             text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(remc);
         }
-        getCmdSrcClass().inst(source).mthd("sendFeedback", C.Text).invk(text);
+        sendMessage(text, false);
     }
 
     @Override
@@ -164,6 +185,7 @@ public class Texts_1_17_0 extends Texts {
             z = literal("");
 
         } else {
+            // TODO: centralized exceptions
             throw new RuntimeException("Unexpected type of configurable!");
         }
 
@@ -179,11 +201,6 @@ public class Texts_1_17_0 extends Texts {
         text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(x);
         text = C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(y);
         return C.MutableText.inst(text).mthd("method_10852/append", C.Text).invk(z);
-    }
-
-
-    protected R.RClass getCmdSrcClass() {
-        return R.clz("net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource");
     }
 
     protected ClickEvent runnable(String command) {

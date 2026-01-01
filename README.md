@@ -187,7 +187,7 @@ The menu provides an overview of all togglable configs and grays out configs whi
 LibrGetter tries to be compatible with all other mods, by modifying the client as little as possible.
 
 Mods that previously were not compatible and were made explicitly compatible:
-* OffersHUD ([<kbd>Modrinth</kbd>](https://modrinth.com/mod/offershud))
+* ~~OffersHUD ([<kbd>Modrinth</kbd>](https://modrinth.com/mod/offershud))~~ incompatible
 
 Mods that add/change functionality of LibrGetter:
 ### Trade Cycling

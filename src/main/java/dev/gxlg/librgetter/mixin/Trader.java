@@ -1,8 +1,9 @@
 package dev.gxlg.librgetter.mixin;
 
-import dev.gxlg.librgetter.Worker;
 import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.Support;
+import dev.gxlg.librgetter.utils.types.TradeOfferData;
+import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.c2s.play.CloseHandledScreenC2SPacket;
@@ -16,21 +17,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class Trader {
-    @Inject(at = @At("HEAD"), method = "onSetTradeOffers")
+    @Inject(at = @At("HEAD"), method = "onSetTradeOffers", order = 900)
     public void onSetTradeOffers(SetTradeOffersS2CPacket packet, CallbackInfo callback) {
-        if (Worker.getState() == Worker.State.GET_TRADES || Worker.getState() == Worker.State.LOCK_TRADES) {
-            if (packet.getExperience() > 0) {
-                Worker.noRefresh();
-                return;
+        if (TaskManager.isWorking()) {
+            if (packet.isRefreshable()) {
+                TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.offers(packet.getOffers())));
+            } else {
+                TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.noRefresh()));
             }
-            Worker.setTrades(packet.getOffers());
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "onOpenScreen", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "onOpenScreen", cancellable = true, order = 900)
     public void onOpenScreen(OpenScreenS2CPacket packet, CallbackInfo callback) {
-        if (Worker.getState() != Worker.State.GET_TRADES && Worker.getState() != Worker.State.PARSE_TRADES) return;
-        if (packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT && !Support.useTradeCycling()) {
+        if (packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT && TaskManager.isWorking()) {
+            if (Support.isUsingTradeCycling()) return;
+
             callback.cancel();
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayNetworkHandler handler = client.getNetworkHandler();

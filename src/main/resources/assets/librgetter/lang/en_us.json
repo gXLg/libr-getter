@@ -1,6 +1,6 @@
 {
   "librgetter.config": "'%s' config: %s",
-  "librgetter.internal": "Internal Error: %s == null, please report this error so it can be fixed",
+  "librgetter.internal": "Internal Error: %s == null (%s), please report this error so it can be fixed",
   "librgetter.find_lectern": "Could not find a lectern near you!",
   "librgetter.find_librarian": "Could not find a librarian near you!",
   "librgetter.level": "Level for '%s' over the max. Max level: %s",

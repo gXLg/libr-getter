@@ -1,0 +1,26 @@
+package dev.gxlg.librgetter.worker.tasks;
+
+import dev.gxlg.librgetter.LibrGetter;
+import dev.gxlg.librgetter.utils.reflection.Minecraft;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
+import dev.gxlg.librgetter.worker.TaskManager;
+
+public class WaitVillagerAcceptProfessionTask extends TaskManager.Task {
+    private int timeout = 0;
+
+    @Override
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+        if (!Minecraft.isVillagerUnemployed(taskContext.selectedVillager())) {
+            if (!Minecraft.isVillagerLibrarian(taskContext.selectedVillager()))
+                throw new TaskException("librgetter.pick");
+            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RequestTradesTask(), ctx));
+        }
+        if (LibrGetter.config.timeout != 0) {
+            timeout++;
+            // break and place the lectern again after a timeout
+            if (timeout >= LibrGetter.config.timeout * 20)
+                throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new SelectAxeTask(), ctx));
+        }
+    }
+}

@@ -1,9 +1,9 @@
 package dev.gxlg.librgetter.mixin;
 
-import dev.gxlg.librgetter.Worker;
-import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.gxlg.librgetter.utils.reflection.Minecraft;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
+import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -30,22 +30,19 @@ public abstract class Manager {
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void tick(CallbackInfo info) {
-        Worker.tick();
+        TaskManager.work();
     }
 
     @Inject(at = @At("HEAD"), method = "attackBlock", cancellable = true)
     private void attackBlock(CallbackInfoReturnable<Boolean> info, @Local(argsOnly = true) BlockPos pos) {
         if (client.player == null) {
-            Texts.getImpl().sendError(Worker.getSource(), "librgetter.internal", "player");
+            Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "ClientPlayerInteractionManagerMixin#attackBlock");
             return;
         }
         ClientWorld world = Minecraft.getWorld(client.player);
         if (!world.getBlockState(pos).isOf(Blocks.LECTERN)) return;
-        for (Worker.State state : new Worker.State[]{Worker.State.MANUAL_WAIT_FINISH, Worker.State.GET_TRADES, Worker.State.PARSE_TRADES, Worker.State.WAIT_VILLAGER_ACCEPT_PROFESSION}) {
-            if (Worker.getState() == state) {
-                info.setReturnValue(false);
-                return;
-            }
+        if (!TaskManager.getCurrentTask().allowsBreaking()) {
+            info.setReturnValue(false);
         }
     }
 
@@ -67,11 +64,12 @@ public abstract class Manager {
         BlockPos pos = hitResult.getBlockPos().offset(hitResult.getSide());
 
         if (client.player == null) {
-            Texts.getImpl().sendError(Worker.getSource(), "librgetter.internal", "player");
+            Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "ClientPlayerInteractionManagerMixin#interactBlock");
             return;
         }
 
-        if (!pos.equals(Worker.getBlock())) return;
-        if (Worker.getState() == Worker.State.WAIT_VILLAGER_LOSE_PROFESSION) Minecraft.setActionResultFail(info);
+        if (!pos.equals(TaskManager.getTaskContext().selectedLectern())) return;
+        if (!TaskManager.getCurrentTask().allowsPlacing())
+            Minecraft.setActionResultFail(info);
     }
 }
