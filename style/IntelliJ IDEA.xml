@@ -1,0 +1,341 @@
+<code_scheme name="Project" version="173">
+    <option name="AUTODETECT_INDENTS" value="false"/>
+    <option name="LINE_SEPARATOR" value="&#10;"/>
+    <option name="RIGHT_MARGIN" value="200"/>
+    <option name="FORMATTER_ON_TAG" value="%&gt;"/>
+    <option name="FORMATTER_OFF_TAG" value="&lt;%"/>
+    <option name="SOFT_MARGINS" value="200"/>
+    <option name="DO_NOT_FORMAT">
+        <list>
+            <fileSet type="globPattern" pattern="src/main/java/dev/gxlg/librgetter/multiversion/*.java"/>
+            <fileSet type="globPattern" pattern="src/main/resources/**"/>
+        </list>
+    </option>
+    <JavaCodeStyleSettings>
+        <option name="ANNOTATION_PARAMETER_WRAP" value="1"/>
+        <option name="ALIGN_MULTILINE_ANNOTATION_PARAMETERS" value="true"/>
+        <option name="NEW_LINE_AFTER_LPAREN_IN_ANNOTATION" value="true"/>
+        <option name="RPAREN_ON_NEW_LINE_IN_ANNOTATION" value="true"/>
+        <option name="ALIGN_MULTILINE_TEXT_BLOCKS" value="true"/>
+        <option name="BLANK_LINES_AROUND_FIELD_WITH_ANNOTATIONS" value="1"/>
+        <option name="NEW_LINE_WHEN_BODY_IS_PRESENTED" value="true"/>
+        <option name="DELETE_UNUSED_MODULE_IMPORTS" value="true"/>
+        <option name="USE_FQ_CLASS_NAMES" value="true"/>
+        <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="100"/>
+        <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="100"/>
+        <option name="NEW_LINE_AFTER_LPAREN_IN_RECORD_HEADER" value="true"/>
+        <option name="RPAREN_ON_NEW_LINE_IN_RECORD_HEADER" value="true"/>
+        <option name="ENABLE_JAVADOC_FORMATTING" value="false"/>
+    </JavaCodeStyleSettings>
+    <editorconfig>
+        <option name="ENABLED" value="false"/>
+    </editorconfig>
+    <codeStyleSettings language="JAVA">
+        <option name="KEEP_LINE_BREAKS" value="false"/>
+        <option name="KEEP_FIRST_COLUMN_COMMENT" value="false"/>
+        <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="false"/>
+        <option name="BLANK_LINES_AROUND_FIELD" value="1"/>
+        <option name="ALIGN_MULTILINE_CHAINED_METHODS" value="true"/>
+        <option name="ALIGN_MULTILINE_PARAMETERS" value="false"/>
+        <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true"/>
+        <option name="ALIGN_MULTILINE_BINARY_OPERATION" value="true"/>
+        <option name="ALIGN_MULTILINE_ASSIGNMENT" value="true"/>
+        <option name="ALIGN_MULTILINE_TERNARY_OPERATION" value="true"/>
+        <option name="ALIGN_MULTILINE_PARENTHESIZED_EXPRESSION" value="true"/>
+        <option name="ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION" value="true"/>
+        <option name="SPACE_WITHIN_BRACES" value="true"/>
+        <option name="SPACE_WITHIN_ARRAY_INITIALIZER_BRACES" value="true"/>
+        <option name="SPACE_WITHIN_EMPTY_ARRAY_INITIALIZER_BRACES" value="true"/>
+        <option name="CALL_PARAMETERS_WRAP" value="5"/>
+        <option name="CALL_PARAMETERS_LPAREN_ON_NEXT_LINE" value="true"/>
+        <option name="CALL_PARAMETERS_RPAREN_ON_NEXT_LINE" value="true"/>
+        <option name="METHOD_PARAMETERS_LPAREN_ON_NEXT_LINE" value="true"/>
+        <option name="METHOD_PARAMETERS_RPAREN_ON_NEXT_LINE" value="true"/>
+        <option name="METHOD_CALL_CHAIN_WRAP" value="1"/>
+        <option name="PARENTHESES_EXPRESSION_LPAREN_WRAP" value="true"/>
+        <option name="PARENTHESES_EXPRESSION_RPAREN_WRAP" value="true"/>
+        <option name="BINARY_OPERATION_WRAP" value="1"/>
+        <option name="TERNARY_OPERATION_WRAP" value="1"/>
+        <option name="KEEP_SIMPLE_LAMBDAS_IN_ONE_LINE" value="true"/>
+        <option name="KEEP_SIMPLE_CLASSES_IN_ONE_LINE" value="true"/>
+        <option name="ARRAY_INITIALIZER_WRAP" value="1"/>
+        <option name="ARRAY_INITIALIZER_LBRACE_ON_NEXT_LINE" value="true"/>
+        <option name="ARRAY_INITIALIZER_RBRACE_ON_NEXT_LINE" value="true"/>
+        <option name="IF_BRACE_FORCE" value="3"/>
+        <option name="DOWHILE_BRACE_FORCE" value="3"/>
+        <option name="WHILE_BRACE_FORCE" value="3"/>
+        <option name="FOR_BRACE_FORCE" value="3"/>
+        <option name="ENUM_CONSTANTS_WRAP" value="2"/>
+        <option name="WRAP_ON_TYPING" value="0"/>
+        <indentOptions>
+            <option name="CONTINUATION_INDENT_SIZE" value="4"/>
+            <option name="USE_RELATIVE_INDENTS" value="true"/>
+        </indentOptions>
+        <arrangement>
+            <rules>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <FINAL>true</FINAL>
+                                <PUBLIC>true</PUBLIC>
+                                <STATIC>true</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <FINAL>true</FINAL>
+                                <PUBLIC>true</PUBLIC>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <FINAL>true</FINAL>
+                                <PROTECTED>true</PROTECTED>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <FINAL>true</FINAL>
+                                <PACKAGE_PRIVATE>true</PACKAGE_PRIVATE>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <FINAL>true</FINAL>
+                                <PRIVATE>true</PRIVATE>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <PUBLIC>true</PUBLIC>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <PROTECTED>true</PROTECTED>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <PACKAGE_PRIVATE>true</PACKAGE_PRIVATE>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <PRIVATE>true</PRIVATE>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <INITIALIZER_BLOCK>true</INITIALIZER_BLOCK>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <CONSTRUCTOR>true</CONSTRUCTOR>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <METHOD>true</METHOD>
+                                <STATIC>false</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <FINAL>true</FINAL>
+                                <PROTECTED>true</PROTECTED>
+                                <STATIC>true</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <FINAL>true</FINAL>
+                                <PACKAGE_PRIVATE>true</PACKAGE_PRIVATE>
+                                <STATIC>true</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <FINAL>true</FINAL>
+                                <PRIVATE>true</PRIVATE>
+                                <STATIC>true</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <PUBLIC>true</PUBLIC>
+                                <STATIC>true</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <PROTECTED>true</PROTECTED>
+                                <STATIC>true</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <PACKAGE_PRIVATE>true</PACKAGE_PRIVATE>
+                                <STATIC>true</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <FIELD>true</FIELD>
+                                <PRIVATE>true</PRIVATE>
+                                <STATIC>true</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <INITIALIZER_BLOCK>true</INITIALIZER_BLOCK>
+                                <STATIC>true</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <AND>
+                                <METHOD>true</METHOD>
+                                <STATIC>true</STATIC>
+                            </AND>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <ENUM>true</ENUM>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <INTERFACE>true</INTERFACE>
+                        </match>
+                    </rule>
+                </section>
+                <section>
+                    <rule>
+                        <match>
+                            <CLASS>true</CLASS>
+                        </match>
+                    </rule>
+                </section>
+            </rules>
+        </arrangement>
+    </codeStyleSettings>
+</code_scheme>

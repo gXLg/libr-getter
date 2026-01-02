@@ -1,4 +1,4 @@
-name: Lint and Build
+name: Build
 
 on:
   push:
@@ -13,7 +13,7 @@ on:
     tags-ignore: ["**"]
 
 jobs:
-  lint-and-build:
+  build:
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -35,16 +35,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "18.17.0"
-
-      - name: Google Java Format
-        uses: axel-op/googlejavaformat-action@v4.0.0
-        with:
-          args: "--replace --aosp --skip-sorting-imports --skip-javadoc-formatting"
-          skip-commit: true
-          files-excluded: "src/main/java/dev/gxlg/librgetter/multiversion/*"
-
-      - name: Print diffs
-        run: git --no-pager diff --exit-code
 
       - name: Mark executable
         run: chmod +x ./gradlew
