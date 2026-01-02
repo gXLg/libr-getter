@@ -36,3 +36,4 @@ replay_*.log
 prep/
 logs/
 changelog.txt
+node_modules

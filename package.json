@@ -1,0 +1,15 @@
+{
+  "name": "libr-getter",
+  "version": "1.0.0",
+  "description": "<img width=\"100%\" src=\"/images/cover.png\" alt=\"logo\"/><br>\r # Over-engineered librarian trade finder for fabric\r A highly configurable fabric mod to automatically cycle a librarian villager for the desired enchantment by replacing his lectern",
+  "main": "push-update-test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "gXLg",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^3.7.4",
+    "prettier-plugin-java": "^2.7.7"
+  }
+}
