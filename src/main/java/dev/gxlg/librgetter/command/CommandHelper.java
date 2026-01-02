@@ -80,9 +80,9 @@ public class CommandHelper {
             }
 
             if (remove) {
-              removeGoal(enchantmentId.toString(), lvl);
+              removeGoal(enchantmentId.toString(), level);
             } else {
-              addGoal(enchantmentId.toString(), lvl, price, custom);
+              addGoal(enchantmentId.toString(), level, price, custom);
             }
         }
 
