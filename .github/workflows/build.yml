@@ -41,7 +41,7 @@ jobs:
         with:
           args: "--replace --aosp --skip-sorting-imports --skip-javadoc-formatting"
           skip-commit: true
-          files-excluded: "src/main/java/multiversion/*"
+          files-excluded: "src/main/java/dev/gxlg/librgetter/multiversion/*"
 
       - name: Print diffs
         run: git --no-pager diff --exit-code
