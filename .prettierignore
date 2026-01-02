@@ -1,0 +1,5 @@
+# Ignore artifacts:
+build
+coverage
+MultiVersion
+src/main/java/dev/gxlg/librgetter/multiversion
