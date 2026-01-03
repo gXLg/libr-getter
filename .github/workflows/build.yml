@@ -45,10 +45,10 @@ jobs:
       - name: Cache IntelliJ IDEA
         uses: actions/cache@v5
         with:
-          path: /github/workflow/idea-cache
+          path: .idea-cache
           key: idea-cache-2025-3
 
       - name: Format with IntelliJ IDEA
-        uses: gXLg/intellij-idea-format@f3b0510a22536eff358f881b507e7d1ef4819a14
+        uses: gXLg/intellij-idea-format@1f156ef74ab90aa904e322504a942d5c142236f7
         with:
           idea-url: "https://download.jetbrains.com/idea/idea-2025.3.tar.gz"
