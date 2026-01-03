@@ -45,7 +45,7 @@ jobs:
       - name: Format with IntelliJ IDEA
         uses: notdevcody/intellij-format-action@1704ffb57e311164f98c06b009f4736e11a1b6c3
         with:
-          idea-version: "2025.3"
+          idea-version: "2025.2.6"
           include-glob: "./src/**/*.java"
           style-settings-file: "./style/IntelliJ IDEA.xml"
           push-type: "none"
