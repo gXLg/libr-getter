@@ -25,7 +25,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build
-        uses: burrunan/gradle-cache-action@6fdc0d904ff45100d8a92c14b9d6bc593d98294c
+        uses: burrunan/gradle-cache-action@v3
         with:
           arguments: build
 
