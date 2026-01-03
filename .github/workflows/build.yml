@@ -46,7 +46,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: .idea-cache
-          key: idea-cache
+          key: idea-cache-2025.2.6
 
       - name: Format with IntelliJ IDEA
         uses: gXLg/intellij-idea-format@60b02981852740be851f839b3951a65f34a9c9b7
