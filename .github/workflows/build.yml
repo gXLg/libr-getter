@@ -42,8 +42,7 @@ jobs:
       - name: Build
         uses: burrunan/gradle-cache-action@v3
         with:
-          arguments: build --daemon
-          daemon: false # https://github.com/burrunan/gradle-cache-action/issues/138
+          arguments: build
 
       - name: Cache IntelliJ IDEA
         uses: actions/cache@v5
@@ -52,6 +51,6 @@ jobs:
           key: idea-cache-2025.3.0
 
       - name: Format with IntelliJ IDEA
-        uses: gXLg/intellij-idea-format@7222804ca64279e4d4a85a8e79c7376769e3f8c0
+        uses: gXLg/intellij-idea-format@ef6ec9cff204cad7bd33882f828bc74b556a7808
         with:
           idea-url: "https://download.jetbrains.com/idea/idea-2025.3.tar.gz"
