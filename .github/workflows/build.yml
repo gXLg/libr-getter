@@ -43,7 +43,7 @@ jobs:
           key: idea-cache-2025-3
 
       - name: Format with IntelliJ IDEA
-        uses: gXLg/intellij-idea-format@96458048f9dcc080f90a30d5f6b64906659ab258
+        uses: gXLg/intellij-idea-format@2815bf8106f3c62aa2c5e0d525d503de73bf48c7
         with:
           idea-url: "https://download.jetbrains.com/idea/idea-2025.3.tar.gz"
 
