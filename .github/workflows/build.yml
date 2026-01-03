@@ -39,21 +39,11 @@ jobs:
       - name: Cache IntelliJ IDEA
         uses: actions/cache@v5
         with:
-          path: /home/runner/work/_temp/_github_workflow/idea-cache
-          key: ${{ runner.os }}-idea-cache
+          path: /github/workflow/idea-cache
+          key: idea-cache
 
       - name: Format with IntelliJ IDEA
-        uses: notdevcody/intellij-format-action@1704ffb57e311164f98c06b009f4736e11a1b6c3
-        with:
-          idea-version: "2025.2.6"
-          include-glob: "./src/**/*.java"
-          style-settings-file: "./style/IntelliJ IDEA.xml"
-          push-type: "none"
-          mute-formatter-output: true
-          fail-on-changes: false
-
-      - name: Check diff
-        run: git --no-pager diff --exit-code
+        uses: gXLg/intellij-idea-format@0df08676ddafbae939f7d675a5e3b02e6c343a29
 
       - name: Mark executable
         run: chmod +x ./gradlew
