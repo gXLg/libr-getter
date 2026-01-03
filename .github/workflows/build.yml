@@ -40,7 +40,10 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build
-        run: ./gradlew clean build
+        uses: burrunan/gradle-cache-action@v3
+        with:
+          arguments: build
+          daemon: true
 
       - name: Cache IntelliJ IDEA
         uses: actions/cache@v5
