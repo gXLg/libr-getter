@@ -1,4 +1,4 @@
-name: Check Styling and Build
+name: Build Project and Check Styling
 
 on:
   push:
@@ -13,7 +13,7 @@ on:
     tags-ignore: [ "**" ]
 
 jobs:
-  check-and-build:
+  build-and-check:
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -36,6 +36,12 @@ jobs:
         with:
           node-version: "24.12.0"
 
+      - name: Mark executable
+        run: chmod +x ./gradlew
+
+      - name: Build
+        run: ./gradlew clean build
+
       - name: Cache IntelliJ IDEA
         uses: actions/cache@v5
         with:
@@ -43,12 +49,6 @@ jobs:
           key: idea-cache-2025-3
 
       - name: Format with IntelliJ IDEA
-        uses: gXLg/intellij-idea-format@2815bf8106f3c62aa2c5e0d525d503de73bf48c7
+        uses: gXLg/intellij-idea-format@f3b0510a22536eff358f881b507e7d1ef4819a14
         with:
           idea-url: "https://download.jetbrains.com/idea/idea-2025.3.tar.gz"
-
-      - name: Mark executable
-        run: chmod +x ./gradlew
-
-      - name: Build
-        run: ./gradlew clean build
