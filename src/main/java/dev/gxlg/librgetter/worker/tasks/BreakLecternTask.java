@@ -15,7 +15,9 @@ public class BreakLecternTask extends TaskManager.Task {
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
-        if (world == null) throw new InternalTaskException("world", this);
+        if (world == null) {
+            throw new InternalTaskException("world", this);
+        }
 
         BlockState targetBlock = world.getBlockState(taskContext.selectedLectern());
         if (targetBlock.isAir()) {
@@ -23,7 +25,9 @@ public class BreakLecternTask extends TaskManager.Task {
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitVillagerLoseProfessionTask(), ctx.withIncreasedAttemptsCounter()));
         }
 
-        if (LibrGetter.config.manual) return;
+        if (LibrGetter.config.manual) {
+            return;
+        }
 
         ClientPlayerInteractionManager manager = client.interactionManager;
         if (manager == null) {

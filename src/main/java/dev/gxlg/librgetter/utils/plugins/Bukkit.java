@@ -40,7 +40,7 @@ public class Bukkit {
             }
         }
         if (id == null) {
-            return Triple.of(null, null, new String[]{"librgetter.unknown", "Enchantment Solution"});
+            return Triple.of(null, null, new String[]{ "librgetter.unknown", "Enchantment Solution" });
         }
 
         return Triple.of(id, lvl, null);

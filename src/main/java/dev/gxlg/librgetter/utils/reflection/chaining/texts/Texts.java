@@ -36,8 +36,11 @@ public abstract class Texts {
     abstract public Object bookEntry(Object text, Configurable<?> configurable);
 
     private static Texts implementation = null;
+
     public static Texts getImpl() {
-        if (implementation != null) return implementation;
+        if (implementation != null) {
+            return implementation;
+        }
         if (V.lower("1.19")) {
             implementation = new Texts_1_17_0();
         } else if (V.lower("1.21.5")) {

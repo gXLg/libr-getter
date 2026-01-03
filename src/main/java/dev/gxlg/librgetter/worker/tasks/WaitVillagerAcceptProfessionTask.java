@@ -12,15 +12,17 @@ public class WaitVillagerAcceptProfessionTask extends TaskManager.Task {
     @Override
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
         if (!Minecraft.isVillagerUnemployed(taskContext.selectedVillager())) {
-            if (!Minecraft.isVillagerLibrarian(taskContext.selectedVillager()))
+            if (!Minecraft.isVillagerLibrarian(taskContext.selectedVillager())) {
                 throw new TaskException("librgetter.pick");
+            }
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RequestTradesTask(), ctx));
         }
         if (LibrGetter.config.timeout != 0) {
             timeout++;
             // break and place the lectern again after a timeout
-            if (timeout >= LibrGetter.config.timeout * 20)
+            if (timeout >= LibrGetter.config.timeout * 20) {
                 throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new SelectAxeTask(), ctx));
+            }
         }
     }
 }

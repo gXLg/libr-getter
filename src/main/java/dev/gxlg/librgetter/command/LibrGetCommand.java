@@ -75,7 +75,9 @@ public class LibrGetCommand {
             for (int dx = -dis; dx <= dis; dx++) {
                 for (int dy = -dis; dy <= dis; dy++) {
                     for (int dz = -dis; dz <= dis; dz++) {
-                        if (dis != Math.abs(dx) && dis != Math.abs(dy) && dis != Math.abs(dz)) continue;
+                        if (dis != Math.abs(dx) && dis != Math.abs(dy) && dis != Math.abs(dz)) {
+                            continue;
+                        }
 
                         BlockPos pos = player.getBlockPos().add(dx, dy, dz);
                         if (world.getBlockState(pos).isOf(Blocks.LECTERN)) {
@@ -83,11 +85,17 @@ public class LibrGetCommand {
                             break;
                         }
                     }
-                    if (lec != null) break;
+                    if (lec != null) {
+                        break;
+                    }
                 }
-                if (lec != null) break;
+                if (lec != null) {
+                    break;
+                }
             }
-            if (lec != null) break;
+            if (lec != null) {
+                break;
+            }
         }
         if (lec == null) {
             Texts.getImpl().sendTranslatableError("librgetter.find_lectern");

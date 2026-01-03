@@ -18,7 +18,9 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
         try {
             Field f = Config.class.getField(name);
             T t = type.cast(f.get(instance));
-            if (t != null) return t;
+            if (t != null) {
+                return t;
+            }
             return getDefault();
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -52,18 +54,23 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
 
         } else if (type == Integer.class) {
             IntRange a = f.getDeclaredAnnotation(IntRange.class);
-            if (a == null) return IntegerArgumentType.integer();
+            if (a == null) {
+                return IntegerArgumentType.integer();
+            }
             return IntegerArgumentType.integer(a.min(), a.max());
 
         } else if (type == OptionsConfig.class) {
             return ((OptionsConfig<?>) get()).argumentType();
 
-        } else throw new RuntimeException("This field does not support ArgumentTypes");
+        } else {
+            throw new RuntimeException("This field does not support ArgumentTypes");
+        }
     }
 
     public boolean inRange(int i) {
-        if (type != Integer.class)
+        if (type != Integer.class) {
             throw new RuntimeException("The field of type '" + type.getName() + "' does not support the inRange(int) method");
+        }
         Field f;
         try {
             f = Config.class.getField(name);
@@ -71,8 +78,11 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
             throw new RuntimeException(e);
         }
         IntRange a = f.getDeclaredAnnotation(IntRange.class);
-        if (a == null) return true;
-        else return a.min() <= i && i <= a.max();
+        if (a == null) {
+            return true;
+        } else {
+            return a.min() <= i && i <= a.max();
+        }
     }
 
     public boolean hasEffect() {
@@ -91,12 +101,16 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
             } else {
                 current = conf.get().toString();
             }
-            if (!Arrays.asList(oe.equals()).contains(current)) return false;
+            if (!Arrays.asList(oe.equals()).contains(current)) {
+                return false;
+            }
         }
 
         Compatibility c = f.getDeclaredAnnotation(Compatibility.class);
         //noinspection RedundantIfStatement
-        if (c != null && !Support.isExisting(c.value())) return false;
+        if (c != null && !Support.isExisting(c.value())) {
+            return false;
+        }
 
         // some more criteria later possibly...
 

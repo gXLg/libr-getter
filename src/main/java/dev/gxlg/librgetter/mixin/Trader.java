@@ -31,12 +31,16 @@ public class Trader {
     @Inject(at = @At("HEAD"), method = "onOpenScreen", cancellable = true, order = 900)
     public void onOpenScreen(OpenScreenS2CPacket packet, CallbackInfo callback) {
         if (packet.getScreenHandlerType() == ScreenHandlerType.MERCHANT && TaskManager.isWorking()) {
-            if (Support.isUsingTradeCycling()) return;
+            if (Support.isUsingTradeCycling()) {
+                return;
+            }
 
             callback.cancel();
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
-            if (handler == null) return;
+            if (handler == null) {
+                return;
+            }
             CloseHandledScreenC2SPacket packetClose = new CloseHandledScreenC2SPacket(packet.getSyncId());
             Minecraft.getConnection(handler).send(packetClose);
         }

@@ -7,11 +7,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@SuppressWarnings({"UnresolvedMixinReference", "MixinAnnotationTarget"})
+@SuppressWarnings({ "UnresolvedMixinReference", "MixinAnnotationTarget" })
 @Mixin(BookScreen.class)
 public class BookScreenMixin {
 
     // used only with RUN_COMMAND in 1.21.5 and before
+
     /// <%
     @Inject(at = @At("HEAD"), method = "$1", cancellable = true, require = 0, remap = false)
     private void close$2(CallbackInfo info) {

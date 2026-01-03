@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 
 public class ParsedEnchantmentTrade {
     private final boolean isError;
+
     private final Either<EnchantmentTrade, String[]> contents;
 
     private ParsedEnchantmentTrade(boolean isError, Either<EnchantmentTrade, String[]> contents) {
@@ -17,13 +18,17 @@ public class ParsedEnchantmentTrade {
 
     public EnchantmentTrade getTrade() {
         // TODO: centralized exceptions
-        if (isError) throw new IllegalStateException("Can't get the trade from an errored parse");
+        if (isError) {
+            throw new IllegalStateException("Can't get the trade from an errored parse");
+        }
         return contents.left().orElseThrow();
     }
 
     public String[] getError() {
         // TODO: centralized exceptions
-        if (!isError) throw new IllegalStateException("Can't get the error from a successfull parse");
+        if (!isError) {
+            throw new IllegalStateException("Can't get the error from a successfull parse");
+        }
         return contents.right().orElseThrow();
     }
 

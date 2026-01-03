@@ -8,7 +8,8 @@ import dev.gxlg.librgetter.worker.TaskManager;
 public class WaitVillagerLoseProfessionTask extends TaskManager.Task {
     @Override
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
-        if (!LibrGetter.config.waitLose || Minecraft.isVillagerUnemployed(taskContext.selectedVillager()))
+        if (!LibrGetter.config.waitLose || Minecraft.isVillagerUnemployed(taskContext.selectedVillager())) {
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new SelectAndPlaceLecternTask(), ctx));
+        }
     }
 }

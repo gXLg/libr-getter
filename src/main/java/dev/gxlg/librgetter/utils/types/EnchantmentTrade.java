@@ -9,8 +9,12 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("ClassCanBeRecord") // GSON can't handle records in earlier versions
 public class EnchantmentTrade {
 
+    public static final EnchantmentTrade EMPTY = new EnchantmentTrade("", -1, 0);
+
     private final String id;
+
     private final int lvl;
+
     private final int price;
 
     public EnchantmentTrade(String id, int lvl, int price) {
@@ -18,8 +22,6 @@ public class EnchantmentTrade {
         this.lvl = lvl;
         this.price = price;
     }
-
-    public static final EnchantmentTrade EMPTY = new EnchantmentTrade("", -1, 0);
 
     public boolean meets(EnchantmentTrade e) {
         return e.id.equals(id) && e.lvl == lvl && e.price <= price;
@@ -32,7 +34,9 @@ public class EnchantmentTrade {
     @Override
     public @NotNull String toString() {
         Identifier iid = Identifier.tryParse(id);
-        if (iid == null) return id + " " + lvl;
+        if (iid == null) {
+            return id + " " + lvl;
+        }
         Language lang = Language.getInstance();
         String full = "enchantment." + iid.getNamespace() + "." + iid.getPath();
         String name = (String) R.clz(Language.class).inst(lang).mthd(V.lower("1.19.4") ? "method_4679/get" : "method_48307/get", String.class).invk(full);

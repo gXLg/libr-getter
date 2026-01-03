@@ -27,29 +27,35 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) throw new InternalTaskException("player", this);
+        if (player == null) {
+            throw new InternalTaskException("player", this);
+        }
         ClientWorld world = Minecraft.getWorld(player);
 
-        if (!taskContext.selectedLectern().isWithinDistance(player.getBlockPos(), 3.4f))
+        if (!taskContext.selectedLectern().isWithinDistance(player.getBlockPos(), 3.4f)) {
             throw new TaskException("librgetter.far");
+        }
 
         if (world.getBlockState(taskContext.selectedLectern()).isOf(Blocks.LECTERN)) {
             // the lectern is placed down now
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(
-                    new RotationTask(
-                            player,
-                            EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(ctx.selectedVillager()),
-                            new WaitVillagerAcceptProfessionTask()
-                    ),
-                    ctx
+                new RotationTask(
+                    player,
+                    EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(ctx.selectedVillager()),
+                    new WaitVillagerAcceptProfessionTask()
+                ), ctx
             ));
         }
 
-        if (LibrGetter.config.manual) return;
+        if (LibrGetter.config.manual) {
+            return;
+        }
 
         // select
         PlayerInventory inventory = player.getInventory();
-        if (inventory == null) throw new InternalTaskException("inventory", this);
+        if (inventory == null) {
+            throw new InternalTaskException("inventory", this);
+        }
 
         int slot;
         boolean mainhand = true;
@@ -58,16 +64,24 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
         } else {
             slot = inventory.getSlotWithStack(Items.LECTERN.getDefaultStack());
         }
-        if (slot == -1) return;
+        if (slot == -1) {
+            return;
+        }
 
         ClientPlayerInteractionManager manager = client.interactionManager;
-        if (manager == null) throw new InternalTaskException("manager", this);
+        if (manager == null) {
+            throw new InternalTaskException("manager", this);
+        }
         ClientPlayNetworkHandler handler = client.getNetworkHandler();
-        if (handler == null) throw new InternalTaskException("handler", this);
+        if (handler == null) {
+            throw new InternalTaskException("handler", this);
+        }
 
         if (slot != PlayerInventory.OFF_HAND_SLOT) {
             if (LibrGetter.config.offhand) {
-                if (PlayerInventory.isValidHotbarIndex(slot)) slot += 36;
+                if (PlayerInventory.isValidHotbarIndex(slot)) {
+                    slot += 36;
+                }
                 manager.clickSlot(player.currentScreenHandler.syncId, slot, PlayerInventory.OFF_HAND_SLOT, SlotActionType.SWAP, player);
                 mainhand = false;
             } else {

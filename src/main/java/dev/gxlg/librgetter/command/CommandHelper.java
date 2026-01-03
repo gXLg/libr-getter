@@ -16,7 +16,9 @@ import java.util.List;
 public class CommandHelper {
     public static int manageGoals(CommandContext<?> context, boolean remove) {
         List<Either<Enchantment, String>> list = new ArrayList<>();
-        if (!Commands.getEnchantments(list, context)) return 1;
+        if (!Commands.getEnchantments(list, context)) {
+            return 1;
+        }
 
         int lvl = -1;
         try {
@@ -49,10 +51,10 @@ public class CommandHelper {
                 }
 
                 if (lvl == -1) {
-                  // default to the max level for each enchantment
-                  level = max;
+                    // default to the max level for each enchantment
+                    level = max;
                 } else {
-                  level = lvl;
+                    level = lvl;
                 }
 
                 if (enchantmentId == null) {
@@ -76,13 +78,13 @@ public class CommandHelper {
                 }
 
             } else {
-              continue;
+                continue;
             }
 
             if (remove) {
-              removeGoal(enchantmentId.toString(), level);
+                removeGoal(enchantmentId.toString(), level);
             } else {
-              addGoal(enchantmentId.toString(), level, price, custom);
+                addGoal(enchantmentId.toString(), level, price, custom);
             }
         }
 

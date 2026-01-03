@@ -42,7 +42,9 @@ public class Nbt {
     public static short getShort(Object element, String name) {
         if (!V.lower("1.21.5")) {
             Object s = ((Optional<?>) C.NbtCompound.inst(element).mthd("method_10568/getShort", String.class).invk(name)).orElse(null);
-            if (s == null) return 0;
+            if (s == null) {
+                return 0;
+            }
             return (short) s;
         } else {
             return (short) C.NbtCompound.inst(element).mthd("method_10568/getShort", String.class).invk(name);

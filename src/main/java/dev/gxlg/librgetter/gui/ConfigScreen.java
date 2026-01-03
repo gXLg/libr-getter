@@ -6,10 +6,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.BookScreen;
 
 public class ConfigScreen extends BookScreen {
-    private static int currentPage = 0;
-
-    private static final Contents CONTENT = ConfigMenu.getContent();
-
     public ConfigScreen() {
         super(CONTENT);
     }
@@ -29,14 +25,18 @@ public class ConfigScreen extends BookScreen {
 
     @Override
     protected void goToPreviousPage() {
-        if (currentPage > 0) currentPage--;
+        if (currentPage > 0) {
+            currentPage--;
+        }
         updateScreen();
         super.goToPreviousPage();
     }
 
     @Override
     protected void goToNextPage() {
-        if (currentPage < ConfigMenu.pageCount - 1) currentPage++;
+        if (currentPage < ConfigMenu.pageCount - 1) {
+            currentPage++;
+        }
         updateScreen();
         super.goToNextPage();
     }
@@ -45,6 +45,10 @@ public class ConfigScreen extends BookScreen {
         ConfigMenu.updatePage(currentPage);
         ((BookScreenAccessor) this).setCachedPageIndex(-1);
     }
+
+    private static final Contents CONTENT = ConfigMenu.getContent();
+
+    private static int currentPage = 0;
 
     public static boolean configChange() {
         if (MinecraftClient.getInstance().currentScreen instanceof ConfigScreen cs) {

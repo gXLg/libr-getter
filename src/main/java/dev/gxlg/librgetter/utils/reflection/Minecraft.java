@@ -36,7 +36,11 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class Minecraft {
@@ -59,14 +63,17 @@ public class Minecraft {
         if (!V.lower("1.19")) {
             R.clz(ClientPlayerInteractionManager.class).inst(manager).mthd("method_2896/interactBlock", ClientPlayerEntity.class, Hand.class, BlockHitResult.class).invk(player, hand, lowBlock);
         } else {
-            R.clz(ClientPlayerInteractionManager.class).inst(manager).mthd("method_2896/interactBlock", ClientPlayerEntity.class, ClientWorld.class, Hand.class, BlockHitResult.class).invk(player, getWorld(player), hand, lowBlock);
+            R.clz(ClientPlayerInteractionManager.class).inst(manager).mthd("method_2896/interactBlock", ClientPlayerEntity.class, ClientWorld.class, Hand.class, BlockHitResult.class)
+             .invk(player, getWorld(player), hand, lowBlock);
         }
     }
 
     public static Identifier enchantmentId(Enchantment enchantment) {
         if (!V.lower("1.21")) {
             ClientWorld w = MinecraftClient.getInstance().world;
-            if (w == null) return null;
+            if (w == null) {
+                return null;
+            }
             Object rm = w.getRegistryManager();
 
             Object r = C.DynamicRegistryManager.inst(rm).mthd("method_30530/get/getOrThrow", C.RegistryKey).invk(C.RegistryKeys.fld("field_41265/ENCHANTMENT").get());
@@ -97,7 +104,9 @@ public class Minecraft {
 
         } else {
             tag = R.clz(ItemStack.class).inst(stack).mthd("method_7969/getNbt/getTag").invk();
-            if (tag == null) return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
+            if (tag == null) {
+                return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
+            }
         }
 
         String id = null;
@@ -106,7 +115,9 @@ public class Minecraft {
         // Parse plugins
         Triple<String, Integer, String[]> parsed = Plugins.parse(tag);
         if (parsed != null) {
-            if (parsed.getRight() != null) return ParsedEnchantmentTrade.error(parsed.getRight());
+            if (parsed.getRight() != null) {
+                return ParsedEnchantmentTrade.error(parsed.getRight());
+            }
             id = parsed.getLeft();
             lvl = parsed.getMiddle();
 
@@ -125,8 +136,12 @@ public class Minecraft {
                 boolean tryNext = false;
                 if (ecom != null) {
                     s = (Set<?>) ic.inst(ecom).mthd("method_57539/getEnchantmentsMap/getEnchantmentEntries").invk();
-                    if (s.isEmpty()) tryNext = true;
-                } else tryNext = true;
+                    if (s.isEmpty()) {
+                        tryNext = true;
+                    }
+                } else {
+                    tryNext = true;
+                }
 
                 // Vanilla
                 if (tryNext) {
@@ -136,8 +151,12 @@ public class Minecraft {
                     tryNext = false;
                     if (ecom != null) {
                         s = (Set<?>) ic.inst(ecom).mthd("method_57539/getEnchantmentsMap/getEnchantmentEntries").invk();
-                        if (s.isEmpty()) tryNext = true;
-                    } else tryNext = true;
+                        if (s.isEmpty()) {
+                            tryNext = true;
+                        }
+                    } else {
+                        tryNext = true;
+                    }
                 }
 
                 // Insert more methods to find an enchantment here
@@ -173,7 +192,9 @@ public class Minecraft {
         if (id == null) {
             // Nothing was found, so try fallback or return empty
             Pair<String, Integer> fb = fallback(tag);
-            if (fb == null) return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
+            if (fb == null) {
+                return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
+            }
 
             id = fb.getLeft();
             lvl = fb.getRight();
@@ -181,8 +202,12 @@ public class Minecraft {
 
         ItemStack f = getFirstBuyItem(trades.get(trade));
         ItemStack s = getSecondBuyItem(trades.get(trade));
-        if (f.getItem() != Items.EMERALD) f = null;
-        if (s.getItem() == Items.EMERALD) f = s;
+        if (f.getItem() != Items.EMERALD) {
+            f = null;
+        }
+        if (s.getItem() == Items.EMERALD) {
+            f = s;
+        }
 
         if (f == null) {
             return ParsedEnchantmentTrade.error("librgetter.internal", "f", "Minecraft#parseTrade");
@@ -192,19 +217,25 @@ public class Minecraft {
     }
 
     public static Pair<String, Integer> fallback(Object tag) {
-        if (!LibrGetter.config.fallback) return null;
+        if (!LibrGetter.config.fallback) {
+            return null;
+        }
 
         String string = tag.toString();
         Map<String, Set<Integer>> searching = new HashMap<>();
         for (EnchantmentTrade search : LibrGetter.config.goals) {
-            if (!searching.containsKey(search.id())) searching.put(search.id(), new HashSet<>());
+            if (!searching.containsKey(search.id())) {
+                searching.put(search.id(), new HashSet<>());
+            }
             searching.get(search.id()).add(search.lvl());
         }
 
         Map<String, Integer> found = new HashMap<>();
         for (String id : searching.keySet()) {
             int i = string.indexOf("\"" + id + "\"");
-            if (i != -1) found.put(id, i);
+            if (i != -1) {
+                found.put(id, i);
+            }
         }
 
         String cid = null;
@@ -215,8 +246,12 @@ public class Minecraft {
             int i = found.get(id) + id.length();
             for (int lvl : searching.get(id)) {
                 int j = string.indexOf(":\"" + lvl + "\"", i);
-                if (j == -1) j = string.indexOf(":" + lvl, i);
-                if (j == -1) continue;
+                if (j == -1) {
+                    j = string.indexOf(":" + lvl, i);
+                }
+                if (j == -1) {
+                    continue;
+                }
 
                 if (j < distance) {
                     distance = j;
@@ -225,7 +260,9 @@ public class Minecraft {
                 }
             }
         }
-        if (cid == null) return null;
+        if (cid == null) {
+            return null;
+        }
         return new Pair<>(cid, clvl);
     }
 
@@ -236,7 +273,9 @@ public class Minecraft {
     public static ItemStack getSecondBuyItem(TradeOffer offer) {
         if (!V.lower("1.20.5")) {
             Optional<?> optional = (Optional<?>) R.clz(TradeOffer.class).inst(offer).mthd("method_57557/getSecondBuyItem").invk();
-            if (optional.isEmpty()) return ItemStack.EMPTY;
+            if (optional.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
             Object item = optional.get();
             return (ItemStack) R.clz("net.minecraft.class_9306/net.minecraft.village.TradedItem").inst(item).mthd("comp_2427/itemStack").invk();
         } else {
@@ -269,19 +308,26 @@ public class Minecraft {
     public static boolean canBeTraded(Enchantment enchantment) {
         if (!V.lower("1.21")) {
             ClientWorld w = MinecraftClient.getInstance().world;
-            if (w == null) return false;
+            if (w == null) {
+                return false;
+            }
             Object rm = w.getRegistryManager();
             Object r = C.DynamicRegistryManager.inst(rm).mthd("method_30530/get/getOrThrow", C.RegistryKey).invk(C.RegistryKeys.fld("field_41265/ENCHANTMENT").get());
             Object e = C.Registry.inst(r).mthd("method_47983/getEntry", Object.class).invk(enchantment);
-            return (boolean) C.RegistryEntry.inst(e).mthd("method_40220/isIn", R.clz("net.minecraft.class_6862/net.minecraft.registry.tag.TagKey")).invk(R.clz("net.minecraft.class_9636/net.minecraft.registry.tag.EnchantmentTags").fld("field_51545/TRADEABLE").get());
+            return (boolean) C.RegistryEntry.inst(e).mthd("method_40220/isIn", R.clz("net.minecraft.class_6862/net.minecraft.registry.tag.TagKey"))
+                                            .invk(R.clz("net.minecraft.class_9636/net.minecraft.registry.tag.EnchantmentTags").fld("field_51545/TRADEABLE").get());
         } else {
             return (boolean) R.clz(Enchantment.class).inst(enchantment).mthd("method_25949/isAvailableForEnchantedBookOffer").invk();
         }
     }
 
     public static void playNotification(ClientWorld world, ClientPlayerEntity player) {
-        if (!LibrGetter.config.notify) return;
-        R.clz(World.class).inst(world).mthd("method_8486/playSound/playSoundClient", double.class, double.class, double.class, SoundEvent.class, SoundCategory.class, float.class, float.class, boolean.class).invk(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.NEUTRAL, 10F, 0.7F, false);
+        if (!LibrGetter.config.notify) {
+            return;
+        }
+        R.clz(World.class).inst(world)
+         .mthd("method_8486/playSound/playSoundClient", double.class, double.class, double.class, SoundEvent.class, SoundCategory.class, float.class, float.class, boolean.class)
+         .invk(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.NEUTRAL, 10F, 0.7F, false);
     }
 
     public static void setActionResultFail(CallbackInfoReturnable<ActionResult> info) {
