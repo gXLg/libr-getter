@@ -46,9 +46,9 @@ jobs:
         uses: actions/cache@v5
         with:
           path: .idea-cache
-          key: idea-cache-2025.2.6
+          key: idea-cache-2025.3.0
 
       - name: Format with IntelliJ IDEA
-        uses: gXLg/intellij-idea-format@b6c3c9a56aa651611be063d2a6100a15bb37d376
+        uses: gXLg/intellij-idea-format@132609d8e408695a2094f1b8dbd5b7d4354baacc
         with:
-          idea-url: "https://download.jetbrains.com/idea/ideaIC-2025.2.6.tar.gz"
+          idea-url: "https://download.jetbrains.com/idea/idea-2025.3.tar.gz"
