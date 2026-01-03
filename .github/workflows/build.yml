@@ -2,7 +2,7 @@ name: Check Styling and Build
 
 on:
   push:
-    branches: ["**"]
+    branches: [ "**" ]
     paths:
       - "src/**"
       - "gradle.properties"
@@ -10,7 +10,7 @@ on:
       - "MultiVersion"
       - ".gitmodules"
       - ".github/workflows/build.yml"
-    tags-ignore: ["**"]
+    tags-ignore: [ "**" ]
 
 jobs:
   check-and-build:
@@ -40,10 +40,12 @@ jobs:
         uses: actions/cache@v5
         with:
           path: /github/workflow/idea-cache
-          key: idea-cache
+          key: idea-cache-2025-3
 
       - name: Format with IntelliJ IDEA
-        uses: gXLg/intellij-idea-format@0df08676ddafbae939f7d675a5e3b02e6c343a29
+        uses: gXLg/intellij-idea-format@96458048f9dcc080f90a30d5f6b64906659ab258
+        with:
+          idea-url: "https://download.jetbrains.com/idea/idea-2025.3.tar.gz"
 
       - name: Mark executable
         run: chmod +x ./gradlew
