@@ -19,7 +19,7 @@ public class BreakLecternTask extends TaskManager.Task {
             throw new InternalTaskException("world", this);
         }
 
-        BlockState targetBlock = world.getBlockState(taskContext.selectedLectern());
+        BlockState targetBlock = world.getBlockState(taskContext.selectedLecternPos());
         if (targetBlock.isAir()) {
             // lectern is broken now
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitVillagerLoseProfessionTask(), ctx.withIncreasedAttemptsCounter()));
@@ -33,7 +33,7 @@ public class BreakLecternTask extends TaskManager.Task {
         if (manager == null) {
             throw new InternalTaskException("manager", this);
         }
-        manager.updateBlockBreakingProgress(taskContext.selectedLectern(), Direction.UP);
+        manager.updateBlockBreakingProgress(taskContext.selectedLecternPos(), Direction.UP);
     }
 
     @Override

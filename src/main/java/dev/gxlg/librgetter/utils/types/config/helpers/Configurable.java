@@ -16,10 +16,10 @@ import java.util.Arrays;
 public record Configurable<T>(String name, Class<T> type, Config instance) {
     public T get() {
         try {
-            Field f = Config.class.getField(name);
-            T t = type.cast(f.get(instance));
-            if (t != null) {
-                return t;
+            Field configurableField = Config.class.getField(name);
+            T configurableType = type.cast(configurableField.get(instance));
+            if (configurableType != null) {
+                return configurableType;
             }
             return getDefault();
 
@@ -30,8 +30,8 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
 
     public void set(T value) {
         try {
-            Field f = Config.class.getField(name);
-            f.set(instance, value);
+            Field configurableField = Config.class.getField(name);
+            configurableField.set(instance, value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -41,10 +41,10 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
         return type.cast(Config.DEFAULT.getConfigurableForName(name).get());
     }
 
-    public ArgumentType<?> argument() {
-        Field f;
+    public ArgumentType<?> commandArgument() {
+        Field configurableField;
         try {
-            f = Config.class.getField(name);
+            configurableField = Config.class.getField(name);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -53,11 +53,11 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
             return BoolArgumentType.bool();
 
         } else if (type == Integer.class) {
-            IntRange a = f.getDeclaredAnnotation(IntRange.class);
-            if (a == null) {
+            IntRange rangeAnnotation = configurableField.getDeclaredAnnotation(IntRange.class);
+            if (rangeAnnotation == null) {
                 return IntegerArgumentType.integer();
             }
-            return IntegerArgumentType.integer(a.min(), a.max());
+            return IntegerArgumentType.integer(rangeAnnotation.min(), rangeAnnotation.max());
 
         } else if (type == OptionsConfig.class) {
             return ((OptionsConfig<?>) get()).argumentType();
@@ -67,48 +67,48 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
         }
     }
 
-    public boolean inRange(int i) {
+    public boolean inRange(int value) {
         if (type != Integer.class) {
             throw new RuntimeException("The field of type '" + type.getName() + "' does not support the inRange(int) method");
         }
-        Field f;
+        Field configurableField;
         try {
-            f = Config.class.getField(name);
+            configurableField = Config.class.getField(name);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
-        IntRange a = f.getDeclaredAnnotation(IntRange.class);
-        if (a == null) {
+        IntRange rangeAnnotation = configurableField.getDeclaredAnnotation(IntRange.class);
+        if (rangeAnnotation == null) {
             return true;
         } else {
-            return a.min() <= i && i <= a.max();
+            return rangeAnnotation.min() <= value && value <= rangeAnnotation.max();
         }
     }
 
     public boolean hasEffect() {
-        Field f;
+        Field configurableField;
         try {
-            f = Config.class.getField(name);
+            configurableField = Config.class.getField(name);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
 
-        for (OnlyEffective oe : f.getAnnotationsByType(OnlyEffective.class)) {
-            Configurable<?> conf = instance.getConfigurableForName(oe.when());
+        for (OnlyEffective onlyEffectiveCondition : configurableField.getAnnotationsByType(OnlyEffective.class)) {
+            Configurable<?> configurable = instance.getConfigurableForName(onlyEffectiveCondition.when());
             String current;
-            if (conf.type() == OptionsConfig.class) {
-                current = ((OptionsConfig<?>) conf.get()).asString();
+            if (configurable.type() == OptionsConfig.class) {
+                current = ((OptionsConfig<?>) configurable.get()).asString();
             } else {
-                current = conf.get().toString();
+                current = configurable.get().toString();
             }
-            if (!Arrays.asList(oe.equals()).contains(current)) {
+            if (!Arrays.asList(onlyEffectiveCondition.equals()).contains(current)) {
                 return false;
             }
         }
 
-        Compatibility c = f.getDeclaredAnnotation(Compatibility.class);
+        Compatibility modCompatibilityCondition = configurableField.getDeclaredAnnotation(Compatibility.class);
         //noinspection RedundantIfStatement
-        if (c != null && !Support.isExisting(c.value())) {
+        if (modCompatibilityCondition != null && !Support.isModPresent(modCompatibilityCondition.value())) {
             return false;
         }
 

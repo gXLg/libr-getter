@@ -70,7 +70,7 @@ public abstract class Manager {
             return;
         }
 
-        if (!pos.equals(TaskManager.getTaskContext().selectedLectern())) {
+        if (!pos.equals(TaskManager.getTaskContext().selectedLecternPos())) {
             return;
         }
         if (!TaskManager.getCurrentTask().allowsPlacing()) {

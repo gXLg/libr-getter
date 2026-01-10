@@ -32,11 +32,11 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
         }
         ClientWorld world = Minecraft.getWorld(player);
 
-        if (!taskContext.selectedLectern().isWithinDistance(player.getBlockPos(), 3.4f)) {
+        if (!taskContext.selectedLecternPos().isWithinDistance(player.getBlockPos(), 3.4f)) {
             throw new TaskException("librgetter.far");
         }
 
-        if (world.getBlockState(taskContext.selectedLectern()).isOf(Blocks.LECTERN)) {
+        if (world.getBlockState(taskContext.selectedLecternPos()).isOf(Blocks.LECTERN)) {
             // the lectern is placed down now
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(
                 new RotationTask(
@@ -100,8 +100,8 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
         }
 
         // place
-        Vec3d lowBlockPos = taskContext.selectedLectern().toBottomCenterPos();
-        BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, taskContext.selectedLectern().down(), false);
+        Vec3d lowBlockPos = taskContext.selectedLecternPos().toBottomCenterPos();
+        BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, taskContext.selectedLecternPos().down(), false);
         Minecraft.interactBlock(manager, player, lowBlock, mainhand);
     }
 

@@ -29,7 +29,7 @@ public class Support {
         return tradeCycling && LibrGetter.config.tradeCycling;
     }
 
-    public static boolean isExisting(String modID) {
+    public static boolean isModPresent(String modID) {
         return instance.getModContainer(modID).isPresent();
     }
 }

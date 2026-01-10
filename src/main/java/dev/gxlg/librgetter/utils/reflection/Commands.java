@@ -75,9 +75,9 @@ public class Commands {
 
     public static void registerCommands() {
         if (!V.lower("1.19")) {
-            R.RClass cb = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
+            R.RClass registrationCallback = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
             Object listener = Proxy.newProxyInstance(
-                Thread.currentThread().getContextClassLoader(), new Class[]{ cb.self() }, (proxy, method, args) -> {
+                Thread.currentThread().getContextClassLoader(), new Class[]{ registrationCallback.self() }, (proxy, method, args) -> {
                     if (method.getName().equals("register")) {
                         Object registryAccess = args[1];
                         registerCommand((CommandDispatcher<?>) args[0], registryAccess);
@@ -86,10 +86,10 @@ public class Commands {
                     return method.invoke(proxy, args);
                 }
             );
-            R.clz("net.fabricmc.fabric.api.event.Event").inst(cb.fld("EVENT").get()).mthd("register", Object.class).invk(listener);
+            R.clz("net.fabricmc.fabric.api.event.Event").inst(registrationCallback.fld("EVENT").get()).mthd("register", Object.class).invk(listener);
         } else {
-            R.RClass ccm = R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
-            registerCommand((CommandDispatcher<?>) ccm.fld("DISPATCHER").get(), null);
+            R.RClass clientCommandManager = R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
+            registerCommand((CommandDispatcher<?>) clientCommandManager.fld("DISPATCHER").get(), null);
         }
     }
 
@@ -165,7 +165,7 @@ public class Commands {
                 Object configRunner = runner(LibrGetCommand::config, configurable);
 
                 Object configArgument = executes(literal(name), configRunner);
-                Object valueArgument = executes(argument("value", configurable.argument()), configRunner);
+                Object valueArgument = executes(argument("value", configurable.commandArgument()), configRunner);
 
                 subCommand = then(subCommand, then(configArgument, valueArgument));
             }

@@ -128,32 +128,32 @@ public class TaskManager {
     }
 
     public record TaskContext(
-        BlockPos selectedLectern, ItemStack defaultItem, VillagerEntity selectedVillager, int attemptsCounter, TradeOfferData tradeOfferData
+        BlockPos selectedLecternPos, ItemStack defaultItem, VillagerEntity selectedVillager, int attemptsCounter, TradeOfferData tradeOfferData
     ) {
         public static final TaskContext EMPTY = new TaskContext(null, null, null, 0, null);
 
-        public TaskContext withLectern(BlockPos pos) {
+        public TaskContext withLecternPos(BlockPos pos) {
             return new TaskContext(pos, defaultItem, selectedVillager, attemptsCounter, tradeOfferData);
         }
 
         public TaskContext withDefaultItem(ItemStack item) {
-            return new TaskContext(selectedLectern, item, selectedVillager, attemptsCounter, tradeOfferData);
+            return new TaskContext(selectedLecternPos, item, selectedVillager, attemptsCounter, tradeOfferData);
         }
 
         public TaskContext withVillager(VillagerEntity villager) {
-            return new TaskContext(selectedLectern, defaultItem, villager, attemptsCounter, tradeOfferData);
+            return new TaskContext(selectedLecternPos, defaultItem, villager, attemptsCounter, tradeOfferData);
         }
 
         public TaskContext withIncreasedAttemptsCounter() {
-            return new TaskContext(selectedLectern, defaultItem, selectedVillager, attemptsCounter + 1, tradeOfferData);
+            return new TaskContext(selectedLecternPos, defaultItem, selectedVillager, attemptsCounter + 1, tradeOfferData);
         }
 
         public TaskContext withResetAttemptsCounter() {
-            return new TaskContext(selectedLectern, defaultItem, selectedVillager, 0, tradeOfferData);
+            return new TaskContext(selectedLecternPos, defaultItem, selectedVillager, 0, tradeOfferData);
         }
 
         public TaskContext withTradeOfferData(TradeOfferData data) {
-            return new TaskContext(selectedLectern, defaultItem, selectedVillager, attemptsCounter, data);
+            return new TaskContext(selectedLecternPos, defaultItem, selectedVillager, attemptsCounter, data);
         }
     }
 

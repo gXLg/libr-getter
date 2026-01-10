@@ -35,19 +35,19 @@ public class SelectAxeTask extends TaskManager.Task {
 
         int slot = -1;
         if (LibrGetter.config.autoTool) {
-            float max = -1;
+            float maxBreakingSpeed = -1;
             for (int i = 0; i < PlayerInventory.MAIN_SIZE; i++) {
                 ItemStack stack = inventory.getStack(i);
                 if (stack.isDamageable() && stack.getMaxDamage() - stack.getDamage() < 10) {
                     continue;
                 }
-                float f = stack.getMiningSpeedMultiplier(Blocks.LECTERN.getDefaultState());
-                int ef = Minecraft.getEfficiencyLevel(stack);
+                float breakingSpeed = stack.getMiningSpeedMultiplier(Blocks.LECTERN.getDefaultState());
+                int efficiencyLevel = Minecraft.getEfficiencyLevel(stack);
                 if (stack.getItem() instanceof AxeItem) {
-                    f += (float) (ef * ef + 1);
+                    breakingSpeed += (float) (efficiencyLevel * efficiencyLevel + 1);
                 }
-                if (f > max) {
-                    max = f;
+                if (breakingSpeed > maxBreakingSpeed) {
+                    maxBreakingSpeed = breakingSpeed;
                     slot = i;
                 }
             }
@@ -84,6 +84,6 @@ public class SelectAxeTask extends TaskManager.Task {
             Minecraft.getConnection(handler).send(packetSelect);
         }
 
-        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RotationTask(player, ctx.selectedLectern().toCenterPos(), new BreakLecternTask()), ctx));
+        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RotationTask(player, ctx.selectedLecternPos().toCenterPos(), new BreakLecternTask()), ctx));
     }
 }

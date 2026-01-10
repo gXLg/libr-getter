@@ -70,59 +70,59 @@ public class LibrGetCommand {
             return 1;
         }
 
-        BlockPos lec = null;
-        for (int dis = 1; dis < 5; dis++) {
-            for (int dx = -dis; dx <= dis; dx++) {
-                for (int dy = -dis; dy <= dis; dy++) {
-                    for (int dz = -dis; dz <= dis; dz++) {
-                        if (dis != Math.abs(dx) && dis != Math.abs(dy) && dis != Math.abs(dz)) {
+        BlockPos foundLecternPos = null;
+        for (int distance = 1; distance < 5; distance++) {
+            for (int deltaX = -distance; deltaX <= distance; deltaX++) {
+                for (int deltaY = -distance; deltaY <= distance; deltaY++) {
+                    for (int deltaZ = -distance; deltaZ <= distance; deltaZ++) {
+                        if (distance != Math.abs(deltaX) && distance != Math.abs(deltaY) && distance != Math.abs(deltaZ)) {
                             continue;
                         }
 
-                        BlockPos pos = player.getBlockPos().add(dx, dy, dz);
+                        BlockPos pos = player.getBlockPos().add(deltaX, deltaY, deltaZ);
                         if (world.getBlockState(pos).isOf(Blocks.LECTERN)) {
-                            lec = pos;
+                            foundLecternPos = pos;
                             break;
                         }
                     }
-                    if (lec != null) {
+                    if (foundLecternPos != null) {
                         break;
                     }
                 }
-                if (lec != null) {
+                if (foundLecternPos != null) {
                     break;
                 }
             }
-            if (lec != null) {
+            if (foundLecternPos != null) {
                 break;
             }
         }
-        if (lec == null) {
+        if (foundLecternPos == null) {
             Texts.getImpl().sendTranslatableError("librgetter.find_lectern");
             return 1;
         }
-        Iterable<Entity> all = world.getEntities();
-        VillagerEntity vi = null;
-        float d = Float.MAX_VALUE;
-        for (Entity e : all) {
-            if (e instanceof VillagerEntity v) {
-                if (Minecraft.isVillagerLibrarian(v)) {
-                    float dd = v.distanceTo(player);
-                    if (dd < d && dd < 10) {
-                        vi = v;
-                        d = dd;
+        Iterable<Entity> worldEntities = world.getEntities();
+        VillagerEntity foundVillager = null;
+        float minDistance = Float.MAX_VALUE;
+        for (Entity entity : worldEntities) {
+            if (entity instanceof VillagerEntity villager) {
+                if (Minecraft.isVillagerLibrarian(villager)) {
+                    float distance = villager.distanceTo(player);
+                    if (distance < minDistance && distance < 10) {
+                        foundVillager = villager;
+                        minDistance = distance;
                     }
                 }
             }
         }
-        if (vi == null) {
+        if (foundVillager == null) {
             Texts.getImpl().sendTranslatableError("librgetter.find_librarian");
             return 1;
         }
 
-        BlockPos finalLec = lec;
-        VillagerEntity finalVi = vi;
-        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(true), ctx.withLectern(finalLec).withVillager(finalVi)));
+        BlockPos finalLecTernPos = foundLecternPos;
+        VillagerEntity finalVi = foundVillager;
+        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(true), ctx.withLecternPos(finalLecTernPos).withVillager(finalVi)));
 
         return 0;
     }
@@ -192,7 +192,7 @@ public class LibrGetCommand {
                 return 1;
             }
 
-            TaskManager.updateContext(ctx -> ctx.withLectern(blockPos));
+            TaskManager.updateContext(ctx -> ctx.withLecternPos(blockPos));
             Texts.getImpl().sendTranslatableFeedback("librgetter.lectern");
 
         } else if (hitType == HitResult.Type.ENTITY) {

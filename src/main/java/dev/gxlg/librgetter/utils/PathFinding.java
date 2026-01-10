@@ -37,8 +37,11 @@ public class PathFinding {
             return false;
         }
         // Beneath is air and beneath goal is also air
-        return !((AbstractBlockAccessor) world.getBlockState(pos.down()).getBlock()).getCollidable() &&
-               !((AbstractBlockAccessor) world.getBlockState(pos.offset(dir).down()).getBlock()).getCollidable();
+
+        net.minecraft.block.Block blockBelow = world.getBlockState(pos.down()).getBlock();
+        net.minecraft.block.Block blockBelowGoal = world.getBlockState(pos.offset(dir).down()).getBlock();
+
+        return !((AbstractBlockAccessor) blockBelow).getCollidable() && !((AbstractBlockAccessor) blockBelowGoal).getCollidable();
     }
 
     public static List<BlockPos> findPath(BlockPos from, BlockPos to, ClientWorld world, int minHeight) {

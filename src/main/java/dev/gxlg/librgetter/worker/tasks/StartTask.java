@@ -24,7 +24,7 @@ public class StartTask extends TaskManager.Task {
 
     @Override
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
-        if (taskContext.selectedLectern() == null) {
+        if (taskContext.selectedLecternPos() == null) {
             throw new TaskException("librgetter.no_lectern");
         }
         if (taskContext.selectedVillager() == null) {
@@ -47,7 +47,7 @@ public class StartTask extends TaskManager.Task {
             }
             // If the villager is sitting, assume it cannot move
             if (!taskContext.selectedVillager().hasVehicle()) {
-                List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().getBlockPos(), taskContext.selectedLectern(), world, 2);
+                List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().getBlockPos(), taskContext.selectedLecternPos(), world, 2);
                 if (path != null) {
                     throw new TaskException("librgetter.unsafe");
                 }
