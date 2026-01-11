@@ -14,9 +14,8 @@ import java.util.Optional;
 public class LibrGetter implements ClientModInitializer {
 
     public static final String MOD_ID = "librgetter";
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    public static Config config;
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     @Override
     public void onInitializeClient() {
@@ -34,6 +33,9 @@ public class LibrGetter implements ClientModInitializer {
         // checking for a new update
         Updater.checkUpdates();
     }
+
+    // TODO: make config instance-based
+    public static Config config;
 
     public static String getVersion() {
         Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(MOD_ID);

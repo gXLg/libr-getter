@@ -14,17 +14,27 @@ import net.minecraft.util.Hand;
 public class RequestTradesTask extends TaskManager.Task {
     @Override
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
-        if (LibrGetter.config.manual) throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
+        if (LibrGetter.config.manual) {
+            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
+        }
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) throw new InternalTaskException("player", this);
+        if (player == null) {
+            throw new InternalTaskException("player", this);
+        }
         ClientPlayNetworkHandler handler = client.getNetworkHandler();
-        if (handler == null) throw new InternalTaskException("handler", this);
+        if (handler == null) {
+            throw new InternalTaskException("handler", this);
+        }
         ClientPlayerInteractionManager manager = client.interactionManager;
-        if (manager == null) throw new InternalTaskException("manager", this);
+        if (manager == null) {
+            throw new InternalTaskException("manager", this);
+        }
 
-        if (taskContext.selectedVillager().distanceTo(player) > 3.4f) throw new TaskException("librgetter.far");
+        if (taskContext.selectedVillager().distanceTo(player) > 3.4f) {
+            throw new TaskException("librgetter.far");
+        }
 
         manager.interactEntity(player, taskContext.selectedVillager(), Hand.MAIN_HAND);
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));

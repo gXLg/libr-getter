@@ -16,13 +16,20 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 public class TaskManager {
+    private static final BlockingQueue<Function<TaskContext, TaskContext>> contextUpdates = new LinkedBlockingQueue<>();
+
+    private static final AtomicReference<Function<TaskContext, TaskSwitch>> taskSwitcherReference = new AtomicReference<>(null);
+
     @NotNull
     private static Task currentTask = new StandbyTask();
+
     @NotNull
     private static TaskContext taskContext = TaskContext.EMPTY;
 
-    private static final BlockingQueue<Function<TaskContext, TaskContext>> contextUpdates = new LinkedBlockingQueue<>();
-    private static final AtomicReference<Function<TaskContext, TaskSwitch>> taskSwitcherReference = new AtomicReference<>(null);
+    static {
+        ClientPlayConnectionEvents.JOIN.register((h, s, c) -> switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), TaskContext.EMPTY)));
+        ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), TaskContext.EMPTY)));
+    }
 
     public static void updateContext(Function<TaskContext, TaskContext> updater) {
         try {
@@ -55,7 +62,9 @@ public class TaskManager {
                 throw new RuntimeException(e);
             }
         }
-        if (taskSwitcher == null) return false;
+        if (taskSwitcher == null) {
+            return false;
+        }
         TaskSwitch taskSwitch = taskSwitcher.apply(taskContext);
 
         currentTask = taskSwitch.getNextTask();
@@ -86,7 +95,9 @@ public class TaskManager {
 
     public static class TaskSwitch {
         private final Task nextTask;
+
         private final TaskContext newContext;
+
         private final boolean nextTick;
 
         private TaskSwitch(Task nextTask, TaskContext newContext, boolean nextTick) {
@@ -116,32 +127,33 @@ public class TaskManager {
         }
     }
 
-    public record TaskContext(BlockPos selectedLectern, ItemStack defaultItem,
-                              VillagerEntity selectedVillager, int attemptsCounter, TradeOfferData tradeOfferData) {
+    public record TaskContext(
+        BlockPos selectedLecternPos, ItemStack defaultItem, VillagerEntity selectedVillager, int attemptsCounter, TradeOfferData tradeOfferData
+    ) {
         public static final TaskContext EMPTY = new TaskContext(null, null, null, 0, null);
 
-        public TaskContext withLectern(BlockPos pos) {
+        public TaskContext withLecternPos(BlockPos pos) {
             return new TaskContext(pos, defaultItem, selectedVillager, attemptsCounter, tradeOfferData);
         }
 
         public TaskContext withDefaultItem(ItemStack item) {
-            return new TaskContext(selectedLectern, item, selectedVillager, attemptsCounter, tradeOfferData);
+            return new TaskContext(selectedLecternPos, item, selectedVillager, attemptsCounter, tradeOfferData);
         }
 
         public TaskContext withVillager(VillagerEntity villager) {
-            return new TaskContext(selectedLectern, defaultItem, villager, attemptsCounter, tradeOfferData);
+            return new TaskContext(selectedLecternPos, defaultItem, villager, attemptsCounter, tradeOfferData);
         }
 
         public TaskContext withIncreasedAttemptsCounter() {
-            return new TaskContext(selectedLectern, defaultItem, selectedVillager, attemptsCounter + 1, tradeOfferData);
+            return new TaskContext(selectedLecternPos, defaultItem, selectedVillager, attemptsCounter + 1, tradeOfferData);
         }
 
         public TaskContext withResetAttemptsCounter() {
-            return new TaskContext(selectedLectern, defaultItem, selectedVillager, 0, tradeOfferData);
+            return new TaskContext(selectedLecternPos, defaultItem, selectedVillager, 0, tradeOfferData);
         }
 
         public TaskContext withTradeOfferData(TradeOfferData data) {
-            return new TaskContext(selectedLectern, defaultItem, selectedVillager, attemptsCounter, data);
+            return new TaskContext(selectedLecternPos, defaultItem, selectedVillager, attemptsCounter, data);
         }
     }
 
@@ -159,14 +171,5 @@ public class TaskManager {
         public boolean allowsPlacing() {
             return false;
         }
-    }
-
-    static {
-        ClientPlayConnectionEvents.JOIN.register((h, s, c) ->
-                switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), TaskContext.EMPTY))
-        );
-        ClientPlayConnectionEvents.DISCONNECT.register((h, c) ->
-                switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), TaskContext.EMPTY))
-        );
     }
 }

@@ -24,7 +24,9 @@ public class Texts_1_17_0 extends Texts {
     public void sendMessage(Object text, boolean actionbar) {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
         R.clz(ClientPlayerEntity.class).inst(player).mthd("method_7353/sendMessage", C.Text, boolean.class).invk(text, actionbar);
     }
 
@@ -72,7 +74,9 @@ public class Texts_1_17_0 extends Texts {
     }
 
     public void sendTradeLog(List<EnchantmentTrade> offeredEnchantments) {
-        if (LibrGetter.config.logMode == LogMode.NONE) return;
+        if (LibrGetter.config.logMode == LogMode.NONE) {
+            return;
+        }
         boolean ab = LibrGetter.config.logMode == LogMode.ACTIONBAR;
         Object text = translatable("librgetter.offer", offeredEnchantments);
         sendMessage(text, ab);
@@ -166,9 +170,11 @@ public class Texts_1_17_0 extends Texts {
 
         } else if (configurable.type() == Integer.class) {
             int value = (int) configurable.get();
-            Style mStyle = configurable.inRange(value - 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value - 1))).withColor(red) : Style.EMPTY.withColor(Formatting.GRAY);
+            Style mStyle =
+                configurable.inRange(value - 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value - 1))).withColor(red) : Style.EMPTY.withColor(Formatting.GRAY);
             Style nStyle = Style.EMPTY.withColor(black);
-            Style pStyle = configurable.inRange(value + 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value + 1))).withColor(green) : Style.EMPTY.withColor(Formatting.GRAY);
+            Style pStyle =
+                configurable.inRange(value + 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value + 1))).withColor(green) : Style.EMPTY.withColor(Formatting.GRAY);
 
             r = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + configurable.getDefault().toString()));
             x = applyStyle(Text.of("[-]"), mStyle);

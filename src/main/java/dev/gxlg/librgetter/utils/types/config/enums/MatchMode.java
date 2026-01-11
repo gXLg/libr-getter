@@ -15,7 +15,9 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
     VANILLA {
         @Override
         public GoalMatching match(List<EnchantmentTrade> offeredEnchantments) {
-            if (offeredEnchantments.isEmpty()) return GoalMatching.noMatch();
+            if (offeredEnchantments.isEmpty()) {
+                return GoalMatching.noMatch();
+            }
             EnchantmentTrade firstOffer = offeredEnchantments.get(0);
             for (EnchantmentTrade goal : LibrGetter.config.goals) {
                 if (goal.meets(firstOffer)) {
@@ -30,7 +32,9 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
     PERFECT {
         @Override
         public GoalMatching match(List<EnchantmentTrade> offeredEnchantments) {
-            if (offeredEnchantments.isEmpty()) return GoalMatching.noMatch();
+            if (offeredEnchantments.isEmpty()) {
+                return GoalMatching.noMatch();
+            }
 
             List<EnchantmentTrade> matchedOffers = new ArrayList<>();
             for (EnchantmentTrade offer : offeredEnchantments) {
@@ -81,6 +85,7 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
 
     public static class GoalMatching {
         private final boolean match;
+
         private final List<EnchantmentTrade> matchedEnchantments;
 
         private GoalMatching(boolean matches, List<EnchantmentTrade> matchedEnchantments) {
@@ -94,7 +99,9 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
 
         public List<EnchantmentTrade> getMatchedEnchantments() {
             // TODO: centralized exceptions
-            if (!match) throw new UnsupportedOperationException("Can't get matched enchantments, since it's not a match");
+            if (!match) {
+                throw new UnsupportedOperationException("Can't get matched enchantments, since it's not a match");
+            }
             return matchedEnchantments;
         }
 

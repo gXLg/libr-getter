@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@SuppressWarnings({"UnresolvedMixinReference", "MixinAnnotationTarget"})
+@SuppressWarnings({ "UnresolvedMixinReference", "MixinAnnotationTarget" })
 @Mixin(ClientPlayerInteractionManager.class)
 public abstract class Manager {
 
@@ -40,7 +40,9 @@ public abstract class Manager {
             return;
         }
         ClientWorld world = Minecraft.getWorld(client.player);
-        if (!world.getBlockState(pos).isOf(Blocks.LECTERN)) return;
+        if (!world.getBlockState(pos).isOf(Blocks.LECTERN)) {
+            return;
+        }
         if (!TaskManager.getCurrentTask().allowsBreaking()) {
             info.setReturnValue(false);
         }
@@ -68,8 +70,11 @@ public abstract class Manager {
             return;
         }
 
-        if (!pos.equals(TaskManager.getTaskContext().selectedLectern())) return;
-        if (!TaskManager.getCurrentTask().allowsPlacing())
+        if (!pos.equals(TaskManager.getTaskContext().selectedLecternPos())) {
+            return;
+        }
+        if (!TaskManager.getCurrentTask().allowsPlacing()) {
             Minecraft.setActionResultFail(info);
+        }
     }
 }

@@ -18,7 +18,9 @@ public class Updater {
     private static Pair<String, String> newVersion;
 
     public static void checkUpdates() {
-        if (!LibrGetter.config.checkUpdate) return;
+        if (!LibrGetter.config.checkUpdate) {
+            return;
+        }
 
         CompletableFuture.runAsync(() -> {
             try {
@@ -28,7 +30,9 @@ public class Updater {
                 reader.close();
 
                 String version = LibrGetter.getVersion();
-                if (version == null) return;
+                if (version == null) {
+                    return;
+                }
                 String newest = data.get("tag_name").getAsString();
 
                 if (!newest.equals(version)) {

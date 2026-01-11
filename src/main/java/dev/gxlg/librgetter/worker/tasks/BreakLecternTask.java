@@ -15,21 +15,25 @@ public class BreakLecternTask extends TaskManager.Task {
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientWorld world = client.world;
-        if (world == null) throw new InternalTaskException("world", this);
+        if (world == null) {
+            throw new InternalTaskException("world", this);
+        }
 
-        BlockState targetBlock = world.getBlockState(taskContext.selectedLectern());
+        BlockState targetBlock = world.getBlockState(taskContext.selectedLecternPos());
         if (targetBlock.isAir()) {
             // lectern is broken now
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitVillagerLoseProfessionTask(), ctx.withIncreasedAttemptsCounter()));
         }
 
-        if (LibrGetter.config.manual) return;
+        if (LibrGetter.config.manual) {
+            return;
+        }
 
         ClientPlayerInteractionManager manager = client.interactionManager;
         if (manager == null) {
             throw new InternalTaskException("manager", this);
         }
-        manager.updateBlockBreakingProgress(taskContext.selectedLectern(), Direction.UP);
+        manager.updateBlockBreakingProgress(taskContext.selectedLecternPos(), Direction.UP);
     }
 
     @Override

@@ -32,12 +32,18 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) throw new InternalTaskException("player", this);
+        if (player == null) {
+            throw new InternalTaskException("player", this);
+        }
 
         List<EnchantmentTrade> offeredEnchantments = new ArrayList<>();
         for (int i = 0; i < offers.size(); i++) {
-            if (i >= 2 && LibrGetter.config.matchMode == MatchMode.VANILLA) break;
-            if (!isEnchantmentTrade(offers.get(i))) continue;
+            if (i >= 2 && LibrGetter.config.matchMode == MatchMode.VANILLA) {
+                break;
+            }
+            if (!isEnchantmentTrade(offers.get(i))) {
+                continue;
+            }
 
             ParsedEnchantmentTrade parsed = Minecraft.parseTrade(offers, i);
             if (parsed.isError()) {
@@ -47,21 +53,19 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
                 throw new TaskException(ret[0], (String[]) args);
             }
             offeredEnchantments.add(parsed.getTrade());
-            if (LibrGetter.config.matchMode == MatchMode.VANILLA) break;
+            if (LibrGetter.config.matchMode == MatchMode.VANILLA) {
+                break;
+            }
         }
         Texts.getImpl().sendTradeLog(offeredEnchantments);
         MatchMode.GoalMatching matching = LibrGetter.config.matchMode.match(offeredEnchantments);
         if (!matching.isMatch()) {
-            throw new StopTaskSignal(ctx -> Support.isUsingTradeCycling() ?
-                    TaskManager.TaskSwitch.nextTick(new TradeCyclingClickTask(), ctx) :
-                    TaskManager.TaskSwitch.sameTick(new SelectAxeTask(), ctx)
-            );
+            throw new StopTaskSignal(ctx -> Support.isUsingTradeCycling() ? TaskManager.TaskSwitch.nextTick(new TradeCyclingClickTask(), ctx) :
+                                            TaskManager.TaskSwitch.sameTick(new SelectAxeTask(), ctx));
         }
 
         Minecraft.playNotification(Minecraft.getWorld(player), player);
-        matching.getMatchedEnchantments().forEach(e ->
-                Texts.getImpl().sendFound(e, taskContext.attemptsCounter())
-        );
+        matching.getMatchedEnchantments().forEach(e -> Texts.getImpl().sendFound(e, taskContext.attemptsCounter()));
 
         if (LibrGetter.config.removeGoal) {
             matching.getMatchedEnchantments().forEach(e -> CommandHelper.removeGoal(e.id(), e.lvl()));

@@ -17,9 +17,11 @@ public class Keybinds {
             Identifier id = (Identifier) R.clz(Identifier.class).mthd("method_43902/of", String.class, String.class).invk("librgetter", "category");
 
             R.RClass cat = R.clz("net.minecraft.class_304$class_11900/net.minecraft.client.option.KeyBinding$Category");
-            kOpen = (KeyBinding) R.clz(KeyBinding.class).constr(String.class, InputUtil.Type.class, int.class, cat).newInst("librgetter.keys.open", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, cat.mthd("method_74698/create", Identifier.class).invk(id)).self();
+            kOpen = (KeyBinding) R.clz(KeyBinding.class).constr(String.class, InputUtil.Type.class, int.class, cat)
+                                  .newInst("librgetter.keys.open", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, cat.mthd("method_74698/create", Identifier.class).invk(id)).self();
         } else {
-            kOpen = (KeyBinding) R.clz(KeyBinding.class).constr(String.class, InputUtil.Type.class, int.class, String.class).newInst("librgetter.keys.open", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category.librgetter.category").self();
+            kOpen = (KeyBinding) R.clz(KeyBinding.class).constr(String.class, InputUtil.Type.class, int.class, String.class)
+                                  .newInst("librgetter.keys.open", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category.librgetter.category").self();
         }
         KeyBindingHelper.registerKeyBinding(kOpen);
 

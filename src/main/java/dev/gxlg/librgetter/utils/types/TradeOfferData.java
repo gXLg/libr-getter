@@ -4,6 +4,7 @@ import net.minecraft.village.TradeOfferList;
 
 public class TradeOfferData {
     private final boolean canRefresh;
+
     private final TradeOfferList tradeOfferList;
 
     private TradeOfferData(boolean canRefresh, TradeOfferList list) {
@@ -17,7 +18,9 @@ public class TradeOfferData {
 
     public TradeOfferList getTradeOfferList() {
         // TODO: centralized exceptions
-        if (!canRefresh) throw new IllegalStateException("Can't get the trades from non-refreshable offer data");
+        if (!canRefresh) {
+            throw new IllegalStateException("Can't get the trades from non-refreshable offer data");
+        }
         return tradeOfferList;
     }
 

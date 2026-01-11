@@ -6,6 +6,7 @@ import net.minecraft.util.StringIdentifiable;
 
 public interface OptionsConfig<T extends Enum<T> & StringIdentifiable> extends StringIdentifiable {
     T[] getValues();
+
     @Override
     default String asString() {
         return ((Enum<?>) this).name();

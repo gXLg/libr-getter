@@ -22,14 +22,20 @@ public class LockTradesTask extends TaskManager.Task {
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) throw new InternalTaskException("player", this);
+        if (player == null) {
+            throw new InternalTaskException("player", this);
+        }
         ClientPlayerInteractionManager manager = client.interactionManager;
-        if (manager == null) throw new InternalTaskException("manager", this);
+        if (manager == null) {
+            throw new InternalTaskException("manager", this);
+        }
 
         // select the trade
         if (player.currentScreenHandler.getSlot(0).inventory.getStack(0).isEmpty()) {
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
-            if (handler == null) throw new InternalTaskException("handler", this);
+            if (handler == null) {
+                throw new InternalTaskException("handler", this);
+            }
             handler.sendPacket(new SelectMerchantTradeC2SPacket(offerIndex));
         }
 

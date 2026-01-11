@@ -19,26 +19,35 @@ import net.minecraft.screen.slot.SlotActionType;
 public class SelectAxeTask extends TaskManager.Task {
     @Override
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
-        if (LibrGetter.config.manual)
+        if (LibrGetter.config.manual) {
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new BreakLecternTask(), ctx));
+        }
 
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) throw new InternalTaskException("player", this);
+        if (player == null) {
+            throw new InternalTaskException("player", this);
+        }
         PlayerInventory inventory = player.getInventory();
-        if (inventory == null) throw new InternalTaskException("inventory", this);
+        if (inventory == null) {
+            throw new InternalTaskException("inventory", this);
+        }
 
         int slot = -1;
         if (LibrGetter.config.autoTool) {
-            float max = -1;
+            float maxBreakingSpeed = -1;
             for (int i = 0; i < PlayerInventory.MAIN_SIZE; i++) {
                 ItemStack stack = inventory.getStack(i);
-                if (stack.isDamageable() && stack.getMaxDamage() - stack.getDamage() < 10) continue;
-                float f = stack.getMiningSpeedMultiplier(Blocks.LECTERN.getDefaultState());
-                int ef = Minecraft.getEfficiencyLevel(stack);
-                if (stack.getItem() instanceof AxeItem) f += (float) (ef * ef + 1);
-                if (f > max) {
-                    max = f;
+                if (stack.isDamageable() && stack.getMaxDamage() - stack.getDamage() < 10) {
+                    continue;
+                }
+                float breakingSpeed = stack.getMiningSpeedMultiplier(Blocks.LECTERN.getDefaultState());
+                int efficiencyLevel = Minecraft.getEfficiencyLevel(stack);
+                if (stack.getItem() instanceof AxeItem) {
+                    breakingSpeed += (float) (efficiencyLevel * efficiencyLevel + 1);
+                }
+                if (breakingSpeed > maxBreakingSpeed) {
+                    maxBreakingSpeed = breakingSpeed;
                     slot = i;
                 }
             }
@@ -55,10 +64,14 @@ public class SelectAxeTask extends TaskManager.Task {
         }
         if (slot != -1) {
             ClientPlayerInteractionManager manager = client.interactionManager;
-            if (manager == null)  throw new InternalTaskException("manager", this);
+            if (manager == null) {
+                throw new InternalTaskException("manager", this);
+            }
 
             ClientPlayNetworkHandler handler = client.getNetworkHandler();
-            if (handler == null)  throw new InternalTaskException("handler", this);
+            if (handler == null) {
+                throw new InternalTaskException("handler", this);
+            }
 
             if (!PlayerInventory.isValidHotbarIndex(slot)) {
                 int syncId = player.playerScreenHandler.syncId;
@@ -71,13 +84,6 @@ public class SelectAxeTask extends TaskManager.Task {
             Minecraft.getConnection(handler).send(packetSelect);
         }
 
-        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(
-                new RotationTask(
-                        player,
-                        ctx.selectedLectern().toCenterPos(),
-                        new BreakLecternTask()
-                ),
-                ctx
-        ));
+        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RotationTask(player, ctx.selectedLecternPos().toCenterPos(), new BreakLecternTask()), ctx));
     }
 }

@@ -7,6 +7,7 @@ import net.fabricmc.loader.api.FabricLoader;
 
 public class Support {
     private static final FabricLoader instance;
+
     private static final boolean tradeCycling;
 
     static {
@@ -16,7 +17,8 @@ public class Support {
 
     public static void sendCycleTradesPacket() {
         if (!V.lower("1.20.2")) {
-            R.clz("net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking").mthd("send", R.clz("net.minecraft.class_8710/net.minecraft.network.packet.CustomPayload")).invk(R.clz("de.maxhenkel.tradecycling.net.CycleTradesPacket").constr().newInst().self());
+            R.clz("net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking").mthd("send", R.clz("net.minecraft.class_8710/net.minecraft.network.packet.CustomPayload"))
+             .invk(R.clz("de.maxhenkel.tradecycling.net.CycleTradesPacket").constr().newInst().self());
         } else {
             R.clz("de.maxhenkel.tradecycling.TradeCyclingClientMod").mthd("sendCycleTradesPacket").invk();
         }
@@ -27,7 +29,7 @@ public class Support {
         return tradeCycling && LibrGetter.config.tradeCycling;
     }
 
-    public static boolean isExisting(String modID) {
+    public static boolean isModPresent(String modID) {
         return instance.getModContainer(modID).isPresent();
     }
 }

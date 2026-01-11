@@ -75,19 +75,21 @@ public class Commands {
 
     public static void registerCommands() {
         if (!V.lower("1.19")) {
-            R.RClass cb = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
-            Object listener = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{cb.self()}, (proxy, method, args) -> {
-                if (method.getName().equals("register")) {
-                    Object registryAccess = args[1];
-                    registerCommand((CommandDispatcher<?>) args[0], registryAccess);
-                    return null;
+            R.RClass registrationCallback = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
+            Object listener = Proxy.newProxyInstance(
+                Thread.currentThread().getContextClassLoader(), new Class[]{ registrationCallback.self() }, (proxy, method, args) -> {
+                    if (method.getName().equals("register")) {
+                        Object registryAccess = args[1];
+                        registerCommand((CommandDispatcher<?>) args[0], registryAccess);
+                        return null;
+                    }
+                    return method.invoke(proxy, args);
                 }
-                return method.invoke(proxy, args);
-            });
-            R.clz("net.fabricmc.fabric.api.event.Event").inst(cb.fld("EVENT").get()).mthd("register", Object.class).invk(listener);
+            );
+            R.clz("net.fabricmc.fabric.api.event.Event").inst(registrationCallback.fld("EVENT").get()).mthd("register", Object.class).invk(listener);
         } else {
-            R.RClass ccm = R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
-            registerCommand((CommandDispatcher<?>) ccm.fld("DISPATCHER").get(), null);
+            R.RClass clientCommandManager = R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
+            registerCommand((CommandDispatcher<?>) clientCommandManager.fld("DISPATCHER").get(), null);
         }
     }
 
@@ -157,23 +159,23 @@ public class Commands {
 
         // automatically create config commands for each simply configurable value in Config
         {
-          subCommand = literal("config");
-          for (Configurable<?> configurable : LibrGetter.config.getConfigurables()) {
-              String name = configurable.name();
-              Object configRunner = runner(LibrGetCommand::config, configurable);
+            subCommand = literal("config");
+            for (Configurable<?> configurable : LibrGetter.config.getConfigurables()) {
+                String name = configurable.name();
+                Object configRunner = runner(LibrGetCommand::config, configurable);
 
-              Object configArgument = executes(literal(name), configRunner);
-              Object valueArgument = executes(argument("value", configurable.argument()), configRunner);
+                Object configArgument = executes(literal(name), configRunner);
+                Object valueArgument = executes(argument("value", configurable.commandArgument()), configRunner);
 
-              subCommand = then(subCommand, then(configArgument, valueArgument));
-          }
-          baseCommand = then(baseCommand, subCommand);
+                subCommand = then(subCommand, then(configArgument, valueArgument));
+            }
+            baseCommand = then(baseCommand, subCommand);
         }
 
         // selector
         {
-          Object selectRunner = runner(ctx -> LibrGetCommand.selector());
-          baseCommand = executes(baseCommand, selectRunner);
+            Object selectRunner = runner(ctx -> LibrGetCommand.selector());
+            baseCommand = executes(baseCommand, selectRunner);
         }
 
         R.clz(CommandDispatcher.class).inst(dispatcher).mthd("register", LiteralArgumentBuilder.class).invk(baseCommand);
@@ -200,9 +202,12 @@ public class Commands {
                 key = C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_30517/getKey").invk();
             }
 
-            return (ArgumentType<?>) R.clz("net.minecraft.class_7737/net.minecraft.command.argument.RegistryEntryPredicateArgumentType").mthd("method_45637/registryEntryPredicate", R.clz("net.minecraft.class_7157/net.minecraft.command.CommandRegistryAccess"), C.RegistryKey).invk(registryAccess, key);
+            return (ArgumentType<?>) R.clz("net.minecraft.class_7737/net.minecraft.command.argument.RegistryEntryPredicateArgumentType")
+                                      .mthd("method_45637/registryEntryPredicate", R.clz("net.minecraft.class_7157/net.minecraft.command.CommandRegistryAccess"), C.RegistryKey)
+                                      .invk(registryAccess, key);
         } else {
-            return (ArgumentType<?>) R.clz("net.minecraft.class_2194/net.minecraft.command.argument.EnchantmentArgumentType/net.minecraft.command.argument.ItemEnchantmentArgumentType").mthd("method_9336/enchantment/itemEnchantment").invk();
+            return (ArgumentType<?>) R.clz("net.minecraft.class_2194/net.minecraft.command.argument.EnchantmentArgumentType/net.minecraft.command.argument.ItemEnchantmentArgumentType")
+                                      .mthd("method_9336/enchantment/itemEnchantment").invk();
         }
     }
 

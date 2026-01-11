@@ -1,25 +1,28 @@
-name: Build
+name: Build Project and Check Styling
 
 on:
   push:
-    branches: ["**"]
+    branches: [ "**" ]
     paths:
       - "src/**"
       - "gradle.properties"
       - "build.gradle"
       - "MultiVersion"
       - ".gitmodules"
-    tags-ignore: ["**"]
+      - ".github/workflows/build.yml"
+    tags-ignore: [ "**" ]
 
 jobs:
-  build:
+  build-and-check:
     permissions:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4.1.1
+      - name: Checkout repository
+        uses: actions/checkout@v5
         with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
           submodules: true
 
       - name: Setup Java
@@ -28,8 +31,26 @@ jobs:
           distribution: "temurin"
           java-version: 21
 
-      - name: Mark Executable
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.12.0"
+
+      - name: Mark executable
         run: chmod +x ./gradlew
 
       - name: Build
-        run: ./gradlew clean build
+        uses: burrunan/gradle-cache-action@v3
+        with:
+          arguments: build
+
+      - name: Cache IntelliJ IDEA
+        uses: actions/cache@v5
+        with:
+          path: .idea-cache
+          key: idea-cache-2025.3.0
+
+      - name: Format with IntelliJ IDEA
+        uses: gXLg/intellij-idea-format@ef6ec9cff204cad7bd33882f828bc74b556a7808
+        with:
+          idea-url: "https://download.jetbrains.com/idea/idea-2025.3.tar.gz"

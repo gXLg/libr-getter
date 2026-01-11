@@ -16,12 +16,15 @@ import java.util.List;
 public class CommandHelper {
     public static int manageGoals(CommandContext<?> context, boolean remove) {
         List<Either<Enchantment, String>> list = new ArrayList<>();
-        if (!Commands.getEnchantments(list, context)) return 1;
+        if (!Commands.getEnchantments(list, context)) {
+            return 1;
+        }
 
-        int lvl = -1;
+        int globalLvlCriteria;
         try {
-            lvl = context.getArgument("level", Integer.class);
+            globalLvlCriteria = context.getArgument("level", Integer.class);
         } catch (IllegalArgumentException ignored) {
+            globalLvlCriteria = -1;
         }
 
         int price = 64;
@@ -32,8 +35,8 @@ public class CommandHelper {
 
         for (Either<Enchantment, String> item : list) {
             Identifier enchantmentId;
-            int level;
-            boolean custom = false;
+            int currentEnchantmentLvl;
+            boolean isCustomEnchantmentFormat = false;
 
             if (item.left().isPresent()) {
                 Enchantment enchantment = item.left().get();
@@ -44,15 +47,15 @@ public class CommandHelper {
                 }
 
                 int max = enchantment.getMaxLevel();
-                if (lvl > max && LibrGetter.config.warning) {
+                if (globalLvlCriteria > max && LibrGetter.config.warning) {
                     Texts.getImpl().sendTranslatableWarning("librgetter.level", enchantmentId, enchantment.getMaxLevel());
                 }
 
-                if (lvl == -1) {
-                  // default to the max level for each enchantment
-                  level = max;
+                if (globalLvlCriteria == -1) {
+                    // default to the max level for each enchantment
+                    currentEnchantmentLvl = max;
                 } else {
-                  level = lvl;
+                    currentEnchantmentLvl = globalLvlCriteria;
                 }
 
                 if (enchantmentId == null) {
@@ -63,8 +66,8 @@ public class CommandHelper {
             } else if (item.right().isPresent()) {
                 String customId = item.right().get();
                 enchantmentId = Identifier.tryParse(customId);
-                level = lvl;
-                custom = true;
+                currentEnchantmentLvl = globalLvlCriteria;
+                isCustomEnchantmentFormat = true;
 
                 if (enchantmentId == null) {
                     Texts.getImpl().sendTranslatableError("librgetter.parse");
@@ -76,13 +79,13 @@ public class CommandHelper {
                 }
 
             } else {
-              continue;
+                continue;
             }
 
             if (remove) {
-              removeGoal(enchantmentId.toString(), lvl);
+                removeGoal(enchantmentId.toString(), currentEnchantmentLvl);
             } else {
-              addGoal(enchantmentId.toString(), lvl, price, custom);
+                addGoal(enchantmentId.toString(), currentEnchantmentLvl, price, isCustomEnchantmentFormat);
             }
         }
 
@@ -90,39 +93,39 @@ public class CommandHelper {
     }
 
     public static void addGoal(String name, int level, int price, boolean custom) {
-        EnchantmentTrade newLooking = new EnchantmentTrade(name, level, price);
-        EnchantmentTrade already = null;
-        for (EnchantmentTrade l : LibrGetter.config.goals) {
-            if (l.same(newLooking)) {
-                already = l;
+        EnchantmentTrade newTrade = new EnchantmentTrade(name, level, price);
+        EnchantmentTrade alreadyPresentTrade = null;
+        for (EnchantmentTrade trade : LibrGetter.config.goals) {
+            if (trade.same(newTrade)) {
+                alreadyPresentTrade = trade;
                 break;
             }
         }
-        if (already != null) {
-            Texts.getImpl().sendTranslatableSuccess("librgetter.price", already, price);
-            LibrGetter.config.goals.remove(already);
+        if (alreadyPresentTrade != null) {
+            Texts.getImpl().sendTranslatableSuccess("librgetter.price", alreadyPresentTrade, price);
+            LibrGetter.config.goals.remove(alreadyPresentTrade);
         } else {
-            Texts.getImpl().sendTranslatableSuccess(custom ? "libgetter.add_custom" : "libgetter.add", newLooking, newLooking.price());
+            Texts.getImpl().sendTranslatableSuccess(custom ? "libgetter.add_custom" : "libgetter.add", newTrade, newTrade.price());
         }
-        LibrGetter.config.goals.add(newLooking);
+        LibrGetter.config.goals.add(newTrade);
         LibrGetter.config.save();
     }
 
     public static void removeGoal(String name, int level) {
-        EnchantmentTrade newLooking = new EnchantmentTrade(name, level, 64);
-        EnchantmentTrade already = null;
-        for (EnchantmentTrade l : LibrGetter.config.goals) {
-            if (l.same(newLooking)) {
-                already = l;
+        EnchantmentTrade newTrade = new EnchantmentTrade(name, level, 64);
+        EnchantmentTrade alreadyPresentTrade = null;
+        for (EnchantmentTrade trade : LibrGetter.config.goals) {
+            if (trade.same(newTrade)) {
+                alreadyPresentTrade = trade;
                 break;
             }
         }
-        if (already == null) {
-            Texts.getImpl().sendTranslatableError("librgetter.not", newLooking);
+        if (alreadyPresentTrade == null) {
+            Texts.getImpl().sendTranslatableError("librgetter.not", newTrade);
             return;
         }
-        LibrGetter.config.goals.remove(already);
+        LibrGetter.config.goals.remove(alreadyPresentTrade);
         LibrGetter.config.save();
-        Texts.getImpl().sendTranslatableWarning("librgetter.removed", newLooking);
+        Texts.getImpl().sendTranslatableWarning("librgetter.removed", newTrade);
     }
 }
