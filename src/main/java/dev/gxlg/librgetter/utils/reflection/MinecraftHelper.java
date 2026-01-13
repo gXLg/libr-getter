@@ -1,94 +1,93 @@
 package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.multiversion.C;
 import dev.gxlg.librgetter.multiversion.R;
 import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.Plugins;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.ParsedEnchantmentTrade;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradeOfferList;
-import net.minecraft.village.VillagerData;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.Connection;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.npc.villager.VillagerData;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import org.apache.commons.lang3.tuple.Triple;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class Minecraft {
-    public static ClientConnection getConnection(ClientPlayNetworkHandler handler) {
-        return (ClientConnection) R.clz(ClientPlayNetworkHandler.class).inst(handler).mthd("method_48296/method_2872/getConnection").invk();
+public class MinecraftHelper {
+    public static Connection getConnection(ClientPacketListener handler) {
+        return (Connection) R.clz(ClientPacketListener.class).inst(handler).mthd("method_48296/method_2872/getConnection").invk();
     }
 
-    public static ClientWorld getWorld(ClientPlayerEntity player) {
+    public static ClientLevel getWorld(LocalPlayer player) {
         if (!V.lower("1.21.9")) {
-            return (ClientWorld) R.clz(ClientPlayerEntity.class).inst(player).mthd("method_73183/getEntityWorld").invk();
+            return (ClientLevel) R.clz(LocalPlayer.class).inst(player).mthd("method_73183/level").invk();
         } else if (!V.lower("1.19")) {
-            return (ClientWorld) R.clz(ClientPlayerEntity.class).inst(player).mthd("method_37908/getWorld").invk();
+            return (ClientLevel) R.clz(LocalPlayer.class).inst(player).mthd("method_37908/getLevel").invk();
         } else {
-            return (ClientWorld) R.clz(ClientPlayerEntity.class).inst(player).fld("field_17892/clientWorld").get();
+            return (ClientLevel) R.clz(LocalPlayer.class).inst(player).fld("field_17892/clientLevel").get();
         }
     }
 
-    public static void interactBlock(ClientPlayerInteractionManager manager, ClientPlayerEntity player, BlockHitResult lowBlock, boolean main) {
-        Hand hand = main ? Hand.MAIN_HAND : Hand.OFF_HAND;
+    public static void interactBlock(MultiPlayerGameMode manager, LocalPlayer player, BlockHitResult lowBlock, boolean main) {
+        InteractionHand hand = main ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         if (!V.lower("1.19")) {
-            R.clz(ClientPlayerInteractionManager.class).inst(manager).mthd("method_2896/interactBlock", ClientPlayerEntity.class, Hand.class, BlockHitResult.class).invk(player, hand, lowBlock);
+            R.clz(MultiPlayerGameMode.class).inst(manager).mthd("method_2896/useItemOn", LocalPlayer.class, InteractionHand.class, BlockHitResult.class).invk(player, hand, lowBlock);
         } else {
-            R.clz(ClientPlayerInteractionManager.class).inst(manager).mthd("method_2896/interactBlock", ClientPlayerEntity.class, ClientWorld.class, Hand.class, BlockHitResult.class)
+            R.clz(MultiPlayerGameMode.class).inst(manager).mthd("method_2896/useItemOn", LocalPlayer.class, ClientLevel.class, InteractionHand.class, BlockHitResult.class)
              .invk(player, getWorld(player), hand, lowBlock);
         }
     }
 
     public static Identifier enchantmentId(Enchantment enchantment) {
         if (!V.lower("1.21")) {
-            ClientWorld world = MinecraftClient.getInstance().world;
+            ClientLevel world = Minecraft.getInstance().level;
             if (world == null) {
                 return null;
             }
-            Object registryManager = world.getRegistryManager();
+            Object registryManager = world.registryAccess();
 
-            Object enchantmentRegistry = C.DynamicRegistryManager.inst(registryManager).mthd("method_30530/get/getOrThrow", C.RegistryKey).invk(C.RegistryKeys.fld("field_41265/ENCHANTMENT").get());
-            Object enchantmentRegistryEntry = C.Registry.inst(enchantmentRegistry).mthd("method_47983/getEntry", Object.class).invk(enchantment);
-            return (Identifier) R.clz(Identifier.class).mthd("method_60654/of", String.class).invk(C.RegistryEntry.inst(enchantmentRegistryEntry).mthd("method_55840/getIdAsString").invk());
+            Object enchantmentRegistry = C.DynamicRegistryManager.inst(registryManager).mthd("method_30530/registryOrThrow/lookupOrThrow", C.RegistryKey)
+                                                                 .invk(C.RegistryKeys.fld("field_41265/ENCHANTMENT").get());
+            Object enchantmentRegistryEntry = C.Registry.inst(enchantmentRegistry).mthd("method_47983/wrapAsHolder", Object.class).invk(enchantment);
+            return (Identifier) R.clz(Identifier.class).mthd("method_60654/parse", String.class).invk(C.RegistryEntry.inst(enchantmentRegistryEntry).mthd("method_55840/getRegisteredName").invk());
 
         } else if (!V.lower("1.19.3")) {
-            return (Identifier) C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_10221/getId", Object.class).invk(enchantment);
+            return (Identifier) C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_10221/getKey", Object.class).invk(enchantment);
         } else {
-            return (Identifier) C.Registry.inst(C.Registry.fld("field_11160/ENCHANTMENT").get()).mthd("method_10221/getId", Object.class).invk(enchantment);
+            return (Identifier) C.Registry.inst(C.Registry.fld("field_11160/ENCHANTMENT").get()).mthd("method_10221/getKey", Object.class).invk(enchantment);
         }
     }
 
-    public static ParsedEnchantmentTrade parseTrade(TradeOfferList trades, int trade) {
-        ItemStack stack = trades.get(trade).getSellItem();
+    public static ParsedEnchantmentTrade parseTrade(MerchantOffers trades, int trade) {
+        ItemStack stack = trades.get(trade).getResult();
 
         Object tag;
         if (!V.lower("1.20.5")) {
@@ -98,12 +97,12 @@ public class Minecraft {
             Object[] tagContainer = new Object[1];
             if (nbt != null) {
                 Consumer<?> consumer = (Consumer<Object>) o -> tagContainer[0] = o;
-                R.clz("net.minecraft.class_9279/net.minecraft.component.type.NbtComponent").inst(nbt).mthd("method_57451/apply", Consumer.class).invk(consumer);
+                R.clz("net.minecraft.class_9279/net.minecraft.world.item.component.CustomData").inst(nbt).mthd("method_57451/update", Consumer.class).invk(consumer);
             }
             tag = tagContainer[0];
 
         } else {
-            tag = R.clz(ItemStack.class).inst(stack).mthd("method_7969/getNbt/getTag").invk();
+            tag = R.clz(ItemStack.class).inst(stack).mthd("method_7969/getTag").invk();
             if (tag == null) {
                 return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
             }
@@ -136,7 +135,7 @@ public class Minecraft {
                 Set<?> enchantmentSet = null;
                 boolean tryNext = false;
                 if (enchantmentComponent != null) {
-                    enchantmentSet = (Set<?>) itemEnchantmentsComponentClass.inst(enchantmentComponent).mthd("method_57539/getEnchantmentsMap/getEnchantmentEntries").invk();
+                    enchantmentSet = (Set<?>) itemEnchantmentsComponentClass.inst(enchantmentComponent).mthd("method_57539/entrySet").invk();
                     if (enchantmentSet.isEmpty()) {
                         tryNext = true;
                     }
@@ -152,7 +151,7 @@ public class Minecraft {
 
                     tryNext = false;
                     if (enchantmentComponent != null) {
-                        enchantmentSet = (Set<?>) itemEnchantmentsComponentClass.inst(enchantmentComponent).mthd("method_57539/getEnchantmentsMap/getEnchantmentEntries").invk();
+                        enchantmentSet = (Set<?>) itemEnchantmentsComponentClass.inst(enchantmentComponent).mthd("method_57539/entrySet").invk();
                         if (enchantmentSet.isEmpty()) {
                             tryNext = true;
                         }
@@ -168,7 +167,7 @@ public class Minecraft {
                     // found something
                     for (Object enchantmentRegistryEntry : enchantmentSet) {
                         Object2IntMap.Entry<?> e = (Object2IntMap.Entry<?>) enchantmentRegistryEntry;
-                        id = (String) C.RegistryEntry.inst(e.getKey()).mthd("method_55840/getIdAsString").invk();
+                        id = (String) C.RegistryEntry.inst(e.getKey()).mthd("method_55840/getRegisteredName").invk();
                         lvl = e.getIntValue();
                         break;
                     }
@@ -193,13 +192,13 @@ public class Minecraft {
 
         if (id == null) {
             // Nothing was found, so try fallback or return empty
-            Pair<String, Integer> fallbackData = fallbackParse(tag);
+            Tuple<String, Integer> fallbackData = fallbackParse(tag);
             if (fallbackData == null) {
                 return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
             }
 
-            id = fallbackData.getLeft();
-            lvl = fallbackData.getRight();
+            id = fallbackData.getA();
+            lvl = fallbackData.getB();
         }
 
         ItemStack firstBuyItem = getFirstBuyItem(trades.get(trade));
@@ -212,13 +211,13 @@ public class Minecraft {
         }
 
         if (firstBuyItem == null) {
-            return ParsedEnchantmentTrade.error("librgetter.internal", "firstBuyItem", "Minecraft#parseTrade");
+            return ParsedEnchantmentTrade.error("librgetter.internal", "firstBuyItem", "MinecraftHelper#parseTrade");
         }
 
         return ParsedEnchantmentTrade.success(new EnchantmentTrade(id, lvl, firstBuyItem.getCount()));
     }
 
-    public static Pair<String, Integer> fallbackParse(Object tag) {
+    public static Tuple<String, Integer> fallbackParse(Object tag) {
         if (!LibrGetter.config.fallback) {
             return null;
         }
@@ -265,24 +264,15 @@ public class Minecraft {
         if (finalId == null) {
             return null;
         }
-        return new Pair<>(finalId, finalLvl);
+        return new Tuple<>(finalId, finalLvl);
     }
 
-    public static ItemStack getFirstBuyItem(TradeOffer offer) {
-        return (ItemStack) R.clz(TradeOffer.class).inst(offer).mthd("method_19272/getAdjustedFirstBuyItem/getDisplayedFirstBuyItem").invk();
+    public static ItemStack getFirstBuyItem(MerchantOffer offer) {
+        return (ItemStack) R.clz(MerchantOffer.class).inst(offer).mthd("method_19272/getCostA").invk();
     }
 
-    public static ItemStack getSecondBuyItem(TradeOffer offer) {
-        if (!V.lower("1.20.5")) {
-            Optional<?> optional = (Optional<?>) R.clz(TradeOffer.class).inst(offer).mthd("method_57557/getSecondBuyItem").invk();
-            if (optional.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
-            Object item = optional.get();
-            return (ItemStack) R.clz("net.minecraft.class_9306/net.minecraft.village.TradedItem").inst(item).mthd("comp_2427/itemStack").invk();
-        } else {
-            return (ItemStack) R.clz(TradeOffer.class).inst(offer).mthd("method_8247/getSecondBuyItem/getDisplayedSecondBuyItem").invk();
-        }
+    public static ItemStack getSecondBuyItem(MerchantOffer offer) {
+        return (ItemStack) R.clz(MerchantOffer.class).inst(offer).mthd("method_8247/getCostB").invk();
     }
 
     public static int getEfficiencyLevel(ItemStack stack) {
@@ -291,9 +281,9 @@ public class Minecraft {
             R.RClass registryEntryClass = C.RegistryEntry;
 
             Object enchantmentComponent = R.clz(ItemStack.class).inst(stack).mthd("method_58657/getEnchantments").invk();
-            Set<?> enchantmentSet = (Set<?>) itemEnchantmentsComponentClass.inst(enchantmentComponent).mthd("method_57534/getEnchantments").invk();
+            Set<?> enchantmentSet = (Set<?>) itemEnchantmentsComponentClass.inst(enchantmentComponent).mthd("method_57534/keySet").invk();
             for (Object enchantmentRegistryEntry : enchantmentSet) {
-                String id = (String) registryEntryClass.inst(enchantmentRegistryEntry).mthd("method_55840/getIdAsString").invk();
+                String id = (String) registryEntryClass.inst(enchantmentRegistryEntry).mthd("method_55840/getRegisteredName").invk();
                 if (id.equals("minecraft:efficiency")) {
                     return (int) itemEnchantmentsComponentClass.inst(enchantmentComponent).mthd("method_57536/getLevel", registryEntryClass).invk(enchantmentRegistryEntry);
                 }
@@ -301,42 +291,42 @@ public class Minecraft {
             return 0;
 
         } else {
-            Object efficiencyEnchantment = R.clz("net.minecraft.class_1893/net.minecraft.enchantment.Enchantments").fld("field_9131/EFFICIENCY").get();
-            return (int) R.clz(EnchantmentHelper.class).mthd("method_8225/getLevel", Enchantment.class, ItemStack.class).invk(efficiencyEnchantment, stack);
+            Object efficiencyEnchantment = R.clz("net.minecraft.class_1893/net.minecraft.world.item.enchantment.Enchantments").fld("field_9131/EFFICIENCY").get();
+            return (int) R.clz(EnchantmentHelper.class).mthd("method_8225/getItemEnchantmentLevel", Enchantment.class, ItemStack.class).invk(efficiencyEnchantment, stack);
         }
     }
 
     public static boolean canBeTraded(Enchantment enchantment) {
         if (!V.lower("1.21")) {
-            ClientWorld world = MinecraftClient.getInstance().world;
+            ClientLevel world = Minecraft.getInstance().level;
             if (world == null) {
                 return false;
             }
 
-            Object registryManager = world.getRegistryManager();
-            Object enchantmentRegistry = C.DynamicRegistryManager.inst(registryManager).mthd("method_30530/get/getOrThrow", C.RegistryKey).invk(C.RegistryKeys.fld("field_41265/ENCHANTMENT").get());
-            Object enchantmentRegistryEntry = C.Registry.inst(enchantmentRegistry).mthd("method_47983/getEntry", Object.class).invk(enchantment);
-            return (boolean) C.RegistryEntry.inst(enchantmentRegistryEntry).mthd("method_40220/isIn", R.clz("net.minecraft.class_6862/net.minecraft.registry.tag.TagKey"))
-                                            .invk(R.clz("net.minecraft.class_9636/net.minecraft.registry.tag.EnchantmentTags").fld("field_51545/TRADEABLE").get());
+            Object registryManager = world.registryAccess();
+            Object enchantmentRegistry = C.DynamicRegistryManager.inst(registryManager).mthd("method_30530/registryOrThrow/lookupOrThrow", C.RegistryKey)
+                                                                 .invk(C.RegistryKeys.fld("field_41265/ENCHANTMENT").get());
+            Object enchantmentRegistryEntry = C.Registry.inst(enchantmentRegistry).mthd("method_47983/wrapAsHolder", Object.class).invk(enchantment);
+            return (boolean) C.RegistryEntry.inst(enchantmentRegistryEntry).mthd("method_40220/is", R.clz("net.minecraft.class_6862/net.minecraft.tags.TagKey"))
+                                            .invk(R.clz("net.minecraft.class_9636/net.minecraft.tags.EnchantmentTags").fld("field_51545/TRADEABLE").get());
         } else {
-            return (boolean) R.clz(Enchantment.class).inst(enchantment).mthd("method_25949/isAvailableForEnchantedBookOffer").invk();
+            return (boolean) R.clz(Enchantment.class).inst(enchantment).mthd("method_25949/isTradeable").invk();
         }
     }
 
-    public static void playNotification(ClientWorld world, ClientPlayerEntity player) {
+    public static void playNotification(ClientLevel world, LocalPlayer player) {
         if (!LibrGetter.config.notify) {
             return;
         }
-        R.clz(World.class).inst(world)
-         .mthd("method_8486/playSound/playSoundClient", double.class, double.class, double.class, SoundEvent.class, SoundCategory.class, float.class, float.class, boolean.class)
-         .invk(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.NEUTRAL, 10F, 0.7F, false);
+        R.clz(Level.class).inst(world).mthd("method_8486/playLocalSound", double.class, double.class, double.class, SoundEvent.class, SoundSource.class, float.class, float.class, boolean.class)
+         .invk(player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_LEVELUP, SoundSource.NEUTRAL, 10F, 0.7F, false);
     }
 
-    public static void setActionResultFail(CallbackInfoReturnable<ActionResult> info) {
-        info.setReturnValue((ActionResult) R.clz(ActionResult.class).fld("field_5814/FAIL").get());
+    public static void setActionResultFail(CallbackInfoReturnable<InteractionResult> info) {
+        info.setReturnValue((InteractionResult) R.clz(InteractionResult.class).fld("field_5814/FAIL").get());
     }
 
-    public static boolean isVillagerLibrarian(VillagerEntity villager) {
+    public static boolean isVillagerLibrarian(Villager villager) {
         VillagerData villagerData = villager.getVillagerData();
         Object librarianProfession = C.VillagerProfession.fld("field_17060/LIBRARIAN").get();
         if (!V.lower("1.21.5")) {
@@ -347,7 +337,7 @@ public class Minecraft {
         }
     }
 
-    public static boolean isVillagerUnemployed(VillagerEntity villager) {
+    public static boolean isVillagerUnemployed(Villager villager) {
         VillagerData villagerData = villager.getVillagerData();
         Object noneProfession = C.VillagerProfession.fld("field_17051/NONE").get();
         if (!V.lower("1.21.5")) {
@@ -359,15 +349,15 @@ public class Minecraft {
         }
     }
 
-    public static void setSelectedSlot(PlayerInventory inventory, int slot) {
+    public static void setSelectedSlot(Inventory inventory, int slot) {
         if (!V.lower("1.21.5")) {
-            R.clz(PlayerInventory.class).inst(inventory).mthd("method_61496/setSelectedSlot", int.class).invk(slot);
+            R.clz(Inventory.class).inst(inventory).mthd("method_61496/setSelectedHotbarSlot", int.class).invk(slot);
         } else {
-            R.clz(PlayerInventory.class).inst(inventory).fld("field_7545/selectedSlot").set(slot);
+            R.clz(Inventory.class).inst(inventory).fld("field_7545/selected").set(slot);
         }
     }
 
-    public static void setScreen(MinecraftClient client, Screen screen) {
-        R.clz(MinecraftClient.class).inst(client).mthd("method_1507/setScreen/openScreen", Screen.class).invk(screen);
+    public static void setScreen(Minecraft client, Screen screen) {
+        R.clz(Minecraft.class).inst(client).mthd("method_1507/setScreen", Screen.class).invk(screen);
     }
 }

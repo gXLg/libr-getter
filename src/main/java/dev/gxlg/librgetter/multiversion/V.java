@@ -10,7 +10,9 @@ public class V {
     private static MinecraftVersion version = null;
 
     public static MinecraftVersion getVersion() {
-        if (version != null) return version;
+        if (version != null) {
+            return version;
+        }
 
         R.RClass constants = R.clz(SharedConstants.class);
         Object gameVersion = constants.mthd("method_16673/getGameVersion").invk();
@@ -24,10 +26,26 @@ public class V {
         return version;
     }
 
+    public static boolean higher(String other) {
+        return getVersion().higher(other);
+    }
+
+    public static boolean equal(String other) {
+        return getVersion().equal(other);
+    }
+
+    public static boolean lower(String other) {
+        return getVersion().lower(other);
+    }
+
     public static class MinecraftVersion {
         private final int major;
+
         private final int minor;
+
         private final int patch;
+
+        private final Map<String, Integer> cache = new HashMap<>();
 
         public MinecraftVersion(String version) {
             String[] mainParts = version.split("-", 2);
@@ -37,15 +55,19 @@ public class V {
             this.patch = nums.length > 2 ? Integer.parseInt(nums[2]) : 0;
         }
 
-        private final Map<String, Integer> cache = new HashMap<>();
-
         public int compare(String other) {
-            return cache.computeIfAbsent(other, i -> {
-                MinecraftVersion v = new MinecraftVersion(other);
-                if (this.major != v.major) return Integer.compare(this.major, v.major);
-                if (this.minor != v.minor) return Integer.compare(this.minor, v.minor);
-                return Integer.compare(this.patch, v.patch);
-            });
+            return cache.computeIfAbsent(
+                other, i -> {
+                    MinecraftVersion v = new MinecraftVersion(other);
+                    if (this.major != v.major) {
+                        return Integer.compare(this.major, v.major);
+                    }
+                    if (this.minor != v.minor) {
+                        return Integer.compare(this.minor, v.minor);
+                    }
+                    return Integer.compare(this.patch, v.patch);
+                }
+            );
         }
 
         public boolean higher(String other) {
@@ -59,17 +81,5 @@ public class V {
         public boolean equal(String other) {
             return this.compare(other) == 0;
         }
-    }
-
-    public static boolean higher(String other) {
-        return getVersion().higher(other);
-    }
-
-    public static boolean equal(String other) {
-        return getVersion().equal(other);
-    }
-
-    public static boolean lower(String other) {
-        return getVersion().lower(other);
     }
 }

@@ -2,13 +2,13 @@ package dev.gxlg.librgetter.utils.types.config;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import dev.gxlg.librgetter.utils.types.config.helpers.EnumArgumentType;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public interface OptionsConfig<T extends Enum<T> & StringIdentifiable> extends StringIdentifiable {
+public interface OptionsConfig<T extends Enum<T> & StringRepresentable> extends StringRepresentable {
     T[] getValues();
 
     @Override
-    default String asString() {
+    default String getSerializedName() {
         return ((Enum<?>) this).name();
     }
 

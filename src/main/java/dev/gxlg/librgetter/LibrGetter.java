@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter;
 
 import dev.gxlg.librgetter.utils.Updater;
-import dev.gxlg.librgetter.utils.reflection.Commands;
 import dev.gxlg.librgetter.utils.reflection.Keybinds;
+import dev.gxlg.librgetter.utils.reflection.chaining.commands.Commands;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 public class LibrGetter implements ClientModInitializer {
-
     public static final String MOD_ID = "librgetter";
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
@@ -25,7 +24,7 @@ public class LibrGetter implements ClientModInitializer {
         config = Config.init();
 
         // register commands
-        Commands.registerCommands();
+        Commands.getImpl().registerCommands();
 
         // register keybinds
         Keybinds.registerKeybinds();

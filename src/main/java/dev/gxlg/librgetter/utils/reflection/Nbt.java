@@ -1,6 +1,5 @@
 package dev.gxlg.librgetter.utils.reflection;
 
-import dev.gxlg.librgetter.multiversion.C;
 import dev.gxlg.librgetter.multiversion.V;
 
 import java.util.Optional;
@@ -24,7 +23,7 @@ public class Nbt {
     }
 
     public static Set<?> getKeys(Object element) {
-        return (Set<?>) C.NbtCompound.inst(element).mthd("method_10541/getKeys").invk();
+        return (Set<?>) C.NbtCompound.inst(element).mthd("method_10541/keySet").invk();
     }
 
     public static Object getList(Object element, String name, int type) {

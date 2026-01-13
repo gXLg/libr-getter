@@ -5,9 +5,9 @@ import dev.gxlg.librgetter.utils.types.TradeOfferData;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
 import dev.gxlg.librgetter.worker.tasks.StandbyTask;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.BlockingQueue;
@@ -128,7 +128,7 @@ public class TaskManager {
     }
 
     public record TaskContext(
-        BlockPos selectedLecternPos, ItemStack defaultItem, VillagerEntity selectedVillager, int attemptsCounter, TradeOfferData tradeOfferData
+        BlockPos selectedLecternPos, ItemStack defaultItem, Villager selectedVillager, int attemptsCounter, TradeOfferData tradeOfferData
     ) {
         public static final TaskContext EMPTY = new TaskContext(null, null, null, 0, null);
 
@@ -140,7 +140,7 @@ public class TaskManager {
             return new TaskContext(selectedLecternPos, item, selectedVillager, attemptsCounter, tradeOfferData);
         }
 
-        public TaskContext withVillager(VillagerEntity villager) {
+        public TaskContext withVillager(Villager villager) {
             return new TaskContext(selectedLecternPos, defaultItem, villager, attemptsCounter, tradeOfferData);
         }
 

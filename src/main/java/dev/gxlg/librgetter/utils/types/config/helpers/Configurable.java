@@ -97,7 +97,7 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
             Configurable<?> configurable = instance.getConfigurableForName(onlyEffectiveCondition.when());
             String current;
             if (configurable.type() == OptionsConfig.class) {
-                current = ((OptionsConfig<?>) configurable.get()).asString();
+                current = ((OptionsConfig<?>) configurable.get()).getSerializedName();
             } else {
                 current = configurable.get().toString();
             }

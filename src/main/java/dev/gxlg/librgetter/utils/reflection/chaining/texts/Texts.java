@@ -1,17 +1,19 @@
 package dev.gxlg.librgetter.utils.reflection.chaining.texts;
 
 import dev.gxlg.librgetter.multiversion.V;
+import dev.gxlg.librgetter.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
+import dev.gxlg.librgetter.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
 
 import java.util.List;
 import java.util.Map;
 
 public abstract class Texts {
-    abstract public void sendMessage(Object text, boolean actionbar);
+    abstract public void sendMessage(ComponentWrapper text, boolean actionbar);
 
-    abstract public void sendTranslatable(Formatting format, String message, Object... args);
+    abstract public void sendTranslatable(ChatFormatting format, String message, Object... args);
 
     abstract public void sendTranslatableFeedback(String message, Object... args);
 
@@ -29,11 +31,11 @@ public abstract class Texts {
 
     abstract public void sendListOfGoals();
 
-    abstract public Object bookMainPage(Map<String, Integer> categories);
+    abstract public MutableComponentWrapper bookMainPage(Map<String, Integer> categories);
 
-    abstract public Object bookTitle(String category);
+    abstract public MutableComponentWrapper bookTitle(String category);
 
-    abstract public Object bookEntry(Object text, Configurable<?> configurable);
+    abstract public MutableComponentWrapper bookEntry(MutableComponentWrapper text, Configurable<?> configurable);
 
     private static Texts implementation = null;
 

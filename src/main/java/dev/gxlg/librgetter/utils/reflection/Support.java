@@ -17,7 +17,7 @@ public class Support {
 
     public static void sendCycleTradesPacket() {
         if (!V.lower("1.20.2")) {
-            R.clz("net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking").mthd("send", R.clz("net.minecraft.class_8710/net.minecraft.network.packet.CustomPayload"))
+            R.clz("net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking").mthd("send", R.clz("net.minecraft.class_8710/net.minecraft.network.protocol.common.custom.CustomPacketPayload"))
              .invk(R.clz("de.maxhenkel.tradecycling.net.CycleTradesPacket").constr().newInst().self());
         } else {
             R.clz("de.maxhenkel.tradecycling.TradeCyclingClientMod").mthd("sendCycleTradesPacket").invk();

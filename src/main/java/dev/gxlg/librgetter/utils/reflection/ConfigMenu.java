@@ -4,10 +4,11 @@ import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.multiversion.R;
 import dev.gxlg.librgetter.multiversion.V;
+import dev.gxlg.librgetter.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import net.minecraft.client.gui.screen.ingame.BookScreen;
-import net.minecraft.text.StringVisitable;
+import net.minecraft.client.gui.screens.inventory.BookViewScreen;
+import net.minecraft.network.chat.FormattedText;
 
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class ConfigMenu {
         pageCount = pages;
     }
 
-    public static BookScreen.Contents getContent() {
+    public static BookViewScreen.BookAccess getContent() {
         if (list.isEmpty()) {
             for (int i = 0; i < pageCount; i++) {
                 list.add(null);
@@ -43,11 +44,11 @@ public class ConfigMenu {
         }
 
         if (!V.lower("1.20.5")) {
-            return (BookScreen.Contents) R.clz(BookScreen.Contents.class).constr(List.class).newInst(list).self();
+            return (BookViewScreen.BookAccess) R.clz(BookViewScreen.BookAccess.class).constr(List.class).newInst(list).self();
         }
 
-        return (BookScreen.Contents) Proxy.newProxyInstance(
-            Thread.currentThread().getContextClassLoader(), new Class[]{ BookScreen.Contents.class }, (proxy, method, args) -> {
+        return (BookViewScreen.BookAccess) Proxy.newProxyInstance(
+            Thread.currentThread().getContextClassLoader(), new Class[]{ BookViewScreen.BookAccess.class }, (proxy, method, args) -> {
                 String name = method.getName();
                 if (name.equals("method_17560") || name.equals("getPageCount")) {
                     return pageCount;
@@ -55,7 +56,7 @@ public class ConfigMenu {
                 } else if (name.equals("method_17563") || name.equals("getPage")) {
                     Integer index = (Integer) args[0];
                     if (index < 0 || index >= pageCount) {
-                        return StringVisitable.EMPTY;
+                        return FormattedText.EMPTY;
                     }
                     return list.get(index);
                 }
@@ -65,7 +66,7 @@ public class ConfigMenu {
     }
 
     public static void updatePage(int index) {
-        Object text;
+        MutableComponentWrapper text;
         if (index == 0) {
             text = Texts.getImpl().bookMainPage(categories);
 
@@ -82,6 +83,6 @@ public class ConfigMenu {
                 text = Texts.getImpl().bookEntry(text, config);
             }
         }
-        list.set(index, text);
+        list.set(index, text.unwrap());
     }
 }

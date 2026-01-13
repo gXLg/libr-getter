@@ -5,11 +5,11 @@ import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
 import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.util.Hand;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
 
 public class RequestTradesTask extends TaskManager.Task {
     @Override
@@ -18,16 +18,16 @@ public class RequestTradesTask extends TaskManager.Task {
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.player;
         if (player == null) {
             throw new InternalTaskException("player", this);
         }
-        ClientPlayNetworkHandler handler = client.getNetworkHandler();
+        ClientPacketListener handler = client.getConnection();
         if (handler == null) {
             throw new InternalTaskException("handler", this);
         }
-        ClientPlayerInteractionManager manager = client.interactionManager;
+        MultiPlayerGameMode manager = client.gameMode;
         if (manager == null) {
             throw new InternalTaskException("manager", this);
         }
@@ -36,7 +36,7 @@ public class RequestTradesTask extends TaskManager.Task {
             throw new TaskException("librgetter.far");
         }
 
-        manager.interactEntity(player, taskContext.selectedVillager(), Hand.MAIN_HAND);
+        manager.interact(player, taskContext.selectedVillager(), InteractionHand.MAIN_HAND);
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
     }
 }

@@ -2,8 +2,8 @@ package dev.gxlg.librgetter.utils.types;
 
 import dev.gxlg.librgetter.multiversion.R;
 import dev.gxlg.librgetter.multiversion.V;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Language;
+import net.minecraft.locale.Language;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("ClassCanBeRecord") // GSON can't handle records in earlier versions

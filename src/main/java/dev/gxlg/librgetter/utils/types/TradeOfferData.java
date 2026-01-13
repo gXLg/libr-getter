@@ -1,13 +1,13 @@
 package dev.gxlg.librgetter.utils.types;
 
-import net.minecraft.village.TradeOfferList;
+import net.minecraft.world.item.trading.MerchantOffers;
 
 public class TradeOfferData {
     private final boolean canRefresh;
 
-    private final TradeOfferList tradeOfferList;
+    private final MerchantOffers tradeOfferList;
 
-    private TradeOfferData(boolean canRefresh, TradeOfferList list) {
+    private TradeOfferData(boolean canRefresh, MerchantOffers list) {
         this.canRefresh = canRefresh;
         tradeOfferList = list;
     }
@@ -16,7 +16,7 @@ public class TradeOfferData {
         return canRefresh;
     }
 
-    public TradeOfferList getTradeOfferList() {
+    public MerchantOffers getTradeOfferList() {
         // TODO: centralized exceptions
         if (!canRefresh) {
             throw new IllegalStateException("Can't get the trades from non-refreshable offer data");
@@ -28,7 +28,7 @@ public class TradeOfferData {
         return new TradeOfferData(false, null);
     }
 
-    public static TradeOfferData offers(TradeOfferList tradeOfferList) {
+    public static TradeOfferData offers(MerchantOffers tradeOfferList) {
         return new TradeOfferData(true, tradeOfferList);
     }
 }

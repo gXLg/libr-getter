@@ -1,11 +1,11 @@
 package dev.gxlg.librgetter.gui;
 
-import dev.gxlg.librgetter.mixin.BookScreenAccessor;
+import dev.gxlg.librgetter.mixin.BookViewScreenAccessor;
 import dev.gxlg.librgetter.utils.reflection.ConfigMenu;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.BookScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 
-public class ConfigScreen extends BookScreen {
+public class ConfigScreen extends BookViewScreen {
     public ConfigScreen() {
         super(CONTENT);
     }
@@ -13,45 +13,45 @@ public class ConfigScreen extends BookScreen {
     @Override
     protected void init() {
         super.init();
-        jumpToPage(currentPage);
+        forcePage(currentPage);
     }
 
     @Override
-    protected boolean jumpToPage(int page) {
+    protected boolean forcePage(int page) {
         currentPage = page;
         updateScreen();
-        return super.jumpToPage(page);
+        return super.forcePage(page);
     }
 
     @Override
-    protected void goToPreviousPage() {
+    protected void pageBack() {
         if (currentPage > 0) {
             currentPage--;
         }
         updateScreen();
-        super.goToPreviousPage();
+        super.pageBack();
     }
 
     @Override
-    protected void goToNextPage() {
+    protected void pageForward() {
         if (currentPage < ConfigMenu.pageCount - 1) {
             currentPage++;
         }
         updateScreen();
-        super.goToNextPage();
+        super.pageForward();
     }
 
     public void updateScreen() {
         ConfigMenu.updatePage(currentPage);
-        ((BookScreenAccessor) this).setCachedPageIndex(-1);
+        ((BookViewScreenAccessor) this).setCachedPage(-1);
     }
 
-    private static final Contents CONTENT = ConfigMenu.getContent();
+    private static final BookAccess CONTENT = ConfigMenu.getContent();
 
     private static int currentPage = 0;
 
     public static boolean configChange() {
-        if (MinecraftClient.getInstance().currentScreen instanceof ConfigScreen cs) {
+        if (Minecraft.getInstance().screen instanceof ConfigScreen cs) {
             cs.updateScreen();
             return true;
         }

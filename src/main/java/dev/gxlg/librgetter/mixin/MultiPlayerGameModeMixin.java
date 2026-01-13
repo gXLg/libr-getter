@@ -1,16 +1,16 @@
 package dev.gxlg.librgetter.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.gxlg.librgetter.utils.reflection.Minecraft;
+import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,26 +21,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @SuppressWarnings({ "UnresolvedMixinReference", "MixinAnnotationTarget" })
-@Mixin(ClientPlayerInteractionManager.class)
-public abstract class Manager {
+@Mixin(MultiPlayerGameMode.class)
+public abstract class MultiPlayerGameModeMixin {
 
     @Shadow
     @Final
-    private MinecraftClient client;
+    private Minecraft minecraft;
 
     @Inject(at = @At("HEAD"), method = "tick")
     private void tick(CallbackInfo info) {
         TaskManager.work();
     }
 
-    @Inject(at = @At("HEAD"), method = "attackBlock", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "startDestroyBlock", cancellable = true)
     private void attackBlock(CallbackInfoReturnable<Boolean> info, @Local(argsOnly = true) BlockPos pos) {
-        if (client.player == null) {
+        if (minecraft.player == null) {
             Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "ClientPlayerInteractionManagerMixin#attackBlock");
             return;
         }
-        ClientWorld world = Minecraft.getWorld(client.player);
-        if (!world.getBlockState(pos).isOf(Blocks.LECTERN)) {
+        ClientLevel world = MinecraftHelper.getWorld(minecraft.player);
+        if (!world.getBlockState(pos).is(Blocks.LECTERN)) {
             return;
         }
         if (!TaskManager.getCurrentTask().allowsBreaking()) {
@@ -50,22 +50,22 @@ public abstract class Manager {
 
     /// <%
     @Inject(at = @At("HEAD"), method = "$1", cancellable = true, require = 0, remap = false)
-    private void interactBlock$2(CallbackInfoReturnable<ActionResult> info, @Local(argsOnly = true) BlockHitResult hitResult) {
+    private void interactBlock$2(CallbackInfoReturnable<InteractionResult> info, @Local(argsOnly = true) BlockHitResult hitResult) {
         interactBlock(info, hitResult);
     }
     /// [
     ///   "method_2896(Lnet/minecraft/class_746;Lnet/minecraft/class_1268;Lnet/minecraft/class_3965;)Lnet/minecraft/class_1269;",
-    ///   "interactBlock(Lnet/minecraft/client/network/ClientPlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/util/hit/BlockHitResult;)Lnet/minecraft/util/ActionResult;",
+    ///   "useItemOn(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;",
     ///   "method_2896(Lnet/minecraft/class_746;Lnet/minecraft/class_638;Lnet/minecraft/class_1268;Lnet/minecraft/class_3965;)Lnet/minecraft/class_1269;",
-    ///   "interactBlock(Lnet/minecraft/client/network/ClientPlayerEntity;Lnet/minecraft/client/world/ClientWorld;Lnet/minecraft/util/Hand;Lnet/minecraft/util/hit/BlockHitResult;)Lnet/minecraft/util/ActionResult;"
+    ///   "useItemOn(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"
     /// ].map((s, i) => code.replace("$1", s).replace("$2", i))
     /// %>
 
     @Unique
-    private void interactBlock(CallbackInfoReturnable<ActionResult> info, BlockHitResult hitResult) {
-        BlockPos pos = hitResult.getBlockPos().offset(hitResult.getSide());
+    private void interactBlock(CallbackInfoReturnable<InteractionResult> info, BlockHitResult hitResult) {
+        BlockPos pos = hitResult.getBlockPos().relative(hitResult.getDirection());
 
-        if (client.player == null) {
+        if (minecraft.player == null) {
             Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "ClientPlayerInteractionManagerMixin#interactBlock");
             return;
         }
@@ -74,7 +74,7 @@ public abstract class Manager {
             return;
         }
         if (!TaskManager.getCurrentTask().allowsPlacing()) {
-            Minecraft.setActionResultFail(info);
+            MinecraftHelper.setActionResultFail(info);
         }
     }
 }

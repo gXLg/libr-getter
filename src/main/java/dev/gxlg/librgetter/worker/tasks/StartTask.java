@@ -7,11 +7,11 @@ import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
 import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.BlockPos;
 
 import java.util.List;
 
@@ -34,20 +34,20 @@ public class StartTask extends TaskManager.Task {
             throw new TaskException("librgetter.goals");
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.player;
         if (player == null) {
             throw new InternalTaskException("player", this);
         }
 
         if (LibrGetter.config.safeChecker) {
-            ClientWorld world = client.world;
+            ClientLevel world = client.level;
             if (world == null) {
                 throw new InternalTaskException("world", this);
             }
             // If the villager is sitting, assume it cannot move
-            if (!taskContext.selectedVillager().hasVehicle()) {
-                List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().getBlockPos(), taskContext.selectedLecternPos(), world, 2);
+            if (!taskContext.selectedVillager().isPassenger()) {
+                List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), world, 2);
                 if (path != null) {
                     throw new TaskException("librgetter.unsafe");
                 }
@@ -58,14 +58,14 @@ public class StartTask extends TaskManager.Task {
 
         throw new StopTaskSignal(ctx -> {
             if (!LibrGetter.config.autoTool) {
-                ctx = ctx.withDefaultItem(player.getMainHandStack());
+                ctx = ctx.withDefaultItem(player.getMainHandItem());
             }
             if (resetCounter) {
                 ctx = ctx.withResetAttemptsCounter();
             }
 
             return TaskManager.TaskSwitch.nextTick(
-                new RotationTask(player, EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(ctx.selectedVillager()), new WaitVillagerAcceptProfessionTask()),
+                new RotationTask(player, EntityAnchorArgument.Anchor.EYES.apply(ctx.selectedVillager()), new WaitVillagerAcceptProfessionTask()),
                 ctx
             );
         });
