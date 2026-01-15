@@ -1,10 +1,10 @@
 package dev.gxlg.librgetter.utils.reflection.chaining.texts;
 
-import dev.gxlg.librgetter.multiversion.V;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import dev.gxlg.multiversion.V;
+import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
 import net.minecraft.ChatFormatting;
 
 import java.util.List;

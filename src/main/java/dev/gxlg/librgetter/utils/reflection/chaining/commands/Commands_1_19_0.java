@@ -1,14 +1,14 @@
 package dev.gxlg.librgetter.utils.reflection.chaining.commands;
 
 import com.mojang.brigadier.arguments.ArgumentType;
-import dev.gxlg.librgetter.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper;
-import dev.gxlg.librgetter.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper;
-import dev.gxlg.librgetter.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandManagerWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallbackWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.core.registries.BuiltInRegistriesWrapper;
+import dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper;
+import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper;
+import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper;
+import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandManagerWrapper;
+import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallbackWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.registries.BuiltInRegistriesWrapper;
 
 import java.lang.reflect.Proxy;
 

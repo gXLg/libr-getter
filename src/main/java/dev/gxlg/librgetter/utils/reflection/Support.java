@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.multiversion.R;
-import dev.gxlg.librgetter.multiversion.V;
+import dev.gxlg.multiversion.R;
+import dev.gxlg.multiversion.V;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class Support {

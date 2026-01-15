@@ -2,8 +2,8 @@ package dev.gxlg.librgetter.utils.reflection;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.gxlg.librgetter.gui.ConfigScreen;
-import dev.gxlg.librgetter.multiversion.R;
-import dev.gxlg.librgetter.multiversion.V;
+import dev.gxlg.multiversion.R;
+import dev.gxlg.multiversion.V;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;

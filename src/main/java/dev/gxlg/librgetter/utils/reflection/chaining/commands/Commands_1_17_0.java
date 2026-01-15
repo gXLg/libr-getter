@@ -5,13 +5,13 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.command.LibrGetCommand;
-import dev.gxlg.librgetter.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper;
-import dev.gxlg.librgetter.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper;
-import dev.gxlg.librgetter.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.fabricmc.fabric.api.client.command.v1.ClientCommandManagerWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.commands.arguments.ItemEnchantmentArgumentWrapper;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.exceptions.commands.CommandException;
+import dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper;
+import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper;
+import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper;
+import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v1.ClientCommandManagerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ItemEnchantmentArgumentWrapper;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.List;

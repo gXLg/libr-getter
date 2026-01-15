@@ -2,11 +2,11 @@ package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.Config;
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.multiversion.R;
-import dev.gxlg.librgetter.multiversion.V;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import dev.gxlg.multiversion.R;
+import dev.gxlg.multiversion.V;
+import dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.network.chat.FormattedText;
 

@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.reflection;
 
-import dev.gxlg.librgetter.multiversion.V;
+import dev.gxlg.multiversion.V;
 
 import java.util.Optional;
 import java.util.Set;

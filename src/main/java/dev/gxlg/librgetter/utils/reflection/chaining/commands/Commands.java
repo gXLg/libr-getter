@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.utils.reflection.chaining.commands;
 
 import com.mojang.brigadier.context.CommandContext;
-import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.types.exceptions.commands.CommandException;
+import dev.gxlg.multiversion.V;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.List;

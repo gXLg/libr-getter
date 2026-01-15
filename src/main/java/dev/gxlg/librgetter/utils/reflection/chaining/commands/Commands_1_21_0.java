@@ -1,10 +1,10 @@
 package dev.gxlg.librgetter.utils.reflection.chaining.commands;
 
 import com.mojang.brigadier.arguments.ArgumentType;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgument$ResultWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper;
-import dev.gxlg.librgetter.multiversion.gen.net.minecraft.core.registries.RegistriesWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgument$ResultWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.registries.RegistriesWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

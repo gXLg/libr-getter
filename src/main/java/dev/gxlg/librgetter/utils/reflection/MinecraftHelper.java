@@ -1,11 +1,11 @@
 package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.multiversion.R;
-import dev.gxlg.librgetter.multiversion.V;
 import dev.gxlg.librgetter.utils.Plugins;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.ParsedEnchantmentTrade;
+import dev.gxlg.multiversion.R;
+import dev.gxlg.multiversion.V;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
