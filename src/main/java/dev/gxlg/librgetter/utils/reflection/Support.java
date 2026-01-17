@@ -1,26 +1,27 @@
 package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.multiversion.R;
 import dev.gxlg.multiversion.V;
+import dev.gxlg.multiversion.gen.de.maxhenkel.tradecycling.TradeCyclingClientModWrapper;
+import dev.gxlg.multiversion.gen.de.maxhenkel.tradecycling.net.CycleTradesPacketWrapper;
+import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworkingWrapper;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class Support {
-    private static final FabricLoader instance;
+    private static final FabricLoader fabricLoader;
 
     private static final boolean tradeCycling;
 
     static {
-        instance = FabricLoader.getInstance();
-        tradeCycling = instance.getModContainer("trade_cycling").isPresent();
+        fabricLoader = FabricLoader.getInstance();
+        tradeCycling = fabricLoader.getModContainer("trade_cycling").isPresent();
     }
 
     public static void sendCycleTradesPacket() {
         if (!V.lower("1.20.2")) {
-            R.clz("net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking").mthd("send", R.clz("net.minecraft.class_8710/net.minecraft.network.protocol.common.custom.CustomPacketPayload"))
-             .invk(R.clz("de.maxhenkel.tradecycling.net.CycleTradesPacket").constr().newInst().self());
+            ClientPlayNetworkingWrapper.send(new CycleTradesPacketWrapper());
         } else {
-            R.clz("de.maxhenkel.tradecycling.TradeCyclingClientMod").mthd("sendCycleTradesPacket").invk();
+            TradeCyclingClientModWrapper.sendCycleTradesPacket();
         }
     }
 
@@ -30,6 +31,6 @@ public class Support {
     }
 
     public static boolean isModPresent(String modID) {
-        return instance.getModContainer(modID).isPresent();
+        return fabricLoader.getModContainer(modID).isPresent();
     }
 }

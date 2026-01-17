@@ -12,4 +12,8 @@ public class DataComponentsWrapper extends R.RWrapper<DataComponentsWrapper> {
     public static DataComponentsWrapper inst(Object instance) {
         return new DataComponentsWrapper(instance);
     }
+
+    public static dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper CUSTOM_DATA() {
+        return dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.inst(clazz.fld("field_49628/CUSTOM_DATA").get());
+    }
 }

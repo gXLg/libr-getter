@@ -13,7 +13,7 @@ public class KeyMapping$CategoryWrapper extends R.RWrapper<KeyMapping$CategoryWr
         return new KeyMapping$CategoryWrapper(instance);
     }
 
-    public static dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper register(dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper id){
-        return dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper.inst(clazz.mthd("method_74698/register", dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.clazz).invk(id.unwrap()));
+    public static dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper register(net.minecraft.resources.Identifier id){
+        return dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper.inst(clazz.mthd("method_74698/register", net.minecraft.resources.Identifier.class).invk(id));
     }
 }

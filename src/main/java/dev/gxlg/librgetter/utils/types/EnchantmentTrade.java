@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.types;
 
-import dev.gxlg.librgetter.multiversion.R;
-import dev.gxlg.librgetter.multiversion.V;
+import dev.gxlg.multiversion.R;
+import dev.gxlg.multiversion.V;
 import net.minecraft.locale.Language;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -53,5 +53,29 @@ public class EnchantmentTrade {
 
     public int price() {
         return price;
+    }
+
+    public static class Enchantment {
+
+        private final String id;
+
+        private final int lvl;
+
+        public Enchantment(String id, int lvl) {
+            this.id = id;
+            this.lvl = lvl;
+        }
+
+        public String id() {
+            return id;
+        }
+
+        public int lvl() {
+            return lvl;
+        }
+
+        public EnchantmentTrade tradeWithPrice(int price) {
+            return new EnchantmentTrade(id, lvl, price);
+        }
     }
 }

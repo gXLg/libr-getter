@@ -1,13 +1,14 @@
 package dev.gxlg.librgetter.utils.plugins;
 
 import dev.gxlg.librgetter.utils.reflection.chaining.tags.Tags;
+import dev.gxlg.librgetter.utils.types.ParsedEnchantmentTrade;
 import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Set;
 
 public class Bukkit {
-    public static Triple<String, Integer, String[]> parse(CompoundTagWrapper tag) {
+    public static ParsedEnchantmentTrade.Raw parse(CompoundTagWrapper tag) {
         CompoundTagWrapper element = Tags.getImpl().getCompound(tag, "PublicBukkitValues");
         Set<String> keys = element.keySet();
 
@@ -22,7 +23,7 @@ public class Bukkit {
 
     /* different bukkit plugins */
 
-    private static Triple<String, Integer, String[]> enchantmentSolution(CompoundTagWrapper element, Set<String> keys) {
+    private static ParsedEnchantmentTrade.Raw enchantmentSolution(CompoundTagWrapper element, Set<String> keys) {
         String id = null;
         int lvl = -1;
 

@@ -7,8 +7,18 @@ import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.ParsedEnchantmentTrade;
 import dev.gxlg.multiversion.R;
 import dev.gxlg.multiversion.V;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.RegistryAccessWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentHolderWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentsWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.registries.BuiltInRegistriesWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.registries.RegistriesWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.nbt.TagWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.component.CustomDataWrapper;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -43,7 +53,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class MinecraftHelper {
     public static Connection getConnection(ClientPacketListener handler) {
@@ -51,22 +60,23 @@ public class MinecraftHelper {
     }
 
     public static ClientLevel getWorld(LocalPlayer player) {
+        LocalPlayerWrapper playerWrapper = LocalPlayerWrapper.inst(player);
         if (!V.lower("1.21.9")) {
-            return (ClientLevel) R.clz(LocalPlayer.class).inst(player).mthd("method_73183/level").invk();
+            return playerWrapper.level();
         } else if (!V.lower("1.19")) {
-            return (ClientLevel) R.clz(LocalPlayer.class).inst(player).mthd("method_37908/getLevel").invk();
+            return playerWrapper.getLevel();
         } else {
-            return (ClientLevel) R.clz(LocalPlayer.class).inst(player).fld("field_17892/clientLevel").get();
+            return playerWrapper.getClientLevel();
         }
     }
 
-    public static void interactBlock(MultiPlayerGameMode manager, LocalPlayer player, BlockHitResult lowBlock, boolean main) {
-        InteractionHand hand = main ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+    public static void interactBlock(MultiPlayerGameMode manager, LocalPlayer player, BlockHitResult lowBlock, boolean useMainHand) {
+        InteractionHand hand = useMainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+        MultiPlayerGameModeWrapper managerWrapper = MultiPlayerGameModeWrapper.inst(manager);
         if (!V.lower("1.19")) {
-            R.clz(MultiPlayerGameMode.class).inst(manager).mthd("method_2896/useItemOn", LocalPlayer.class, InteractionHand.class, BlockHitResult.class).invk(player, hand, lowBlock);
+            managerWrapper.useItemOn(player, hand, lowBlock);
         } else {
-            R.clz(MultiPlayerGameMode.class).inst(manager).mthd("method_2896/useItemOn", LocalPlayer.class, ClientLevel.class, InteractionHand.class, BlockHitResult.class)
-             .invk(player, getWorld(player), hand, lowBlock);
+            managerWrapper.useItemOn(player, getWorld(player), hand, lowBlock);
         }
     }
 
@@ -76,17 +86,12 @@ public class MinecraftHelper {
             if (world == null) {
                 return null;
             }
-            Object registryManager = world.registryAccess();
-
-            Object enchantmentRegistry = C.DynamicRegistryManager.inst(registryManager).mthd("method_30530/registryOrThrow/lookupOrThrow", C.RegistryKey)
-                                                                 .invk(C.RegistryKeys.fld("field_41265/ENCHANTMENT").get());
-            Object enchantmentRegistryEntry = C.Registry.inst(enchantmentRegistry).mthd("method_47983/wrapAsHolder", Object.class).invk(enchantment);
-            return (Identifier) R.clz(Identifier.class).mthd("method_60654/parse", String.class).invk(C.RegistryEntry.inst(enchantmentRegistryEntry).mthd("method_55840/getRegisteredName").invk());
+            return RegistryAccessWrapper.inst(world.registryAccess()).lookupOrThrow(RegistriesWrapper.ENCHANTMENT()).getKey(enchantment);
 
         } else if (!V.lower("1.19.3")) {
-            return (Identifier) C.Registry.inst(C.Registries.fld("field_41176/ENCHANTMENT").get()).mthd("method_10221/getKey", Object.class).invk(enchantment);
+            return BuiltInRegistriesWrapper.ENCHANTMENT().getKey(enchantment);
         } else {
-            return (Identifier) C.Registry.inst(C.Registry.fld("field_11160/ENCHANTMENT").get()).mthd("method_10221/getKey", Object.class).invk(enchantment);
+            return RegistryWrapper.ENCHANTMENT().getKey(enchantment);
         }
     }
 
@@ -95,19 +100,14 @@ public class MinecraftHelper {
 
         CompoundTagWrapper tag;
         if (!V.lower("1.20.5")) {
-            Object componentsMap = C.ComponentHolder.inst(stack).mthd("method_57353/getComponents").invk();
-            Object nbt = C.ComponentMap.inst(componentsMap).mthd("method_57829/method_58694/get", C.DataComponentType).invk(C.DataComponentTypes.fld("field_49628/CUSTOM_DATA").get());
-
-            Object[] tagContainer = new Object[1];
-            if (nbt != null) {
-                Consumer<?> consumer = (Consumer<Object>) o -> tagContainer[0] = o;
-                R.clz("net.minecraft.class_9279/net.minecraft.world.item.component.CustomData").inst(nbt).mthd("method_57451/update", Consumer.class).invk(consumer);
+            CustomDataWrapper customData = CustomDataWrapper.inst(DataComponentHolderWrapper.inst(stack).get(DataComponentsWrapper.CUSTOM_DATA()));
+            if (customData.isNull()) {
+                return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
             }
-            tag = tagContainer[0];
-
+            tag = customData.copyTag();
         } else {
-            tag = R.clz(ItemStack.class).inst(stack).mthd("method_7969/getTag").invk();
-            if (tag == null) {
+            tag = ItemStackWrapper.inst(stack).getTag();
+            if (tag.isNull()) {
                 return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
             }
         }

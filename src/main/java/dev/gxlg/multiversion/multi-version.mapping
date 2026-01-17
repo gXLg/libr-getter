@@ -1,21 +1,38 @@
 net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
     void method_7353/displayClientMessage(net.minecraft.class_2561/net.minecraft.network.chat.Component message, boolean actionBar)
+    net.minecraft.client.multiplayer.ClientLevel method_73183/level()
+    net.minecraft.client.multiplayer.ClientLevel method_37908/getLevel()
+    net.minecraft.client.multiplayer.ClientLevel field_17892/clientLevel
 
 net.minecraft.class_6880/net.minecraft.core.Holder
     net.minecraft.class_6880$class_6883/net.minecraft.core.Holder$Reference
         Object comp_349/value()
 
 net.minecraft.class_9322/net.minecraft.core.component.DataComponentHolder
+    Object method_58694/get(net.minecraft.class_9331/net.minecraft.core.component.DataComponentType type)
+
+net.minecraft.class_9279/net.minecraft.world.item.component.CustomData
+    net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_57461/copyTag()
 
 net.minecraft.class_9323/net.minecraft.core.component.DataComponentMap
 
 net.minecraft.class_9331/net.minecraft.core.component.DataComponentType
 
 net.minecraft.class_9334/net.minecraft.core.component.DataComponents
+    static net.minecraft.class_9331/net.minecraft.core.component.DataComponentType field_49628/CUSTOM_DATA
+
+net.minecraft.class_1799/net.minecraft.world.item.ItemStack
+     net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_7969/getTag()
 
 net.minecraft.class_9304/net.minecraft.world.item.enchantment.ItemEnchantments
 
 net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+net.minecraft.class_636/net.minecraft.client.multiplayer.MultiPlayerGameMode
+    net.minecraft.world.InteractionResult method_2896/useItemOn(net.minecraft.client.player.LocalPlayer player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hit)
+    net.minecraft.world.InteractionResult method_2896/useItemOn(net.minecraft.client.player.LocalPlayer player, net.minecraft.client.multiplayer.ClientLevel clientWorld, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hit)
 
 # ------------------------------------------------------------------------------------------------------------- #
 
@@ -41,11 +58,14 @@ net.minecraft.class_7924/net.minecraft.core.registries.Registries
 
 net.minecraft.class_2378/net.minecraft.core.Registry
     net.minecraft.class_5321/net.minecraft.resources.ResourceKey method_30517/key()
+    net.minecraft.resources.Identifier method_10221/getKey(Object resource)
+    static net.minecraft.class_2378/net.minecraft.core.Registry field_11160/ENCHANTMENT
 
 net.minecraft.class_7923/net.minecraft.core.registries.BuiltInRegistries
     static net.minecraft.class_2378/net.minecraft.core.Registry field_41176/ENCHANTMENT
 
 net.minecraft.class_5455/net.minecraft.core.RegistryAccess
+    net.minecraft.class_2378/net.minecraft.core.Registry method_30530/registryOrThrow/lookupOrThrow(net.minecraft.class_5321/net.minecraft.resources.ResourceKey key)
 
 # ------------------------------------------------------------------------------------------------------------- #
 
@@ -148,14 +168,14 @@ net.minecraft.class_2487/net.minecraft.nbt.CompoundTag extends net.minecraft.cla
 # ------------------------------------------------------------------------------------------------------------- #
 
 net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier
-    static net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier method_43902/tryBuild(String namespace, String path)
+    static net.minecraft.resources.Identifier method_43902/tryBuild(String namespace, String path)
 
 net.minecraft.class_304/net.minecraft.client.KeyMapping
     <init>(String id, com.mojang.blaze3d.platform.InputConstants.Type type, int keyCode, net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category category)
     <init>(String id, com.mojang.blaze3d.platform.InputConstants.Type type, int keyCode, String categoryId)
 
 net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category
-    static net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category method_74698/register(net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier id)
+    static net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category method_74698/register(net.minecraft.resources.Identifier id)
 
 # ------------------------------------------------------------------------------------------------------------- #
 
@@ -165,3 +185,14 @@ net.minecraft.class_3872$class_3931/net.minecraft.client.gui.screens.inventory.B
 interface net.minecraft.class_3872$class_3931/net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess
     int method_17560/getPageCount()
     net.minecraft.class_2561/net.minecraft.network.chat.Component method_17563/getPage(int index)
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+    static void send(net.minecraft.class_8710/net.minecraft.network.protocol.common.custom.CustomPacketPayload customPayload)
+
+de.maxhenkel.tradecycling.net.CycleTradesPacket extends net.minecraft.class_8710/net.minecraft.network.protocol.common.custom.CustomPacketPayload
+    <init>()
+
+de.maxhenkel.tradecycling.TradeCyclingClientMod
+    static void sendCycleTradesPacket()

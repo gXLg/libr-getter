@@ -13,7 +13,7 @@ public class IdentifierWrapper extends R.RWrapper<IdentifierWrapper> {
         return new IdentifierWrapper(instance);
     }
 
-    public static dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper tryBuild(String namespace, String path){
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.inst(clazz.mthd("method_43902/tryBuild", String.class, String.class).invk(namespace, path));
+    public static net.minecraft.resources.Identifier tryBuild(String namespace, String path){
+        return (net.minecraft.resources.Identifier) clazz.mthd("method_43902/tryBuild", String.class, String.class).invk(namespace, path);
     }
 }
