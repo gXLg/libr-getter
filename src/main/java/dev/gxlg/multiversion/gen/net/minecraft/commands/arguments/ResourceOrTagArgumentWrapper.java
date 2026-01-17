@@ -14,6 +14,6 @@ public class ResourceOrTagArgumentWrapper extends R.RWrapper<ResourceOrTagArgume
     }
 
     public static com.mojang.brigadier.arguments.ArgumentType resourceOrTag(dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper context, dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper registryKey){
-        return (com.mojang.brigadier.arguments.ArgumentType) this.instance.mthd("method_45637/resourceOrTag", dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).invk(context.unwrap(), registryKey.unwrap());
+        return (com.mojang.brigadier.arguments.ArgumentType) clazz.mthd("method_45637/resourceOrTag", dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).invk(context.unwrap(), registryKey.unwrap());
     }
 }

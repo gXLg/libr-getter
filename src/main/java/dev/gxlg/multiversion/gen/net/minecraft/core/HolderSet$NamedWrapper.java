@@ -10,7 +10,7 @@ public class HolderSet$NamedWrapper extends R.RWrapper<HolderSet$NamedWrapper> {
     }
 
     public java.util.stream.Stream stream(){
-        return (java.util.stream.Stream) clazz.mthd("method_40239/stream").invk();
+        return (java.util.stream.Stream) this.instance.mthd("method_40239/stream").invk();
     }
 
     public static HolderSet$NamedWrapper inst(Object instance) {

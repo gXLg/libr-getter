@@ -9,8 +9,8 @@ public class CommandDispatcherWrapper extends R.RWrapper<CommandDispatcherWrappe
         super(clazz.inst(instance));
     }
 
-    public undefined register(dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper command){
-        clazz.mthd("register", dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.clazz).invk(command.unwrap());
+    public void register(dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper command){
+        this.instance.mthd("register", dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.clazz).invk(command.unwrap());
     }
 
     public static CommandDispatcherWrapper inst(Object instance) {

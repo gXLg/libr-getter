@@ -136,7 +136,7 @@ public class CommandHelper {
         return false;
     }
 
-    private static boolean removeGoal(String name, int level) {
+    public static boolean removeGoal(String name, int level) {
         EnchantmentTrade newTrade = new EnchantmentTrade(name, level, 64);
         EnchantmentTrade alreadyPresentTrade = null;
         for (EnchantmentTrade trade : LibrGetter.config.goals) {

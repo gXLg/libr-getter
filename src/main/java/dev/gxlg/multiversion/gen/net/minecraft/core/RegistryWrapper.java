@@ -10,7 +10,7 @@ public class RegistryWrapper extends R.RWrapper<RegistryWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper key(){
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.mthd("method_30517/key").invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(this.instance.mthd("method_30517/key").invk());
     }
 
     public static RegistryWrapper inst(Object instance) {

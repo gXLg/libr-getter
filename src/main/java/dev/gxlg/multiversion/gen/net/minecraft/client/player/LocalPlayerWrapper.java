@@ -9,8 +9,8 @@ public class LocalPlayerWrapper extends R.RWrapper<LocalPlayerWrapper> {
         super(clazz.inst(instance));
     }
 
-    public undefined displayClientMessage(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper message,  boolean actionBar){
-        clazz.mthd("method_7353/displayClientMessage", dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz,  boolean.class).invk(message.unwrap(), actionBar);
+    public void displayClientMessage(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper message, boolean actionBar){
+        this.instance.mthd("method_7353/displayClientMessage", dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz, boolean.class).invk(message.unwrap(), actionBar);
     }
 
     public static LocalPlayerWrapper inst(Object instance) {

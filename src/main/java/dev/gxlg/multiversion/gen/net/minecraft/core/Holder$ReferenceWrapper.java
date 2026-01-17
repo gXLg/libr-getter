@@ -9,8 +9,8 @@ public class Holder$ReferenceWrapper extends R.RWrapper<Holder$ReferenceWrapper>
         super(clazz.inst(instance));
     }
 
-    public undefined value(){
-        return clazz.mthd("comp_349/value").invk();
+    public Object value(){
+        return this.instance.mthd("comp_349/value").invk();
     }
 
     public static Holder$ReferenceWrapper inst(Object instance) {

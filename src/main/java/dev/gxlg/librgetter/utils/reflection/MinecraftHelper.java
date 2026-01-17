@@ -2,10 +2,13 @@ package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.Plugins;
+import dev.gxlg.librgetter.utils.reflection.chaining.tags.Tags;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.ParsedEnchantmentTrade;
 import dev.gxlg.multiversion.R;
 import dev.gxlg.multiversion.V;
+import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.nbt.TagWrapper;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -37,6 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -89,7 +93,7 @@ public class MinecraftHelper {
     public static ParsedEnchantmentTrade parseTrade(MerchantOffers trades, int trade) {
         ItemStack stack = trades.get(trade).getResult();
 
-        Object tag;
+        CompoundTagWrapper tag;
         if (!V.lower("1.20.5")) {
             Object componentsMap = C.ComponentHolder.inst(stack).mthd("method_57353/getComponents").invk();
             Object nbt = C.ComponentMap.inst(componentsMap).mthd("method_57829/method_58694/get", C.DataComponentType).invk(C.DataComponentTypes.fld("field_49628/CUSTOM_DATA").get());
@@ -174,18 +178,18 @@ public class MinecraftHelper {
                 }
 
             } else {
-                Object list = null;
-                if (Nbt.contains(tag, "Enchantments")) {
+                List<TagWrapper> list = null;
+                if (tag.contains("Enchantments")) {
                     // Legacy enchantment books
-                    list = Nbt.getList(tag, "Enchantments", 10);
-                } else if (Nbt.contains(tag, "StoredEnchantments")) {
+                    list = Tags.getImpl().getList(tag, "Enchantments", 10);
+                } else if (tag.contains("StoredEnchantments")) {
                     // Vanilla minecraft
-                    list = Nbt.getList(tag, "StoredEnchantments", 10);
+                    list = Tags.getImpl().getList(tag, "StoredEnchantments", 10);
                 }
                 if (list != null) {
-                    Object element = Nbt.get(list, 0);
-                    id = Nbt.getString(element, "id");
-                    lvl = Nbt.getShort(element, "lvl");
+                    CompoundTagWrapper element = list.get(0).downcast(CompoundTagWrapper.class);
+                    id = Tags.getImpl().getString(element, "id");
+                    lvl = Tags.getImpl().getShort(element, "lvl");
                 }
             }
         }

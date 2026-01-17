@@ -14,6 +14,6 @@ public class ItemEnchantmentArgumentWrapper extends R.RWrapper<ItemEnchantmentAr
     }
 
     public static com.mojang.brigadier.arguments.ArgumentType enchantment(){
-        return (com.mojang.brigadier.arguments.ArgumentType) this.instance.mthd("method_9336/enchantment").invk();
+        return (com.mojang.brigadier.arguments.ArgumentType) clazz.mthd("method_9336/enchantment").invk();
     }
 }

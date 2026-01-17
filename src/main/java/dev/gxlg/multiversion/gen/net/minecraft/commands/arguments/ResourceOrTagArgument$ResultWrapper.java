@@ -10,11 +10,11 @@ public class ResourceOrTagArgument$ResultWrapper extends R.RWrapper<ResourceOrTa
     }
 
     public com.mojang.datafixers.util.Either unwrap2(){
-        return (com.mojang.datafixers.util.Either) clazz.mthd("method_45647/unwrap").invk();
+        return (com.mojang.datafixers.util.Either) this.instance.mthd("method_45647/unwrap").invk();
     }
 
     public java.util.Optional cast(dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper registryKey){
-        return (java.util.Optional) clazz.mthd("method_45648/cast", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).invk(registryKey.unwrap());
+        return (java.util.Optional) this.instance.mthd("method_45648/cast", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).invk(registryKey.unwrap());
     }
 
     public static ResourceOrTagArgument$ResultWrapper inst(Object instance) {

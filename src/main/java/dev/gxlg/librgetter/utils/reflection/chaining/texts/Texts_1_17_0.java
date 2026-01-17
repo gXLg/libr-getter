@@ -227,9 +227,6 @@ public class Texts_1_17_0 extends Texts {
     }
 
     protected MutableComponentWrapper title() {
-        MutableComponentWrapper text = literal("");
-        MutableComponentWrapper lg = literal("LibrGetter " + LibrGetter.getVersion() + "\n");
-        lg = lg.withStyle(ChatFormatting.DARK_GREEN);
-        return text.append(lg);
+        return literal("").append(literal("LibrGetter " + LibrGetter.getVersion() + "\n").withStyle(ChatFormatting.DARK_GREEN));
     }
 }

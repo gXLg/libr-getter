@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter;
 
 import dev.gxlg.librgetter.utils.Updater;
-import dev.gxlg.librgetter.utils.reflection.Keybinds;
 import dev.gxlg.librgetter.utils.reflection.chaining.commands.Commands;
+import dev.gxlg.librgetter.utils.reflection.chaining.keybinds.Keybinds;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -27,7 +27,7 @@ public class LibrGetter implements ClientModInitializer {
         Commands.getImpl().registerCommands();
 
         // register keybinds
-        Keybinds.registerKeybinds();
+        Keybinds.getImpl().registerKeybinds();
 
         // checking for a new update
         Updater.checkUpdates();

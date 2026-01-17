@@ -17,10 +17,6 @@ net.minecraft.class_9304/net.minecraft.world.item.enchantment.ItemEnchantments
 
 net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession
 
-net.minecraft.class_2487/net.minecraft.nbt.CompoundTag
-
-net.minecraft.class_2499/net.minecraft.nbt.ListTag
-
 # ------------------------------------------------------------------------------------------------------------- #
 
 net.minecraft.class_2561/net.minecraft.network.chat.Component
@@ -90,6 +86,9 @@ net.fabricmc.fabric.api.event.Event
 net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
     static !net.fabricmc.fabric.api.event.Event EVENT
 
+interface net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
+    void register(!com.mojang.brigadier.CommandDispatcher dispatcher, net.minecraft.class_7157/net.minecraft.commands.CommandBuildContext context)
+
 # ------------------------------------------------------------------------------------------------------------- #
 
 net.minecraft.class_7737/net.minecraft.commands.arguments.ResourceOrTagArgument
@@ -121,3 +120,48 @@ com.mojang.brigadier.builder.ArgumentBuilder
     !com.mojang.brigadier.builder.ArgumentBuilder executes(com.mojang.brigadier.Command command)
 
 com.mojang.brigadier.builder.LiteralArgumentBuilder extends !com.mojang.brigadier.builder.ArgumentBuilder
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+net.minecraft.class_2520/net.minecraft.nbt.Tag
+    byte method_10711/getId()
+
+net.minecraft.class_2487/net.minecraft.nbt.CompoundTag extends net.minecraft.class_2520/net.minecraft.nbt.Tag
+    String method_10558/getString(String name)
+    String method_68564/getStringOr(String name, String or)
+
+    boolean method_33133/isEmpty()
+
+    net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_10562/getCompound(String name)
+    net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_68568/getCompoundOrEmpty(String name)
+
+    java.util.Set<String> method_10541/keySet()
+
+    java.util.List<net.minecraft.class_2520/net.minecraft.nbt.Tag> method_10554/getList(String name, int type)
+    java.util.List<net.minecraft.class_2520/net.minecraft.nbt.Tag> method_68569/getListOrEmpty(String name)
+
+    short method_10568/getShort(String name)
+    short method_68565/getShortOr(String name, short or)
+
+    boolean method_10545/contains(String name)
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier
+    static net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier method_43902/tryBuild(String namespace, String path)
+
+net.minecraft.class_304/net.minecraft.client.KeyMapping
+    <init>(String id, com.mojang.blaze3d.platform.InputConstants.Type type, int keyCode, net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category category)
+    <init>(String id, com.mojang.blaze3d.platform.InputConstants.Type type, int keyCode, String categoryId)
+
+net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category
+    static net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category method_74698/register(net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier id)
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+net.minecraft.class_3872$class_3931/net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess
+    <init>(java.util.List<net.minecraft.class_2561/net.minecraft.network.chat.Component> pages)
+
+interface net.minecraft.class_3872$class_3931/net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess
+    int method_17560/getPageCount()
+    net.minecraft.class_2561/net.minecraft.network.chat.Component method_17563/getPage(int index)

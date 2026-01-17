@@ -9,8 +9,8 @@ public class EventWrapper extends R.RWrapper<EventWrapper> {
         super(clazz.inst(instance));
     }
 
-    public undefined register(undefined listener){
-        clazz.mthd("register", undefined.class).invk(listener);
+    public void register(Object listener){
+        this.instance.mthd("register", Object.class).invk(listener);
     }
 
     public static EventWrapper inst(Object instance) {
