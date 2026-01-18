@@ -6,7 +6,14 @@ import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import dev.gxlg.librgetter.utils.types.exceptions.runtime.UnexpectedConfigurableTypeException;
 import dev.gxlg.librgetter.utils.types.messages.TranslatableMessage;
+import dev.gxlg.librgetter.utils.types.messages.feedback.NewVersionReleasedMessage;
+import dev.gxlg.librgetter.utils.types.messages.feedback.OfferMessage;
+import dev.gxlg.librgetter.utils.types.messages.partial.TranslatableConfigMenuName;
+import dev.gxlg.librgetter.utils.types.messages.partial.TranslatableGoalsListName;
+import dev.gxlg.librgetter.utils.types.messages.partial.TranslatableRemoveButton;
+import dev.gxlg.librgetter.utils.types.messages.success.EnchantmentFoundMessage;
 import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEventWrapper;
@@ -46,17 +53,17 @@ public class Texts_1_17_0 extends Texts {
     }
 
     public void sendTranslatable(TranslatableMessage translatableMessage) {
-        sendTranslatable(translatableMessage.getColor(), translatableMessage.getTranslationKey(), translatableMessage.getArgs());
+        sendMessage(translatable(translatableMessage), false);
     }
 
     @Override
     public void sendFound(EnchantmentTrade enchant, int counter) {
-        MutableComponentWrapper text = translatable("feedback.found", enchant, counter, enchant.price());
+        MutableComponentWrapper text = translatable(new EnchantmentFoundMessage(enchant, counter, enchant.price()));
         text = text.withStyle(ChatFormatting.GREEN);
 
         if (!LibrGetter.config.removeGoal) {
             text = text.append(" ");
-            MutableComponentWrapper rem = translatable("element.remove");
+            MutableComponentWrapper rem = translatable(new TranslatableRemoveButton());
             Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + enchant.id() + "\" " + enchant.lvl())).withColor(ChatFormatting.YELLOW);
             rem.setStyle(style);
             text = text.append(rem);
@@ -69,22 +76,22 @@ public class Texts_1_17_0 extends Texts {
             return;
         }
         boolean ab = LibrGetter.config.logMode == LogMode.ACTIONBAR;
-        MutableComponentWrapper text = translatable("feedback.offer", offeredEnchantments);
+        MutableComponentWrapper text = translatable(new OfferMessage(offeredEnchantments));
         sendMessage(text, ab);
     }
 
     @Override
-    public void sendNewVersion(String message, String hover) {
-        MutableComponentWrapper text = translatable("feedback.version", message);
-        Style style = Style.EMPTY.withHoverEvent(hoverable(literalComponent(hover)));
+    public void sendNewVersion(String releaseName, String description) {
+        MutableComponentWrapper text = translatable(new NewVersionReleasedMessage(releaseName));
+        Style style = Style.EMPTY.withHoverEvent(hoverable(literal(description)));
         text.setStyle(style);
         sendMessage(text, false);
     }
 
     @Override
     public void sendListOfGoals() {
-        MutableComponentWrapper text = translatable("feedback.list");
-        MutableComponentWrapper rem = translatable("element.remove");
+        MutableComponentWrapper text = translatable(new TranslatableGoalsListName());
+        MutableComponentWrapper rem = translatable(new TranslatableRemoveButton());
         for (EnchantmentTrade l : LibrGetter.config.goals) {
             String line = "\n- " + l + " (" + l.price() + ") ";
             text = text.append(line);
@@ -98,7 +105,7 @@ public class Texts_1_17_0 extends Texts {
     @Override
     public MutableComponentWrapper bookMainPage(Map<String, Integer> categories) {
         MutableComponentWrapper text = title();
-        MutableComponentWrapper s = translatable("element.menu");
+        MutableComponentWrapper s = translatable(new TranslatableConfigMenuName());
         text = text.append(s);
         text = text.append("\n");
         for (String cat : Config.CATEGORIES) {
@@ -112,9 +119,9 @@ public class Texts_1_17_0 extends Texts {
     @Override
     public MutableComponentWrapper bookTitle(String category) {
         MutableComponentWrapper text = title();
-        MutableComponentWrapper s = applyStyle(literalComponent("↩"), Style.EMPTY.withClickEvent(paging(1)));
+        MutableComponentWrapper s = applyStyle(literal("↩"), Style.EMPTY.withClickEvent(paging(1)));
         text = text.append(s);
-        s = literalComponent(" ");
+        s = literal(" ");
         text = text.append(s);
         s = translatable("category." + category);
         return text.append(s);
@@ -131,7 +138,7 @@ public class Texts_1_17_0 extends Texts {
         ChatFormatting red = configurable.hasEffect() ? ChatFormatting.RED : ChatFormatting.GRAY;
 
         Style cStyle = Style.EMPTY.withHoverEvent(hoverable(name)).withColor(black);
-        MutableComponentWrapper c = applyStyle(literalComponent(showName), cStyle);
+        MutableComponentWrapper c = applyStyle(literal(showName), cStyle);
 
         text = text.append("\n\n").append(c);
 
@@ -142,9 +149,9 @@ public class Texts_1_17_0 extends Texts {
             Style style = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (!value))).withColor(value ? green : red);
 
             r = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + configurable.getDefault().toString()));
-            x = applyStyle(literalComponent("[" + value + "]"), style);
-            y = literalComponent(" ");
-            z = literalComponent("");
+            x = applyStyle(literal("[" + value + "]"), style);
+            y = literal(" ");
+            z = literal("");
 
         } else if (configurable.type() == Integer.class) {
             int value = (int) configurable.get();
@@ -155,28 +162,27 @@ public class Texts_1_17_0 extends Texts {
                 configurable.inRange(value + 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value + 1))).withColor(green) : Style.EMPTY.withColor(ChatFormatting.GRAY);
 
             r = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + configurable.getDefault().toString()));
-            x = applyStyle(literalComponent("[-]"), mStyle);
-            y = applyStyle(literalComponent(" " + value + " "), nStyle);
-            z = applyStyle(literalComponent("[+]"), pStyle);
+            x = applyStyle(literal("[-]"), mStyle);
+            y = applyStyle(literal(" " + value + " "), nStyle);
+            z = applyStyle(literal("[+]"), pStyle);
 
         } else if (configurable.type() == OptionsConfig.class) {
             OptionsConfig<?> value = (OptionsConfig<?>) configurable.get();
             Style style = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + value.next().getSerializedName())).withColor(value.getSerializedName().equals("NONE") ? red : green);
 
             r = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + ((OptionsConfig<?>) configurable.getDefault()).getSerializedName()));
-            x = applyStyle(literalComponent("[" + value.getSerializedName() + "]"), style);
-            y = literalComponent("");
-            z = literalComponent("");
+            x = applyStyle(literal("[" + value.getSerializedName() + "]"), style);
+            y = literal("");
+            z = literal("");
 
         } else {
-            // TODO: centralized exceptions
-            throw new RuntimeException("Unexpected type of configurable!");
+            throw new UnexpectedConfigurableTypeException(configurable.type());
         }
 
         if (!configurable.isDefault()) {
-            MutableComponentWrapper s = literalComponent(" ");
+            MutableComponentWrapper s = literal(" ");
             text = text.append(s);
-            s = applyStyle(literalComponent("↩"), r.withColor(black));
+            s = applyStyle(literal("↩"), r.withColor(black));
             text = text.append(s);
         }
         return text.append("\n").append(x).append(y).append(z);
@@ -199,18 +205,22 @@ public class Texts_1_17_0 extends Texts {
         return new TranslatableContentsWrapper(message, args);
     }
 
+    private MutableComponentWrapper translatable(TranslatableMessage message) {
+        return translatable(message.getTranslationKey(), message.getArgs()).withStyle(message.getColor());
+    }
+
     private MutableComponentWrapper applyStyle(ComponentWrapper text, Style style) {
         MutableComponentWrapper copy = text.plainCopy();
         copy.setStyle(style);
         return copy;
     }
 
-    private MutableComponentWrapper literalComponent(String message) {
+    private MutableComponentWrapper literal(String message) {
         Component m = Component.nullToEmpty(message);
         return ComponentWrapper.inst(m).plainCopy();
     }
 
     private MutableComponentWrapper title() {
-        return literalComponent("").append(literalComponent("LibrGetter " + LibrGetter.getVersion() + "\n").withStyle(ChatFormatting.DARK_GREEN));
+        return literal("").append(literal("LibrGetter " + LibrGetter.getVersion() + "\n").withStyle(ChatFormatting.DARK_GREEN));
     }
 }

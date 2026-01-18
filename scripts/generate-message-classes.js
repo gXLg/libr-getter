@@ -1,7 +1,7 @@
 const fs = require("fs");
 const lang = JSON.parse(fs.readFileSync("src/main/resources/assets/librgetter/lang/en_us.json"));
 const translationKeys = [...Object.keys(lang)];
-const messageTypes = ["error", "feedback", "success", "warning"];
+const messageTypes = ["error", "feedback", "success", "warning", "partial"];
 const genPath = "src/main/java/dev/gxlg/librgetter/utils/types/messages";
 
 const template = `package dev.gxlg.librgetter.utils.types.messages.{type};
@@ -26,7 +26,7 @@ for (const messageType of messageTypes) {
         let keyToRemove = -1;
         for (let i = 0; i < remainingKeys.length; i++) {
             const key = remainingKeys[i];
-            if (fileContent.includes(key)) {
+            if (fileContent.includes(`"${key}"`)) {
                 keyToRemove = i;
                 break;
             }

@@ -1,10 +1,11 @@
 package dev.gxlg.librgetter.utils.types.signals;
 
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.types.messages.feedback.ProcessStoppedMessage;
 
 public class StopCyclingSignal extends FinishSignal {
     @Override
     protected void sendFeedbackToPlayer() {
-        Texts.getImpl().sendTranslatableWarning("librgetter.stop");
+        Texts.getImpl().sendTranslatable(new ProcessStoppedMessage());
     }
 }

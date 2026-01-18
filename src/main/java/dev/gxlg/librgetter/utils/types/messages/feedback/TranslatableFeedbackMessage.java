@@ -10,6 +10,6 @@ public abstract class TranslatableFeedbackMessage extends TranslatableMessage {
 
     @Override
     public ChatFormatting getColor() {
-        return ChatFormatting.WHITE;
+        return ChatFormatting.RESET;
     }
 }
