@@ -40,7 +40,6 @@
   "librgetter.error.parse": "カスタ・ムエンチャントを解析できませんでした！",
   "librgetter.error.pick": "村人は途中で別の職業を選びました！",
   "librgetter.error.running": "LibrGetterはすでに稼働しています！",
-  "librgetter.error.specify": "書見台や司書は設定されていません！",
   "librgetter.error.unknown": "プラグイン '%s' に対して不明なデータ型です",
   "librgetter.error.unsafe": "村人が設置作業に干渉する恐れがあります。書見台を塞いでください。",
   "librgetter.error.update": "司書の取引を更新できません！",

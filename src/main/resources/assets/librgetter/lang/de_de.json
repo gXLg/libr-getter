@@ -40,7 +40,6 @@
   "librgetter.error.parse": "Die benutzerdefinierte Verzauberung konnte nicht analysiert werden!",
   "librgetter.error.pick": "Dorfbewohner wählte einen anderen Beruf während des Prozess!",
   "librgetter.error.running": "LibrGetter läuft schon!",
-  "librgetter.error.specify": "Lesepult oder Bibliothekar wurden nicht ausgewählt!",
   "librgetter.error.unknown": "Unbekannter Datentyp für den Plugin '%s'",
   "librgetter.error.unsafe": "Der Dorfbewohner könnte den Platzierungsprozess verhindern, verbauen Sie den Lesepult besser",
   "librgetter.error.update": "Bibliothekar kann seine Händel nicht aktualisieren!",

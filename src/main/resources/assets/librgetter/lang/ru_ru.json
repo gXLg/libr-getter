@@ -40,7 +40,6 @@
   "librgetter.error.parse": "Не удалось анализировать пользовательские чары!",
   "librgetter.error.pick": "Житель принял другую профессию во время процесса!",
   "librgetter.error.running": "LibrGetter уже запущен!",
-  "librgetter.error.specify": "Кафедра или библиотекарь не были выбраны!",
   "librgetter.error.unknown": "Неизвестный тип данных для плагина '%s'",
   "librgetter.error.unsafe": "Житель может помешать процессу, застройте кафедру получше",
   "librgetter.error.update": "Библиотекарь не может обновить свои сделки!",

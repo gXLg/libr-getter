@@ -40,7 +40,6 @@
   "librgetter.error.parse": "¡No se pudo analizar el encantamiento personalizado!",
   "librgetter.error.pick": "¡El aldeano cambió de profesión durante el proceso!",
   "librgetter.error.running": "¡LibrGetter ya está en ejecución!",
-  "librgetter.error.specify": "¡No se ha establecido un atril o un bibliotecario!",
   "librgetter.error.unknown": "Tipo de datos desconocido para el plugin '%s'",
   "librgetter.error.unsafe": "El aldeano podría interferir con el proceso de colocación, por favor obstruye el atril",
   "librgetter.error.update": "¡No se pueden actualizar los comercios del bibliotecario!",

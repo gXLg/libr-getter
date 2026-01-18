@@ -40,7 +40,6 @@
   "librgetter.error.parse": "Không thể phân tích phù phép đặc biệt!",
   "librgetter.error.pick": "Dân làng đã chọn nghề khác trong khi tiến hành!",
   "librgetter.error.running": "LibrGetter đang hoạt động rồi!",
-  "librgetter.error.specify": "Chưa chọn thủ thư hoặc bục để sách!",
   "librgetter.error.unknown": "Chưa biết loại dữ liệu cho plugin '%s'",
   "librgetter.error.unsafe": "Dân làng có thể can thiệp vào việc đặt bục để sách, hãy đặt khối phía trên bục để ngăn cách",
   "librgetter.error.update": "Giao dịch của thủ thư không thể bị thay đổi!",

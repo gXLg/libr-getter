@@ -40,7 +40,6 @@
   "librgetter.error.parse": "Could not parse custom enchantment!",
   "librgetter.error.pick": "Villager picked another profession during process!",
   "librgetter.error.running": "LibrGetter is already running!",
-  "librgetter.error.specify": "Lectern or librarian have not been set!",
   "librgetter.error.unknown": "Unknown type of data for the plugin '%s'",
   "librgetter.error.unsafe": "The villager could interfere with the placing process, please obstruct the lectern",
   "librgetter.error.update": "The librarian trades can not be updated!",
