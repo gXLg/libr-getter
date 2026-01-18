@@ -2,8 +2,8 @@ package dev.gxlg.librgetter.utils.plugins;
 
 import dev.gxlg.librgetter.utils.reflection.chaining.tags.Tags;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.parser.UnknownPluginDataException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.parser.UnknownPluginDataException;
 import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
 
 import java.util.Set;

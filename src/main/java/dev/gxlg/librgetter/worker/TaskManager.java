@@ -2,8 +2,8 @@ package dev.gxlg.librgetter.worker;
 
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.TradeOfferData;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.ProcessNotRunningException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.ProcessNotRunningException;
 import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
 import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.ProcessStoppedMessage;
 import dev.gxlg.librgetter.worker.tasks.StandbyTask;

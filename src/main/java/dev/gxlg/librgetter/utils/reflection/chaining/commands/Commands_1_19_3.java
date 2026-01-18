@@ -2,9 +2,9 @@ package dev.gxlg.librgetter.utils.reflection.chaining.commands;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.datafixers.util.Either;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.commands.ArgumentNotSupportedException;
-import dev.gxlg.librgetter.utils.types.exceptions.commands.WrongEnchantmentException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.ArgumentNotSupportedException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.WrongEnchantmentException;
 import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgument$ResultWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.core.Holder$ReferenceWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.core.HolderSet$NamedWrapper;

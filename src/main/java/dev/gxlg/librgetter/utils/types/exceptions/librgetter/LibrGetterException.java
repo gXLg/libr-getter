@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.utils.types.exceptions;
+package dev.gxlg.librgetter.utils.types.exceptions.librgetter;
 
 import dev.gxlg.librgetter.utils.types.translatable_messages.error.TranslatableErrorMessage;
 

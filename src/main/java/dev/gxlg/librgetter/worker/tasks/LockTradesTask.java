@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.worker.tasks;
 
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.signals.FinishSignal;
 import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;

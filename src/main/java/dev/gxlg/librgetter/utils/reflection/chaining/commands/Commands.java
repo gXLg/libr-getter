@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.reflection.chaining.commands;
 
 import com.mojang.brigadier.context.CommandContext;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.multiversion.V;
 import net.minecraft.world.item.enchantment.Enchantment;
 

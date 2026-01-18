@@ -7,7 +7,7 @@ import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.command.CommandHelper;
 import dev.gxlg.librgetter.command.LibrGetCommand;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper;
 import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper;
 import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper;
