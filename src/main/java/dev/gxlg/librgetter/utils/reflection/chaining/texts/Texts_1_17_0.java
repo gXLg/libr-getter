@@ -44,14 +44,7 @@ public class Texts_1_17_0 extends Texts {
         LocalPlayerWrapper.inst(player).displayClientMessage(text, actionbar);
     }
 
-    public void sendTranslatable(ChatFormatting format, String translationKey, Object... args) {
-        MutableComponentWrapper text = translatable(translationKey, args);
-        if (format != null) {
-            text = text.withStyle(format);
-        }
-        sendMessage(text, false);
-    }
-
+    @Override
     public void sendTranslatable(TranslatableMessage translatableMessage) {
         sendMessage(translatable(translatableMessage), false);
     }
