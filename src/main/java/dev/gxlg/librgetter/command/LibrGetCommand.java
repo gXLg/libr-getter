@@ -16,10 +16,10 @@ import dev.gxlg.librgetter.utils.types.exceptions.commands.NothingTargetedExcept
 import dev.gxlg.librgetter.utils.types.exceptions.commands.VillagerNotLibrarianException;
 import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.ProcessNotRunningException;
-import dev.gxlg.librgetter.utils.types.messages.feedback.ConfigValueMessage;
-import dev.gxlg.librgetter.utils.types.messages.feedback.GoalsListClearedMessage;
-import dev.gxlg.librgetter.utils.types.messages.feedback.LecternSelectedMessage;
-import dev.gxlg.librgetter.utils.types.messages.feedback.LibrarianSelectedMessage;
+import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.ConfigValueMessage;
+import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.GoalsListClearedMessage;
+import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.LecternSelectedMessage;
+import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.LibrarianSelectedMessage;
 import dev.gxlg.librgetter.worker.TaskManager;
 import dev.gxlg.librgetter.worker.tasks.StartTask;
 import net.minecraft.client.Minecraft;

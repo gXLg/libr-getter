@@ -7,13 +7,13 @@ import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.exceptions.runtime.UnexpectedConfigurableTypeException;
-import dev.gxlg.librgetter.utils.types.messages.TranslatableMessage;
-import dev.gxlg.librgetter.utils.types.messages.feedback.NewVersionReleasedMessage;
-import dev.gxlg.librgetter.utils.types.messages.feedback.OfferMessage;
-import dev.gxlg.librgetter.utils.types.messages.partial.TranslatableConfigMenuName;
-import dev.gxlg.librgetter.utils.types.messages.partial.TranslatableGoalsListName;
-import dev.gxlg.librgetter.utils.types.messages.partial.TranslatableRemoveButton;
-import dev.gxlg.librgetter.utils.types.messages.success.EnchantmentFoundMessage;
+import dev.gxlg.librgetter.utils.types.translatable_messages.TranslatableMessage;
+import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.NewVersionReleasedMessage;
+import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.OfferMessage;
+import dev.gxlg.librgetter.utils.types.translatable_messages.partial.TranslatableConfigMenuName;
+import dev.gxlg.librgetter.utils.types.translatable_messages.partial.TranslatableGoalsListName;
+import dev.gxlg.librgetter.utils.types.translatable_messages.partial.TranslatableRemoveButton;
+import dev.gxlg.librgetter.utils.types.translatable_messages.success.EnchantmentFoundMessage;
 import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEventWrapper;
@@ -44,8 +44,8 @@ public class Texts_1_17_0 extends Texts {
         LocalPlayerWrapper.inst(player).displayClientMessage(text, actionbar);
     }
 
-    public void sendTranslatable(ChatFormatting format, String message, Object... args) {
-        MutableComponentWrapper text = translatable(message, args);
+    public void sendTranslatable(ChatFormatting format, String translationKey, Object... args) {
+        MutableComponentWrapper text = translatable(translationKey, args);
         if (format != null) {
             text = text.withStyle(format);
         }
@@ -58,7 +58,7 @@ public class Texts_1_17_0 extends Texts {
 
     @Override
     public void sendFound(EnchantmentTrade enchant, int counter) {
-        MutableComponentWrapper text = translatable(new EnchantmentFoundMessage(enchant, counter, enchant.price()));
+        MutableComponentWrapper text = translatable(new EnchantmentFoundMessage(enchant, counter));
         text = text.withStyle(ChatFormatting.GREEN);
 
         if (!LibrGetter.config.removeGoal) {

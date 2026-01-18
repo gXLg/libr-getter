@@ -3,7 +3,7 @@ package dev.gxlg.librgetter.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.types.messages.error.InternalErrorMessage;
+import dev.gxlg.librgetter.utils.types.translatable_messages.error.InternalErrorMessage;
 import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
