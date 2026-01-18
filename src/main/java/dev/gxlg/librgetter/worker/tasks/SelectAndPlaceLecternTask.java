@@ -2,9 +2,10 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.VillagerTooFarException;
+import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -24,16 +25,16 @@ import net.minecraft.world.phys.Vec3;
 
 public class SelectAndPlaceLecternTask extends TaskManager.Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
         Minecraft client = Minecraft.getInstance();
         LocalPlayer player = client.player;
         if (player == null) {
-            throw new InternalTaskException("player", this);
+            throw new InternalErrorException("player");
         }
         ClientLevel world = MinecraftHelper.getWorld(player);
 
         if (!taskContext.selectedLecternPos().closerThan(player.blockPosition(), 3.4f)) {
-            throw new TaskException("librgetter.far");
+            throw new VillagerTooFarException();
         }
 
         if (world.getBlockState(taskContext.selectedLecternPos()).is(Blocks.LECTERN)) {
@@ -52,10 +53,6 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
 
         // select
         Inventory inventory = player.getInventory();
-        if (inventory == null) {
-            throw new InternalTaskException("inventory", this);
-        }
-
         int slot;
         boolean mainhand = true;
         if (ItemStack.isSameItem(inventory.getItem(Inventory.SLOT_OFFHAND), Items.LECTERN.getDefaultInstance())) {
@@ -69,11 +66,11 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
 
         MultiPlayerGameMode manager = client.gameMode;
         if (manager == null) {
-            throw new InternalTaskException("manager", this);
+            throw new InternalErrorException("manager");
         }
         ClientPacketListener handler = client.getConnection();
         if (handler == null) {
-            throw new InternalTaskException("handler", this);
+            throw new InternalErrorException("handler");
         }
 
         if (slot != Inventory.SLOT_OFFHAND) {
@@ -84,6 +81,7 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
                 manager.handleInventoryMouseClick(player.containerMenu.containerId, slot, Inventory.SLOT_OFFHAND, ClickType.SWAP, player);
                 mainhand = false;
             } else {
+                // TODO: extract to method
                 if (!Inventory.isHotbarSlot(slot)) {
                     int syncId = player.inventoryMenu.containerId;
                     int swap = inventory.getSuitableHotbarSlot();

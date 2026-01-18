@@ -6,8 +6,8 @@
     "BlockBehaviourAccessor",
     "BookViewScreenAccessor",
     "BookViewScreenMixin",
-    "MultiPlayerGameModeMixin",
-    "ClientPacketListenerMixin"
+    "ClientPacketListenerMixin",
+    "MultiPlayerGameModeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

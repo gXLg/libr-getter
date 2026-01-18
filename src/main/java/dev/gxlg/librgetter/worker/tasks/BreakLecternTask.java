@@ -1,8 +1,9 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -12,11 +13,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BreakLecternTask extends TaskManager.Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
         Minecraft client = Minecraft.getInstance();
         ClientLevel world = client.level;
         if (world == null) {
-            throw new InternalTaskException("world", this);
+            throw new InternalErrorException("world");
         }
 
         BlockState targetBlock = world.getBlockState(taskContext.selectedLecternPos());
@@ -31,7 +32,7 @@ public class BreakLecternTask extends TaskManager.Task {
 
         MultiPlayerGameMode manager = client.gameMode;
         if (manager == null) {
-            throw new InternalTaskException("manager", this);
+            throw new InternalErrorException("manager");
         }
         manager.continueDestroyBlock(taskContext.selectedLecternPos(), Direction.UP);
     }

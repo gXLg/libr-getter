@@ -3,10 +3,11 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
 import dev.gxlg.librgetter.utils.reflection.Support;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.FinishSignal;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.CanNotLockException;
+import dev.gxlg.librgetter.utils.types.signals.FinishSignal;
+import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -24,7 +25,7 @@ public class FinalizeSearchTask extends TaskManager.Task {
     }
 
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
         if (LibrGetter.config.manual) {
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new ManualModeWaitTask(), ctx));
         }
@@ -36,14 +37,14 @@ public class FinalizeSearchTask extends TaskManager.Task {
         Minecraft client = Minecraft.getInstance();
         LocalPlayer player = client.player;
         if (player == null) {
-            throw new InternalTaskException("player", this);
+            throw new InternalErrorException("player");
         }
 
         if (!Support.isUsingTradeCycling()) {
             // TradeCycling process keeps the screen open, else we have to open it again
             MultiPlayerGameMode manager = client.gameMode;
             if (manager == null) {
-                throw new InternalTaskException("manager", this);
+                throw new InternalErrorException("manager");
             }
 
             manager.interact(player, taskContext.selectedVillager(), InteractionHand.MAIN_HAND);
@@ -53,7 +54,7 @@ public class FinalizeSearchTask extends TaskManager.Task {
             canBuy(player, offers.get(1)) ? 1 : -1
         );
         if (buy == -1) {
-            throw new TaskException("librgetter.lock");
+            throw new CanNotLockException();
         }
 
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.nextTick(new LockTradesTask(buy), ctx));

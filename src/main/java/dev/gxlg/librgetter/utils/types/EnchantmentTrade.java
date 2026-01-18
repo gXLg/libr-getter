@@ -1,9 +1,6 @@
 package dev.gxlg.librgetter.utils.types;
 
-import dev.gxlg.multiversion.R;
-import dev.gxlg.multiversion.V;
-import net.minecraft.locale.Language;
-import net.minecraft.resources.Identifier;
+import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("ClassCanBeRecord") // GSON can't handle records in earlier versions
@@ -33,14 +30,7 @@ public class EnchantmentTrade {
 
     @Override
     public @NotNull String toString() {
-        Identifier iid = Identifier.tryParse(id);
-        if (iid == null) {
-            return id + " " + lvl;
-        }
-        Language lang = Language.getInstance();
-        String full = "enchantment." + iid.getNamespace() + "." + iid.getPath();
-        String name = (String) R.clz(Language.class).inst(lang).mthd(V.lower("1.19.4") ? "method_4679/get" : "method_48307/get", String.class).invk(full);
-        return name + " " + lvl;
+        return MinecraftHelper.translateEnchantmentId(id) + " " + lvl;
     }
 
     public String id() {
@@ -55,13 +45,13 @@ public class EnchantmentTrade {
         return price;
     }
 
-    public static class Enchantment {
+    public static class EnchantmentOnly {
 
         private final String id;
 
         private final int lvl;
 
-        public Enchantment(String id, int lvl) {
+        public EnchantmentOnly(String id, int lvl) {
             this.id = id;
             this.lvl = lvl;
         }

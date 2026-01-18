@@ -2,6 +2,7 @@ package dev.gxlg.librgetter.utils.reflection.chaining.texts;
 
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import dev.gxlg.librgetter.utils.types.messages.TranslatableMessage;
 import dev.gxlg.multiversion.V;
 import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
@@ -15,13 +16,7 @@ public abstract class Texts {
 
     abstract public void sendTranslatable(ChatFormatting format, String message, Object... args);
 
-    abstract public void sendTranslatableFeedback(String message, Object... args);
-
-    abstract public void sendTranslatableSuccess(String message, Object... args);
-
-    abstract public void sendTranslatableError(String message, Object... args);
-
-    abstract public void sendTranslatableWarning(String message, Object... args);
+    abstract public void sendTranslatable(TranslatableMessage translatableMessage);
 
     abstract public void sendFound(EnchantmentTrade enchant, int counter);
 

@@ -1,11 +1,11 @@
-package dev.gxlg.librgetter.utils;
+package dev.gxlg.librgetter.utils.plugins;
 
-import dev.gxlg.librgetter.utils.plugins.Bukkit;
+import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
-import org.apache.commons.lang3.tuple.Triple;
 
 public class Plugins {
-    public static Triple<String, Integer, String[]> parse(CompoundTagWrapper tag) {
+    public static EnchantmentTrade.EnchantmentOnly parse(CompoundTagWrapper tag) throws LibrGetterException {
         if (tag == null) {
             return null;
         }

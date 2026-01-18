@@ -2,7 +2,6 @@ package dev.gxlg.librgetter.gui;
 
 import dev.gxlg.librgetter.mixin.BookViewScreenAccessor;
 import dev.gxlg.librgetter.utils.reflection.ConfigMenu;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 
 public class ConfigScreen extends BookViewScreen {
@@ -49,12 +48,4 @@ public class ConfigScreen extends BookViewScreen {
     private static final BookAccess CONTENT = ConfigMenu.getContent();
 
     private static int currentPage = 0;
-
-    public static boolean configChange() {
-        if (Minecraft.getInstance().screen instanceof ConfigScreen cs) {
-            cs.updateScreen();
-            return true;
-        }
-        return false;
-    }
 }

@@ -6,6 +6,7 @@ import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import dev.gxlg.librgetter.utils.types.messages.TranslatableMessage;
 import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEventWrapper;
@@ -44,34 +45,18 @@ public class Texts_1_17_0 extends Texts {
         sendMessage(text, false);
     }
 
-    @Override
-    public void sendTranslatableError(String message, Object... args) {
-        sendTranslatable(ChatFormatting.RED, message, args);
-    }
-
-    @Override
-    public void sendTranslatableWarning(String message, Object... args) {
-        sendTranslatable(ChatFormatting.YELLOW, message, args);
-    }
-
-    @Override
-    public void sendTranslatableFeedback(String message, Object... args) {
-        sendTranslatable(null, message, args);
-    }
-
-    @Override
-    public void sendTranslatableSuccess(String message, Object... args) {
-        sendTranslatable(ChatFormatting.GREEN, message, args);
+    public void sendTranslatable(TranslatableMessage translatableMessage) {
+        sendTranslatable(translatableMessage.getColor(), translatableMessage.getTranslationKey(), translatableMessage.getArgs());
     }
 
     @Override
     public void sendFound(EnchantmentTrade enchant, int counter) {
-        MutableComponentWrapper text = translatable("librgetter.found", enchant, counter, enchant.price());
+        MutableComponentWrapper text = translatable("feedback.found", enchant, counter, enchant.price());
         text = text.withStyle(ChatFormatting.GREEN);
 
         if (!LibrGetter.config.removeGoal) {
             text = text.append(" ");
-            MutableComponentWrapper rem = translatable("librgetter.remove");
+            MutableComponentWrapper rem = translatable("element.remove");
             Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + enchant.id() + "\" " + enchant.lvl())).withColor(ChatFormatting.YELLOW);
             rem.setStyle(style);
             text = text.append(rem);
@@ -84,23 +69,22 @@ public class Texts_1_17_0 extends Texts {
             return;
         }
         boolean ab = LibrGetter.config.logMode == LogMode.ACTIONBAR;
-        MutableComponentWrapper text = translatable("librgetter.offer", offeredEnchantments);
+        MutableComponentWrapper text = translatable("feedback.offer", offeredEnchantments);
         sendMessage(text, ab);
     }
 
     @Override
     public void sendNewVersion(String message, String hover) {
-        MutableComponentWrapper text = translatable(message);
-        MutableComponentWrapper hov = literal(hover);
-        Style style = Style.EMPTY.withHoverEvent(hoverable(hov));
+        MutableComponentWrapper text = translatable("feedback.version", message);
+        Style style = Style.EMPTY.withHoverEvent(hoverable(literalComponent(hover)));
         text.setStyle(style);
         sendMessage(text, false);
     }
 
     @Override
     public void sendListOfGoals() {
-        MutableComponentWrapper text = translatable("librgetter.list");
-        MutableComponentWrapper rem = translatable("librgetter.remove");
+        MutableComponentWrapper text = translatable("feedback.list");
+        MutableComponentWrapper rem = translatable("element.remove");
         for (EnchantmentTrade l : LibrGetter.config.goals) {
             String line = "\n- " + l + " (" + l.price() + ") ";
             text = text.append(line);
@@ -114,12 +98,12 @@ public class Texts_1_17_0 extends Texts {
     @Override
     public MutableComponentWrapper bookMainPage(Map<String, Integer> categories) {
         MutableComponentWrapper text = title();
-        MutableComponentWrapper s = translatable("librgetter.menu");
+        MutableComponentWrapper s = translatable("element.menu");
         text = text.append(s);
         text = text.append("\n");
         for (String cat : Config.CATEGORIES) {
             text = text.append("\n* ");
-            s = applyStyle(translatable("librgetter.category." + cat), Style.EMPTY.withClickEvent(paging(categories.get(cat) + 1)));
+            s = applyStyle(translatable("category." + cat), Style.EMPTY.withClickEvent(paging(categories.get(cat) + 1)));
             text = text.append(s);
         }
         return text;
@@ -128,11 +112,11 @@ public class Texts_1_17_0 extends Texts {
     @Override
     public MutableComponentWrapper bookTitle(String category) {
         MutableComponentWrapper text = title();
-        MutableComponentWrapper s = applyStyle(literal("↩"), Style.EMPTY.withClickEvent(paging(1)));
+        MutableComponentWrapper s = applyStyle(literalComponent("↩"), Style.EMPTY.withClickEvent(paging(1)));
         text = text.append(s);
-        s = literal(" ");
+        s = literalComponent(" ");
         text = text.append(s);
-        s = translatable("librgetter.category." + category);
+        s = translatable("category." + category);
         return text.append(s);
     }
 
@@ -140,14 +124,14 @@ public class Texts_1_17_0 extends Texts {
     public MutableComponentWrapper bookEntry(MutableComponentWrapper text, Configurable<?> configurable) {
         String config = configurable.name();
         String showName = config.startsWith("_") ? "+ " + config.substring(1) : config;
-        MutableComponentWrapper name = translatable("librgetter.config." + config);
+        MutableComponentWrapper name = translatable("config." + config);
 
         ChatFormatting green = configurable.hasEffect() ? ChatFormatting.GREEN : ChatFormatting.GRAY;
         ChatFormatting black = configurable.hasEffect() ? ChatFormatting.BLACK : ChatFormatting.GRAY;
         ChatFormatting red = configurable.hasEffect() ? ChatFormatting.RED : ChatFormatting.GRAY;
 
         Style cStyle = Style.EMPTY.withHoverEvent(hoverable(name)).withColor(black);
-        MutableComponentWrapper c = applyStyle(literal(showName), cStyle);
+        MutableComponentWrapper c = applyStyle(literalComponent(showName), cStyle);
 
         text = text.append("\n\n").append(c);
 
@@ -158,9 +142,9 @@ public class Texts_1_17_0 extends Texts {
             Style style = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (!value))).withColor(value ? green : red);
 
             r = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + configurable.getDefault().toString()));
-            x = applyStyle(literal("[" + value + "]"), style);
-            y = literal(" ");
-            z = literal("");
+            x = applyStyle(literalComponent("[" + value + "]"), style);
+            y = literalComponent(" ");
+            z = literalComponent("");
 
         } else if (configurable.type() == Integer.class) {
             int value = (int) configurable.get();
@@ -171,18 +155,18 @@ public class Texts_1_17_0 extends Texts {
                 configurable.inRange(value + 1) ? Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + (value + 1))).withColor(green) : Style.EMPTY.withColor(ChatFormatting.GRAY);
 
             r = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + configurable.getDefault().toString()));
-            x = applyStyle(literal("[-]"), mStyle);
-            y = applyStyle(literal(" " + value + " "), nStyle);
-            z = applyStyle(literal("[+]"), pStyle);
+            x = applyStyle(literalComponent("[-]"), mStyle);
+            y = applyStyle(literalComponent(" " + value + " "), nStyle);
+            z = applyStyle(literalComponent("[+]"), pStyle);
 
         } else if (configurable.type() == OptionsConfig.class) {
             OptionsConfig<?> value = (OptionsConfig<?>) configurable.get();
             Style style = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + value.next().getSerializedName())).withColor(value.getSerializedName().equals("NONE") ? red : green);
 
             r = Style.EMPTY.withClickEvent(runnable("/librget config " + config + " " + ((OptionsConfig<?>) configurable.getDefault()).getSerializedName()));
-            x = applyStyle(literal("[" + value.getSerializedName() + "]"), style);
-            y = literal("");
-            z = literal("");
+            x = applyStyle(literalComponent("[" + value.getSerializedName() + "]"), style);
+            y = literalComponent("");
+            z = literalComponent("");
 
         } else {
             // TODO: centralized exceptions
@@ -190,9 +174,9 @@ public class Texts_1_17_0 extends Texts {
         }
 
         if (!configurable.isDefault()) {
-            MutableComponentWrapper s = literal(" ");
+            MutableComponentWrapper s = literalComponent(" ");
             text = text.append(s);
-            s = applyStyle(literal("↩"), r.withColor(black));
+            s = applyStyle(literalComponent("↩"), r.withColor(black));
             text = text.append(s);
         }
         return text.append("\n").append(x).append(y).append(z);
@@ -215,18 +199,18 @@ public class Texts_1_17_0 extends Texts {
         return new TranslatableContentsWrapper(message, args);
     }
 
-    protected MutableComponentWrapper applyStyle(ComponentWrapper text, Style style) {
+    private MutableComponentWrapper applyStyle(ComponentWrapper text, Style style) {
         MutableComponentWrapper copy = text.plainCopy();
         copy.setStyle(style);
         return copy;
     }
 
-    protected MutableComponentWrapper literal(String message) {
+    private MutableComponentWrapper literalComponent(String message) {
         Component m = Component.nullToEmpty(message);
         return ComponentWrapper.inst(m).plainCopy();
     }
 
-    protected MutableComponentWrapper title() {
-        return literal("").append(literal("LibrGetter " + LibrGetter.getVersion() + "\n").withStyle(ChatFormatting.DARK_GREEN));
+    private MutableComponentWrapper title() {
+        return literalComponent("").append(literalComponent("LibrGetter " + LibrGetter.getVersion() + "\n").withStyle(ChatFormatting.DARK_GREEN));
     }
 }

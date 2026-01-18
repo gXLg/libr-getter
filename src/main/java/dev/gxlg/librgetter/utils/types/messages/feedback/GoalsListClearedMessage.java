@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.types.messages.feedback;
 
-public class ListClearedMessage extends TranslatableFeedbackMessage {
-    public ListClearedMessage() {
+public class GoalsListClearedMessage extends TranslatableFeedbackMessage {
+    public GoalsListClearedMessage() {
         super("librgetter.feedback.cleared");
     }
 }
