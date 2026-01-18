@@ -319,7 +319,7 @@ public class MinecraftHelper {
         }
     }
 
-    public static void playNotification(ClientLevel world, LocalPlayer player) {
+    public static void playFoundNotification(ClientLevel world, LocalPlayer player) {
         if (!LibrGetter.config.notify) {
             return;
         }

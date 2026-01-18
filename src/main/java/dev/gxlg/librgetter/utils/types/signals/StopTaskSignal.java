@@ -12,10 +12,10 @@ public class StopTaskSignal extends Exception {
     }
 
     public void switchTask() {
-        sendFeedbackToPlayer();
+        notifyPlayer();
         TaskManager.switchTask(taskSwitcher);
     }
 
-    protected void sendFeedbackToPlayer() {
+    protected void notifyPlayer() {
     }
 }

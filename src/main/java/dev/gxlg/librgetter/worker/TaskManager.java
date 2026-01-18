@@ -3,6 +3,8 @@ package dev.gxlg.librgetter.worker;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.TradeOfferData;
 import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.ProcessNotRunningException;
+import dev.gxlg.librgetter.utils.types.messages.feedback.ProcessStoppedMessage;
 import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.tasks.StandbyTask;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -51,7 +53,7 @@ public class TaskManager {
             } catch (StopTaskSignal signal) {
                 signal.switchTask();
             } catch (LibrGetterException e) {
-                e.sendErrorToPlayer();
+                Texts.getImpl().sendTranslatable(e.getTranslatableErrorMessage());
                 switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), ctx));
             }
         } while (updateContextAndTaskAndReturnIsNextTick());
@@ -76,12 +78,11 @@ public class TaskManager {
         return !taskSwitch.isNextTick();
     }
 
-    public static void stop() {
+    public static void stop() throws ProcessNotRunningException {
         if (!isWorking()) {
-            Texts.getImpl().sendTranslatableError("librgetter.not_running");
-            return;
+            throw new ProcessNotRunningException();
         }
-        Texts.getImpl().sendTranslatableWarning("librgetter.stop");
+        Texts.getImpl().sendTranslatable(new ProcessStoppedMessage());
         switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), TaskContext.EMPTY));
     }
 
@@ -162,10 +163,6 @@ public class TaskManager {
     }
 
     public abstract static class Task {
-        public Task() {
-            Texts.getImpl().sendTranslatableFeedback("task: " + this.getClass().getSimpleName());
-        }
-
         public abstract void work(TaskContext taskContext) throws StopTaskSignal, LibrGetterException;
 
         public boolean allowsBreaking() {

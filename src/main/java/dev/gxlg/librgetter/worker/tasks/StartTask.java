@@ -9,6 +9,7 @@ import dev.gxlg.librgetter.utils.types.exceptions.tasks.EmptyGoalsListException;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.NoLecternSetException;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.NoLibrarianSetException;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.UnsafeSetupException;
+import dev.gxlg.librgetter.utils.types.messages.feedback.ProcessStartedMessage;
 import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.Minecraft;
@@ -58,7 +59,7 @@ public class StartTask extends TaskManager.Task {
             }
         }
 
-        Texts.getImpl().sendTranslatableSuccess("librgetter.start");
+        Texts.getImpl().sendTranslatable(new ProcessStartedMessage());
 
         throw new StopTaskSignal(ctx -> {
             if (!LibrGetter.config.autoTool) {
@@ -68,10 +69,7 @@ public class StartTask extends TaskManager.Task {
                 ctx = ctx.withResetAttemptsCounter();
             }
 
-            return TaskManager.TaskSwitch.nextTick(
-                new RotationTask(player, EntityAnchorArgument.Anchor.EYES.apply(ctx.selectedVillager()), new WaitVillagerAcceptProfessionTask()),
-                ctx
-            );
+            return TaskManager.TaskSwitch.nextTick(new RotationTask(player, EntityAnchorArgument.Anchor.EYES.apply(ctx.selectedVillager()), new WaitVillagerAcceptProfessionTask()), ctx);
         });
     }
 }

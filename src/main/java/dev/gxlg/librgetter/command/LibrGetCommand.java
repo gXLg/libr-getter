@@ -15,6 +15,7 @@ import dev.gxlg.librgetter.utils.types.exceptions.commands.EntityNotVillagerExce
 import dev.gxlg.librgetter.utils.types.exceptions.commands.NothingTargetedException;
 import dev.gxlg.librgetter.utils.types.exceptions.commands.VillagerNotLibrarianException;
 import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.ProcessNotRunningException;
 import dev.gxlg.librgetter.utils.types.messages.feedback.ConfigValueMessage;
 import dev.gxlg.librgetter.utils.types.messages.feedback.GoalsListClearedMessage;
 import dev.gxlg.librgetter.utils.types.messages.feedback.LecternSelectedMessage;
@@ -144,7 +145,7 @@ public class LibrGetCommand {
         Texts.getImpl().sendTranslatable(new GoalsListClearedMessage());
     }
 
-    public static void stopWorking() {
+    public static void stopWorking() throws ProcessNotRunningException {
         TaskManager.stop();
     }
 

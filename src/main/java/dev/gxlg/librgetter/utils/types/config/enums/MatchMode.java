@@ -7,33 +7,32 @@ import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public enum MatchMode implements OptionsConfig<MatchMode> {
 
-    // only match the first found enchantment
     VANILLA {
         @Override
-        public GoalMatching match(List<EnchantmentTrade> offeredEnchantments) {
+        public Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments) {
             if (offeredEnchantments.isEmpty()) {
-                return GoalMatching.noMatch();
+                return Optional.empty();
             }
             EnchantmentTrade firstOffer = offeredEnchantments.get(0);
             for (EnchantmentTrade goal : LibrGetter.config.goals) {
                 if (goal.meets(firstOffer)) {
-                    return GoalMatching.match(List.of(firstOffer));
+                    return Optional.of(List.of(firstOffer));
                 }
             }
-            return GoalMatching.noMatch();
+            return Optional.empty();
         }
     },
 
-    // only match if all offered are in goals list
     PERFECT {
         @Override
-        public GoalMatching match(List<EnchantmentTrade> offeredEnchantments) {
+        public Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments) {
             if (offeredEnchantments.isEmpty()) {
-                return GoalMatching.noMatch();
+                return Optional.empty();
             }
 
             List<EnchantmentTrade> matchedOffers = new ArrayList<>();
@@ -47,17 +46,16 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
                     }
                 }
                 if (!offerMatches) {
-                    return GoalMatching.noMatch();
+                    return Optional.empty();
                 }
             }
-            return GoalMatching.match(matchedOffers);
+            return Optional.of(matchedOffers);
         }
     },
 
-    // match if at least N unique offers match
     ATLEAST {
         @Override
-        public GoalMatching match(List<EnchantmentTrade> offeredEnchantments) {
+        public Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments) {
             List<EnchantmentTrade> matchedOffers = new ArrayList<>();
             Set<EnchantmentTrade> foundGoals = new HashSet<>();
             for (EnchantmentTrade offer : offeredEnchantments) {
@@ -70,47 +68,16 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
             }
             int matchSize = Math.min(LibrGetter.config.matchAtLeast, LibrGetter.config.goals.size());
             if (foundGoals.size() < matchSize) {
-                return GoalMatching.noMatch();
+                return Optional.empty();
             }
-            return GoalMatching.match(matchedOffers);
+            return Optional.of(matchedOffers);
         }
     };
 
-    public abstract GoalMatching match(List<EnchantmentTrade> offeredEnchantments);
+    public abstract Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments);
 
     @Override
     public MatchMode[] getValues() {
         return MatchMode.values();
-    }
-
-    public static class GoalMatching {
-        private final boolean match;
-
-        private final List<EnchantmentTrade> matchedEnchantments;
-
-        private GoalMatching(boolean matches, List<EnchantmentTrade> matchedEnchantments) {
-            this.match = matches;
-            this.matchedEnchantments = matchedEnchantments;
-        }
-
-        public boolean isMatch() {
-            return match;
-        }
-
-        public List<EnchantmentTrade> getMatchedEnchantments() {
-            // TODO: centralized exceptions
-            if (!match) {
-                throw new UnsupportedOperationException("Can't get matched enchantments, since it's not a match");
-            }
-            return matchedEnchantments;
-        }
-
-        public static GoalMatching match(List<EnchantmentTrade> matchedEnchantments) {
-            return new GoalMatching(true, matchedEnchantments);
-        }
-
-        public static GoalMatching noMatch() {
-            return new GoalMatching(false, null);
-        }
     }
 }

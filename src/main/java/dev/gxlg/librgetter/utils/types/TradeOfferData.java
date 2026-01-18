@@ -17,10 +17,6 @@ public class TradeOfferData {
     }
 
     public MerchantOffers getTradeOfferList() {
-        // TODO: centralized exceptions
-        if (!canRefresh) {
-            throw new IllegalStateException("Can't get the trades from non-refreshable offer data");
-        }
         return tradeOfferList;
     }
 

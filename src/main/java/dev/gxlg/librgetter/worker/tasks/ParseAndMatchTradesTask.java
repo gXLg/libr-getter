@@ -19,6 +19,7 @@ import net.minecraft.world.item.trading.MerchantOffers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ParseAndMatchTradesTask extends TaskManager.Task {
     private final MerchantOffers offers;
@@ -50,17 +51,17 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
             }
         }
         Texts.getImpl().sendTradeLog(offeredEnchantments);
-        MatchMode.GoalMatching matching = LibrGetter.config.matchMode.match(offeredEnchantments);
-        if (!matching.isMatch()) {
+        Optional<List<EnchantmentTrade>> matching = LibrGetter.config.matchMode.match(offeredEnchantments);
+        if (matching.isEmpty()) {
             throw new StopTaskSignal(ctx -> Support.isUsingTradeCycling() ? TaskManager.TaskSwitch.nextTick(new TradeCyclingClickTask(), ctx) :
                                             TaskManager.TaskSwitch.sameTick(new SelectAxeTask(), ctx));
         }
 
-        MinecraftHelper.playNotification(MinecraftHelper.getWorld(player), player);
-        matching.getMatchedEnchantments().forEach(e -> Texts.getImpl().sendFound(e, taskContext.attemptsCounter()));
+        MinecraftHelper.playFoundNotification(MinecraftHelper.getWorld(player), player);
+        matching.get().forEach(e -> Texts.getImpl().sendFound(e, taskContext.attemptsCounter()));
 
         if (LibrGetter.config.removeGoal) {
-            for (EnchantmentTrade e : matching.getMatchedEnchantments()) {
+            for (EnchantmentTrade e : matching.get()) {
                 CommandHelper.removeGoal(e.id(), e.lvl());
             }
         }
