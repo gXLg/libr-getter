@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.utils.reflection.Support;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopCyclingSignal;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.signals.StopCyclingSignal;
+import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;

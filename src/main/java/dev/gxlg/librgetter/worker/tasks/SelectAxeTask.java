@@ -2,8 +2,9 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 
 public class SelectAxeTask extends TaskManager.Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
         if (LibrGetter.config.manual) {
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new BreakLecternTask(), ctx));
         }
@@ -26,12 +27,9 @@ public class SelectAxeTask extends TaskManager.Task {
         Minecraft client = Minecraft.getInstance();
         LocalPlayer player = client.player;
         if (player == null) {
-            throw new InternalTaskException("player", this);
+            throw new InternalErrorException("player");
         }
         Inventory inventory = player.getInventory();
-        if (inventory == null) {
-            throw new InternalTaskException("inventory", this);
-        }
 
         int slot = -1;
         if (LibrGetter.config.autoTool) {
@@ -65,14 +63,15 @@ public class SelectAxeTask extends TaskManager.Task {
         if (slot != -1) {
             MultiPlayerGameMode manager = client.gameMode;
             if (manager == null) {
-                throw new InternalTaskException("manager", this);
+                throw new InternalErrorException("manager");
             }
 
             ClientPacketListener handler = client.getConnection();
             if (handler == null) {
-                throw new InternalTaskException("handler", this);
+                throw new InternalErrorException("handler");
             }
 
+            // TODO: extract to method
             if (!Inventory.isHotbarSlot(slot)) {
                 int syncId = player.inventoryMenu.containerId;
                 int swap = inventory.getSuitableHotbarSlot();

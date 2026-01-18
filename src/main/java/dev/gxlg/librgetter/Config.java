@@ -40,6 +40,8 @@ public class Config {
 
     private transient final Map<String, List<Configurable<?>>> categoryMap = new HashMap<>();
 
+    // TODO: separate config toggles into own class ConfigData
+
     public boolean notify = false;
 
     @OnlyEffective(when = "manual", equals = "false")

@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.utils.types.exceptions.tasks;
+package dev.gxlg.librgetter.utils.types.signals;
 
 import dev.gxlg.librgetter.worker.TaskManager;
 
@@ -12,6 +12,10 @@ public class StopTaskSignal extends Exception {
     }
 
     public void switchTask() {
+        notifyPlayer();
         TaskManager.switchTask(taskSwitcher);
+    }
+
+    protected void notifyPlayer() {
     }
 }

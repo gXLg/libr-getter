@@ -3,6 +3,7 @@ package dev.gxlg.librgetter.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.types.translatable_messages.error.InternalErrorMessage;
 import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -36,7 +37,7 @@ public abstract class MultiPlayerGameModeMixin {
     @Inject(at = @At("HEAD"), method = "startDestroyBlock", cancellable = true)
     private void attackBlock(CallbackInfoReturnable<Boolean> info, @Local(argsOnly = true) BlockPos pos) {
         if (minecraft.player == null) {
-            Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "ClientPlayerInteractionManagerMixin#attackBlock");
+            Texts.getImpl().sendTranslatable(new InternalErrorMessage("player"));
             return;
         }
         ClientLevel world = MinecraftHelper.getWorld(minecraft.player);
@@ -66,7 +67,7 @@ public abstract class MultiPlayerGameModeMixin {
         BlockPos pos = hitResult.getBlockPos().relative(hitResult.getDirection());
 
         if (minecraft.player == null) {
-            Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "ClientPlayerInteractionManagerMixin#interactBlock");
+            Texts.getImpl().sendTranslatable(new InternalErrorMessage("player"));
             return;
         }
 

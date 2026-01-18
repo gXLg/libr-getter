@@ -1,14 +1,15 @@
 package dev.gxlg.librgetter.utils.plugins;
 
 import dev.gxlg.librgetter.utils.reflection.chaining.tags.Tags;
-import dev.gxlg.librgetter.utils.types.ParsedEnchantmentTrade;
+import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.parser.UnknownPluginDataException;
 import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Set;
 
 public class Bukkit {
-    public static ParsedEnchantmentTrade.Raw parse(CompoundTagWrapper tag) {
+    public static EnchantmentTrade.EnchantmentOnly parse(CompoundTagWrapper tag) throws LibrGetterException {
         CompoundTagWrapper element = Tags.getImpl().getCompound(tag, "PublicBukkitValues");
         Set<String> keys = element.keySet();
 
@@ -21,9 +22,9 @@ public class Bukkit {
         return null;
     }
 
-    /* different bukkit plugins */
+    /* different Bukkit plugins */
 
-    private static ParsedEnchantmentTrade.Raw enchantmentSolution(CompoundTagWrapper element, Set<String> keys) {
+    private static EnchantmentTrade.EnchantmentOnly enchantmentSolution(CompoundTagWrapper element, Set<String> keys) throws LibrGetterException {
         String id = null;
         int lvl = -1;
 
@@ -36,9 +37,9 @@ public class Bukkit {
             }
         }
         if (id == null) {
-            return Triple.of(null, null, new String[]{ "librgetter.unknown", "Enchantment Solution" });
+            throw new UnknownPluginDataException("Enchantment Solution");
         }
 
-        return Triple.of(id, lvl, null);
+        return new EnchantmentTrade.EnchantmentOnly(id, lvl);
     }
 }

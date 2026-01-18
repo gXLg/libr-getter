@@ -2,8 +2,9 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.types.config.enums.RotationMode;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -32,7 +33,7 @@ public class RotationTask extends TaskManager.Task {
     }
 
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
         if (LibrGetter.config.manual || LibrGetter.config.rotationMode == RotationMode.NONE) {
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(nextTask, ctx));
         }
@@ -40,7 +41,7 @@ public class RotationTask extends TaskManager.Task {
         Minecraft client = Minecraft.getInstance();
         LocalPlayer player = client.player;
         if (player == null) {
-            throw new InternalTaskException("player", this);
+            throw new InternalErrorException("player");
         }
 
         if (LibrGetter.config.rotationMode == RotationMode.INSTANT) {

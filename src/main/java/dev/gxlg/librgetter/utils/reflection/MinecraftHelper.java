@@ -1,10 +1,11 @@
 package dev.gxlg.librgetter.utils.reflection;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.Plugins;
+import dev.gxlg.librgetter.utils.plugins.Plugins;
 import dev.gxlg.librgetter.utils.reflection.chaining.tags.Tags;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.ParsedEnchantmentTrade;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.multiversion.R;
 import dev.gxlg.multiversion.V;
 import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper;
@@ -26,6 +27,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.locale.Language;
 import net.minecraft.network.Connection;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
@@ -45,7 +47,6 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import org.apache.commons.lang3.tuple.Triple;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
@@ -55,6 +56,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class MinecraftHelper {
+
+    // TODO: split into multiple helper classes?
+
     public static Connection getConnection(ClientPacketListener handler) {
         return (Connection) R.clz(ClientPacketListener.class).inst(handler).mthd("method_48296/method_2872/getConnection").invk();
     }
@@ -95,20 +99,20 @@ public class MinecraftHelper {
         }
     }
 
-    public static ParsedEnchantmentTrade parseTrade(MerchantOffers trades, int trade) {
+    public static EnchantmentTrade parseTrade(MerchantOffers trades, int trade) throws LibrGetterException {
         ItemStack stack = trades.get(trade).getResult();
 
         CompoundTagWrapper tag;
         if (!V.lower("1.20.5")) {
             CustomDataWrapper customData = CustomDataWrapper.inst(DataComponentHolderWrapper.inst(stack).get(DataComponentsWrapper.CUSTOM_DATA()));
             if (customData.isNull()) {
-                return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
+                return EnchantmentTrade.EMPTY;
             }
             tag = customData.copyTag();
         } else {
             tag = ItemStackWrapper.inst(stack).getTag();
             if (tag.isNull()) {
-                return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
+                return EnchantmentTrade.EMPTY;
             }
         }
 
@@ -116,13 +120,10 @@ public class MinecraftHelper {
         int lvl = -1;
 
         // Parse plugins
-        Triple<String, Integer, String[]> parsed = Plugins.parse(tag);
+        EnchantmentTrade.EnchantmentOnly parsed = Plugins.parse(tag);
         if (parsed != null) {
-            if (parsed.getRight() != null) {
-                return ParsedEnchantmentTrade.error(parsed.getRight());
-            }
-            id = parsed.getLeft();
-            lvl = parsed.getMiddle();
+            id = parsed.id();
+            lvl = parsed.lvl();
 
         } else {
             if (!V.lower("1.20.5")) {
@@ -198,7 +199,7 @@ public class MinecraftHelper {
             // Nothing was found, so try fallback or return empty
             Tuple<String, Integer> fallbackData = fallbackParse(tag);
             if (fallbackData == null) {
-                return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
+                return EnchantmentTrade.EMPTY;
             }
 
             id = fallbackData.getA();
@@ -215,10 +216,10 @@ public class MinecraftHelper {
         }
 
         if (firstBuyItem == null) {
-            return ParsedEnchantmentTrade.error("librgetter.internal", "firstBuyItem", "MinecraftHelper#parseTrade");
+            throw new InternalErrorException("firstBuyItem");
         }
 
-        return ParsedEnchantmentTrade.success(new EnchantmentTrade(id, lvl, firstBuyItem.getCount()));
+        return new EnchantmentTrade(id, lvl, firstBuyItem.getCount());
     }
 
     public static Tuple<String, Integer> fallbackParse(Object tag) {
@@ -318,7 +319,7 @@ public class MinecraftHelper {
         }
     }
 
-    public static void playNotification(ClientLevel world, LocalPlayer player) {
+    public static void playFoundNotification(ClientLevel world, LocalPlayer player) {
         if (!LibrGetter.config.notify) {
             return;
         }
@@ -363,5 +364,19 @@ public class MinecraftHelper {
 
     public static void setScreen(Minecraft client, Screen screen) {
         R.clz(Minecraft.class).inst(client).mthd("method_1507/setScreen", Screen.class).invk(screen);
+    }
+
+    public static String translateEnchantmentId(String stringId) {
+        Identifier id = Identifier.tryParse(stringId);
+        if (id == null) {
+            return stringId;
+        }
+        return translateEnchantmentId(id);
+    }
+
+    public static String translateEnchantmentId(Identifier id) {
+        Language lang = Language.getInstance();
+        String fullLanguageKey = "enchantment." + id.getNamespace() + "." + id.getPath();
+        return (String) R.clz(Language.class).inst(lang).mthd(V.lower("1.19.4") ? "method_4679/get" : "method_48307/get", String.class).invk(fullLanguageKey);
     }
 }
