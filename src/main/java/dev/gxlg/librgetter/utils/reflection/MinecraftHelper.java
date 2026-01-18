@@ -366,17 +366,17 @@ public class MinecraftHelper {
         R.clz(Minecraft.class).inst(client).mthd("method_1507/setScreen", Screen.class).invk(screen);
     }
 
-    public static String translateEnchantmentId(String id) {
-        Identifier iid = Identifier.tryParse(id);
-        if (iid == null) {
-            return id;
+    public static String translateEnchantmentId(String stringId) {
+        Identifier id = Identifier.tryParse(stringId);
+        if (id == null) {
+            return stringId;
         }
-        return translateEnchantmentId(iid);
+        return translateEnchantmentId(id);
     }
 
     public static String translateEnchantmentId(Identifier id) {
         Language lang = Language.getInstance();
-        String full = "enchantment." + id.getNamespace() + "." + id.getPath();
-        return (String) R.clz(Language.class).inst(lang).mthd(V.lower("1.19.4") ? "method_4679/get" : "method_48307/get", String.class).invk(full);
+        String fullLanguageKey = "enchantment." + id.getNamespace() + "." + id.getPath();
+        return (String) R.clz(Language.class).inst(lang).mthd(V.lower("1.19.4") ? "method_4679/get" : "method_48307/get", String.class).invk(fullLanguageKey);
     }
 }
