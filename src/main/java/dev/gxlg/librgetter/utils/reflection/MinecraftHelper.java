@@ -4,7 +4,6 @@ import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.plugins.Plugins;
 import dev.gxlg.librgetter.utils.reflection.chaining.tags.Tags;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.ParsedEnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
 import dev.gxlg.multiversion.R;
@@ -57,6 +56,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class MinecraftHelper {
+
+    // TODO: split into multiple helper classes?
+
     public static Connection getConnection(ClientPacketListener handler) {
         return (Connection) R.clz(ClientPacketListener.class).inst(handler).mthd("method_48296/method_2872/getConnection").invk();
     }
@@ -104,13 +106,13 @@ public class MinecraftHelper {
         if (!V.lower("1.20.5")) {
             CustomDataWrapper customData = CustomDataWrapper.inst(DataComponentHolderWrapper.inst(stack).get(DataComponentsWrapper.CUSTOM_DATA()));
             if (customData.isNull()) {
-                return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
+                return EnchantmentTrade.EMPTY;
             }
             tag = customData.copyTag();
         } else {
             tag = ItemStackWrapper.inst(stack).getTag();
             if (tag.isNull()) {
-                return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
+                return EnchantmentTrade.EMPTY;
             }
         }
 
@@ -197,7 +199,7 @@ public class MinecraftHelper {
             // Nothing was found, so try fallback or return empty
             Tuple<String, Integer> fallbackData = fallbackParse(tag);
             if (fallbackData == null) {
-                return ParsedEnchantmentTrade.success(EnchantmentTrade.EMPTY);
+                return EnchantmentTrade.EMPTY;
             }
 
             id = fallbackData.getA();
@@ -217,7 +219,7 @@ public class MinecraftHelper {
             throw new InternalErrorException("firstBuyItem");
         }
 
-        return ParsedEnchantmentTrade.success(new EnchantmentTrade(id, lvl, firstBuyItem.getCount()));
+        return new EnchantmentTrade(id, lvl, firstBuyItem.getCount());
     }
 
     public static Tuple<String, Integer> fallbackParse(Object tag) {
