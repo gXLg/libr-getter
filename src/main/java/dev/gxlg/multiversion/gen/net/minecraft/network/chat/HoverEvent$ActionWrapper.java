@@ -6,7 +6,8 @@ public class HoverEvent$ActionWrapper extends R.RWrapper<HoverEvent$ActionWrappe
     public static final R.RClass clazz = R.clz("net.minecraft.class_2568$class_5247/net.minecraft.network.chat.HoverEvent$Action");
 
     protected HoverEvent$ActionWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static HoverEvent$ActionWrapper inst(Object instance) {

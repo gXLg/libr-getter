@@ -4,9 +4,6 @@ net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
     net.minecraft.client.multiplayer.ClientLevel method_37908/getLevel()
     net.minecraft.client.multiplayer.ClientLevel field_17892/clientLevel
 
-net.minecraft.class_310/net.minecraft.client.Minecraft
-    method_1507/setScreen
-
 net.minecraft.class_1661/net.minecraft.world.entity.player.Inventory
     void method_61496/setSelectedHotbarSlot(int slot)
     int field_7545/selected

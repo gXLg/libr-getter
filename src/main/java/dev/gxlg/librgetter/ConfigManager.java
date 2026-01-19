@@ -29,65 +29,34 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("CanBeFinal")
-public class Config {
+public class ConfigManager {
     public static final List<String> CATEGORIES = List.of("process", "success", "messages", "matching", "compatibility");
 
-    public static final Config DEFAULT = new Config();
+    public static final Map<String, List<String>> CATEGORIES_MAP = Map.of(
+        "process",
+        List.of("autoTool", "offhand", "rotationMode", "manual", "waitLose", "safeChecker", "timeout"),
+        "success",
+        List.of("notify", "removeGoal", "lock"),
+        "messages",
+        List.of("logMode", "warning", "checkUpdate"),
+        "matching",
+        List.of("fallback", "matchMode", "matchAtLeast"),
+        "compatibility",
+        Arrays.stream(Config.class.getFields()).filter(f -> f.getAnnotation(Compatibility.class) != null).map(Field::getName).sorted().toList()
+    );
 
-    private transient final List<Configurable<?>> configurable = new ArrayList<>();
+    public static final ConfigManager DEFAULT = new ConfigManager(new Config());
 
-    private transient final Map<String, Configurable<?>> configurableMap = new HashMap<>();
+    public final Config data;
 
-    private transient final Map<String, List<Configurable<?>>> categoryMap = new HashMap<>();
+    private final List<Configurable<?>> configurable = new ArrayList<>();
 
-    // TODO: separate config toggles into own class ConfigData
+    private final Map<String, Configurable<?>> configurableMap = new HashMap<>();
 
-    public boolean notify = false;
+    private final Map<String, List<Configurable<?>>> categoryMap = new HashMap<>();
 
-    @OnlyEffective(when = "manual", equals = "false")
-    public boolean autoTool = true;
-
-    public LogMode logMode = LogMode.CHAT;
-
-    @OnlyEffective(when = "manual", equals = "false")
-    public boolean lock = false;
-
-    public boolean removeGoal = false;
-
-    public boolean checkUpdate = true;
-
-    public boolean warning = true;
-
-    @OnlyEffective(when = "manual", equals = "false")
-    public boolean offhand = false;
-
-    public boolean manual = false;
-
-    public boolean waitLose = false;
-
-    public boolean safeChecker = true;
-
-    public boolean fallback = false;
-
-    @OnlyEffective(when = "manual", equals = "false")
-    public RotationMode rotationMode = RotationMode.INSTANT;
-
-    @IntRange(min = 0, max = 20)
-    public int timeout = 0;
-
-    @NotNull
-    public MatchMode matchMode = MatchMode.VANILLA;
-
-    @OnlyEffective(when = "matchMode", equals = "ATLEAST")
-    @IntRange(min = 1)
-    public int matchAtLeast = 1;
-
-    @Compatibility("trade_cycling")
-    public boolean tradeCycling = false;
-
-    public List<EnchantmentTrade> goals = new ArrayList<>();
-
-    public Config() {
+    private ConfigManager(Config data) {
+        this.data = data;
         for (Field f : Config.class.getFields()) {
             Configurable<?> conf;
             if (f.getType() == boolean.class) {
@@ -101,12 +70,12 @@ public class Config {
             }
             configurable.add(conf);
             configurableMap.put(f.getName(), conf);
-            String key = categories.entrySet().stream().filter(e -> e.getValue().contains(f.getName())).findFirst().map(Map.Entry::getKey)
-                                   .orElseThrow(() -> new RuntimeException("Uncategorized config '" + f.getName() + "'"));
+            String key = CATEGORIES_MAP.entrySet().stream().filter(e -> e.getValue().contains(f.getName())).findFirst().map(Map.Entry::getKey)
+                                       .orElseThrow(() -> new RuntimeException("Uncategorized config '" + f.getName() + "'"));
             categoryMap.computeIfAbsent(key, k -> new ArrayList<>()).add(conf);
         }
         configurable.sort(Comparator.comparing(Configurable::name));
-        categoryMap.forEach((key, value) -> value.sort(Comparator.comparing(c -> categories.get(key).indexOf(c.name()))));
+        categoryMap.forEach((key, value) -> value.sort(Comparator.comparing(c -> CATEGORIES_MAP.get(key).indexOf(c.name()))));
     }
 
     public void save() {
@@ -123,7 +92,7 @@ public class Config {
                 Files.createFile(tempPath);
             }
 
-            Files.write(tempPath, GSON.toJson(this).getBytes(), StandardOpenOption.WRITE);
+            Files.write(tempPath, GSON.toJson(this.data).getBytes(), StandardOpenOption.WRITE);
             Files.move(tempPath, configPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException("Could not save config", e);
@@ -142,40 +111,75 @@ public class Config {
         return configurableMap.getOrDefault(field, null);
     }
 
-    private static final Map<String, List<String>> categories = Map.of(
-        "process",
-        List.of("autoTool", "offhand", "rotationMode", "manual", "waitLose", "safeChecker", "timeout"),
-        "success",
-        List.of("notify", "removeGoal", "lock"),
-        "messages",
-        List.of("logMode", "warning", "checkUpdate"),
-        "matching",
-        List.of("fallback", "matchMode", "matchAtLeast"),
-        "compatibility",
-        Arrays.stream(Config.class.getFields()).filter(f -> f.getAnnotation(Compatibility.class) != null).map(Field::getName).sorted().toList()
-    );
-
     private static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("librgetter.json");
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    public static Config init() {
-        Config config;
+    public static ConfigManager init() {
+        Config data;
         if (Files.notExists(configPath)) {
             try {
                 Files.createFile(configPath);
             } catch (IOException e) {
                 throw new RuntimeException("Could not initialize config", e);
             }
-            config = new Config();
+            data = new Config();
         } else {
             try (FileReader reader = new FileReader(configPath.toFile())) {
-                config = GSON.fromJson(reader, Config.class);
+                data = GSON.fromJson(reader, Config.class);
             } catch (IOException e) {
                 throw new RuntimeException("Could not parse config", e);
             }
         }
+        ConfigManager config = new ConfigManager(data);
         config.save();
         return config;
+    }
+
+    public static class Config {
+        public boolean notify = false;
+
+        @OnlyEffective(when = "manual", equals = "false")
+        public boolean autoTool = true;
+
+        public LogMode logMode = LogMode.CHAT;
+
+        @OnlyEffective(when = "manual", equals = "false")
+        public boolean lock = false;
+
+        public boolean removeGoal = false;
+
+        public boolean checkUpdate = true;
+
+        public boolean warning = true;
+
+        @OnlyEffective(when = "manual", equals = "false")
+        public boolean offhand = false;
+
+        public boolean manual = false;
+
+        public boolean waitLose = false;
+
+        public boolean safeChecker = true;
+
+        public boolean fallback = false;
+
+        @OnlyEffective(when = "manual", equals = "false")
+        public RotationMode rotationMode = RotationMode.INSTANT;
+
+        @IntRange(min = 0, max = 20)
+        public int timeout = 0;
+
+        @NotNull
+        public MatchMode matchMode = MatchMode.VANILLA;
+
+        @OnlyEffective(when = "matchMode", equals = "ATLEAST")
+        @IntRange(min = 1)
+        public int matchAtLeast = 1;
+
+        @Compatibility("trade_cycling")
+        public boolean tradeCycling = false;
+
+        public List<EnchantmentTrade> goals = new ArrayList<>();
     }
 }

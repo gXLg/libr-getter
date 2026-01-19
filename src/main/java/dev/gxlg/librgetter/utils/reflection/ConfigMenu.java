@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.reflection;
 
-import dev.gxlg.librgetter.Config;
+import dev.gxlg.librgetter.ConfigManager;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
@@ -29,9 +29,9 @@ public class ConfigMenu {
 
     static {
         int pages = 1;
-        for (String cat : Config.CATEGORIES) {
+        for (String cat : ConfigManager.CATEGORIES) {
             categories.put(cat, pages);
-            pages += (int) Math.ceil(LibrGetter.config.getConfigurablesForCategory(cat).size() / ((float) CONFIGS_PER_PAGE));
+            pages += (int) Math.ceil(LibrGetter.configManager.getConfigurablesForCategory(cat).size() / ((float) CONFIGS_PER_PAGE));
         }
         pageCount = pages;
     }
@@ -70,15 +70,15 @@ public class ConfigMenu {
             text = Texts.getImpl().bookMainPage(categories);
 
         } else {
-            List<String> reversed = new ArrayList<>(Config.CATEGORIES);
+            List<String> reversed = new ArrayList<>(ConfigManager.CATEGORIES);
             Collections.reverse(reversed);
             String category = reversed.stream().filter(c -> categories.get(c) <= index).findFirst().orElseThrow(() -> new RuntimeException("Invalid index " + index));
             text = Texts.getImpl().bookTitle(category);
 
             int j = index - categories.get(category);
-            int finish = Math.min(j * CONFIGS_PER_PAGE + CONFIGS_PER_PAGE, LibrGetter.config.getConfigurablesForCategory(category).size());
+            int finish = Math.min(j * CONFIGS_PER_PAGE + CONFIGS_PER_PAGE, LibrGetter.configManager.getConfigurablesForCategory(category).size());
             for (int i = j * CONFIGS_PER_PAGE; i < finish; i++) {
-                Configurable<?> config = LibrGetter.config.getConfigurablesForCategory(category).get(i);
+                Configurable<?> config = LibrGetter.configManager.getConfigurablesForCategory(category).get(i);
                 text = Texts.getImpl().bookEntry(text, config);
             }
         }

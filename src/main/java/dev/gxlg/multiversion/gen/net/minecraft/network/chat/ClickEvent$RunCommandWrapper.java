@@ -10,7 +10,8 @@ public class ClickEvent$RunCommandWrapper extends R.RWrapper<ClickEvent$RunComma
     }
 
     protected ClickEvent$RunCommandWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static ClickEvent$RunCommandWrapper inst(Object instance) {

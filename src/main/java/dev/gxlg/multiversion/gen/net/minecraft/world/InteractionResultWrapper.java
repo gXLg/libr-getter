@@ -6,7 +6,8 @@ public class InteractionResultWrapper extends R.RWrapper<InteractionResultWrappe
     public static final R.RClass clazz = R.clz("net.minecraft.class_1269/net.minecraft.world.InteractionResult");
 
     protected InteractionResultWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static InteractionResultWrapper inst(Object instance) {

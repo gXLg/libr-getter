@@ -43,7 +43,7 @@ public class FinalizeSearchTask extends TaskManager.Task {
             // TradeCycling process keeps the screen open, else we have to open it again
             MultiPlayerGameMode manager = client.gameMode;
             if (manager == null) {
-                throw new InternalErrorException("manager");
+                throw new InternalErrorException("managerInstance");
             }
 
             manager.interact(player, taskContext.selectedVillager(), InteractionHand.MAIN_HAND);

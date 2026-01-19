@@ -11,6 +11,7 @@ public class CycleTradesPacketWrapper extends dev.gxlg.multiversion.gen.net.mine
 
     protected CycleTradesPacketWrapper(Object instance) {
         super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static CycleTradesPacketWrapper inst(Object instance) {

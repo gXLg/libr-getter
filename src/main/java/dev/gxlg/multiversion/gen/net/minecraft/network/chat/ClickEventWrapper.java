@@ -10,7 +10,8 @@ public class ClickEventWrapper extends R.RWrapper<ClickEventWrapper> {
     }
 
     protected ClickEventWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static ClickEventWrapper inst(Object instance) {

@@ -11,6 +11,7 @@ public class TranslatableContentsWrapper extends dev.gxlg.multiversion.gen.net.m
 
     protected TranslatableContentsWrapper(Object instance) {
         super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static TranslatableContentsWrapper inst(Object instance) {

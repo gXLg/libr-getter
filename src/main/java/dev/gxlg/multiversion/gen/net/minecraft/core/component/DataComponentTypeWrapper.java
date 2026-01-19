@@ -6,7 +6,8 @@ public class DataComponentTypeWrapper extends R.RWrapper<DataComponentTypeWrappe
     public static final R.RClass clazz = R.clz("net.minecraft.class_9331/net.minecraft.core.component.DataComponentType");
 
     protected DataComponentTypeWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static DataComponentTypeWrapper inst(Object instance) {

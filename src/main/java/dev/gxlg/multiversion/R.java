@@ -57,39 +57,6 @@ public class R {
         return new RClass(clz);
     }
 
-    private static RField getField(String names, Class<?> clz, Object inst) {
-        String[] fields = names.split("/");
-        Field fld = cache(
-            fieldsCache, clz, fields, () -> {
-                for (String field : fields) {
-                    try {
-                        return clz.getField(field);
-                    } catch (NoSuchFieldException ignored) {
-                    }
-                }
-                throw new RuntimeException("Field not found from " + Arrays.toString(fields) + " for class " + clz.getName());
-            }
-        );
-        return new RField(null, fld);
-    }
-
-    private static RMethod getMethod(String names, Class<?> clz, Object inst, Object[] types) {
-        String[] methods = names.split("/");
-        Class<?>[] params = types(types);
-        Method mthd = cache(
-            methodsCache, clz, methods, () -> {
-                for (String method : methods) {
-                    try {
-                        return clz.getMethod(method, params);
-                    } catch (NoSuchMethodException ignored) {
-                    }
-                }
-                throw new RuntimeException("Method not found from " + Arrays.toString(methods) + " for class " + clz.getName() + " with params " + Arrays.toString(params));
-            }
-        );
-        return new RMethod(inst, mthd);
-    }
-
     @SuppressWarnings("unchecked")
     public static <T> Function<Object, T[]> arrayWrapper(Function<Object, T> wrapperT) {
         return obj -> (T[]) Stream.of((Object[]) obj).map(wrapperT).toArray();
@@ -138,25 +105,15 @@ public class R {
         }
 
         public RConstructor constr(Object... types) {
-            Class<?>[] params = types(types);
-            Constructor<?> constr = cache(
-                constructorsCache, self(), params, () -> {
-                    try {
-                        return self().getConstructor(params);
-                    } catch (NoSuchMethodException e) {
-                        throw new RuntimeException("Constructor not found for class " + self().getName() + " with args " + Arrays.toString(params));
-                    }
-                }
-            );
-            return new RConstructor(self(), constr);
+            return new RConstructor(self(), types);
         }
 
         public RField fld(String names) {
-            return getField(names, self(), null);
+            return new RField(null, names, self());
         }
 
         public RMethod mthd(String names, Object... types) {
-            return getMethod(names, self(), null, types);
+            return new RMethod(null, names, self(), types);
         }
 
         public Class<?> self() {
@@ -182,11 +139,11 @@ public class R {
         }
 
         public RField fld(String names) {
-            return getField(names, clz, inst);
+            return new RField(inst, names, clz);
         }
 
         public RMethod mthd(String names, Object... types) {
-            return getMethod(names, clz, inst, types);
+            return new RMethod(inst, names, clz, types);
         }
 
         public Object self() {
@@ -197,35 +154,73 @@ public class R {
     public static class RMethod {
         private final Object inst;
 
-        private final Method method;
+        private final Supplier<Method> lazyMethod;
 
-        public RMethod(Object inst, Method method) {
+        private Method method = null;
+
+        public RMethod(Object inst, String names, Class<?> clz, Object[] types) {
             this.inst = inst;
-            this.method = method;
+            this.lazyMethod = () -> {
+                String[] methods = names.split("/");
+                Class<?>[] params = types(types);
+                return cache(
+                    methodsCache, clz, methods, () -> {
+                        for (String method : methods) {
+                            try {
+                                return clz.getMethod(method, params);
+                            } catch (NoSuchMethodException ignored) {
+                            }
+                        }
+                        throw new RuntimeException("Method not found from " + Arrays.toString(methods) + " for class " + clz.getName() + " with params " + Arrays.toString(params));
+                    }
+                );
+            };
         }
 
         public Object invk(Object... args) {
             try {
-                return method.invoke(inst, args);
+                return self().invoke(inst, args);
             } catch (InvocationTargetException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        public Method self() {
+            if (method == null) {
+                method = lazyMethod.get();
+            }
+            return method;
         }
     }
 
     public static class RField {
         private final Object inst;
 
-        private final Field fld;
+        private final Supplier<Field> lazyField;
 
-        public RField(Object inst, Field fld) {
+        private Field fld = null;
+
+        public RField(Object inst, String names, Class<?> clz) {
             this.inst = inst;
-            this.fld = fld;
+            this.lazyField = () -> {
+                String[] fields = names.split("/");
+                return cache(
+                    fieldsCache, clz, fields, () -> {
+                        for (String field : fields) {
+                            try {
+                                return clz.getField(field);
+                            } catch (NoSuchFieldException ignored) {
+                            }
+                        }
+                        throw new RuntimeException("Field not found from " + Arrays.toString(fields) + " for class " + clz.getName());
+                    }
+                );
+            };
         }
 
         public void set(Object value) {
             try {
-                fld.set(inst, value);
+                self().set(inst, value);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
@@ -233,60 +228,84 @@ public class R {
 
         public Object get() {
             try {
-                return fld.get(inst);
+                return self().get(inst);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        public Field self() {
+            if (fld == null) {
+                fld = lazyField.get();
+            }
+            return fld;
         }
     }
 
     public static class RConstructor {
         private final Class<?> clz;
 
-        private final Constructor<?> constr;
+        private final Supplier<Constructor<?>> lazyConstr;
 
-        private RConstructor(Class<?> clz, Constructor<?> constr) {
+        private Constructor<?> constr = null;
+
+        private RConstructor(Class<?> clz, Object... types) {
             this.clz = clz;
-            this.constr = constr;
+            this.lazyConstr = () -> {
+                Class<?>[] params = types(types);
+                return cache(
+                    constructorsCache, clz, params, () -> {
+                        try {
+                            return clz.getConstructor(params);
+                        } catch (NoSuchMethodException e) {
+                            throw new RuntimeException("Constructor not found for class " + clz.getName() + " with args " + Arrays.toString(params));
+                        }
+                    }
+                );
+            };
         }
 
         public RInstance newInst(Object... args) {
             try {
-                return new RInstance(clz, constr.newInstance(args));
+                return new RInstance(clz, self().newInstance(args));
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
         }
+
+        public Constructor<?> self() {
+            if (constr == null) {
+                constr = lazyConstr.get();
+            }
+            return constr;
+        }
     }
 
     public static abstract class RWrapper<S extends RWrapper<S>> {
-        protected final RInstance instance;
+        protected final Object instance;
 
-        protected RWrapper(RInstance instance) {
+        protected RWrapper(Object instance) {
             this.instance = instance;
         }
 
         public Object unwrap() {
-            return instance.self();
+            return instance;
         }
 
         public <T> T unwrap(Class<T> type) {
-            return type.cast(instance.self());
+            return type.cast(instance);
         }
 
         public boolean isNull() {
-            return instance.self() == null;
+            return instance == null;
         }
 
         public <T extends S> T downcast(Class<T> wrapperType) {
-            return wrapperType.cast(R.clz(wrapperType).mthd("inst", Object.class).invk(instance.self()));
+            return wrapperType.cast(R.clz(wrapperType).mthd("inst", Object.class).invk(instance));
         }
 
         public boolean equals(S wrapper) {
-            if (this.isNull()) {
-                return wrapper.isNull();
-            }
-            return this.unwrap().equals(wrapper.unwrap());
+            return Objects.equals(instance, wrapper.instance);
         }
     }
 }

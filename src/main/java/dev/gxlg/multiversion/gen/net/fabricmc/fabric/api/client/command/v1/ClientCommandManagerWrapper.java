@@ -6,7 +6,8 @@ public class ClientCommandManagerWrapper extends R.RWrapper<ClientCommandManager
     public static final R.RClass clazz = R.clz("net.fabricmc.fabric.api.client.command.v1.ClientCommandManager");
 
     protected ClientCommandManagerWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static ClientCommandManagerWrapper inst(Object instance) {

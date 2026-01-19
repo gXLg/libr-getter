@@ -98,7 +98,7 @@ public class Commands_1_17_0 extends Commands {
         // automatically create config commands for each simply configurable value in Config
         {
             subCommand = literal("config");
-            for (Configurable<?> configurable : LibrGetter.config.getConfigurables()) {
+            for (Configurable<?> configurable : LibrGetter.configManager.getConfigurables()) {
                 String name = configurable.name();
 
                 ArgumentBuilderWrapper configArgument = literal(name).executes(CommandHelper.commandWrapper(ctx -> LibrGetCommand.config(ctx, configurable)));

@@ -123,7 +123,7 @@ public class CommandHelper {
             Texts.getImpl().sendTranslatable(message);
         }
         LibrGetter.config.goals.add(newTrade);
-        LibrGetter.config.save();
+        LibrGetter.configManager.save();
     }
 
     private static void removeGoals(String name) throws NotInGoalsException {
@@ -140,6 +140,7 @@ public class CommandHelper {
             LibrGetter.config.goals.remove(trade);
             Texts.getImpl().sendTranslatable(new EnchantmentRemovedMessage(trade));
         }
+        LibrGetter.configManager.save();
     }
 
     public static void removeGoal(String name, int level) throws NotInGoalsException {
@@ -155,7 +156,7 @@ public class CommandHelper {
             throw new NotInGoalsException(newTrade);
         }
         LibrGetter.config.goals.remove(alreadyPresentTrade);
-        LibrGetter.config.save();
+        LibrGetter.configManager.save();
         Texts.getImpl().sendTranslatable(new EnchantmentRemovedMessage(newTrade));
     }
 

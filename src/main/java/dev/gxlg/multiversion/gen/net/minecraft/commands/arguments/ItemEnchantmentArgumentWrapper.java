@@ -6,7 +6,8 @@ public class ItemEnchantmentArgumentWrapper extends R.RWrapper<ItemEnchantmentAr
     public static final R.RClass clazz = R.clz("net.minecraft.class_2194/net.minecraft.commands.arguments.ItemEnchantmentArgument");
 
     protected ItemEnchantmentArgumentWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static ItemEnchantmentArgumentWrapper inst(Object instance) {

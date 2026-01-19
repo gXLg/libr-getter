@@ -7,6 +7,7 @@ public class LiteralArgumentBuilderWrapper extends dev.gxlg.multiversion.gen.com
 
     protected LiteralArgumentBuilderWrapper(Object instance) {
         super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static LiteralArgumentBuilderWrapper inst(Object instance) {

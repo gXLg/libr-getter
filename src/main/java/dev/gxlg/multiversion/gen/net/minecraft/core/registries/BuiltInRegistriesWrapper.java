@@ -6,7 +6,8 @@ public class BuiltInRegistriesWrapper extends R.RWrapper<BuiltInRegistriesWrappe
     public static final R.RClass clazz = R.clz("net.minecraft.class_7923/net.minecraft.core.registries.BuiltInRegistries");
 
     protected BuiltInRegistriesWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static BuiltInRegistriesWrapper inst(Object instance) {

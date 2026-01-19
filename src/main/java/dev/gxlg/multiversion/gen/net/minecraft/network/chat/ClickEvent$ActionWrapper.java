@@ -6,7 +6,8 @@ public class ClickEvent$ActionWrapper extends R.RWrapper<ClickEvent$ActionWrappe
     public static final R.RClass clazz = R.clz("net.minecraft.class_2558$class_2559/net.minecraft.network.chat.ClickEvent$Action");
 
     protected ClickEvent$ActionWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static ClickEvent$ActionWrapper inst(Object instance) {

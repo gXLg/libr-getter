@@ -10,7 +10,8 @@ public class HoverEventWrapper extends R.RWrapper<HoverEventWrapper> {
     }
 
     protected HoverEventWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static HoverEventWrapper inst(Object instance) {

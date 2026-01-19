@@ -6,7 +6,8 @@ public class IdentifierWrapper extends R.RWrapper<IdentifierWrapper> {
     public static final R.RClass clazz = R.clz("net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier");
 
     protected IdentifierWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static IdentifierWrapper inst(Object instance) {

@@ -14,7 +14,8 @@ public class KeyMappingWrapper extends R.RWrapper<KeyMappingWrapper> {
     }
 
     protected KeyMappingWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static KeyMappingWrapper inst(Object instance) {

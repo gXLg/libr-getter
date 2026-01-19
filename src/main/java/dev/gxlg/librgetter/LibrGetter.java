@@ -16,12 +16,13 @@ public class LibrGetter implements ClientModInitializer {
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
+    public static final ConfigManager configManager = ConfigManager.init();
+
+    public static final ConfigManager.Config config = configManager.data;
+
     @Override
     public void onInitializeClient() {
         LOGGER.info("Hello World from LibrGetter!");
-
-        // initialize configuration
-        config = Config.init();
 
         // register commands
         Commands.getImpl().registerCommands();
@@ -32,9 +33,6 @@ public class LibrGetter implements ClientModInitializer {
         // checking for a new update
         Updater.checkUpdates();
     }
-
-    // TODO: make config instance-based
-    public static Config config;
 
     public static String getVersion() {
         Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(MOD_ID);

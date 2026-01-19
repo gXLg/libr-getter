@@ -5,9 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("ClassCanBeRecord") // GSON can't handle records in earlier versions
 public class EnchantmentTrade {
-
-    public static final EnchantmentTrade EMPTY = new EnchantmentTrade("", -1, 0);
-
     private final String id;
 
     private final int lvl;
@@ -45,25 +42,7 @@ public class EnchantmentTrade {
         return price;
     }
 
-    public static class EnchantmentOnly {
-
-        private final String id;
-
-        private final int lvl;
-
-        public EnchantmentOnly(String id, int lvl) {
-            this.id = id;
-            this.lvl = lvl;
-        }
-
-        public String id() {
-            return id;
-        }
-
-        public int lvl() {
-            return lvl;
-        }
-
+    public record EnchantmentOnly(String id, int lvl) {
         public EnchantmentTrade tradeWithPrice(int price) {
             return new EnchantmentTrade(id, lvl, price);
         }

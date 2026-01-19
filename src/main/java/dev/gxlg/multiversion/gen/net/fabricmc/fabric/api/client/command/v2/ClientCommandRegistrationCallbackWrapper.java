@@ -6,7 +6,8 @@ public class ClientCommandRegistrationCallbackWrapper extends R.RWrapper<ClientC
     public static final R.RClass clazz = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback");
 
     protected ClientCommandRegistrationCallbackWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static ClientCommandRegistrationCallbackWrapper inst(Object instance) {

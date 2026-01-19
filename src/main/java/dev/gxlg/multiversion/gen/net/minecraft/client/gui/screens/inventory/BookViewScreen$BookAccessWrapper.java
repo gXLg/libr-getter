@@ -10,7 +10,8 @@ public class BookViewScreen$BookAccessWrapper extends R.RWrapper<BookViewScreen$
     }
 
     protected BookViewScreen$BookAccessWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static BookViewScreen$BookAccessWrapper inst(Object instance) {

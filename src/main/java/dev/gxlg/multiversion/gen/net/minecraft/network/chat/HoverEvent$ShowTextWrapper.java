@@ -10,7 +10,8 @@ public class HoverEvent$ShowTextWrapper extends R.RWrapper<HoverEvent$ShowTextWr
     }
 
     protected HoverEvent$ShowTextWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static HoverEvent$ShowTextWrapper inst(Object instance) {

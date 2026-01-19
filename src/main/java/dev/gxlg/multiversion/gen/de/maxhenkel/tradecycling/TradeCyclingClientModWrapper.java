@@ -6,7 +6,8 @@ public class TradeCyclingClientModWrapper extends R.RWrapper<TradeCyclingClientM
     public static final R.RClass clazz = R.clz("de.maxhenkel.tradecycling.TradeCyclingClientMod");
 
     protected TradeCyclingClientModWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static TradeCyclingClientModWrapper inst(Object instance) {

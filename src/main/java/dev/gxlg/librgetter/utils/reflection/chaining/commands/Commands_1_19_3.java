@@ -26,7 +26,7 @@ public class Commands_1_19_3 extends Commands_1_19_0 {
             throw new ArgumentNotSupportedException();
         }
 
-        Either<?, ?> entry = (Either<?, ?>) ResourceOrTagArgument$ResultWrapper.inst(optionalResult.get()).unwrap();
+        Either<?, ?> entry = (Either<?, ?>) ResourceOrTagArgument$ResultWrapper.inst(optionalResult.get()).unwrap2();
         Optional<?> optEnchantment = entry.left();
         Optional<?> optTag = entry.right();
 

@@ -6,11 +6,12 @@ public class EnchantmentWrapper extends R.RWrapper<EnchantmentWrapper> {
     public static final R.RClass clazz = R.clz("net.minecraft.class_1887/net.minecraft.world.item.enchantment.Enchantment");
 
     protected EnchantmentWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public boolean isTradeable(){
-        return (boolean) this.instance.mthd("method_25949/isTradeable").invk();
+        return (boolean) clazz.inst(this.instance).mthd("method_25949/isTradeable").invk();
     }
 
     public static EnchantmentWrapper inst(Object instance) {

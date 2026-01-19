@@ -6,11 +6,12 @@ public class ClientPacketListenerWrapper extends R.RWrapper<ClientPacketListener
     public static final R.RClass clazz = R.clz("net.minecraft.class_634/net.minecraft.client.multiplayer.ClientPacketListener");
 
     protected ClientPacketListenerWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public net.minecraft.network.Connection getConnection(){
-        return (net.minecraft.network.Connection) this.instance.mthd("method_48296/method_2872/getConnection").invk();
+        return (net.minecraft.network.Connection) clazz.inst(this.instance).mthd("method_48296/method_2872/getConnection").invk();
     }
 
     public static ClientPacketListenerWrapper inst(Object instance) {

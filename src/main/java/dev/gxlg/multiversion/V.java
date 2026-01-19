@@ -13,15 +13,14 @@ public class V {
         if (version != null) {
             return version;
         }
-
         R.RClass constants = R.clz(SharedConstants.class);
-        Object gameVersion = constants.mthd("method_16673/getGameVersion").invk();
+        Object gameVersion = constants.mthd("method_16673/getCurrentVersion").invk();
         try {
-            R.RClass gameVersionClz = R.clz("com.mojang.bridge.game.GameVersion");
+            R.RClass gameVersionClz = R.clz("net.minecraft.class_6489/com.mojang.bridge.game.GameVersion");
             version = new MinecraftVersion((String) gameVersionClz.inst(gameVersion).mthd("method_48019/getName").invk());
         } catch (Exception ignored) {
-            R.RClass gameVersionClz = R.clz("net.minecraft.class_6489/net.minecraft.GameVersion");
-            version = new MinecraftVersion((String) gameVersionClz.inst(gameVersion).mthd("method_48019/getName/comp_4025/name").invk());
+            R.RClass gameVersionClz = R.clz("net.minecraft.class_6489/net.minecraft.WorldVersion");
+            version = new MinecraftVersion((String) gameVersionClz.inst(gameVersion).mthd("comp_4025/name").invk());
         }
         return version;
     }

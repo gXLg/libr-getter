@@ -45,8 +45,10 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
             if (!isEnchantmentTrade(offers.get(i))) {
                 continue;
             }
-
-            offeredEnchantments.add(Parser.parseTrade(offers.get(i)));
+            EnchantmentTrade trade = Parser.parseTrade(offers.get(i));
+            if (trade != null) {
+                offeredEnchantments.add(trade);
+            }
             if (LibrGetter.config.matchMode == MatchMode.VANILLA) {
                 break;
             }

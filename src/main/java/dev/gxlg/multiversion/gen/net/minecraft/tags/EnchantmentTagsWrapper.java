@@ -6,7 +6,8 @@ public class EnchantmentTagsWrapper extends R.RWrapper<EnchantmentTagsWrapper> {
     public static final R.RClass clazz = R.clz("net.minecraft.class_9636/net.minecraft.tags.EnchantmentTags");
 
     protected EnchantmentTagsWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static EnchantmentTagsWrapper inst(Object instance) {

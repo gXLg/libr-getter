@@ -30,7 +30,7 @@ public class RequestTradesTask extends TaskManager.Task {
         }
         MultiPlayerGameMode manager = client.gameMode;
         if (manager == null) {
-            throw new InternalErrorException("manager");
+            throw new InternalErrorException("managerInstance");
         }
 
         if (taskContext.selectedVillager().distanceTo(player) > 3.4f) {

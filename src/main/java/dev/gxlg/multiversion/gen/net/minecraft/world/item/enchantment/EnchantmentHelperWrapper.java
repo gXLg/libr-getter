@@ -6,7 +6,8 @@ public class EnchantmentHelperWrapper extends R.RWrapper<EnchantmentHelperWrappe
     public static final R.RClass clazz = R.clz("net.minecraft.class_1890/net.minecraft.world.item.enchantment.EnchantmentHelper");
 
     protected EnchantmentHelperWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static EnchantmentHelperWrapper inst(Object instance) {

@@ -6,7 +6,8 @@ public class VillagerProfessionWrapper extends R.RWrapper<VillagerProfessionWrap
     public static final R.RClass clazz = R.clz("net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession");
 
     protected VillagerProfessionWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static VillagerProfessionWrapper inst(Object instance) {

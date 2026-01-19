@@ -6,7 +6,8 @@ public class ClientPlayNetworkingWrapper extends R.RWrapper<ClientPlayNetworking
     public static final R.RClass clazz = R.clz("net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking");
 
     protected ClientPlayNetworkingWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static ClientPlayNetworkingWrapper inst(Object instance) {

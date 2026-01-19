@@ -6,7 +6,8 @@ public class ResourceOrTagArgumentWrapper extends R.RWrapper<ResourceOrTagArgume
     public static final R.RClass clazz = R.clz("net.minecraft.class_7737/net.minecraft.commands.arguments.ResourceOrTagArgument");
 
     protected ResourceOrTagArgumentWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static ResourceOrTagArgumentWrapper inst(Object instance) {

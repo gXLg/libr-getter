@@ -63,7 +63,7 @@ public class SelectAxeTask extends TaskManager.Task {
         if (slot != -1) {
             MultiPlayerGameMode manager = client.gameMode;
             if (manager == null) {
-                throw new InternalErrorException("manager");
+                throw new InternalErrorException("managerInstance");
             }
 
             ClientPacketListener handler = client.getConnection();

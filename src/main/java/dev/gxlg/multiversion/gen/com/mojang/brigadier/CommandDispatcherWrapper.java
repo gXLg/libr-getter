@@ -6,11 +6,12 @@ public class CommandDispatcherWrapper extends R.RWrapper<CommandDispatcherWrappe
     public static final R.RClass clazz = R.clz("com.mojang.brigadier.CommandDispatcher");
 
     protected CommandDispatcherWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public void register(dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper command){
-        this.instance.mthd("register", dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.clazz).invk(command.unwrap());
+        clazz.inst(this.instance).mthd("register", dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.clazz).invk(command.unwrap());
     }
 
     public static CommandDispatcherWrapper inst(Object instance) {

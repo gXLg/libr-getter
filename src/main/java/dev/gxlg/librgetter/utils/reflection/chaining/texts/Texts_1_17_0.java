@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.reflection.chaining.texts;
 
-import dev.gxlg.librgetter.Config;
+import dev.gxlg.librgetter.ConfigManager;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
@@ -8,6 +8,8 @@ import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.exceptions.runtime.UnexpectedConfigurableTypeException;
 import dev.gxlg.librgetter.utils.types.translatable_messages.TranslatableMessage;
+import dev.gxlg.librgetter.utils.types.translatable_messages.config.TranslatableCategory;
+import dev.gxlg.librgetter.utils.types.translatable_messages.config.TranslatableConfigDescription;
 import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.NewVersionReleasedMessage;
 import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.OfferMessage;
 import dev.gxlg.librgetter.utils.types.translatable_messages.partial.TranslatableConfigMenuName;
@@ -46,17 +48,17 @@ public class Texts_1_17_0 extends Texts {
 
     @Override
     public void sendTranslatable(TranslatableMessage translatableMessage) {
-        sendMessage(translatable(translatableMessage), false);
+        sendMessage(ofTranslatableMessage(translatableMessage), false);
     }
 
     @Override
     public void sendFound(EnchantmentTrade enchant, int counter) {
-        MutableComponentWrapper text = translatable(new EnchantmentFoundMessage(enchant, counter));
+        MutableComponentWrapper text = ofTranslatableMessage(new EnchantmentFoundMessage(enchant, counter));
         text = text.withStyle(ChatFormatting.GREEN);
 
         if (!LibrGetter.config.removeGoal) {
             text = text.append(" ");
-            MutableComponentWrapper rem = translatable(new TranslatableRemoveButton());
+            MutableComponentWrapper rem = ofTranslatableMessage(new TranslatableRemoveButton());
             Style style = Style.EMPTY.withClickEvent(runnable("/librget remove \"" + enchant.id() + "\" " + enchant.lvl())).withColor(ChatFormatting.YELLOW);
             rem.setStyle(style);
             text = text.append(rem);
@@ -69,13 +71,13 @@ public class Texts_1_17_0 extends Texts {
             return;
         }
         boolean ab = LibrGetter.config.logMode == LogMode.ACTIONBAR;
-        MutableComponentWrapper text = translatable(new OfferMessage(offeredEnchantments));
+        MutableComponentWrapper text = ofTranslatableMessage(new OfferMessage(offeredEnchantments));
         sendMessage(text, ab);
     }
 
     @Override
     public void sendNewVersion(String releaseName, String description) {
-        MutableComponentWrapper text = translatable(new NewVersionReleasedMessage(releaseName));
+        MutableComponentWrapper text = ofTranslatableMessage(new NewVersionReleasedMessage(releaseName));
         Style style = Style.EMPTY.withHoverEvent(hoverable(literal(description)));
         text.setStyle(style);
         sendMessage(text, false);
@@ -83,8 +85,8 @@ public class Texts_1_17_0 extends Texts {
 
     @Override
     public void sendListOfGoals() {
-        MutableComponentWrapper text = translatable(new TranslatableGoalsListName());
-        MutableComponentWrapper rem = translatable(new TranslatableRemoveButton());
+        MutableComponentWrapper text = ofTranslatableMessage(new TranslatableGoalsListName());
+        MutableComponentWrapper rem = ofTranslatableMessage(new TranslatableRemoveButton());
         for (EnchantmentTrade l : LibrGetter.config.goals) {
             String line = "\n- " + l + " (" + l.price() + ") ";
             text = text.append(line);
@@ -98,12 +100,12 @@ public class Texts_1_17_0 extends Texts {
     @Override
     public MutableComponentWrapper bookMainPage(Map<String, Integer> categories) {
         MutableComponentWrapper text = title();
-        MutableComponentWrapper s = translatable(new TranslatableConfigMenuName());
+        MutableComponentWrapper s = ofTranslatableMessage(new TranslatableConfigMenuName());
         text = text.append(s);
         text = text.append("\n");
-        for (String cat : Config.CATEGORIES) {
+        for (String cat : ConfigManager.CATEGORIES) {
             text = text.append("\n* ");
-            s = applyStyle(translatable("category." + cat), Style.EMPTY.withClickEvent(paging(categories.get(cat) + 1)));
+            s = applyStyle(ofTranslatableMessage(new TranslatableCategory(cat)), Style.EMPTY.withClickEvent(paging(categories.get(cat) + 1)));
             text = text.append(s);
         }
         return text;
@@ -116,7 +118,7 @@ public class Texts_1_17_0 extends Texts {
         text = text.append(s);
         s = literal(" ");
         text = text.append(s);
-        s = translatable("category." + category);
+        s = ofTranslatableMessage(new TranslatableCategory(category));
         return text.append(s);
     }
 
@@ -124,7 +126,7 @@ public class Texts_1_17_0 extends Texts {
     public MutableComponentWrapper bookEntry(MutableComponentWrapper text, Configurable<?> configurable) {
         String config = configurable.name();
         String showName = config.startsWith("_") ? "+ " + config.substring(1) : config;
-        MutableComponentWrapper name = translatable("config." + config);
+        MutableComponentWrapper name = ofTranslatableMessage(new TranslatableConfigDescription(config));
 
         ChatFormatting green = configurable.hasEffect() ? ChatFormatting.GREEN : ChatFormatting.GRAY;
         ChatFormatting black = configurable.hasEffect() ? ChatFormatting.BLACK : ChatFormatting.GRAY;
@@ -198,7 +200,7 @@ public class Texts_1_17_0 extends Texts {
         return new TranslatableContentsWrapper(message, args);
     }
 
-    private MutableComponentWrapper translatable(TranslatableMessage message) {
+    private MutableComponentWrapper ofTranslatableMessage(TranslatableMessage message) {
         return translatable(message.getTranslationKey(), message.getArgs()).withStyle(message.getColor());
     }
 

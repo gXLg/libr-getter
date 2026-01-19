@@ -60,7 +60,7 @@ public class LibrGetCommand {
         try {
             value = context.getArgument("value", config.type());
             config.set(value);
-            config.instance().save();
+            config.managerInstance().save();
         } catch (IllegalArgumentException ignored) {
         }
 
@@ -141,7 +141,7 @@ public class LibrGetCommand {
 
     public static void clearGoals() {
         LibrGetter.config.goals.clear();
-        LibrGetter.config.save();
+        LibrGetter.configManager.save();
         Texts.getImpl().sendTranslatable(new GoalsListClearedMessage());
     }
 

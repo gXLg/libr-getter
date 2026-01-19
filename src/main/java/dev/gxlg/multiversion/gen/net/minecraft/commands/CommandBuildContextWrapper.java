@@ -6,7 +6,8 @@ public class CommandBuildContextWrapper extends R.RWrapper<CommandBuildContextWr
     public static final R.RClass clazz = R.clz("net.minecraft.class_7157/net.minecraft.commands.CommandBuildContext");
 
     protected CommandBuildContextWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static CommandBuildContextWrapper inst(Object instance) {

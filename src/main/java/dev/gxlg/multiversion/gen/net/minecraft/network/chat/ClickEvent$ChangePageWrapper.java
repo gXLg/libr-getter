@@ -10,7 +10,8 @@ public class ClickEvent$ChangePageWrapper extends R.RWrapper<ClickEvent$ChangePa
     }
 
     protected ClickEvent$ChangePageWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static ClickEvent$ChangePageWrapper inst(Object instance) {

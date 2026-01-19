@@ -6,11 +6,12 @@ public class ComponentWrapper extends R.RWrapper<ComponentWrapper> {
     public static final R.RClass clazz = R.clz("net.minecraft.class_2561/net.minecraft.network.chat.Component");
 
     protected ComponentWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper plainCopy(){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(this.instance.mthd("method_27662/plainCopy").invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_27662/plainCopy").invk());
     }
 
     public static ComponentWrapper inst(Object instance) {

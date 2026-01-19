@@ -6,7 +6,8 @@ public class RegistriesWrapper extends R.RWrapper<RegistriesWrapper> {
     public static final R.RClass clazz = R.clz("net.minecraft.class_7924/net.minecraft.core.registries.Registries");
 
     protected RegistriesWrapper(Object instance) {
-        super(clazz.inst(instance));
+        super(instance);
+        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static RegistriesWrapper inst(Object instance) {

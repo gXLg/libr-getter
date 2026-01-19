@@ -32,7 +32,7 @@ public class BreakLecternTask extends TaskManager.Task {
 
         MultiPlayerGameMode manager = client.gameMode;
         if (manager == null) {
-            throw new InternalErrorException("manager");
+            throw new InternalErrorException("managerInstance");
         }
         manager.continueDestroyBlock(taskContext.selectedLecternPos(), Direction.UP);
     }

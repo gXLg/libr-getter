@@ -3,7 +3,7 @@ package dev.gxlg.librgetter.utils.types.config.helpers;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import dev.gxlg.librgetter.Config;
+import dev.gxlg.librgetter.ConfigManager;
 import dev.gxlg.librgetter.utils.reflection.Support;
 import dev.gxlg.librgetter.utils.types.config.Compatibility;
 import dev.gxlg.librgetter.utils.types.config.IntRange;
@@ -13,11 +13,11 @@ import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-public record Configurable<T>(String name, Class<T> type, Config instance) {
+public record Configurable<T>(String name, Class<T> type, ConfigManager managerInstance) {
     public T get() {
         try {
-            Field configurableField = Config.class.getField(name);
-            T configurableType = type.cast(configurableField.get(instance));
+            Field configurableField = ConfigManager.Config.class.getField(name);
+            T configurableType = type.cast(configurableField.get(managerInstance.data));
             if (configurableType != null) {
                 return configurableType;
             }
@@ -30,21 +30,21 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
 
     public void set(T value) {
         try {
-            Field configurableField = Config.class.getField(name);
-            configurableField.set(instance, value);
+            Field configurableField = ConfigManager.Config.class.getField(name);
+            configurableField.set(managerInstance.data, value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
     public T getDefault() {
-        return type.cast(Config.DEFAULT.getConfigurableForName(name).get());
+        return type.cast(ConfigManager.DEFAULT.getConfigurableForName(name).get());
     }
 
     public ArgumentType<?> commandArgument() {
         Field configurableField;
         try {
-            configurableField = Config.class.getField(name);
+            configurableField = ConfigManager.Config.class.getField(name);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -73,7 +73,7 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
         }
         Field configurableField;
         try {
-            configurableField = Config.class.getField(name);
+            configurableField = ConfigManager.Config.class.getField(name);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -88,13 +88,13 @@ public record Configurable<T>(String name, Class<T> type, Config instance) {
     public boolean hasEffect() {
         Field configurableField;
         try {
-            configurableField = Config.class.getField(name);
+            configurableField = ConfigManager.Config.class.getField(name);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
 
         for (OnlyEffective onlyEffectiveCondition : configurableField.getAnnotationsByType(OnlyEffective.class)) {
-            Configurable<?> configurable = instance.getConfigurableForName(onlyEffectiveCondition.when());
+            Configurable<?> configurable = managerInstance.getConfigurableForName(onlyEffectiveCondition.when());
             String current;
             if (configurable.type() == OptionsConfig.class) {
                 current = ((OptionsConfig<?>) configurable.get()).getSerializedName();
