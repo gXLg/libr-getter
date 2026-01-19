@@ -3,6 +3,7 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.command.CommandHelper;
 import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
+import dev.gxlg.librgetter.utils.reflection.Parser;
 import dev.gxlg.librgetter.utils.reflection.Support;
 import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
@@ -45,7 +46,7 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
                 continue;
             }
 
-            offeredEnchantments.add(MinecraftHelper.parseTrade(offers, i));
+            offeredEnchantments.add(Parser.parseTrade(offers.get(i)));
             if (LibrGetter.config.matchMode == MatchMode.VANILLA) {
                 break;
             }

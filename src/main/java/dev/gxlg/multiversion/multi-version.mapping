@@ -4,9 +4,30 @@ net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
     net.minecraft.client.multiplayer.ClientLevel method_37908/getLevel()
     net.minecraft.client.multiplayer.ClientLevel field_17892/clientLevel
 
+net.minecraft.class_310/net.minecraft.client.Minecraft
+    method_1507/setScreen
+
+net.minecraft.class_1661/net.minecraft.world.entity.player.Inventory
+    void method_61496/setSelectedHotbarSlot(int slot)
+    int field_7545/selected
+
+net.minecraft.class_1269/net.minecraft.world.InteractionResult
+    static net.minecraft.world.InteractionResult field_5814/FAIL
+
+net.minecraft.class_1937/net.minecraft.world.level.Level
+    void method_8486/playLocalSound(double x, double y, double z, net.minecraft.sounds.SoundEvent sound, net.minecraft.sounds.SoundSource source, float volume, float pitch, boolean distanceDelay)
+
 net.minecraft.class_6880/net.minecraft.core.Holder
-    net.minecraft.class_6880$class_6883/net.minecraft.core.Holder$Reference
+    boolean method_40225/is(net.minecraft.class_5321/net.minecraft.resources.ResourceKey resourceKey)
+    boolean method_40220/is(net.minecraft.class_6862/net.minecraft.tags.TagKey resourceKey)
+    String method_55840/getRegisteredName()
+
+    net.minecraft.class_6880$class_6883/net.minecraft.core.Holder$Reference extends net.minecraft.class_6880/net.minecraft.core.Holder
+        net.minecraft.class_5321/net.minecraft.resources.ResourceKey method_40237/key()
         Object comp_349/value()
+
+net.minecraft.class_9636/net.minecraft.tags.EnchantmentTags
+    static net.minecraft.class_6862/net.minecraft.tags.TagKey field_51545/TRADEABLE
 
 net.minecraft.class_9322/net.minecraft.core.component.DataComponentHolder
     Object method_58694/get(net.minecraft.class_9331/net.minecraft.core.component.DataComponentType type)
@@ -20,13 +41,45 @@ net.minecraft.class_9331/net.minecraft.core.component.DataComponentType
 
 net.minecraft.class_9334/net.minecraft.core.component.DataComponents
     static net.minecraft.class_9331/net.minecraft.core.component.DataComponentType field_49628/CUSTOM_DATA
+    static net.minecraft.class_9331/net.minecraft.core.component.DataComponentType field_49633/ENCHANTMENTS
+    static net.minecraft.class_9331/net.minecraft.core.component.DataComponentType field_49643/STORED_ENCHANTMENTS
 
 net.minecraft.class_1799/net.minecraft.world.item.ItemStack
-     net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_7969/getTag()
+    net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_7969/getTag()
+    net.minecraft.class_9304/net.minecraft.world.item.enchantment.ItemEnchantments method_58657/getEnchantments()
 
 net.minecraft.class_9304/net.minecraft.world.item.enchantment.ItemEnchantments
+    java.util.Set<it.unimi.dsi.fastutil.objects.Object2IntMap$Entry<net.minecraft.class_6880/net.minecraft.core.Holder>> method_57539/entrySet()
+
+net.minecraft.class_1887/net.minecraft.world.item.enchantment.Enchantment
+    boolean method_25949/isTradeable()
+
+net.minecraft.class_1893/net.minecraft.world.item.enchantment.Enchantments
+    # 1.17
+    static net.minecraft.world.item.enchantment.Enchantment field_9131/EFFICIENCY
+    # 1.21
+    static net.minecraft.class_5321/net.minecraft.resources.ResourceKey field_9131/EFFICIENCY
+
+net.minecraft.class_1890/net.minecraft.world.item.enchantment.EnchantmentHelper
+    static int method_8225/getItemEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantment enchantment, net.minecraft.world.item.ItemStack stack)
+
+net.minecraft.class_3850/net.minecraft.world.entity.npc.villager.VillagerData
+    net.minecraft.class_6880/net.minecraft.core.Holder comp_3521/profession()
+    net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession method_16924/getProfession()
 
 net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession
+    static net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession field_17060/LIBRARIAN
+    static net.minecraft.class_5321/net.minecraft.resources.ResourceKey field_17060/LIBRARIAN
+
+    static net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession field_17051/NONE
+    static net.minecraft.class_5321/net.minecraft.resources.ResourceKey field_17051/NONE
+
+net.minecraft.class_2477/net.minecraft.locale.Language
+    String method_4679/get(String translationKey)
+    String method_48307/get(String translationKey)
+
+net.minecraft.class_634/net.minecraft.client.multiplayer.ClientPacketListener
+    net.minecraft.network.Connection method_48296/method_2872/getConnection()
 
 # ------------------------------------------------------------------------------------------------------------- #
 
@@ -51,6 +104,9 @@ net.minecraft.class_2588/net.minecraft.network.chat.contents.TranslatableContent
 
 # ------------------------------------------------------------------------------------------------------------- #
 
+
+# ------------------------------------------------------------------------------------------------------------- #
+
 net.minecraft.class_5321/net.minecraft.resources.ResourceKey
 
 net.minecraft.class_7924/net.minecraft.core.registries.Registries
@@ -59,6 +115,8 @@ net.minecraft.class_7924/net.minecraft.core.registries.Registries
 net.minecraft.class_2378/net.minecraft.core.Registry
     net.minecraft.class_5321/net.minecraft.resources.ResourceKey method_30517/key()
     net.minecraft.resources.Identifier method_10221/getKey(Object resource)
+    net.minecraft.class_6880/net.minecraft.core.Holder method_47983/wrapAsHolder(Object value)
+
     static net.minecraft.class_2378/net.minecraft.core.Registry field_11160/ENCHANTMENT
 
 net.minecraft.class_7923/net.minecraft.core.registries.BuiltInRegistries

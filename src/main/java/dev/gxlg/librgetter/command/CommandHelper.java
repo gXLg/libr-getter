@@ -68,11 +68,11 @@ public class CommandHelper {
                 removeGoal(enchantmentId.toString(), currentEnchantmentLvl);
 
             } else {
-                if (!MinecraftHelper.canBeTraded(enchantment) && LibrGetter.config.warning) {
+                if (LibrGetter.config.warning && !MinecraftHelper.canBeTraded(enchantment)) {
                     Texts.getImpl().sendTranslatable(new CanNotBeTradedMessage(enchantmentId));
                 }
 
-                if (globalLvlCriteria > max && LibrGetter.config.warning) {
+                if (LibrGetter.config.warning && globalLvlCriteria > max) {
                     new LevelOverMaxMessage(enchantmentId, enchantment.getMaxLevel());
                 }
 

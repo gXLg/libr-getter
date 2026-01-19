@@ -13,6 +13,10 @@ public class ItemStackWrapper extends R.RWrapper<ItemStackWrapper> {
         return dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.inst(this.instance.mthd("method_7969/getTag").invk());
     }
 
+    public dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.ItemEnchantmentsWrapper getEnchantments(){
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.ItemEnchantmentsWrapper.inst(this.instance.mthd("method_58657/getEnchantments").invk());
+    }
+
     public static ItemStackWrapper inst(Object instance) {
         return new ItemStackWrapper(instance);
     }

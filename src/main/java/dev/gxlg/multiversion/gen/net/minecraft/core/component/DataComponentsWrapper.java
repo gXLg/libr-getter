@@ -16,4 +16,12 @@ public class DataComponentsWrapper extends R.RWrapper<DataComponentsWrapper> {
     public static dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper CUSTOM_DATA() {
         return dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.inst(clazz.fld("field_49628/CUSTOM_DATA").get());
     }
+
+    public static dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper ENCHANTMENTS() {
+        return dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.inst(clazz.fld("field_49633/ENCHANTMENTS").get());
+    }
+
+    public static dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper STORED_ENCHANTMENTS() {
+        return dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.inst(clazz.fld("field_49643/STORED_ENCHANTMENTS").get());
+    }
 }

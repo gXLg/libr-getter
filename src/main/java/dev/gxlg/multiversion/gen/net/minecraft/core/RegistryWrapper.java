@@ -17,6 +17,10 @@ public class RegistryWrapper extends R.RWrapper<RegistryWrapper> {
         return (net.minecraft.resources.Identifier) this.instance.mthd("method_10221/getKey", Object.class).invk(resource);
     }
 
+    public dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper wrapAsHolder(Object value){
+        return dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper.inst(this.instance.mthd("method_47983/wrapAsHolder", Object.class).invk(value));
+    }
+
     public static RegistryWrapper inst(Object instance) {
         return new RegistryWrapper(instance);
     }

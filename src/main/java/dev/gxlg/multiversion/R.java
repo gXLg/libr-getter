@@ -90,8 +90,8 @@ public class R {
         return new RMethod(inst, mthd);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Function<Object, T[]> arrayWrapper(Function<Object, T> wrapperT) {
-        //noinspection unchecked
         return obj -> (T[]) Stream.of((Object[]) obj).map(wrapperT).toArray();
     }
 
@@ -280,6 +280,13 @@ public class R {
 
         public <T extends S> T downcast(Class<T> wrapperType) {
             return wrapperType.cast(R.clz(wrapperType).mthd("inst", Object.class).invk(instance.self()));
+        }
+
+        public boolean equals(S wrapper) {
+            if (this.isNull()) {
+                return wrapper.isNull();
+            }
+            return this.unwrap().equals(wrapper.unwrap());
         }
     }
 }

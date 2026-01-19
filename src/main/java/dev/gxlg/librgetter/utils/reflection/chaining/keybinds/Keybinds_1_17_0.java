@@ -3,7 +3,6 @@ package dev.gxlg.librgetter.utils.reflection.chaining.keybinds;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.gui.ConfigScreen;
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
 import dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -18,7 +17,7 @@ public class Keybinds_1_17_0 extends Keybinds {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (configMenuKeyMapping.consumeClick()) {
-                MinecraftHelper.setScreen(client, new ConfigScreen());
+                client.setScreen(new ConfigScreen());
             }
         });
 

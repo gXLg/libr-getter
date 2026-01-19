@@ -1,7 +1,6 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
 import dev.gxlg.librgetter.utils.reflection.Support;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
@@ -61,8 +60,8 @@ public class FinalizeSearchTask extends TaskManager.Task {
     }
 
     private static boolean canBuy(LocalPlayer player, MerchantOffer offer) {
-        ItemStack first = MinecraftHelper.getFirstBuyItem(offer);
-        ItemStack second = MinecraftHelper.getSecondBuyItem(offer);
+        ItemStack first = offer.getCostA();
+        ItemStack second = offer.getCostB();
         int firstCount = player.getInventory().countItem(first.getItem());
         int secondCount = second.isEmpty() ? 0 : player.getInventory().countItem(second.getItem());
         return first.getCount() <= firstCount && second.getCount() <= secondCount;
