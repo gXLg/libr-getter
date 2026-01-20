@@ -13,8 +13,8 @@ public class InventoryWrapper extends R.RWrapper<InventoryWrapper> {
         this.selected = rInstance.fld("field_7545/selected");
     }
 
-    public void setSelectedHotbarSlot(int slot){
-        clazz.inst(this.instance).mthd("method_61496/setSelectedHotbarSlot", int.class).invk(slot);
+    public void setSelectedSlot(int slot){
+        clazz.inst(this.instance).mthd("method_61496/setSelectedSlot", int.class).invk(slot);
     }
 
     public int getSelected() {

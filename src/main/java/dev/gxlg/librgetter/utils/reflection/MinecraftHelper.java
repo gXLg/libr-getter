@@ -148,7 +148,7 @@ public class MinecraftHelper {
 
     public static void setSelectedSlot(Inventory inventory, int slot) {
         if (!V.lower("1.21.5")) {
-            InventoryWrapper.inst(inventory).setSelectedHotbarSlot(slot);
+            InventoryWrapper.inst(inventory).setSelectedSlot(slot);
         } else {
             InventoryWrapper.inst(inventory).setSelected(slot);
         }
@@ -166,9 +166,9 @@ public class MinecraftHelper {
         Language lang = Language.getInstance();
         String fullLanguageKey = "enchantment." + id.getNamespace() + "." + id.getPath();
         if (!V.lower("1.19.4")) {
-            return LanguageWrapper.inst(lang).get2(fullLanguageKey);
+            return LanguageWrapper.inst(lang).getOrDefault2(fullLanguageKey);
         } else {
-            return LanguageWrapper.inst(lang).get(fullLanguageKey);
+            return LanguageWrapper.inst(lang).getOrDefault(fullLanguageKey);
         }
     }
 }

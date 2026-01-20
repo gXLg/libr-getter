@@ -64,8 +64,8 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
         matching.get().forEach(e -> Texts.getImpl().sendFound(e, taskContext.attemptsCounter()));
 
         if (LibrGetter.config.removeGoal) {
-            for (EnchantmentTrade e : matching.get()) {
-                CommandHelper.removeGoal(e.id(), e.lvl());
+            for (EnchantmentTrade trade : matching.get()) {
+                CommandHelper.removeGoal(trade);
             }
         }
 

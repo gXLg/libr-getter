@@ -1,10 +1,9 @@
 package dev.gxlg.librgetter.utils.types.translatable_messages.warning;
 
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
-import net.minecraft.resources.Identifier;
+import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 
 public class LevelOverMaxMessage extends TranslatableWarningMessage {
-    public LevelOverMaxMessage(Identifier enchantmentId, int maxLevel) {
-        super("librgetter.warning.level", MinecraftHelper.translateEnchantmentId(enchantmentId), maxLevel);
+    public LevelOverMaxMessage(EnchantmentTrade trade, int maxLevel) {
+        super("librgetter.warning.level", trade, maxLevel);
     }
 }

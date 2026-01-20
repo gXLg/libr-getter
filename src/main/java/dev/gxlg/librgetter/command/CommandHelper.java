@@ -27,7 +27,7 @@ import java.util.List;
 
 public class CommandHelper {
     public static void manageGoals(CommandContext<?> context, boolean remove) throws LibrGetterException {
-        List<Enchantment> list = Commands.getImpl().getEnchantmentsFromCommandContext(context);
+        List<Enchantment> enchantments = Commands.getImpl().getEnchantmentsFromCommandContext(context);
 
         int globalLvlCriteria;
         try {
@@ -42,41 +42,58 @@ public class CommandHelper {
         } catch (IllegalArgumentException ignored) {
         }
 
-        for (Enchantment enchantment : list) {
+        List<EnchantmentTrade> trades = new ArrayList<>();
+        List<Integer> maxLevels = new ArrayList<>();
+        for (Enchantment enchantment : enchantments) {
             Identifier enchantmentId = MinecraftHelper.enchantmentId(enchantment);
-
             if (enchantmentId == null) {
-                throw new InternalErrorException("id");
+                throw new InternalErrorException("enchantmentId");
             }
-
-            if (globalLvlCriteria == -1 && remove) {
-                // remove all levels of the enchantment
-                removeGoals(enchantmentId.toString());
-                continue;
-            }
-
             int max = enchantment.getMaxLevel();
-            int currentEnchantmentLvl;
+            maxLevels.add(max);
+            int level = globalLvlCriteria == -1 ? max : globalLvlCriteria;
+            trades.add(new EnchantmentTrade(enchantmentId.toString(), level, price));
+        }
+
+        if (remove) {
             if (globalLvlCriteria == -1) {
-                // default to the max level for each enchantment
-                currentEnchantmentLvl = max;
+                boolean anyRemoved = false;
+                for (EnchantmentTrade trade : trades) {
+                    try {
+                        removeAllGoals(trade);
+                    } catch (NotInGoalsException e) {
+                        continue;
+                    }
+                    anyRemoved = true;
+                }
+                if (!anyRemoved) {
+                    throw new NotInGoalsException(trades);
+                }
             } else {
-                currentEnchantmentLvl = globalLvlCriteria;
+                for (int i = 0; i < enchantments.size(); i++) {
+                    EnchantmentTrade trade = trades.get(i);
+                    int maxLevel = maxLevels.get(i);
+                    if (LibrGetter.config.warning && globalLvlCriteria > maxLevel) {
+                        Texts.getImpl().sendTranslatable(new LevelOverMaxMessage(trade, maxLevel));
+                    }
+                    removeGoal(trade);
+                }
             }
+        } else {
+            for (int i = 0; i < enchantments.size(); i++) {
+                Enchantment enchantment = enchantments.get(i);
+                EnchantmentTrade trade = trades.get(i);
+                int maxLevel = maxLevels.get(i);
 
-            if (remove) {
-                removeGoal(enchantmentId.toString(), currentEnchantmentLvl);
-
-            } else {
                 if (LibrGetter.config.warning && !MinecraftHelper.canBeTraded(enchantment)) {
-                    Texts.getImpl().sendTranslatable(new CanNotBeTradedMessage(enchantmentId));
+                    Texts.getImpl().sendTranslatable(new CanNotBeTradedMessage(trade));
                 }
 
-                if (LibrGetter.config.warning && globalLvlCriteria > max) {
-                    new LevelOverMaxMessage(enchantmentId, enchantment.getMaxLevel());
+                if (LibrGetter.config.warning && trade.lvl() > maxLevel) {
+                    new LevelOverMaxMessage(trade, enchantment.getMaxLevel());
                 }
 
-                addGoal(enchantmentId.toString(), currentEnchantmentLvl, price, false);
+                addGoal(trade, false);
             }
         }
     }
@@ -94,16 +111,19 @@ public class CommandHelper {
         } catch (IllegalArgumentException ignored) {
         }
 
+        EnchantmentTrade trade = new EnchantmentTrade(enchantment, enchantmentLevel, price);
+
         if (remove) {
-            removeGoal(enchantment, enchantmentLevel);
+            removeGoal(trade);
         } else {
-            addGoal(enchantment, enchantmentLevel, price, true);
+            if (LibrGetter.config.warning) {
+                Texts.getImpl().sendTranslatable(new AddingCustomEnchantmentMessage(trade));
+            }
+            addGoal(trade, true);
         }
     }
 
-
-    private static void addGoal(String name, int level, int price, boolean custom) {
-        EnchantmentTrade newTrade = new EnchantmentTrade(name, level, price);
+    private static void addGoal(EnchantmentTrade newTrade, boolean custom) {
         EnchantmentTrade alreadyPresentTrade = null;
         for (EnchantmentTrade trade : LibrGetter.config.goals) {
             if (trade.same(newTrade)) {
@@ -111,12 +131,9 @@ public class CommandHelper {
                 break;
             }
         }
-        if (custom && LibrGetter.config.warning) {
-            Texts.getImpl().sendTranslatable(new AddingCustomEnchantmentMessage(name));
-        }
 
         if (alreadyPresentTrade != null) {
-            Texts.getImpl().sendTranslatable(new PriceChangedMessage(alreadyPresentTrade, price));
+            Texts.getImpl().sendTranslatable(new PriceChangedMessage(alreadyPresentTrade, newTrade.price()));
             LibrGetter.config.goals.remove(alreadyPresentTrade);
         } else {
             TranslatableSuccessMessage message = custom ? new CustomTradeAddedMessage(newTrade, newTrade.price()) : new TradeAddedMessage(newTrade, newTrade.price());
@@ -126,15 +143,15 @@ public class CommandHelper {
         LibrGetter.configManager.save();
     }
 
-    private static void removeGoals(String name) throws NotInGoalsException {
+    private static void removeAllGoals(EnchantmentTrade tradeToRemove) throws NotInGoalsException {
         List<EnchantmentTrade> alreadyPresentTrades = new ArrayList<>();
         for (EnchantmentTrade trade : LibrGetter.config.goals) {
-            if (trade.id().equals(name)) {
+            if (trade.id().equals(tradeToRemove.id())) {
                 alreadyPresentTrades.add(trade);
             }
         }
         if (alreadyPresentTrades.isEmpty()) {
-            throw new NotInGoalsException(name);
+            throw new NotInGoalsException(tradeToRemove);
         }
         for (EnchantmentTrade trade : alreadyPresentTrades) {
             LibrGetter.config.goals.remove(trade);
@@ -143,21 +160,20 @@ public class CommandHelper {
         LibrGetter.configManager.save();
     }
 
-    public static void removeGoal(String name, int level) throws NotInGoalsException {
-        EnchantmentTrade newTrade = new EnchantmentTrade(name, level, 64);
+    public static void removeGoal(EnchantmentTrade tradeToRemove) throws NotInGoalsException {
         EnchantmentTrade alreadyPresentTrade = null;
         for (EnchantmentTrade trade : LibrGetter.config.goals) {
-            if (trade.same(newTrade)) {
+            if (trade.same(tradeToRemove)) {
                 alreadyPresentTrade = trade;
                 break;
             }
         }
         if (alreadyPresentTrade == null) {
-            throw new NotInGoalsException(newTrade);
+            throw new NotInGoalsException(tradeToRemove);
         }
         LibrGetter.config.goals.remove(alreadyPresentTrade);
         LibrGetter.configManager.save();
-        Texts.getImpl().sendTranslatable(new EnchantmentRemovedMessage(newTrade));
+        Texts.getImpl().sendTranslatable(new EnchantmentRemovedMessage(tradeToRemove));
     }
 
     public static Command<?> commandWrapper(CommandRunnable runnable) {

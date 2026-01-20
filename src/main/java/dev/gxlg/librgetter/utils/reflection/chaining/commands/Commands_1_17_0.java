@@ -2,6 +2,7 @@ package dev.gxlg.librgetter.utils.reflection.chaining.commands;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.command.CommandHelper;
@@ -48,12 +49,12 @@ public class Commands_1_17_0 extends Commands {
             enchantmentArgument = argument("enchantment", enchantmentArgumentType).executes(CommandHelper.commandWrapper(LibrGetCommand::add));
             levelArgument = argument("level", IntegerArgumentType.integer(1)).executes(CommandHelper.commandWrapper(LibrGetCommand::add));
             priceArgument = argument("maxprice", IntegerArgumentType.integer(1, 64)).executes(CommandHelper.commandWrapper(LibrGetCommand::add));
-            subCommand = subCommand.then(enchantmentArgument.then(levelArgument).then(priceArgument));
+            subCommand = subCommand.then(enchantmentArgument.then(levelArgument.then(priceArgument)));
 
-            enchantmentArgument = argument("enchantment_custom", enchantmentArgumentType);
+            enchantmentArgument = argument("enchantment_custom", StringArgumentType.string());
             levelArgument = argument("level", IntegerArgumentType.integer(1));
             priceArgument = argument("maxprice", IntegerArgumentType.integer(1, 64)).executes(CommandHelper.commandWrapper(LibrGetCommand::addCustom));
-            subCommand = subCommand.then(enchantmentArgument.then(levelArgument).then(priceArgument));
+            subCommand = subCommand.then(enchantmentArgument.then(levelArgument.then(priceArgument)));
 
             baseCommand = baseCommand.then(subCommand);
         }
@@ -67,7 +68,7 @@ public class Commands_1_17_0 extends Commands {
             levelArgument = argument("level", IntegerArgumentType.integer(1)).executes(CommandHelper.commandWrapper(LibrGetCommand::remove));
             subCommand = subCommand.then(enchantmentArgument.then(levelArgument));
 
-            enchantmentArgument = argument("enchantment", enchantmentArgumentType).executes(CommandHelper.commandWrapper(LibrGetCommand::removeCustom));
+            enchantmentArgument = argument("enchantment_custom", StringArgumentType.string()).executes(CommandHelper.commandWrapper(LibrGetCommand::removeCustom));
             levelArgument = argument("level", IntegerArgumentType.integer(1)).executes(CommandHelper.commandWrapper(LibrGetCommand::removeCustom));
             subCommand = subCommand.then(enchantmentArgument.then(levelArgument));
 

@@ -5,7 +5,7 @@ net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
     net.minecraft.client.multiplayer.ClientLevel field_17892/clientLevel
 
 net.minecraft.class_1661/net.minecraft.world.entity.player.Inventory
-    void method_61496/setSelectedHotbarSlot(int slot)
+    void method_61496/setSelectedSlot(int slot)
     int field_7545/selected
 
 net.minecraft.class_1269/net.minecraft.world.InteractionResult
@@ -72,8 +72,8 @@ net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfess
     static net.minecraft.class_5321/net.minecraft.resources.ResourceKey field_17051/NONE
 
 net.minecraft.class_2477/net.minecraft.locale.Language
-    String method_4679/get(String translationKey)
-    String method_48307/get(String translationKey)
+    String method_4679/getOrDefault(String translationKey)
+    String method_48307/getOrDefault(String translationKey)
 
 net.minecraft.class_634/net.minecraft.client.multiplayer.ClientPacketListener
     net.minecraft.network.Connection method_48296/method_2872/getConnection()

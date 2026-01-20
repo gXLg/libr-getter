@@ -126,7 +126,7 @@ public class Texts_1_17_0 extends Texts {
     public MutableComponentWrapper bookEntry(MutableComponentWrapper text, Configurable<?> configurable) {
         String config = configurable.name();
         String showName = config.startsWith("_") ? "+ " + config.substring(1) : config;
-        MutableComponentWrapper name = ofTranslatableMessage(new TranslatableConfigDescription(config));
+        MutableComponentWrapper name = ofTranslatableMessage(new TranslatableConfigDescription(configurable));
 
         ChatFormatting green = configurable.hasEffect() ? ChatFormatting.GREEN : ChatFormatting.GRAY;
         ChatFormatting black = configurable.hasEffect() ? ChatFormatting.BLACK : ChatFormatting.GRAY;

@@ -27,6 +27,8 @@ public class ConfigMenu {
 
     private static final Map<String, Integer> categories = new HashMap<>();
 
+    private static BookViewScreen.BookAccess cachedContent = null;
+
     static {
         int pages = 1;
         for (String cat : ConfigManager.CATEGORIES) {
@@ -34,20 +36,26 @@ public class ConfigMenu {
             pages += (int) Math.ceil(LibrGetter.configManager.getConfigurablesForCategory(cat).size() / ((float) CONFIGS_PER_PAGE));
         }
         pageCount = pages;
+
+        // pre-fill pages
+        for (int i = 0; i < pageCount; i++) {
+            list.add(null);
+            updatePage(i);
+        }
     }
 
-    public static BookViewScreen.BookAccess getContent() {
-        if (list.isEmpty()) {
-            for (int i = 0; i < pageCount; i++) {
-                list.add(null);
-                updatePage(i); // pre-fill pages
-            }
+    public static BookViewScreen.BookAccess getCachedContent() {
+        if (cachedContent == null) {
+            updateAndReturnContent();
         }
+        return cachedContent;
+    }
 
+    public static BookViewScreen.BookAccess updateAndReturnContent() {
         if (!V.lower("1.20.5")) {
-            return new BookViewScreen$BookAccessWrapper(list).unwrap(BookViewScreen.BookAccess.class);
+            cachedContent = new BookViewScreen$BookAccessWrapper(list).unwrap(BookViewScreen.BookAccess.class);
         } else {
-            return new BookViewScreen$BookAccessWrapperInterface() {
+            cachedContent = new BookViewScreen$BookAccessWrapperInterface() {
                 @Override
                 public int getPageCount() {
                     return pageCount;
@@ -62,6 +70,7 @@ public class ConfigMenu {
                 }
             }.wrapper().unwrap(BookViewScreen.BookAccess.class);
         }
+        return cachedContent;
     }
 
     public static void updatePage(int index) {

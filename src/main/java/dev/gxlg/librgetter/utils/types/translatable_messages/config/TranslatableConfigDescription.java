@@ -1,11 +1,12 @@
 package dev.gxlg.librgetter.utils.types.translatable_messages.config;
 
+import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.translatable_messages.TranslatableMessage;
 import net.minecraft.ChatFormatting;
 
 public class TranslatableConfigDescription extends TranslatableMessage {
-    public TranslatableConfigDescription(String configName) {
-        super("librgetter.config." + configName);
+    public TranslatableConfigDescription(Configurable<?> configurable) {
+        super("librgetter.config." + configurable.name());
     }
 
     @Override

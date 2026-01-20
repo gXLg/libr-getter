@@ -1,15 +1,11 @@
 package dev.gxlg.librgetter.gui;
 
-import dev.gxlg.librgetter.mixin.BookViewScreenAccessor;
 import dev.gxlg.librgetter.utils.reflection.ConfigMenu;
-import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
-import net.minecraft.network.chat.Component;
 
 public class ConfigScreen extends BookViewScreen {
     public ConfigScreen() {
-        super(CONTENT);
+        super(ConfigMenu.getCachedContent());
     }
 
     @Override
@@ -21,7 +17,6 @@ public class ConfigScreen extends BookViewScreen {
     @Override
     protected boolean forcePage(int page) {
         currentPage = page;
-        updateScreen();
         return super.forcePage(page);
     }
 
@@ -30,7 +25,6 @@ public class ConfigScreen extends BookViewScreen {
         if (currentPage > 0) {
             currentPage--;
         }
-        updateScreen();
         super.pageBack();
     }
 
@@ -39,17 +33,13 @@ public class ConfigScreen extends BookViewScreen {
         if (currentPage < ConfigMenu.pageCount - 1) {
             currentPage++;
         }
-        updateScreen();
         super.pageForward();
     }
 
     public void updateScreen() {
-        Texts.getImpl().sendMessage(ComponentWrapper.inst(Component.nullToEmpty("Updating screen")), false);
         ConfigMenu.updatePage(currentPage);
-        ((BookViewScreenAccessor) this).setCachedPage(-1);
+        this.setBookAccess(ConfigMenu.updateAndReturnContent());
     }
-
-    private static final BookAccess CONTENT = ConfigMenu.getContent();
 
     private static int currentPage = 0;
 }

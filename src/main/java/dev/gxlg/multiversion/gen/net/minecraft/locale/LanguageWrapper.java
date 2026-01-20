@@ -10,12 +10,12 @@ public class LanguageWrapper extends R.RWrapper<LanguageWrapper> {
         R.RInstance rInstance = clazz.inst(instance);
     }
 
-    public String get(String translationKey){
-        return (String) clazz.inst(this.instance).mthd("method_4679/get", String.class).invk(translationKey);
+    public String getOrDefault(String translationKey){
+        return (String) clazz.inst(this.instance).mthd("method_4679/getOrDefault", String.class).invk(translationKey);
     }
 
-    public String get2(String translationKey){
-        return (String) clazz.inst(this.instance).mthd("method_48307/get", String.class).invk(translationKey);
+    public String getOrDefault2(String translationKey){
+        return (String) clazz.inst(this.instance).mthd("method_48307/getOrDefault", String.class).invk(translationKey);
     }
 
     public static LanguageWrapper inst(Object instance) {
