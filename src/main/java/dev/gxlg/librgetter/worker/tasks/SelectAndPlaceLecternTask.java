@@ -1,6 +1,7 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
+import dev.gxlg.librgetter.utils.InventoryHelper;
 import dev.gxlg.librgetter.utils.chaining.helper.Helper;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
@@ -14,7 +15,6 @@ import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
@@ -81,16 +81,7 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
                 manager.handleInventoryMouseClick(player.containerMenu.containerId, slot, Inventory.SLOT_OFFHAND, ClickType.SWAP, player);
                 mainhand = false;
             } else {
-                // TODO: extract to method
-                if (!Inventory.isHotbarSlot(slot)) {
-                    int syncId = player.inventoryMenu.containerId;
-                    int swap = inventory.getSuitableHotbarSlot();
-                    manager.handleInventoryMouseClick(syncId, slot, swap, ClickType.SWAP, player);
-                    slot = swap;
-                }
-                Helper.getImpl().setSelectedSlot(inventory, slot);
-                ServerboundSetCarriedItemPacket packetSelect = new ServerboundSetCarriedItemPacket(slot);
-                Helper.getImpl().getConnection(handler).send(packetSelect);
+                InventoryHelper.selectItem(player, slot, manager, handler);
             }
         } else {
             mainhand = false;

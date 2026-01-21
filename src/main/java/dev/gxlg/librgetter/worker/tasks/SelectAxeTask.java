@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
+import dev.gxlg.librgetter.utils.InventoryHelper;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
-import dev.gxlg.librgetter.utils.chaining.helper.Helper;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
@@ -11,9 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -72,16 +70,7 @@ public class SelectAxeTask extends TaskManager.Task {
                 throw new InternalErrorException("handler");
             }
 
-            // TODO: extract to method
-            if (!Inventory.isHotbarSlot(slot)) {
-                int syncId = player.inventoryMenu.containerId;
-                int swap = inventory.getSuitableHotbarSlot();
-                manager.handleInventoryMouseClick(syncId, slot, swap, ClickType.SWAP, player);
-                slot = swap;
-            }
-            Helper.getImpl().setSelectedSlot(inventory, slot);
-            ServerboundSetCarriedItemPacket packetSelect = new ServerboundSetCarriedItemPacket(slot);
-            Helper.getImpl().getConnection(handler).send(packetSelect);
+            InventoryHelper.selectItem(player, slot, manager, handler);
         }
 
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RotationTask(player, ctx.selectedLecternPos().getCenter(), new BreakLecternTask()), ctx));
