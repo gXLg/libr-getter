@@ -41,7 +41,8 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
             // the lectern is placed down now
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(
                 new RotationTask(
-                    player, EntityAnchorArgument.Anchor.EYES.apply(ctx.selectedVillager()),
+                    player,
+                    EntityAnchorArgument.Anchor.EYES.apply(ctx.selectedVillager()),
                     new WaitVillagerAcceptProfessionTask()
                 ), ctx
             ));
