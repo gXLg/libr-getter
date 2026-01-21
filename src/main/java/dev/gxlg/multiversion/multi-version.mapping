@@ -32,8 +32,6 @@ net.minecraft.class_9322/net.minecraft.core.component.DataComponentHolder
 net.minecraft.class_9279/net.minecraft.world.item.component.CustomData
     net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_57461/copyTag()
 
-net.minecraft.class_9323/net.minecraft.core.component.DataComponentMap
-
 net.minecraft.class_9331/net.minecraft.core.component.DataComponentType
 
 net.minecraft.class_9334/net.minecraft.core.component.DataComponents
@@ -219,6 +217,8 @@ net.minecraft.class_2487/net.minecraft.nbt.CompoundTag extends net.minecraft.cla
     short method_68565/getShortOr(String name, short or)
 
     boolean method_10545/contains(String name)
+
+    String toString()
 
 # ------------------------------------------------------------------------------------------------------------- #
 

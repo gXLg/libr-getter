@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
+import dev.gxlg.librgetter.utils.chaining.helper.Helper;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.VillagerTooFarException;
@@ -31,7 +31,7 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
         if (player == null) {
             throw new InternalErrorException("player");
         }
-        ClientLevel world = MinecraftHelper.getWorld(player);
+        ClientLevel world = Helper.getImpl().getWorld(player);
 
         if (!taskContext.selectedLecternPos().closerThan(player.blockPosition(), 3.4f)) {
             throw new VillagerTooFarException();
@@ -88,9 +88,9 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
                     manager.handleInventoryMouseClick(syncId, slot, swap, ClickType.SWAP, player);
                     slot = swap;
                 }
-                MinecraftHelper.setSelectedSlot(inventory, slot);
+                Helper.getImpl().setSelectedSlot(inventory, slot);
                 ServerboundSetCarriedItemPacket packetSelect = new ServerboundSetCarriedItemPacket(slot);
-                MinecraftHelper.getConnection(handler).send(packetSelect);
+                Helper.getImpl().getConnection(handler).send(packetSelect);
             }
         } else {
             mainhand = false;
@@ -99,7 +99,7 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
         // place
         Vec3 lowBlockPos = taskContext.selectedLecternPos().getBottomCenter();
         BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP, taskContext.selectedLecternPos().below(), false);
-        MinecraftHelper.interactBlock(manager, player, lowBlock, mainhand);
+        Helper.getImpl().interactBlock(manager, player, lowBlock, mainhand);
     }
 
     @Override

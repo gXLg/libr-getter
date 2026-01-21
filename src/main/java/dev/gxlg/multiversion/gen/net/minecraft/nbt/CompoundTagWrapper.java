@@ -54,6 +54,10 @@ public class CompoundTagWrapper extends dev.gxlg.multiversion.gen.net.minecraft.
         return (boolean) clazz.inst(this.instance).mthd("method_10545/contains", String.class).invk(name);
     }
 
+    public String toString(){
+        return (String) clazz.inst(this.instance).mthd("toString").invk();
+    }
+
     public static CompoundTagWrapper inst(Object instance) {
         return new CompoundTagWrapper(instance);
     }

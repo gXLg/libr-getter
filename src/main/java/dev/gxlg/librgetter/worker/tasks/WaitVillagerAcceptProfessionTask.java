@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
+import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.PickedAnotherProfessionException;
 import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
@@ -12,8 +12,8 @@ public class WaitVillagerAcceptProfessionTask extends TaskManager.Task {
 
     @Override
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
-        if (!MinecraftHelper.isVillagerUnemployed(taskContext.selectedVillager())) {
-            if (!MinecraftHelper.isVillagerLibrarian(taskContext.selectedVillager())) {
+        if (!Villagers.getImpl().isVillagerUnemployed(taskContext.selectedVillager())) {
+            if (!Villagers.getImpl().isVillagerLibrarian(taskContext.selectedVillager())) {
                 throw new PickedAnotherProfessionException();
             }
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RequestTradesTask(), ctx));

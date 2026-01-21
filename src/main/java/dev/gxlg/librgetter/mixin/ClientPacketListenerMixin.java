@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.mixin;
 
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
+import dev.gxlg.librgetter.utils.chaining.helper.Helper;
 import dev.gxlg.librgetter.utils.reflection.Support;
 import dev.gxlg.librgetter.utils.types.TradeOfferData;
 import dev.gxlg.librgetter.worker.TaskManager;
@@ -42,7 +42,7 @@ public class ClientPacketListenerMixin {
                 return;
             }
             ServerboundContainerClosePacket packetClose = new ServerboundContainerClosePacket(packet.getContainerId());
-            MinecraftHelper.getConnection(handler).send(packetClose);
+            Helper.getImpl().getConnection(handler).send(packetClose);
         }
     }
 }

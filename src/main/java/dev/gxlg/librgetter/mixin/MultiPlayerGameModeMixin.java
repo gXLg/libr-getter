@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
-import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.chaining.helper.Helper;
+import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.translatable_messages.error.InternalErrorMessage;
 import dev.gxlg.librgetter.worker.TaskManager;
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public abstract class MultiPlayerGameModeMixin {
             Texts.getImpl().sendTranslatable(new InternalErrorMessage("player"));
             return;
         }
-        ClientLevel world = MinecraftHelper.getWorld(minecraft.player);
+        ClientLevel world = Helper.getImpl().getWorld(minecraft.player);
         if (!world.getBlockState(pos).is(Blocks.LECTERN)) {
             return;
         }
@@ -75,7 +75,7 @@ public abstract class MultiPlayerGameModeMixin {
             return;
         }
         if (!TaskManager.getCurrentTask().allowsPlacing()) {
-            MinecraftHelper.setActionResultFail(info);
+            Helper.getImpl().setActionResultFail(info);
         }
     }
 }

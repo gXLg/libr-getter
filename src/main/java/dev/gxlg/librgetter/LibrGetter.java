@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter;
 
 import dev.gxlg.librgetter.utils.Updater;
-import dev.gxlg.librgetter.utils.reflection.chaining.commands.Commands;
-import dev.gxlg.librgetter.utils.reflection.chaining.keybinds.Keybinds;
+import dev.gxlg.librgetter.utils.chaining.commands.Commands;
+import dev.gxlg.librgetter.utils.chaining.keybinds.Keybinds;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;

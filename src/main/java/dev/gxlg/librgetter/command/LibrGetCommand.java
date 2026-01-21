@@ -3,8 +3,8 @@ package dev.gxlg.librgetter.command;
 import com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.gui.ConfigScreen;
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
-import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.AlreadyRunningException;
@@ -121,7 +121,7 @@ public class LibrGetCommand {
         float minDistance = Float.MAX_VALUE;
         for (Entity entity : worldEntities) {
             if (entity instanceof Villager villager) {
-                if (MinecraftHelper.isVillagerLibrarian(villager)) {
+                if (Villagers.getImpl().isVillagerLibrarian(villager)) {
                     float distance = villager.distanceTo(player);
                     if (distance < minDistance && distance < 10) {
                         foundVillager = villager;
@@ -201,7 +201,7 @@ public class LibrGetCommand {
             if (!(entity instanceof Villager villager)) {
                 throw new EntityNotVillagerException();
             }
-            if (!MinecraftHelper.isVillagerLibrarian(villager)) {
+            if (!Villagers.getImpl().isVillagerLibrarian(villager)) {
                 throw new VillagerNotLibrarianException();
             }
 

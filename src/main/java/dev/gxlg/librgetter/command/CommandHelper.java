@@ -3,9 +3,9 @@ package dev.gxlg.librgetter.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
-import dev.gxlg.librgetter.utils.reflection.chaining.commands.Commands;
-import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.chaining.commands.Commands;
+import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
+import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.NotInGoalsException;
@@ -45,7 +45,7 @@ public class CommandHelper {
         List<EnchantmentTrade> trades = new ArrayList<>();
         List<Integer> maxLevels = new ArrayList<>();
         for (Enchantment enchantment : enchantments) {
-            Identifier enchantmentId = MinecraftHelper.enchantmentId(enchantment);
+            Identifier enchantmentId = Enchantments.getImpl().enchantmentId(enchantment);
             if (enchantmentId == null) {
                 throw new InternalErrorException("enchantmentId");
             }
@@ -85,7 +85,7 @@ public class CommandHelper {
                 EnchantmentTrade trade = trades.get(i);
                 int maxLevel = maxLevels.get(i);
 
-                if (LibrGetter.config.warning && !MinecraftHelper.canBeTraded(enchantment)) {
+                if (LibrGetter.config.warning && !Enchantments.getImpl().canBeTraded(enchantment)) {
                     Texts.getImpl().sendTranslatable(new CanNotBeTradedMessage(trade));
                 }
 

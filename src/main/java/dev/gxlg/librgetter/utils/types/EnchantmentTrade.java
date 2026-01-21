@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.types;
 
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
+import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("ClassCanBeRecord") // GSON can't handle records in earlier versions
@@ -27,7 +27,7 @@ public class EnchantmentTrade {
 
     @Override
     public @NotNull String toString() {
-        return MinecraftHelper.translateEnchantmentId(id) + " " + lvl;
+        return Enchantments.getImpl().translateEnchantmentId(id) + " " + lvl;
     }
 
     public String id() {

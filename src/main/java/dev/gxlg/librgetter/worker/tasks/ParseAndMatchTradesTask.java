@@ -2,10 +2,10 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.command.CommandHelper;
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
-import dev.gxlg.librgetter.utils.reflection.Parser;
+import dev.gxlg.librgetter.utils.chaining.helper.Helper;
+import dev.gxlg.librgetter.utils.chaining.parser.Parser;
+import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.reflection.Support;
-import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.enums.MatchMode;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
@@ -45,7 +45,7 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
             if (!isEnchantmentTrade(offers.get(i))) {
                 continue;
             }
-            EnchantmentTrade trade = Parser.parseTrade(offers.get(i));
+            EnchantmentTrade trade = Parser.getImpl().parseTrade(offers.get(i));
             if (trade != null) {
                 offeredEnchantments.add(trade);
             }
@@ -60,7 +60,7 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
                                             TaskManager.TaskSwitch.sameTick(new SelectAxeTask(), ctx));
         }
 
-        MinecraftHelper.playFoundNotification(MinecraftHelper.getWorld(player), player);
+        Helper.getImpl().playFoundNotification(player);
         matching.get().forEach(e -> Texts.getImpl().sendFound(e, taskContext.attemptsCounter()));
 
         if (LibrGetter.config.removeGoal) {

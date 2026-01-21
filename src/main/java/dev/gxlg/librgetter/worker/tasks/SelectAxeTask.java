@@ -1,7 +1,8 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.reflection.MinecraftHelper;
+import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
+import dev.gxlg.librgetter.utils.chaining.helper.Helper;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
@@ -40,7 +41,7 @@ public class SelectAxeTask extends TaskManager.Task {
                     continue;
                 }
                 float breakingSpeed = stack.getDestroySpeed(Blocks.LECTERN.defaultBlockState());
-                int efficiencyLevel = MinecraftHelper.getEfficiencyLevel(stack);
+                int efficiencyLevel = Enchantments.getImpl().getEfficiencyLevel(stack);
                 if (stack.getItem() instanceof AxeItem) {
                     breakingSpeed += (float) (efficiencyLevel * efficiencyLevel + 1);
                 }
@@ -78,9 +79,9 @@ public class SelectAxeTask extends TaskManager.Task {
                 manager.handleInventoryMouseClick(syncId, slot, swap, ClickType.SWAP, player);
                 slot = swap;
             }
-            MinecraftHelper.setSelectedSlot(inventory, slot);
+            Helper.getImpl().setSelectedSlot(inventory, slot);
             ServerboundSetCarriedItemPacket packetSelect = new ServerboundSetCarriedItemPacket(slot);
-            MinecraftHelper.getConnection(handler).send(packetSelect);
+            Helper.getImpl().getConnection(handler).send(packetSelect);
         }
 
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RotationTask(player, ctx.selectedLecternPos().getCenter(), new BreakLecternTask()), ctx));

@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.plugins;
 
-import dev.gxlg.librgetter.utils.reflection.chaining.tags.Tags;
+import dev.gxlg.librgetter.utils.chaining.tags.Tags;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.parser.UnknownPluginDataException;

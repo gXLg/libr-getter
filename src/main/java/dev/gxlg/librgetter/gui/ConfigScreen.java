@@ -1,6 +1,5 @@
 package dev.gxlg.librgetter.gui;
 
-import dev.gxlg.librgetter.utils.reflection.ConfigMenu;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 
 public class ConfigScreen extends BookViewScreen {
