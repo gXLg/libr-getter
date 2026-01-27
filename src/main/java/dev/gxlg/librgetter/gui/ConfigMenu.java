@@ -1,13 +1,13 @@
 package dev.gxlg.librgetter.gui;
 
-import dev.gxlg.librgetter.ConfigManager;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
-import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +24,7 @@ public class ConfigMenu {
 
     private static final Map<String, Integer> categories = new HashMap<>();
 
-    private static BookViewScreen.BookAccess cachedContent = null;
+    private static BookViewScreen$BookAccessWrapper cachedContent = null;
 
     static {
         int pages = 1;
@@ -41,14 +41,14 @@ public class ConfigMenu {
         }
     }
 
-    public static BookViewScreen.BookAccess getCachedContent() {
+    public static BookViewScreen$BookAccessWrapper getCachedContent() {
         if (cachedContent == null) {
             updateAndReturnContent();
         }
         return cachedContent;
     }
 
-    public static BookViewScreen.BookAccess updateAndReturnContent() {
+    public static BookViewScreen$BookAccessWrapper updateAndReturnContent() {
         cachedContent = Gui.getImpl().getBookAccess(list);
         return cachedContent;
     }

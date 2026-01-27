@@ -2,7 +2,7 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.LibrarianCanNotUpdateTradesException;
-import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
 
 public class WaitTradesTask extends TaskManager.Task {

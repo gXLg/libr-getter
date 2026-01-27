@@ -11,23 +11,23 @@ import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.NotInGoalsException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.parser.CouldNotParseCustomException;
-import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.EnchantmentRemovedMessage;
-import dev.gxlg.librgetter.utils.types.translatable_messages.success.CustomTradeAddedMessage;
-import dev.gxlg.librgetter.utils.types.translatable_messages.success.PriceChangedMessage;
-import dev.gxlg.librgetter.utils.types.translatable_messages.success.TradeAddedMessage;
-import dev.gxlg.librgetter.utils.types.translatable_messages.success.TranslatableSuccessMessage;
-import dev.gxlg.librgetter.utils.types.translatable_messages.warning.AddingCustomEnchantmentMessage;
-import dev.gxlg.librgetter.utils.types.translatable_messages.warning.CanNotBeTradedMessage;
-import dev.gxlg.librgetter.utils.types.translatable_messages.warning.LevelOverMaxMessage;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.enchantment.Enchantment;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.EnchantmentRemovedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.success.CustomTradeAddedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.success.PriceChangedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.success.TradeAddedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.success.TranslatableSuccessMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.warning.AddingCustomEnchantmentMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.warning.CanNotBeTradedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.warning.LevelOverMaxMessage;
+import dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommandHelper {
     public static void manageGoals(CommandContext<?> context, boolean remove) throws LibrGetterException {
-        List<Enchantment> enchantments = Commands.getImpl().getEnchantmentsFromCommandContext(context);
+        List<EnchantmentWrapper> enchantments = Commands.getImpl().getEnchantmentsFromCommandContext(context);
 
         int globalLvlCriteria;
         try {
@@ -44,30 +44,27 @@ public class CommandHelper {
 
         List<EnchantmentTrade> trades = new ArrayList<>();
         List<Integer> maxLevels = new ArrayList<>();
-        for (Enchantment enchantment : enchantments) {
-            Identifier enchantmentId = Enchantments.getImpl().enchantmentId(enchantment);
+        for (EnchantmentWrapper enchantment : enchantments) {
+            IdentifierWrapper enchantmentId = Enchantments.getImpl().enchantmentId(enchantment);
             if (enchantmentId == null) {
                 throw new InternalErrorException("enchantmentId");
             }
             int max = enchantment.getMaxLevel();
             maxLevels.add(max);
-            int level = globalLvlCriteria == -1 ? max : globalLvlCriteria;
+            int level = (globalLvlCriteria == -1 && !remove) ? max : globalLvlCriteria;
             trades.add(new EnchantmentTrade(enchantmentId.toString(), level, price));
         }
 
         if (remove) {
+            boolean anyRemoved = false;
             if (globalLvlCriteria == -1) {
-                boolean anyRemoved = false;
                 for (EnchantmentTrade trade : trades) {
                     try {
-                        removeAllGoals(trade);
+                        removeGoalAllLevels(trade);
                     } catch (NotInGoalsException e) {
                         continue;
                     }
                     anyRemoved = true;
-                }
-                if (!anyRemoved) {
-                    throw new NotInGoalsException(trades);
                 }
             } else {
                 for (int i = 0; i < enchantments.size(); i++) {
@@ -76,12 +73,20 @@ public class CommandHelper {
                     if (LibrGetter.config.warning && globalLvlCriteria > maxLevel) {
                         Texts.getImpl().sendTranslatable(new LevelOverMaxMessage(trade, maxLevel));
                     }
-                    removeGoal(trade);
+                    try {
+                        removeGoal(trade);
+                    } catch (NotInGoalsException e) {
+                        continue;
+                    }
+                    anyRemoved = true;
                 }
+            }
+            if (!anyRemoved) {
+                throw new NotInGoalsException(trades);
             }
         } else {
             for (int i = 0; i < enchantments.size(); i++) {
-                Enchantment enchantment = enchantments.get(i);
+                EnchantmentWrapper enchantment = enchantments.get(i);
                 EnchantmentTrade trade = trades.get(i);
                 int maxLevel = maxLevels.get(i);
 
@@ -100,7 +105,7 @@ public class CommandHelper {
 
     public static void manageGoalsCustom(CommandContext<?> context, boolean remove) throws LibrGetterException {
         String enchantment = Commands.getImpl().getCustomEnchantmentFromCommandContext(context);
-        if (Identifier.tryParse(enchantment) == null) {
+        if (IdentifierWrapper.tryParse(enchantment) == null) {
             throw new CouldNotParseCustomException();
         }
         int enchantmentLevel = context.getArgument("level", Integer.class);
@@ -143,7 +148,7 @@ public class CommandHelper {
         LibrGetter.configManager.save();
     }
 
-    private static void removeAllGoals(EnchantmentTrade tradeToRemove) throws NotInGoalsException {
+    private static void removeGoalAllLevels(EnchantmentTrade tradeToRemove) throws NotInGoalsException {
         List<EnchantmentTrade> alreadyPresentTrades = new ArrayList<>();
         for (EnchantmentTrade trade : LibrGetter.config.goals) {
             if (trade.id().equals(tradeToRemove.id())) {

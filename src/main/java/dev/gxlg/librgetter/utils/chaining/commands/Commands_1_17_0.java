@@ -10,18 +10,19 @@ import dev.gxlg.librgetter.command.LibrGetCommand;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper;
+import dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper;
 import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper;
 import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper;
 import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v1.ClientCommandManagerWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ItemEnchantmentArgumentWrapper;
-import net.minecraft.world.item.enchantment.Enchantment;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper;
 
 import java.util.List;
 
 public class Commands_1_17_0 extends Commands {
     @Override
-    public List<Enchantment> getEnchantmentsFromCommandContext(CommandContext<?> context) throws LibrGetterException {
-        Enchantment enchantment = context.getArgument("enchantment", Enchantment.class);
+    public List<EnchantmentWrapper> getEnchantmentsFromCommandContext(CommandContext<?> context) throws LibrGetterException {
+        EnchantmentWrapper enchantment = EnchantmentWrapper.inst(context.getArgument("enchantment", EnchantmentWrapper.clazz.self()));
         return List.of(enchantment);
     }
 
@@ -35,7 +36,7 @@ public class Commands_1_17_0 extends Commands {
         registerLibrget(ClientCommandManagerWrapper.DISPATCHER(), ItemEnchantmentArgumentWrapper.enchantment());
     }
 
-    protected void registerLibrget(CommandDispatcherWrapper dispatcher, ArgumentType<?> enchantmentArgumentType) {
+    protected void registerLibrget(CommandDispatcherWrapper dispatcher, ArgumentTypeWrapper enchantmentArgumentType) {
         ArgumentBuilderWrapper baseCommand = literal("librget");
 
         ArgumentBuilderWrapper subCommand;
@@ -122,7 +123,11 @@ public class Commands_1_17_0 extends Commands {
         return ClientCommandManagerWrapper.literal(command);
     }
 
-    protected ArgumentBuilderWrapper argument(String command, ArgumentType<?> argumentType) {
+    protected ArgumentBuilderWrapper argument(String command, ArgumentTypeWrapper argumentType) {
         return ClientCommandManagerWrapper.argument(command, argumentType);
+    }
+
+    protected ArgumentBuilderWrapper argument(String command, ArgumentType<?> argumentType) {
+        return argument(command, ArgumentTypeWrapper.inst(argumentType));
     }
 }

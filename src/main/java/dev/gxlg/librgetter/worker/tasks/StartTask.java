@@ -9,14 +9,14 @@ import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.EmptyGoalsLis
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.NoLecternSetException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.NoLibrarianSetException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.UnsafeSetupException;
-import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
-import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.ProcessStartedMessage;
+import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStartedMessage;
 import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.core.BlockPos;
+import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper;
 
 import java.util.List;
 
@@ -39,20 +39,20 @@ public class StartTask extends TaskManager.Task {
             throw new EmptyGoalsListException();
         }
 
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
+        MinecraftWrapper client = MinecraftWrapper.getInstance();
+        LocalPlayerWrapper player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
 
         if (LibrGetter.config.safeChecker) {
-            ClientLevel world = client.level;
+            ClientLevelWrapper world = client.getLevelField();
             if (world == null) {
                 throw new InternalErrorException("world");
             }
             // If the villager is sitting, assume it cannot move
             if (!taskContext.selectedVillager().isPassenger()) {
-                List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), world, 2);
+                List<BlockPosWrapper> path = PathFinding.findPath(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), world, 2);
                 if (path != null) {
                     throw new UnsafeSetupException();
                 }
@@ -69,7 +69,7 @@ public class StartTask extends TaskManager.Task {
                 ctx = ctx.withResetAttemptsCounter();
             }
 
-            return TaskManager.TaskSwitch.nextTick(new RotationTask(player, EntityAnchorArgument.Anchor.EYES.apply(ctx.selectedVillager()), new WaitVillagerAcceptProfessionTask()), ctx);
+            return TaskManager.TaskSwitch.nextTick(new RotationTask(player, EntityAnchorArgument$AnchorWrapper.EYES().apply(ctx.selectedVillager()), new WaitVillagerAcceptProfessionTask()), ctx);
         });
     }
 }

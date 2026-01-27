@@ -1,7 +1,5 @@
 package dev.gxlg.multiversion;
 
-import net.minecraft.SharedConstants;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,14 +11,15 @@ public class V {
         if (version != null) {
             return version;
         }
-        R.RClass constants = R.clz(SharedConstants.class);
-        Object gameVersion = constants.mthd("method_16673/getCurrentVersion").invk();
+        R.RClass constants = R.clz("net.minecraft.class_155/net.minecraft.SharedConstants");
         try {
             R.RClass gameVersionClz = R.clz("net.minecraft.class_6489/com.mojang.bridge.game.GameVersion");
-            version = new MinecraftVersion((String) gameVersionClz.inst(gameVersion).mthd("method_48019/getName").invk());
+            Object gameVersion = constants.mthd("method_16673/getCurrentVersion", gameVersionClz).invk();
+            version = new MinecraftVersion((String) gameVersionClz.inst(gameVersion).mthd("method_48019/getName", String.class).invk());
         } catch (Exception ignored) {
             R.RClass gameVersionClz = R.clz("net.minecraft.class_6489/net.minecraft.WorldVersion");
-            version = new MinecraftVersion((String) gameVersionClz.inst(gameVersion).mthd("comp_4025/name").invk());
+            Object gameVersion = constants.mthd("method_16673/getCurrentVersion", gameVersionClz).invk();
+            version = new MinecraftVersion((String) gameVersionClz.inst(gameVersion).mthd("comp_4025/name", String.class).invk());
         }
         return version;
     }

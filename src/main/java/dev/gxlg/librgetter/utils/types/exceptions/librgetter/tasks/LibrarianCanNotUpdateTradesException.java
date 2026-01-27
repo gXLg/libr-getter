@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks;
 
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.translatable_messages.error.LibrarianCanNotUpdateTradesMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.error.LibrarianCanNotUpdateTradesMessage;
 
 public class LibrarianCanNotUpdateTradesException extends LibrGetterException {
     public LibrarianCanNotUpdateTradesException() {

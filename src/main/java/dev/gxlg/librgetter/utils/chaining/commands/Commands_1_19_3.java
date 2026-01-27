@@ -8,8 +8,9 @@ import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.WrongEncha
 import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgument$ResultWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.core.Holder$ReferenceWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.core.HolderSet$NamedWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.core.registries.BuiltInRegistriesWrapper;
-import net.minecraft.world.item.enchantment.Enchantment;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.stream.Stream;
 
 public class Commands_1_19_3 extends Commands_1_19_0 {
     @Override
-    public List<Enchantment> getEnchantmentsFromCommandContext(CommandContext<?> context) throws LibrGetterException {
+    public List<EnchantmentWrapper> getEnchantmentsFromCommandContext(CommandContext<?> context) throws LibrGetterException {
         ResourceOrTagArgument$ResultWrapper argument = ResourceOrTagArgument$ResultWrapper.inst(context.getArgument("enchantment", ResourceOrTagArgument$ResultWrapper.clazz.self()));
 
         Optional<?> optionalResult = fromArgument(argument);
@@ -34,10 +35,10 @@ public class Commands_1_19_3 extends Commands_1_19_0 {
             if (optTag.isEmpty()) {
                 throw new WrongEnchantmentException();
             }
-            Stream<?> stream = (Stream<?>) HolderSet$NamedWrapper.inst(optTag.get()).stream();
-            return stream.map(ref -> (Enchantment) Holder$ReferenceWrapper.inst(ref).value()).toList();
+            Stream<HolderWrapper> stream = HolderSet$NamedWrapper.inst(optTag.get()).stream();
+            return stream.map(ref -> EnchantmentWrapper.inst(ref.downcast(Holder$ReferenceWrapper.class).value())).toList();
         } else {
-            return List.of((Enchantment) Holder$ReferenceWrapper.inst(optEnchantment.get()).value());
+            return List.of(EnchantmentWrapper.inst(Holder$ReferenceWrapper.inst(optEnchantment.get()).value()));
         }
     }
 

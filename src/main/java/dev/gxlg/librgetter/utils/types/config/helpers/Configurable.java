@@ -3,8 +3,9 @@ package dev.gxlg.librgetter.utils.types.config.helpers;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import dev.gxlg.librgetter.ConfigManager;
-import dev.gxlg.librgetter.utils.reflection.Support;
+import dev.gxlg.librgetter.utils.chaining.support.Support;
+import dev.gxlg.librgetter.utils.config.ConfigData;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.Compatibility;
 import dev.gxlg.librgetter.utils.types.config.IntRange;
 import dev.gxlg.librgetter.utils.types.config.OnlyEffective;
@@ -16,8 +17,8 @@ import java.util.Arrays;
 public record Configurable<T>(String name, Class<T> type, ConfigManager managerInstance) {
     public T get() {
         try {
-            Field configurableField = ConfigManager.Config.class.getField(name);
-            T configurableType = type.cast(configurableField.get(managerInstance.data));
+            Field configurableField = ConfigData.class.getField(name);
+            T configurableType = type.cast(configurableField.get(managerInstance.getData()));
             if (configurableType != null) {
                 return configurableType;
             }
@@ -30,8 +31,8 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
 
     public void set(T value) {
         try {
-            Field configurableField = ConfigManager.Config.class.getField(name);
-            configurableField.set(managerInstance.data, value);
+            Field configurableField = ConfigData.class.getField(name);
+            configurableField.set(managerInstance.getData(), value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -44,7 +45,7 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
     public ArgumentType<?> commandArgument() {
         Field configurableField;
         try {
-            configurableField = ConfigManager.Config.class.getField(name);
+            configurableField = ConfigData.class.getField(name);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -73,7 +74,7 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
         }
         Field configurableField;
         try {
-            configurableField = ConfigManager.Config.class.getField(name);
+            configurableField = ConfigData.class.getField(name);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -88,7 +89,7 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
     public boolean hasEffect() {
         Field configurableField;
         try {
-            configurableField = ConfigManager.Config.class.getField(name);
+            configurableField = ConfigData.class.getField(name);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -97,7 +98,7 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
             Configurable<?> configurable = managerInstance.getConfigurableForName(onlyEffectiveCondition.when());
             String current;
             if (configurable.type() == OptionsConfig.class) {
-                current = ((OptionsConfig<?>) configurable.get()).getSerializedName();
+                current = ((OptionsConfig<?>) configurable.get()).getName();
             } else {
                 current = configurable.get().toString();
             }
@@ -108,7 +109,7 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
 
         Compatibility modCompatibilityCondition = configurableField.getDeclaredAnnotation(Compatibility.class);
         //noinspection RedundantIfStatement
-        if (modCompatibilityCondition != null && !Support.isModPresent(modCompatibilityCondition.value())) {
+        if (modCompatibilityCondition != null && !Support.getImpl().isModPresent(modCompatibilityCondition.value())) {
             return false;
         }
 

@@ -1,217 +1,598 @@
-net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
-    void method_7353/displayClientMessage(net.minecraft.class_2561/net.minecraft.network.chat.Component message, boolean actionBar)
-    net.minecraft.client.multiplayer.ClientLevel method_73183/level()
-    net.minecraft.client.multiplayer.ClientLevel method_37908/getLevel()
-    net.minecraft.client.multiplayer.ClientLevel field_17892/clientLevel
+import net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
+import net.minecraft.class_2561/net.minecraft.network.chat.Component
+import net.minecraft.class_638/net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.class_1661/net.minecraft.world.entity.player.Inventory
+import net.minecraft.class_1269/net.minecraft.world.InteractionResult
+import net.minecraft.class_1937/net.minecraft.world.level.Level
+import net.minecraft.class_6880/net.minecraft.core.Holder
+import net.minecraft.class_6880$class_6883/net.minecraft.core.Holder$Reference
+import net.minecraft.class_5321/net.minecraft.resources.ResourceKey
+import net.minecraft.class_6862/net.minecraft.tags.TagKey
+import net.minecraft.class_9636/net.minecraft.tags.EnchantmentTags
+import net.minecraft.class_9322/net.minecraft.core.component.DataComponentHolder
+import net.minecraft.class_9331/net.minecraft.core.component.DataComponentType
+import net.minecraft.class_1799/net.minecraft.world.item.ItemStack
+import net.minecraft.class_9304/net.minecraft.world.item.enchantment.ItemEnchantments
+import net.minecraft.class_2487/net.minecraft.nbt.CompoundTag
+import net.minecraft.class_9279/net.minecraft.world.item.component.CustomData
+import net.minecraft.class_9334/net.minecraft.core.component.DataComponents
+import net.minecraft.class_1887/net.minecraft.world.item.enchantment.Enchantment
+import net.minecraft.class_1893/net.minecraft.world.item.enchantment.Enchantments
+import net.minecraft.class_1890/net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.class_3850/net.minecraft.world.entity.npc.villager.VillagerData
+import net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession
+import net.minecraft.class_2477/net.minecraft.locale.Language
+import net.minecraft.class_634/net.minecraft.client.multiplayer.ClientPacketListener
+import net.minecraft.class_636/net.minecraft.client.multiplayer.MultiPlayerGameMode
+import net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent
+import net.minecraft.class_2588/net.minecraft.network.chat.contents.TranslatableContents
+import net.minecraft.class_7924/net.minecraft.core.registries.Registries
+import net.minecraft.class_2378/net.minecraft.core.Registry
+import net.minecraft.class_7923/net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.class_5455/net.minecraft.core.RegistryAccess
+import net.minecraft.class_6885$class_6888/net.minecraft.core.HolderSet$Named
+import net.minecraft.class_2558/net.minecraft.network.chat.ClickEvent
+import net.minecraft.class_2558$class_2559/net.minecraft.network.chat.ClickEvent$Action
+import net.minecraft.class_2558$class_10609/net.minecraft.network.chat.ClickEvent$RunCommand
+import net.minecraft.class_2558$class_10605/net.minecraft.network.chat.ClickEvent$ChangePage
+import net.minecraft.class_2568/net.minecraft.network.chat.HoverEvent
+import net.minecraft.class_2568$class_5247/net.minecraft.network.chat.HoverEvent$Action
+import net.minecraft.class_2568$class_10613/net.minecraft.network.chat.HoverEvent$ShowText
+import net.minecraft.class_7157/net.minecraft.commands.CommandBuildContext
+import net.minecraft.class_7737/net.minecraft.commands.arguments.ResourceOrTagArgument
+import net.minecraft.class_7737$class_7741/net.minecraft.commands.arguments.ResourceOrTagArgument$Result
+import net.minecraft.class_2520/net.minecraft.nbt.Tag
+import net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier
+import net.minecraft.class_304/net.minecraft.client.KeyMapping
+import net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category
+import net.minecraft.class_3872$class_3931/net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess
+import net.minecraft.class_8710/net.minecraft.network.protocol.common.custom.CustomPacketPayload
+import net.minecraft.class_2194/net.minecraft.commands.arguments.ItemEnchantmentArgument
+import net.minecraft.class_310/net.minecraft.client.Minecraft
+import net.minecraft.class_437/net.minecraft.client.gui.screens.Screen
+import net.minecraft.class_1297/net.minecraft.world.entity.Entity
+import net.minecraft.class_2338/net.minecraft.core.BlockPos
+import net.minecraft.class_2680/net.minecraft.world.level.block.state.BlockState
+import net.minecraft.class_4970$class_4971/net.minecraft.world.level.block.state.BlockBehaviour$BlockStateBase
+import net.minecraft.class_2248/net.minecraft.world.level.block.Block
+import net.minecraft.class_2246/net.minecraft.world.level.block.Blocks
+import net.minecraft.class_3872/net.minecraft.client.gui.screens.inventory.BookViewScreen
+import net.minecraft.class_1646/net.minecraft.world.entity.npc.villager.Villager
+import net.minecraft.class_239/net.minecraft.world.phys.HitResult
+import net.minecraft.class_239$class_240/net.minecraft.world.phys.HitResult$Type
+import net.minecraft.class_3965/net.minecraft.world.phys.BlockHitResult
+import net.minecraft.class_3966/net.minecraft.world.phys.EntityHitResult
+import net.minecraft.class_2350/net.minecraft.core.Direction
+import net.minecraft.class_3943/net.minecraft.network.protocol.game.ClientboundMerchantOffersPacket
+import net.minecraft.class_3944/net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
+import net.minecraft.class_3917/net.minecraft.world.inventory.MenuType
+import net.minecraft.class_2815/net.minecraft.network.protocol.game.ServerboundContainerClosePacket
+import net.minecraft.class_2535/net.minecraft.network.Connection
+import net.minecraft.class_2596/net.minecraft.network.protocol.Packet
+import net.minecraft.class_2868/net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket
+import net.minecraft.class_5348/net.minecraft.network.chat.FormattedText
+import net.minecraft.class_4970/net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.class_2583/net.minecraft.network.chat.Style
+import net.minecraft.class_124/net.minecraft.ChatFormatting
+import net.minecraft.class_1268/net.minecraft.world.InteractionHand
+import net.minecraft.class_3417/net.minecraft.sounds.SoundEvents
+import net.minecraft.class_3414/net.minecraft.sounds.SoundEvent
+import net.minecraft.class_3419/net.minecraft.sounds.SoundSource
+import net.minecraft.class_1914/net.minecraft.world.item.trading.MerchantOffer
+import net.minecraft.class_1792/net.minecraft.world.item.Item
+import net.minecraft.class_1802/net.minecraft.world.item.Items
+import net.minecraft.class_1263/net.minecraft.world.Container
 
-net.minecraft.class_1661/net.minecraft.world.entity.player.Inventory
+import !net.fabricmc.fabric.api.event.Event
+import !com.mojang.brigadier.builder.LiteralArgumentBuilder
+import !com.mojang.brigadier.builder.ArgumentBuilder
+import !com.mojang.brigadier.CommandDispatcher
+import !com.mojang.brigadier.arguments.ArgumentType
+
+import com.mojang.blaze3d.platform.InputConstants$Type
+import com.mojang.brigadier.Command
+import com.mojang.datafixers.util.Either
+import com.mojang.brigadier.suggestion.SuggestionsBuilder
+import com.mojang.brigadier.suggestion.Suggestions
+import com.mojang.brigadier.tree.LiteralCommandNode
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTick
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+import net.fabricmc.fabric.api.networking.v1.PacketSender
+
+import it.unimi.dsi.fastutil.objects.Object2IntMap$Entry
+import java.util.Set
+import java.util.List
+import java.util.Optional
+import java.util.stream.Stream
+import java.lang.Iterable
+import java.util.concurrent.CompletableFuture
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+import net.minecraft.class_2172/net.minecraft.commands.SharedSuggestionProvider
+
+SharedSuggestionProvider
+    static boolean method_27136/matchesSubStr(String input, String search)
+
+KeyBindingHelper
+    static KeyMapping registerKeyBinding(KeyMapping keyBinding)
+
+interface ClientTickEvents$EndTick
+    void onEndTick(Minecraft client)
+
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Join
+interface ClientPlayConnectionEvents$Join
+    void onPlayReady(ClientPacketListener handler, PacketSender sender, Minecraft client)
+
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Disconnect
+interface ClientPlayConnectionEvents$Disconnect
+    void onPlayDisconnect(ClientPacketListener handler, Minecraft client)
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+Block extends BlockBehaviour
+    BlockState method_9564/defaultBlockState()
+
+BlockBehaviour
+    + boolean field_23159/hasCollision
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+Minecraft
+    static Minecraft method_1551/getInstance()
+
+    ? Screen field_1755/screen
+    ? LocalPlayer field_1724/player
+    ? ClientLevel field_1687/level
+    ? HitResult field_1765/hitResult
+    ? MultiPlayerGameMode field_1761/gameMode
+    ? ClientPacketListener method_1562/getConnection()
+
+    void method_1507/setScreen(Screen screen)
+
+Entity
+    boolean method_5765/isPassenger()
+    BlockPos method_24515/blockPosition()
+    float method_5739/distanceTo(Entity entity)
+    double method_23317/getX()
+    double method_23318/getY()
+    double method_23321/getZ()
+
+    float method_36454/getYRot()
+    void method_36456/setYRot(float yaw)
+
+    float method_36455/getXRot()
+    void method_36457/setXRot(float pitch)
+
+import net.minecraft.class_2183$class_2184/net.minecraft.commands.arguments.EntityAnchorArgument$Anchor
+import net.minecraft.class_243/net.minecraft.world.phys.Vec3
+import net.minecraft.class_1309/net.minecraft.world.entity.LivingEntity
+
+EntityAnchorArgument$Anchor
+    static EntityAnchorArgument$Anchor field_9851/EYES
+    Vec3 method_9302/apply(Entity entity)
+
+LivingEntity extends Entity
+    ItemStack method_6047/getMainHandItem()
+    void method_5702/lookAt(EntityAnchorArgument$Anchor anchor, Vec3 target)
+    void method_5847/setYHeadRot(float headYaw)
+
+Vec3
+    <init>(double x, double y, double z)
+    double method_10216/x()
+    double method_10214/y()
+    double method_10215/z()
+    static Vec3 method_24955/atBottomCenterOf(Vec3i pos)
+    static Vec3 method_24953/atCenterOf(Vec3i pos)
+
+HitResult
+    HitResult$Type method_17783/getType()
+
+    HitResult$Type
+        static HitResult$Type field_1331/ENTITY
+        static HitResult$Type field_1332/BLOCK
+        static HitResult$Type field_1333/MISS
+
+BlockHitResult extends HitResult
+    <init>(Vec3 hitPoint, Direction side, BlockPos hitBlockPos, boolean inside)
+    BlockPos method_17777/getBlockPos()
+    Direction method_17780/getDirection()
+
+EntityHitResult extends HitResult
+    Entity method_17782/getEntity()
+
+
+Villager extends Entity
+    VillagerData method_7231/getVillagerData()
+
+BlockPos extends Vec3i
+    BlockPos method_10069/offset(int x, int y, int z)
+    BlockPos method_10093/relative(Direction direction)
+    BlockPos method_10086/above(int distance)
+    BlockPos method_10074/below()
+
+Direction
+    static Direction field_11036/UP
+    static Direction field_11033/DOWN
+    static Direction field_11034/EAST
+    static Direction field_11035/SOUTH
+    static Direction field_11039/WEST
+    static Direction field_11043/NORTH
+
+ClientLevel extends Level
+    Iterable<Entity> method_18112/entitiesForRendering()
+
+BlockState extends BlockBehaviour$BlockStateBase
+
+BlockBehaviour$BlockStateBase
+    boolean method_27852/is(Block block)
+    Block method_26204/getBlock()
+    boolean method_26215/isAir()
+
+Blocks
+    static Block field_16330/LECTERN
+    static Block field_10124/AIR
+
+BookViewScreen extends Screen
+    * <init>(BookViewScreen$BookAccess bookAccess)
+    * protected boolean method_17789/forcePage(int page)
+    * protected void method_25426/init()
+    * protected void method_17057/pageBack()
+    * protected void method_17058/pageForward()
+    * protected void method_34494/closeScreen()
+    void method_17554/setBookAccess(BookViewScreen$BookAccess bookAccess)
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+ClientboundMerchantOffersPacket extends Packet
+    boolean method_20722/canRestock()
+    List<MerchantOffer> method_17590/getOffers()
+
+ClientboundOpenScreenPacket extends Packet
+    MenuType method_17593/getType()
+    int method_17592/getContainerId()
+
+ServerboundContainerClosePacket extends Packet
+    <init>(int containerId)
+
+ServerboundSetCarriedItemPacket extends Packet
+    <init>(int slotId)
+
+import net.minecraft.class_2863/net.minecraft.network.protocol.game.ServerboundSelectTradePacket
+
+ServerboundSelectTradePacket extends Packet
+    <init>(int index)
+
+MenuType
+    static MenuType field_17340/MERCHANT
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+Items
+    static Item field_8529/BOOK
+    static Item field_8598/ENCHANTED_BOOK
+    static Item field_8687/EMERALD
+    static Item field_16312/LECTERN
+
+MerchantOffer
+    ItemStack method_8250/getResult()
+    ItemStack method_19272/getCostA()
+    ItemStack method_8247/getCostB()
+
+import net.minecraft.class_1657/net.minecraft.world.entity.player.Player
+
+Player extends LivingEntity
+    Inventory method_31548/getInventory()
+    InventoryMenu field_7498/inventoryMenu
+    AbstractContainerMenu field_7512/containerMenu
+
+LocalPlayer extends Player
+    void method_7353/displayClientMessage(Component message, boolean actionBar)
+    ClientLevel method_73183/level()
+    ClientLevel method_37908/getLevel()
+    ClientLevel field_17892/clientLevel
+
+import net.minecraft.class_1723/net.minecraft.world.inventory.InventoryMenu
+import net.minecraft.class_1703/net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.class_1735/net.minecraft.world.inventory.Slot
+
+Slot
+    Container field_7871/container
+
+InventoryMenu extends AbstractContainerMenu
+
+AbstractContainerMenu
+    int field_7763/containerId
+    Slot method_7611/getSlot(int slotId)
+
+Container
+    int method_18861/countItem(Item item)
+    ItemStack method_5438/getItem(int index)
+
+Inventory extends Container
     void method_61496/setSelectedSlot(int slot)
     int field_7545/selected
+    int method_7386/getSuitableHotbarSlot()
+    int method_7395/findSlotMatchingItem(ItemStack stack)
+    static boolean method_7380/isHotbarSlot(int slot)
+    static int field_30639/SLOT_OFFHAND
+    static int field_30638/INVENTORY_SIZE
 
-net.minecraft.class_1269/net.minecraft.world.InteractionResult
-    static net.minecraft.world.InteractionResult field_5814/FAIL
+InteractionResult
+    static InteractionResult field_5814/FAIL
 
-net.minecraft.class_1937/net.minecraft.world.level.Level
-    void method_8486/playLocalSound(double x, double y, double z, net.minecraft.sounds.SoundEvent sound, net.minecraft.sounds.SoundSource source, float volume, float pitch, boolean distanceDelay)
+Level
+    BlockState method_8320/getBlockState(BlockPos pos)
+    boolean method_8501/setBlockAndUpdate(BlockPos pos, BlockState state)
+    void method_8486/playLocalSound(double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay)
+    RegistryAccess method_30349/registryAccess()
 
-net.minecraft.class_6880/net.minecraft.core.Holder
-    boolean method_40225/is(net.minecraft.class_5321/net.minecraft.resources.ResourceKey resourceKey)
-    boolean method_40220/is(net.minecraft.class_6862/net.minecraft.tags.TagKey resourceKey)
+SoundEvents
+    static SoundEvent field_14709/PLAYER_LEVELUP
+
+SoundSource
+    static SoundSource field_15254/NEUTRAL
+
+Holder
+    boolean method_40225/is(ResourceKey resourceKey)
+    boolean method_40220/is(TagKey resourceKey)
     String method_55840/getRegisteredName()
 
-    net.minecraft.class_6880$class_6883/net.minecraft.core.Holder$Reference extends net.minecraft.class_6880/net.minecraft.core.Holder
-        net.minecraft.class_5321/net.minecraft.resources.ResourceKey method_40237/key()
+    Holder$Reference extends Holder
+        ResourceKey method_40237/key()
         Object comp_349/value()
 
-net.minecraft.class_9636/net.minecraft.tags.EnchantmentTags
-    static net.minecraft.class_6862/net.minecraft.tags.TagKey field_51545/TRADEABLE
+EnchantmentTags
+    static TagKey field_51545/TRADEABLE
 
-net.minecraft.class_9322/net.minecraft.core.component.DataComponentHolder
-    Object method_58694/get(net.minecraft.class_9331/net.minecraft.core.component.DataComponentType type)
+DataComponentHolder
+    Object method_58694/get(DataComponentType type)
 
-net.minecraft.class_9279/net.minecraft.world.item.component.CustomData
-    net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_57461/copyTag()
+CustomData
+    CompoundTag method_57461/copyTag()
 
-net.minecraft.class_9331/net.minecraft.core.component.DataComponentType
+DataComponents
+    static DataComponentType field_49628/CUSTOM_DATA
+    static DataComponentType field_49633/ENCHANTMENTS
+    static DataComponentType field_49643/STORED_ENCHANTMENTS
 
-net.minecraft.class_9334/net.minecraft.core.component.DataComponents
-    static net.minecraft.class_9331/net.minecraft.core.component.DataComponentType field_49628/CUSTOM_DATA
-    static net.minecraft.class_9331/net.minecraft.core.component.DataComponentType field_49633/ENCHANTMENTS
-    static net.minecraft.class_9331/net.minecraft.core.component.DataComponentType field_49643/STORED_ENCHANTMENTS
+Item
+    ItemStack method_7854/getDefaultInstance()
 
-net.minecraft.class_1799/net.minecraft.world.item.ItemStack
-    net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_7969/getTag()
-    net.minecraft.class_9304/net.minecraft.world.item.enchantment.ItemEnchantments method_58657/getEnchantments()
+import net.minecraft.class_1743/net.minecraft.world.item.AxeItem
 
-net.minecraft.class_9304/net.minecraft.world.item.enchantment.ItemEnchantments
-    java.util.Set<it.unimi.dsi.fastutil.objects.Object2IntMap$Entry<net.minecraft.class_6880/net.minecraft.core.Holder>> method_57539/entrySet()
+AxeItem extends Item
 
-net.minecraft.class_1887/net.minecraft.world.item.enchantment.Enchantment
+ItemStack extends DataComponentHolder
+    CompoundTag method_7969/getTag()
+    ItemEnchantments method_58657/getEnchantments()
+    boolean method_31574/is(Item item)
+    Item method_7909/getItem()
+    int method_7947/getCount()
+    boolean method_7960/isEmpty()
+    boolean method_7963/isDamageableItem()
+    int method_7936/getMaxDamage()
+    int method_7919/getDamageValue()
+    float method_7924/getDestroySpeed(BlockState state)
+
+    static boolean method_7973/matches(ItemStack stackA, ItemStack stackB)
+
+ItemEnchantments
+    Set<Object2IntMap$Entry<Holder>> method_57539/entrySet()
+
+Enchantment
     boolean method_25949/isTradeable()
+    int method_8183/getMaxLevel()
 
-net.minecraft.class_1893/net.minecraft.world.item.enchantment.Enchantments
+Enchantments
     # 1.17
-    static net.minecraft.world.item.enchantment.Enchantment field_9131/EFFICIENCY
+    static Enchantment field_9131/EFFICIENCY
     # 1.21
-    static net.minecraft.class_5321/net.minecraft.resources.ResourceKey field_9131/EFFICIENCY
+    static ResourceKey field_9131/EFFICIENCY
 
-net.minecraft.class_1890/net.minecraft.world.item.enchantment.EnchantmentHelper
-    static int method_8225/getItemEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantment enchantment, net.minecraft.world.item.ItemStack stack)
+EnchantmentHelper
+    static int method_8225/getItemEnchantmentLevel(Enchantment enchantment, ItemStack stack)
 
-net.minecraft.class_3850/net.minecraft.world.entity.npc.villager.VillagerData
-    net.minecraft.class_6880/net.minecraft.core.Holder comp_3521/profession()
-    net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession method_16924/getProfession()
+VillagerData
+    Holder comp_3521/profession()
+    VillagerProfession method_16924/getProfession()
 
-net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession
-    static net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession field_17060/LIBRARIAN
-    static net.minecraft.class_5321/net.minecraft.resources.ResourceKey field_17060/LIBRARIAN
+VillagerProfession
+    static VillagerProfession field_17060/LIBRARIAN
+    static ResourceKey field_17060/LIBRARIAN
 
-    static net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession field_17051/NONE
-    static net.minecraft.class_5321/net.minecraft.resources.ResourceKey field_17051/NONE
+    static VillagerProfession field_17051/NONE
+    static ResourceKey field_17051/NONE
 
-net.minecraft.class_2477/net.minecraft.locale.Language
+Language
+    static Language method_10517/getInstance()
     String method_4679/getOrDefault(String translationKey)
     String method_48307/getOrDefault(String translationKey)
 
-net.minecraft.class_634/net.minecraft.client.multiplayer.ClientPacketListener
-    net.minecraft.network.Connection method_48296/method_2872/getConnection()
+ClientPacketListener
+    void method_2883/send(Packet packet)
 
 # ------------------------------------------------------------------------------------------------------------- #
 
-net.minecraft.class_636/net.minecraft.client.multiplayer.MultiPlayerGameMode
-    net.minecraft.world.InteractionResult method_2896/useItemOn(net.minecraft.client.player.LocalPlayer player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hit)
-    net.minecraft.world.InteractionResult method_2896/useItemOn(net.minecraft.client.player.LocalPlayer player, net.minecraft.client.multiplayer.ClientLevel clientWorld, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hit)
+import net.minecraft.class_2382/net.minecraft.core.Vec3i
+
+Vec3i
+    int method_10263/getX()
+    int method_10264/getY()
+    int method_10260/getZ()
+    boolean method_19771/closerThan(Vec3i target, double distance)
+
+import net.minecraft.class_1713/net.minecraft.world.inventory.ClickType
+
+ClickType
+    static ClickType field_7790/PICKUP
+    static ClickType field_7791/SWAP
+
+MultiPlayerGameMode
+    InteractionResult method_2896/useItemOn(LocalPlayer player, InteractionHand hand, BlockHitResult hit)
+    InteractionResult method_2896/useItemOn(LocalPlayer player, ClientLevel clientWorld, InteractionHand hand, BlockHitResult hit)
+    InteractionResult method_2905/interact(Player player, Entity target, InteractionHand hand)
+    void method_2906/handleInventoryMouseClick(int containerId, int slot, int otherSlot, ClickType clickType, Player player)
+    boolean method_2902/continueDestroyBlock(BlockPos pos, Direction side)
+
+InteractionHand
+    static InteractionHand field_5808/MAIN_HAND
+    static InteractionHand field_5810/OFF_HAND
 
 # ------------------------------------------------------------------------------------------------------------- #
 
-net.minecraft.class_2561/net.minecraft.network.chat.Component
-    net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent method_27662/plainCopy()
-    static net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent method_43469/translatable(String key, Object[] args)
+Component
+    MutableComponent method_27662/plainCopy()
+    static MutableComponent method_43469/translatable(String key, Object[] args)
+    static Component method_30163/nullToEmpty(String text)
 
-net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent extends net.minecraft.class_2561/net.minecraft.network.chat.Component
-    net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent method_27692/withStyle(net.minecraft.ChatFormatting formatting)
-    net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent method_27693/append(String string)
-    net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent method_10852/append(net.minecraft.class_2561/net.minecraft.network.chat.Component component)
-    net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent method_10862/setStyle(net.minecraft.network.chat.Style style)
+MutableComponent extends Component
+    MutableComponent method_27692/withStyle(ChatFormatting formatting)
+    MutableComponent method_27696/withStyle(Style style)
+    MutableComponent method_27693/append(String string)
+    MutableComponent method_10852/append(Component component)
 
-net.minecraft.class_2588/net.minecraft.network.chat.contents.TranslatableContents extends net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent
+TranslatableContents extends MutableComponent
     <init>(String key, Object[] args)
 
+ChatFormatting
+    static ChatFormatting field_1051/OBFUSCATED
+    static ChatFormatting field_1054/YELLOW
+    static ChatFormatting field_1055/STRIKETHROUGH
+    static ChatFormatting field_1056/ITALIC
+    static ChatFormatting field_1058/DARK_BLUE
+    static ChatFormatting field_1060/GREEN
+    static ChatFormatting field_1061/RED
+    static ChatFormatting field_1062/DARK_AQUA
+    static ChatFormatting field_1063/DARK_GRAY
+    static ChatFormatting field_1064/DARK_PURPLE
+    static ChatFormatting field_1065/GOLD
+    static ChatFormatting field_1067/BOLD
+    static ChatFormatting field_1068/WHITE
+    static ChatFormatting field_1070/RESET
+    static ChatFormatting field_1073/UNDERLINE
+    static ChatFormatting field_1074/BLACK
+    static ChatFormatting field_1075/AQUA
+    static ChatFormatting field_1076/LIGHT_PURPLE
+    static ChatFormatting field_1077/DARK_GREEN
+    static ChatFormatting field_1078/BLUE
+    static ChatFormatting field_1079/DARK_RED
+    static ChatFormatting field_1080/GRAY
+
+Style
+    static Style field_24360/EMPTY
+    Style method_10958/withClickEvent(ClickEvent event)
+    Style method_10949/withHoverEvent(HoverEvent event)
+    Style method_10977/withColor(ChatFormatting formatting)
+
 # ------------------------------------------------------------------------------------------------------------- #
 
+Registries
+    static ResourceKey field_41265/ENCHANTMENT
+
+Registry
+    ResourceKey method_30517/key()
+    Identifier method_10221/getKey(Object resource)
+    Holder method_47983/wrapAsHolder(Object value)
+
+    static Registry field_11160/ENCHANTMENT
+
+BuiltInRegistries
+    static Registry field_41176/ENCHANTMENT
+
+RegistryAccess
+    Registry method_30530/registryOrThrow/lookupOrThrow(ResourceKey key)
 
 # ------------------------------------------------------------------------------------------------------------- #
 
-net.minecraft.class_5321/net.minecraft.resources.ResourceKey
-
-net.minecraft.class_7924/net.minecraft.core.registries.Registries
-    static net.minecraft.class_5321/net.minecraft.resources.ResourceKey field_41265/ENCHANTMENT
-
-net.minecraft.class_2378/net.minecraft.core.Registry
-    net.minecraft.class_5321/net.minecraft.resources.ResourceKey method_30517/key()
-    net.minecraft.resources.Identifier method_10221/getKey(Object resource)
-    net.minecraft.class_6880/net.minecraft.core.Holder method_47983/wrapAsHolder(Object value)
-
-    static net.minecraft.class_2378/net.minecraft.core.Registry field_11160/ENCHANTMENT
-
-net.minecraft.class_7923/net.minecraft.core.registries.BuiltInRegistries
-    static net.minecraft.class_2378/net.minecraft.core.Registry field_41176/ENCHANTMENT
-
-net.minecraft.class_5455/net.minecraft.core.RegistryAccess
-    net.minecraft.class_2378/net.minecraft.core.Registry method_30530/registryOrThrow/lookupOrThrow(net.minecraft.class_5321/net.minecraft.resources.ResourceKey key)
+HolderSet$Named
+    Stream<Holder> method_40239/stream()
 
 # ------------------------------------------------------------------------------------------------------------- #
 
-net.minecraft.class_6885$class_6888/net.minecraft.core.HolderSet$Named
-    java.util.stream.Stream method_40239/stream()
+ClickEvent
+    <init>(ClickEvent$Action action, String value)
 
-# ------------------------------------------------------------------------------------------------------------- #
+    ClickEvent$Action
+        static ClickEvent$Action field_11750/RUN_COMMAND
+        static ClickEvent$Action field_11748/CHANGE_PAGE
 
-net.minecraft.class_2558/net.minecraft.network.chat.ClickEvent
-    <init>(net.minecraft.class_2558$class_2559/net.minecraft.network.chat.ClickEvent$Action action, String value)
-
-    net.minecraft.class_2558$class_2559/net.minecraft.network.chat.ClickEvent$Action
-        static net.minecraft.class_2558$class_2559/net.minecraft.network.chat.ClickEvent$Action field_11750/RUN_COMMAND
-        static net.minecraft.class_2558$class_2559/net.minecraft.network.chat.ClickEvent$Action field_11748/CHANGE_PAGE
-
-    net.minecraft.class_2558$class_10609/net.minecraft.network.chat.ClickEvent$RunCommand
+    ClickEvent$RunCommand extends ClickEvent
         <init>(String command)
 
-    net.minecraft.class_2558$class_10605/net.minecraft.network.chat.ClickEvent$ChangePage
+    ClickEvent$ChangePage extends ClickEvent
         <init>(int page)
 
-net.minecraft.class_2568/net.minecraft.network.chat.HoverEvent
-    <init>(net.minecraft.class_2568$class_5247/net.minecraft.network.chat.HoverEvent$Action action, Object contents)
+HoverEvent
+    <init>(HoverEvent$Action action, Object contents)
 
-    net.minecraft.class_2568$class_5247/net.minecraft.network.chat.HoverEvent$Action
-        static net.minecraft.class_2568$class_5247/net.minecraft.network.chat.HoverEvent$Action field_24342/SHOW_TEXT
+    HoverEvent$Action
+        static HoverEvent$Action field_24342/SHOW_TEXT
 
-    net.minecraft.class_2568$class_10613/net.minecraft.network.chat.HoverEvent$ShowText
-        <init>(net.minecraft.class_2561/net.minecraft.network.chat.Component text)
+    HoverEvent$ShowText extends HoverEvent
+        <init>(Component text)
 
 # ------------------------------------------------------------------------------------------------------------- #
 
-net.minecraft.class_7157/net.minecraft.commands.CommandBuildContext
-
-net.fabricmc.fabric.api.event.Event
+Event
     void register(Object listener)
 
 net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
-    static !net.fabricmc.fabric.api.event.Event EVENT
+    static Event EVENT
 
 interface net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
-    void register(!com.mojang.brigadier.CommandDispatcher dispatcher, net.minecraft.class_7157/net.minecraft.commands.CommandBuildContext context)
+    void register(CommandDispatcher dispatcher, CommandBuildContext context)
 
 # ------------------------------------------------------------------------------------------------------------- #
 
-net.minecraft.class_7737/net.minecraft.commands.arguments.ResourceOrTagArgument
-    static com.mojang.brigadier.arguments.ArgumentType method_45637/resourceOrTag(net.minecraft.class_7157/net.minecraft.commands.CommandBuildContext context, net.minecraft.class_5321/net.minecraft.resources.ResourceKey registryKey)
+ResourceOrTagArgument extends ArgumentType
+    static ResourceOrTagArgument method_45637/resourceOrTag(CommandBuildContext context, ResourceKey registryKey)
 
-    net.minecraft.class_7737$class_7741/net.minecraft.commands.arguments.ResourceOrTagArgument$Result
-        com.mojang.datafixers.util.Either method_45647/unwrap()
-        java.util.Optional method_45648/cast(net.minecraft.class_5321/net.minecraft.resources.ResourceKey registryKey)
+    ResourceOrTagArgument$Result
+        Either method_45647/unwrap()
+        Optional method_45648/cast(ResourceKey registryKey)
 
-net.minecraft.class_2194/net.minecraft.commands.arguments.ItemEnchantmentArgument
-    static com.mojang.brigadier.arguments.ArgumentType method_9336/enchantment()
+ItemEnchantmentArgument
+    static ArgumentType method_9336/enchantment()
 
 # ------------------------------------------------------------------------------------------------------------- #
 
 net.fabricmc.fabric.api.client.command.v1.ClientCommandManager
-    static !com.mojang.brigadier.CommandDispatcher DISPATCHER
-    static !com.mojang.brigadier.builder.LiteralArgumentBuilder literal(String name)
-    static !com.mojang.brigadier.builder.ArgumentBuilder argument(String name, com.mojang.brigadier.arguments.ArgumentType argumentType)
+    static CommandDispatcher DISPATCHER
+    static LiteralArgumentBuilder literal(String name)
+    static ArgumentBuilder argument(String name, ArgumentType argumentType)
 
 net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
-    static !com.mojang.brigadier.builder.LiteralArgumentBuilder literal(String name)
-    static !com.mojang.brigadier.builder.ArgumentBuilder argument(String name, com.mojang.brigadier.arguments.ArgumentType argumentType)
+    static LiteralArgumentBuilder literal(String name)
+    static ArgumentBuilder argument(String name, ArgumentType argumentType)
 
-com.mojang.brigadier.CommandDispatcher
-    void register(!com.mojang.brigadier.builder.LiteralArgumentBuilder command)
+CommandDispatcher
+    LiteralCommandNode register(LiteralArgumentBuilder command)
 
-com.mojang.brigadier.builder.ArgumentBuilder
-    !com.mojang.brigadier.builder.ArgumentBuilder then(!com.mojang.brigadier.builder.ArgumentBuilder argument)
-    !com.mojang.brigadier.builder.ArgumentBuilder executes(com.mojang.brigadier.Command command)
+ArgumentBuilder
+    ArgumentBuilder then(ArgumentBuilder argument)
+    ArgumentBuilder executes(Command command)
 
-com.mojang.brigadier.builder.LiteralArgumentBuilder extends !com.mojang.brigadier.builder.ArgumentBuilder
+LiteralArgumentBuilder extends ArgumentBuilder
 
 # ------------------------------------------------------------------------------------------------------------- #
 
-net.minecraft.class_2520/net.minecraft.nbt.Tag
+Tag
     byte method_10711/getId()
 
-net.minecraft.class_2487/net.minecraft.nbt.CompoundTag extends net.minecraft.class_2520/net.minecraft.nbt.Tag
+CompoundTag extends Tag
     String method_10558/getString(String name)
     String method_68564/getStringOr(String name, String or)
 
     boolean method_33133/isEmpty()
 
-    net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_10562/getCompound(String name)
-    net.minecraft.class_2487/net.minecraft.nbt.CompoundTag method_68568/getCompoundOrEmpty(String name)
+    CompoundTag method_10562/getCompound(String name)
+    CompoundTag method_68568/getCompoundOrEmpty(String name)
 
-    java.util.Set<String> method_10541/keySet()
+    Set<String> method_10541/keySet()
 
-    java.util.List<net.minecraft.class_2520/net.minecraft.nbt.Tag> method_10554/getList(String name, int type)
-    java.util.List<net.minecraft.class_2520/net.minecraft.nbt.Tag> method_68569/getListOrEmpty(String name)
+    List<Tag> method_10554/getList(String name, int type)
+    List<Tag> method_68569/getListOrEmpty(String name)
 
     short method_10568/getShort(String name)
     short method_68565/getShortOr(String name, short or)
@@ -222,32 +603,46 @@ net.minecraft.class_2487/net.minecraft.nbt.CompoundTag extends net.minecraft.cla
 
 # ------------------------------------------------------------------------------------------------------------- #
 
-net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier
-    static net.minecraft.resources.Identifier method_43902/tryBuild(String namespace, String path)
+Identifier
+    static Identifier method_12829/tryParse(String location)
+    static Identifier method_43902/tryBuild(String namespace, String path)
+    String method_12836/getNamespace()
+    String method_12832/getPath()
+    String toString()
 
-net.minecraft.class_304/net.minecraft.client.KeyMapping
-    <init>(String id, com.mojang.blaze3d.platform.InputConstants.Type type, int keyCode, net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category category)
-    <init>(String id, com.mojang.blaze3d.platform.InputConstants.Type type, int keyCode, String categoryId)
+KeyMapping
+    <init>(String id, InputConstants$Type type, int keyCode, KeyMapping$Category category)
+    <init>(String id, InputConstants$Type type, int keyCode, String categoryId)
 
-net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category
-    static net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category method_74698/register(net.minecraft.resources.Identifier id)
+    boolean method_1436/consumeClick()
+
+KeyMapping$Category
+    static KeyMapping$Category method_74698/register(Identifier id)
 
 # ------------------------------------------------------------------------------------------------------------- #
 
-net.minecraft.class_3872$class_3931/net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess
-    <init>(java.util.List<net.minecraft.class_2561/net.minecraft.network.chat.Component> pages)
+BookViewScreen$BookAccess
+    <init>(List<Component> pages)
 
-interface net.minecraft.class_3872$class_3931/net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess
+interface BookViewScreen$BookAccess
     int method_17560/getPageCount()
-    net.minecraft.class_2561/net.minecraft.network.chat.Component method_17563/getPage(int index)
+    Component method_17563/getPage(int index)
 
 # ------------------------------------------------------------------------------------------------------------- #
 
 net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-    static void send(net.minecraft.class_8710/net.minecraft.network.protocol.common.custom.CustomPacketPayload customPayload)
+    static void send(CustomPacketPayload customPayload)
 
-de.maxhenkel.tradecycling.net.CycleTradesPacket extends net.minecraft.class_8710/net.minecraft.network.protocol.common.custom.CustomPacketPayload
+de.maxhenkel.tradecycling.net.CycleTradesPacket extends CustomPacketPayload
     <init>()
 
 de.maxhenkel.tradecycling.TradeCyclingClientMod
     static void sendCycleTradesPacket()
+
+# ------------------------------------------------------------------------------------------------------------- #
+
+import net.minecraft.class_3532/net.minecraft.util.Mth
+
+Mth
+    static float method_15393/wrapDegrees(float angle)
+    static double method_15349/atan2(double y, double x)

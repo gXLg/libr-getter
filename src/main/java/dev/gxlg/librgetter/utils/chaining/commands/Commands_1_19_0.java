@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
-import com.mojang.brigadier.arguments.ArgumentType;
+import dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper;
 import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper;
 import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper;
 import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandManagerWrapper;
@@ -14,13 +14,13 @@ public class Commands_1_19_0 extends Commands_1_17_0 {
     @Override
     public void registerCommands() {
         ClientCommandRegistrationCallbackWrapperInterface listener = (dispatcher, context) -> {
-            ArgumentType<?> enchantmentArgumentType = getEnchantmentArgumentType(context);
+            ArgumentTypeWrapper enchantmentArgumentType = getEnchantmentArgumentType(context);
             registerLibrget(dispatcher, enchantmentArgumentType);
         };
         ClientCommandRegistrationCallbackWrapper.EVENT().register(listener.wrapper().unwrap());
     }
 
-    protected ArgumentType<?> getEnchantmentArgumentType(CommandBuildContextWrapper context) {
+    protected ArgumentTypeWrapper getEnchantmentArgumentType(CommandBuildContextWrapper context) {
         return ResourceOrTagArgumentWrapper.resourceOrTag(context, BuiltInRegistriesWrapper.ENCHANTMENT().key());
     }
 
@@ -30,7 +30,7 @@ public class Commands_1_19_0 extends Commands_1_17_0 {
     }
 
     @Override
-    protected ArgumentBuilderWrapper argument(String command, ArgumentType<?> argumentType) {
+    protected ArgumentBuilderWrapper argument(String command, ArgumentTypeWrapper argumentType) {
         return ClientCommandManagerWrapper.argument(command, argumentType);
     }
 }

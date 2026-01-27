@@ -5,17 +5,16 @@ import com.google.gson.JsonObject;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Updater {
-    private static Pair<String, String> newVersion;
+    private static final AtomicReference<NewVersion> newVersion = new AtomicReference<>();
 
     public static void checkUpdates() {
         if (!LibrGetter.config.checkUpdate) {
@@ -36,7 +35,7 @@ public class Updater {
                 String newest = data.get("tag_name").getAsString();
 
                 if (!newest.equals(version)) {
-                    newVersion = new ImmutablePair<>(newest + " - " + data.get("name").getAsString(), data.get("body").getAsString().replace("\r", ""));
+                    newVersion.set(new NewVersion(newest + " - " + data.get("name").getAsString(), data.get("body").getAsString().replace("\r", "")));
                 }
             } catch (IOException ignored) {
             }
@@ -44,10 +43,12 @@ public class Updater {
 
         // notifying about update
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            if (newVersion != null) {
-                Texts.getImpl().sendNewVersion(newVersion.getLeft(), newVersion.getRight());
-                newVersion = null;
+            NewVersion version = Updater.newVersion.getAndSet(null);
+            if (version != null) {
+                Texts.getImpl().sendNewVersion(version.version(), version.changelog());
             }
         });
     }
+
+    private record NewVersion(String version, String changelog) { }
 }

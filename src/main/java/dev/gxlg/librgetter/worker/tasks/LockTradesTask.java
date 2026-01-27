@@ -2,15 +2,15 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
-import dev.gxlg.librgetter.utils.types.signals.FinishSignal;
-import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.signals.FinishSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.protocol.game.ServerboundSelectTradePacket;
-import net.minecraft.world.inventory.ClickType;
+import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.network.protocol.game.ServerboundSelectTradePacketWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper;
 
 public class LockTradesTask extends TaskManager.Task {
     private final int offerIndex;
@@ -21,27 +21,27 @@ public class LockTradesTask extends TaskManager.Task {
 
     @Override
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
+        MinecraftWrapper client = MinecraftWrapper.getInstance();
+        LocalPlayerWrapper player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
-        MultiPlayerGameMode manager = client.gameMode;
-        if (manager == null) {
-            throw new InternalErrorException("managerInstance");
+        MultiPlayerGameModeWrapper game = client.getGameModeField();
+        if (game == null) {
+            throw new InternalErrorException("game");
         }
 
         // select the trade
-        if (player.containerMenu.getSlot(0).container.getItem(0).isEmpty()) {
-            ClientPacketListener handler = client.getConnection();
-            if (handler == null) {
-                throw new InternalErrorException("handler");
+        if (player.getContainerMenuField().getSlot(0).getContainerField().getItem(0).isEmpty()) {
+            ClientPacketListenerWrapper clientNetwork = client.getConnection();
+            if (clientNetwork == null) {
+                throw new InternalErrorException("clientNetwork");
             }
-            handler.send(new ServerboundSelectTradePacket(offerIndex));
+            clientNetwork.send(new ServerboundSelectTradePacketWrapper(offerIndex));
         }
 
         // confirm the trade
-        manager.handleInventoryMouseClick(player.containerMenu.containerId, 2, 0, ClickType.PICKUP, player);
+        game.handleInventoryMouseClick(player.getContainerMenuField().getContainerIdField(), 2, 0, ClickTypeWrapper.PICKUP(), player);
         throw new FinishSignal();
     }
 }

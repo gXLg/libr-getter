@@ -4,13 +4,15 @@ import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.TradeOfferData;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.ProcessNotRunningException;
-import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
-import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.ProcessStoppedMessage;
+import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStoppedMessage;
 import dev.gxlg.librgetter.worker.tasks.StandbyTask;
+import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$DisconnectWrapperInterface;
+import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$JoinWrapperInterface;
+import dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.npc.villager.Villager;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.BlockingQueue;
@@ -30,8 +32,9 @@ public class TaskManager {
     private static TaskContext taskContext = TaskContext.EMPTY;
 
     static {
-        ClientPlayConnectionEvents.JOIN.register((h, s, c) -> switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), TaskContext.EMPTY)));
-        ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), TaskContext.EMPTY)));
+        ClientPlayConnectionEvents.JOIN.register(((ClientPlayConnectionEvents$JoinWrapperInterface) (h, s, c) -> reset()).wrapper().unwrap(ClientPlayConnectionEvents.Join.class));
+        ClientPlayConnectionEvents.DISCONNECT.register(((ClientPlayConnectionEvents$DisconnectWrapperInterface) (handler, client) -> reset()).wrapper()
+                                                                                                                                             .unwrap(ClientPlayConnectionEvents.Disconnect.class));
     }
 
     public static void updateContext(Function<TaskContext, TaskContext> updater) {
@@ -76,6 +79,10 @@ public class TaskManager {
         currentTask = taskSwitch.getNextTask();
         taskContext = taskSwitch.getNewContext();
         return !taskSwitch.isNextTick();
+    }
+
+    public static void reset() {
+        switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), TaskContext.EMPTY));
     }
 
     public static void stop() throws ProcessNotRunningException {
@@ -133,19 +140,19 @@ public class TaskManager {
     }
 
     public record TaskContext(
-        BlockPos selectedLecternPos, ItemStack defaultItem, Villager selectedVillager, int attemptsCounter, TradeOfferData tradeOfferData
+        BlockPosWrapper selectedLecternPos, ItemStackWrapper defaultItem, VillagerWrapper selectedVillager, int attemptsCounter, TradeOfferData tradeOfferData
     ) {
         public static final TaskContext EMPTY = new TaskContext(null, null, null, 0, null);
 
-        public TaskContext withLecternPos(BlockPos pos) {
+        public TaskContext withLecternPos(BlockPosWrapper pos) {
             return new TaskContext(pos, defaultItem, selectedVillager, attemptsCounter, tradeOfferData);
         }
 
-        public TaskContext withDefaultItem(ItemStack item) {
+        public TaskContext withDefaultItem(ItemStackWrapper item) {
             return new TaskContext(selectedLecternPos, item, selectedVillager, attemptsCounter, tradeOfferData);
         }
 
-        public TaskContext withVillager(Villager villager) {
+        public TaskContext withVillager(VillagerWrapper villager) {
             return new TaskContext(selectedLecternPos, defaultItem, villager, attemptsCounter, tradeOfferData);
         }
 

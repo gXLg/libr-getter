@@ -2,18 +2,16 @@ package dev.gxlg.librgetter.utils.chaining.enchantments;
 
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.multiversion.V;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
+import dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper;
 
 public abstract class Enchantments {
-    public abstract Identifier enchantmentId(Enchantment enchantment);
+    public abstract IdentifierWrapper enchantmentId(EnchantmentWrapper enchantment);
 
-    public abstract int getEfficiencyLevel(ItemStack stack);
+    public abstract int getEfficiencyLevel(ItemStackWrapper stack);
 
-    public abstract boolean canBeTraded(Enchantment enchantment) throws InternalErrorException;
-
-    public abstract String translateEnchantmentId(String stringId);
+    public abstract boolean canBeTraded(EnchantmentWrapper enchantment) throws InternalErrorException;
 
     private static Enchantments implementation = null;
 
@@ -23,10 +21,8 @@ public abstract class Enchantments {
         }
         if (V.lower("1.19.3")) {
             implementation = new Enchantments_1_17_0();
-        } else if (V.lower("1.19.4")) {
-            implementation = new Enchantments_1_19_3();
         } else if (V.lower("1.21")) {
-            implementation = new Enchantments_1_19_4();
+            implementation = new Enchantments_1_19_3();
         } else {
             implementation = new Enchantments_1_21_0();
         }

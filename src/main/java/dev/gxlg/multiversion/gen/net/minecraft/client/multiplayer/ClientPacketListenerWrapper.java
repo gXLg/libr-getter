@@ -1,20 +1,42 @@
 package dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer;
 
 import dev.gxlg.multiversion.R;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.FieldValue;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.implementation.bind.annotation.SuperCall;
+import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
 
 public class ClientPacketListenerWrapper extends R.RWrapper<ClientPacketListenerWrapper> {
     public static final R.RClass clazz = R.clz("net.minecraft.class_634/net.minecraft.client.multiplayer.ClientPacketListener");
 
+    private int superCall = 0;
+
     protected ClientPacketListenerWrapper(Object instance) {
         super(instance);
-        R.RInstance rInstance = clazz.inst(instance);
     }
 
-    public net.minecraft.network.Connection getConnection(){
-        return (net.minecraft.network.Connection) clazz.inst(this.instance).mthd("method_48296/method_2872/getConnection").invk();
+    public void send(dev.gxlg.multiversion.gen.net.minecraft.network.protocol.PacketWrapper packet){
+        clazz.inst(this.instance).mthd("method_2883/send", void.class, dev.gxlg.multiversion.gen.net.minecraft.network.protocol.PacketWrapper.clazz).invk(packet.unwrap());
     }
 
     public static ClientPacketListenerWrapper inst(Object instance) {
-        return new ClientPacketListenerWrapper(instance);
+        return instance == null ? null : new ClientPacketListenerWrapper(instance);
+    }
+
+    public static class Interceptor {
+        @SuppressWarnings("unused")
+        @RuntimeType
+        public static Object intercept(@Origin Method method, @FieldValue("__wrapper") ClientPacketListenerWrapper wrapper, @AllArguments Object[] args, @SuperCall Callable<?> superCall) throws Exception {
+            if (wrapper.superCall > 0) {
+                wrapper.superCall--;
+                return superCall.call();
+            }
+            String methodName = method.getName();
+
+            return R.RWrapper.Interceptor.intercept(method, wrapper, args, superCall);
+        }
     }
 }

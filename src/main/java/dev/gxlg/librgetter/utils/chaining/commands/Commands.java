@@ -3,12 +3,12 @@ package dev.gxlg.librgetter.utils.chaining.commands;
 import com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.multiversion.V;
-import net.minecraft.world.item.enchantment.Enchantment;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper;
 
 import java.util.List;
 
 public abstract class Commands {
-    public abstract List<Enchantment> getEnchantmentsFromCommandContext(CommandContext<?> context) throws LibrGetterException;
+    public abstract List<EnchantmentWrapper> getEnchantmentsFromCommandContext(CommandContext<?> context) throws LibrGetterException;
 
     public abstract String getCustomEnchantmentFromCommandContext(CommandContext<?> context);
 

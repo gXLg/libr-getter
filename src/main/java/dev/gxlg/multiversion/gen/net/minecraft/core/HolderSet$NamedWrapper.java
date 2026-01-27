@@ -1,20 +1,42 @@
 package dev.gxlg.multiversion.gen.net.minecraft.core;
 
 import dev.gxlg.multiversion.R;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.FieldValue;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.implementation.bind.annotation.SuperCall;
+import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
 
 public class HolderSet$NamedWrapper extends R.RWrapper<HolderSet$NamedWrapper> {
     public static final R.RClass clazz = R.clz("net.minecraft.class_6885$class_6888/net.minecraft.core.HolderSet$Named");
 
+    private int superCall = 0;
+
     protected HolderSet$NamedWrapper(Object instance) {
         super(instance);
-        R.RInstance rInstance = clazz.inst(instance);
     }
 
-    public java.util.stream.Stream stream(){
-        return (java.util.stream.Stream) clazz.inst(this.instance).mthd("method_40239/stream").invk();
+    public java.util.stream.Stream<dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper> stream(){
+        return dev.gxlg.multiversion.adapters.java.util.stream.StreamAdapter.wrapper(dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper::inst).apply(clazz.inst(this.instance).mthd("method_40239/stream", java.util.stream.Stream.class).invk());
     }
 
     public static HolderSet$NamedWrapper inst(Object instance) {
-        return new HolderSet$NamedWrapper(instance);
+        return instance == null ? null : new HolderSet$NamedWrapper(instance);
+    }
+
+    public static class Interceptor {
+        @SuppressWarnings("unused")
+        @RuntimeType
+        public static Object intercept(@Origin Method method, @FieldValue("__wrapper") HolderSet$NamedWrapper wrapper, @AllArguments Object[] args, @SuperCall Callable<?> superCall) throws Exception {
+            if (wrapper.superCall > 0) {
+                wrapper.superCall--;
+                return superCall.call();
+            }
+            String methodName = method.getName();
+
+            return R.RWrapper.Interceptor.intercept(method, wrapper, args, superCall);
+        }
     }
 }

@@ -1,24 +1,46 @@
 package dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v2;
 
 import dev.gxlg.multiversion.R;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.FieldValue;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.implementation.bind.annotation.SuperCall;
+import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
 
 public class ClientCommandManagerWrapper extends R.RWrapper<ClientCommandManagerWrapper> {
     public static final R.RClass clazz = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandManager");
 
+    private int superCall = 0;
+
     protected ClientCommandManagerWrapper(Object instance) {
         super(instance);
-        R.RInstance rInstance = clazz.inst(instance);
     }
 
     public static ClientCommandManagerWrapper inst(Object instance) {
-        return new ClientCommandManagerWrapper(instance);
+        return instance == null ? null : new ClientCommandManagerWrapper(instance);
     }
 
     public static dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper literal(String name){
-        return dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.inst(clazz.mthd("literal", String.class).invk(name));
+        return dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.inst(clazz.mthd("literal", dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.clazz, String.class).invk(name));
     }
 
-    public static dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper argument(String name, com.mojang.brigadier.arguments.ArgumentType argumentType){
-        return dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper.inst(clazz.mthd("argument", String.class, com.mojang.brigadier.arguments.ArgumentType.class).invk(name, argumentType));
+    public static dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper argument(String name, dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper argumentType){
+        return dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper.inst(clazz.mthd("argument", dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper.clazz, String.class, dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper.clazz).invk(name, argumentType.unwrap()));
+    }
+
+    public static class Interceptor {
+        @SuppressWarnings("unused")
+        @RuntimeType
+        public static Object intercept(@Origin Method method, @FieldValue("__wrapper") ClientCommandManagerWrapper wrapper, @AllArguments Object[] args, @SuperCall Callable<?> superCall) throws Exception {
+            if (wrapper.superCall > 0) {
+                wrapper.superCall--;
+                return superCall.call();
+            }
+            String methodName = method.getName();
+
+            return R.RWrapper.Interceptor.intercept(method, wrapper, args, superCall);
+        }
     }
 }

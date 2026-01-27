@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
-import com.mojang.brigadier.arguments.ArgumentType;
+import dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgument$ResultWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper;
@@ -16,7 +16,7 @@ public class Commands_1_21_0 extends Commands_1_19_3 {
     }
 
     @Override
-    protected ArgumentType<?> getEnchantmentArgumentType(CommandBuildContextWrapper context) {
+    protected ArgumentTypeWrapper getEnchantmentArgumentType(CommandBuildContextWrapper context) {
         return ResourceOrTagArgumentWrapper.resourceOrTag(context, RegistriesWrapper.ENCHANTMENT());
     }
 }

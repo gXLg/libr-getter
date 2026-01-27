@@ -5,16 +5,17 @@ import dev.gxlg.librgetter.utils.InventoryHelper;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
-import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
+import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.entity.player.InventoryWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.AxeItemWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlocksWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper;
 
 public class SelectAxeTask extends TaskManager.Task {
     @Override
@@ -23,24 +24,24 @@ public class SelectAxeTask extends TaskManager.Task {
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new BreakLecternTask(), ctx));
         }
 
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
+        MinecraftWrapper client = MinecraftWrapper.getInstance();
+        LocalPlayerWrapper player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
-        Inventory inventory = player.getInventory();
+        InventoryWrapper inventory = player.getInventory();
 
         int slot = -1;
         if (LibrGetter.config.autoTool) {
             float maxBreakingSpeed = -1;
-            for (int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
-                ItemStack stack = inventory.getItem(i);
+            for (int i = 0; i < InventoryWrapper.INVENTORY_SIZE(); i++) {
+                ItemStackWrapper stack = inventory.getItem(i);
                 if (stack.isDamageableItem() && stack.getMaxDamage() - stack.getDamageValue() < 10) {
                     continue;
                 }
-                float breakingSpeed = stack.getDestroySpeed(Blocks.LECTERN.defaultBlockState());
+                float breakingSpeed = stack.getDestroySpeed(BlocksWrapper.LECTERN().defaultBlockState());
                 int efficiencyLevel = Enchantments.getImpl().getEfficiencyLevel(stack);
-                if (stack.getItem() instanceof AxeItem) {
+                if (stack.getItem().isInstanceOf(AxeItemWrapper.class)) {
                     breakingSpeed += (float) (efficiencyLevel * efficiencyLevel + 1);
                 }
                 if (breakingSpeed > maxBreakingSpeed) {
@@ -50,9 +51,9 @@ public class SelectAxeTask extends TaskManager.Task {
             }
         } else {
             if (taskContext.defaultItem() != null && taskContext.defaultItem().isDamageableItem()) {
-                for (int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
-                    ItemStack stack = inventory.getItem(i);
-                    if (ItemStack.matches(stack, taskContext.defaultItem())) {
+                for (int i = 0; i < InventoryWrapper.INVENTORY_SIZE(); i++) {
+                    ItemStackWrapper stack = inventory.getItem(i);
+                    if (ItemStackWrapper.matches(stack, taskContext.defaultItem())) {
                         slot = i;
                         break;
                     }
@@ -60,19 +61,17 @@ public class SelectAxeTask extends TaskManager.Task {
             }
         }
         if (slot != -1) {
-            MultiPlayerGameMode manager = client.gameMode;
-            if (manager == null) {
-                throw new InternalErrorException("managerInstance");
+            MultiPlayerGameModeWrapper game = client.getGameModeField();
+            if (game == null) {
+                throw new InternalErrorException("game");
             }
-
-            ClientPacketListener handler = client.getConnection();
-            if (handler == null) {
-                throw new InternalErrorException("handler");
+            ClientPacketListenerWrapper clientNetwork = client.getConnection();
+            if (clientNetwork == null) {
+                throw new InternalErrorException("clientNetwork");
             }
-
-            InventoryHelper.selectItem(player, slot, manager, handler);
+            InventoryHelper.selectItem(player, slot, game, clientNetwork);
         }
 
-        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RotationTask(player, ctx.selectedLecternPos().getCenter(), new BreakLecternTask()), ctx));
+        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RotationTask(player, Vec3Wrapper.atCenterOf(ctx.selectedLecternPos()), new BreakLecternTask()), ctx));
     }
 }

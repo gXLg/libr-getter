@@ -4,31 +4,31 @@ import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.types.config.enums.RotationMode;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
-import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
+import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.util.MthWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper;
 
 import java.util.Random;
 
 public class RotationTask extends TaskManager.Task {
-    private final Vec3 absoluteTarget;
+    private final Vec3Wrapper absoluteTarget;
 
-    private final Vec3 relativeTarget;
+    private final Vec3Wrapper relativeTarget;
 
     private final TaskManager.Task nextTask;
 
-    public RotationTask(LocalPlayer player, Vec3 target, TaskManager.Task nextTask) {
-        Vec3 origin = EntityAnchorArgument.Anchor.EYES.apply(player);
-        double relativeX = target.x() + (rng.nextFloat() - 0.5F) * 0.4F - origin.x;
-        double relativeY = target.y() + (rng.nextFloat() - 0.5F) * 0.4F - origin.y;
-        double relativeZ = target.z() + (rng.nextFloat() - 0.5F) * 0.4F - origin.z;
+    public RotationTask(LocalPlayerWrapper player, Vec3Wrapper target, TaskManager.Task nextTask) {
+        Vec3Wrapper origin = EntityAnchorArgument$AnchorWrapper.EYES().apply(player);
+        double relativeX = target.x() + (rng.nextFloat() - 0.5F) * 0.4F - origin.x();
+        double relativeY = target.y() + (rng.nextFloat() - 0.5F) * 0.4F - origin.y();
+        double relativeZ = target.z() + (rng.nextFloat() - 0.5F) * 0.4F - origin.z();
 
         this.absoluteTarget = target;
-        this.relativeTarget = new Vec3(relativeX, relativeY, relativeZ);
+        this.relativeTarget = new Vec3Wrapper(relativeX, relativeY, relativeZ);
         this.nextTask = nextTask;
     }
 
@@ -38,14 +38,14 @@ public class RotationTask extends TaskManager.Task {
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(nextTask, ctx));
         }
 
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
+        MinecraftWrapper client = MinecraftWrapper.getInstance();
+        LocalPlayerWrapper player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
 
         if (LibrGetter.config.rotationMode == RotationMode.INSTANT) {
-            player.lookAt(EntityAnchorArgument.Anchor.EYES, absoluteTarget);
+            player.lookAt(EntityAnchorArgument$AnchorWrapper.EYES(), absoluteTarget);
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(nextTask, ctx));
         }
 
@@ -53,8 +53,9 @@ public class RotationTask extends TaskManager.Task {
         double relativeY = relativeTarget.y();
         double relativeZ = relativeTarget.z();
         double distance = Math.hypot(relativeX, relativeZ);
-        float goalPitch = Mth.wrapDegrees((float) (-(Mth.atan2(relativeY, distance) * 180.0D / Math.PI)));
-        float goalYaw = Mth.wrapDegrees((float) (Mth.atan2(relativeZ, relativeX) * 180.0D / Math.PI) - 90.0F);
+
+        float goalPitch = MthWrapper.wrapDegrees((float) (-(MthWrapper.atan2(relativeY, distance) * 180.0D / Math.PI)));
+        float goalYaw = MthWrapper.wrapDegrees((float) (MthWrapper.atan2(relativeZ, relativeX) * 180.0D / Math.PI) - 90.0F);
 
         float currentYaw = player.getYRot();
         float currentPitch = player.getXRot();

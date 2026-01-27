@@ -1,29 +1,17 @@
 package dev.gxlg.librgetter.utils.chaining.helper;
 
 import dev.gxlg.multiversion.V;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.Connection;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.phys.BlockHitResult;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.entity.player.InventoryWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.phys.BlockHitResultWrapper;
 
 public abstract class Helper {
+    public abstract void interactBlock(MultiPlayerGameModeWrapper game, LocalPlayerWrapper player, BlockHitResultWrapper lowBlock, boolean useMainHand);
 
-    public abstract Connection getConnection(ClientPacketListener handler);
+    public abstract void playFoundNotification(LocalPlayerWrapper player);
 
-    public abstract ClientLevel getWorld(LocalPlayer player);
-
-    public abstract void interactBlock(MultiPlayerGameMode manager, LocalPlayer player, BlockHitResult lowBlock, boolean useMainHand);
-
-    public abstract void playFoundNotification(LocalPlayer player);
-
-    public abstract void setActionResultFail(CallbackInfoReturnable<InteractionResult> info);
-
-    public abstract void setSelectedSlot(Inventory inventory, int slot);
+    public abstract void setSelectedSlot(InventoryWrapper inventory, int slot);
 
     private static Helper implementation = null;
 

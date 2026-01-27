@@ -9,9 +9,8 @@ import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErro
 import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.nbt.TagWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.trading.MerchantOffer;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemsWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.trading.MerchantOfferWrapper;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,8 +20,8 @@ import java.util.Set;
 
 public class Parser_1_17_0 extends Parser {
     @Override
-    public EnchantmentTrade parseTrade(MerchantOffer offer) throws LibrGetterException {
-        ItemStack stack = offer.getResult();
+    public EnchantmentTrade parseTrade(MerchantOfferWrapper offer) throws LibrGetterException {
+        ItemStackWrapper stack = offer.getResult();
 
         CompoundTagWrapper tag = getCustomData(stack);
         EnchantmentTrade.EnchantmentOnly finalEnchantment = Plugins.parse(tag);
@@ -42,25 +41,24 @@ public class Parser_1_17_0 extends Parser {
         }
 
         int price;
-        ItemStack firstBuyItem = offer.getCostA();
-        ItemStack secondBuyItem = offer.getCostB();
-        if (firstBuyItem.getItem() == Items.EMERALD) {
+        ItemStackWrapper firstBuyItem = offer.getCostA();
+        ItemStackWrapper secondBuyItem = offer.getCostB();
+        if (firstBuyItem.is(ItemsWrapper.EMERALD())) {
             price = firstBuyItem.getCount();
-        } else if (secondBuyItem.getItem() == Items.EMERALD) {
+        } else if (secondBuyItem.is(ItemsWrapper.EMERALD())) {
             price = secondBuyItem.getCount();
         } else {
             throw new InternalErrorException("buyItem");
         }
 
         return finalEnchantment.tradeWithPrice(price);
-
     }
 
-    protected CompoundTagWrapper getCustomData(ItemStack stack) {
-        return ItemStackWrapper.inst(stack).getTag();
+    protected CompoundTagWrapper getCustomData(ItemStackWrapper stack) {
+        return stack.getTag();
     }
 
-    protected EnchantmentTrade.EnchantmentOnly parseStored(ItemStack stack) {
+    protected EnchantmentTrade.EnchantmentOnly parseStored(ItemStackWrapper stack) {
         CompoundTagWrapper tag = getCustomData(stack);
         if (tag == null) {
             return null;

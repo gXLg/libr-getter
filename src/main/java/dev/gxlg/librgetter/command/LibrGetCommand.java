@@ -16,22 +16,24 @@ import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.NothingTar
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.VillagerNotLibrarianException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.ProcessNotRunningException;
-import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.ConfigValueMessage;
-import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.GoalsListClearedMessage;
-import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.LecternSelectedMessage;
-import dev.gxlg.librgetter.utils.types.translatable_messages.feedback.LibrarianSelectedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ConfigValueMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.GoalsListClearedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.LecternSelectedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.LibrarianSelectedMessage;
 import dev.gxlg.librgetter.worker.TaskManager;
 import dev.gxlg.librgetter.worker.tasks.StartTask;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.villager.Villager;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
+import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.ScreenWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlocksWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.phys.BlockHitResultWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.phys.EntityHitResultWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResultWrapper;
 
 public class LibrGetCommand {
 
@@ -64,8 +66,9 @@ public class LibrGetCommand {
         } catch (IllegalArgumentException ignored) {
         }
 
-        if (Minecraft.getInstance().screen instanceof ConfigScreen cs) {
-            cs.updateScreen();
+        ScreenWrapper screen = MinecraftWrapper.getInstance().getScreenField();
+        if (screen.isInstanceOf(ConfigScreen.class)) {
+            screen.downcast(ConfigScreen.class).updateScreen();
         } else {
             Texts.getImpl().sendTranslatable(new ConfigValueMessage(config.name(), value));
         }
@@ -76,17 +79,17 @@ public class LibrGetCommand {
             throw new AlreadyRunningException();
         }
 
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
+        MinecraftWrapper client = MinecraftWrapper.getInstance();
+        LocalPlayerWrapper player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
-        ClientLevel world = client.level;
+        ClientLevelWrapper world = client.getLevelField();
         if (world == null) {
             throw new InternalErrorException("world");
         }
 
-        BlockPos foundLecternPos = null;
+        BlockPosWrapper foundLecternPos = null;
         for (int distance = 1; distance < 5; distance++) {
             for (int deltaX = -distance; deltaX <= distance; deltaX++) {
                 for (int deltaY = -distance; deltaY <= distance; deltaY++) {
@@ -95,8 +98,8 @@ public class LibrGetCommand {
                             continue;
                         }
 
-                        BlockPos pos = player.blockPosition().offset(deltaX, deltaY, deltaZ);
-                        if (world.getBlockState(pos).is(Blocks.LECTERN)) {
+                        BlockPosWrapper pos = player.blockPosition().offset(deltaX, deltaY, deltaZ);
+                        if (world.getBlockState(pos).is(BlocksWrapper.LECTERN())) {
                             foundLecternPos = pos;
                             break;
                         }
@@ -116,11 +119,12 @@ public class LibrGetCommand {
         if (foundLecternPos == null) {
             throw new CouldNotFindLecternException();
         }
-        Iterable<Entity> worldEntities = world.entitiesForRendering();
-        Villager foundVillager = null;
+        Iterable<EntityWrapper> worldEntities = world.entitiesForRendering();
+        VillagerWrapper foundVillager = null;
         float minDistance = Float.MAX_VALUE;
-        for (Entity entity : worldEntities) {
-            if (entity instanceof Villager villager) {
+        for (EntityWrapper entity : worldEntities) {
+            if (entity.isInstanceOf(VillagerWrapper.class)) {
+                VillagerWrapper villager = entity.downcast(VillagerWrapper.class);
                 if (Villagers.getImpl().isVillagerLibrarian(villager)) {
                     float distance = villager.distanceTo(player);
                     if (distance < minDistance && distance < 10) {
@@ -134,8 +138,8 @@ public class LibrGetCommand {
             throw new CouldNotFindLibrarianException();
         }
 
-        BlockPos finalLecTernPos = foundLecternPos;
-        Villager finalVi = foundVillager;
+        BlockPosWrapper finalLecTernPos = foundLecternPos;
+        VillagerWrapper finalVi = foundVillager;
         TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(true), ctx.withLecternPos(finalLecTernPos).withVillager(finalVi)));
     }
 
@@ -168,39 +172,38 @@ public class LibrGetCommand {
             throw new AlreadyRunningException();
         }
 
-        Minecraft client = Minecraft.getInstance();
-        ClientLevel world = client.level;
+        MinecraftWrapper client = MinecraftWrapper.getInstance();
+        ClientLevelWrapper world = client.getLevelField();
         if (world == null) {
             throw new InternalErrorException("world");
         }
-        LocalPlayer player = client.player;
+        LocalPlayerWrapper player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
-        HitResult hit = client.hitResult;
+        HitResultWrapper hit = client.getHitResultField();
         if (hit == null) {
             throw new InternalErrorException("hit");
         }
-        HitResult.Type hitType = hit.getType();
-        if (hitType == HitResult.Type.MISS) {
+        HitResult$TypeWrapper hitType = hit.getType();
+        if (hitType.equals(HitResult$TypeWrapper.MISS())) {
             throw new NothingTargetedException();
         }
 
-        if (hitType == HitResult.Type.BLOCK) {
-            BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
-            if (!world.getBlockState(blockPos).is(Blocks.LECTERN)) {
+        if (hitType.equals(HitResult$TypeWrapper.BLOCK())) {
+            BlockPosWrapper blockPos = hit.downcast(BlockHitResultWrapper.class).getBlockPos();
+            if (!world.getBlockState(blockPos).is(BlocksWrapper.LECTERN())) {
                 throw new BlockNotLecternException();
             }
-
             TaskManager.updateContext(ctx -> ctx.withLecternPos(blockPos));
             Texts.getImpl().sendTranslatable(new LecternSelectedMessage());
 
-        } else if (hitType == HitResult.Type.ENTITY) {
-            EntityHitResult entityHitResult = (EntityHitResult) hit;
-            Entity entity = entityHitResult.getEntity();
-            if (!(entity instanceof Villager villager)) {
+        } else if (hitType.equals(HitResult$TypeWrapper.ENTITY())) {
+            EntityWrapper entity = hit.downcast(EntityHitResultWrapper.class).getEntity();
+            if (!(entity.isInstanceOf(VillagerWrapper.class))) {
                 throw new EntityNotVillagerException();
             }
+            VillagerWrapper villager = entity.downcast(VillagerWrapper.class);
             if (!Villagers.getImpl().isVillagerLibrarian(villager)) {
                 throw new VillagerNotLibrarianException();
             }

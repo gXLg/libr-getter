@@ -1,8 +1,5 @@
 package dev.gxlg.librgetter.utils.types;
 
-import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
-import org.jetbrains.annotations.NotNull;
-
 @SuppressWarnings("ClassCanBeRecord") // GSON can't handle records in earlier versions
 public class EnchantmentTrade {
     private final String id;
@@ -23,11 +20,6 @@ public class EnchantmentTrade {
 
     public boolean same(EnchantmentTrade e) {
         return e.id.equals(id) && e.lvl == lvl;
-    }
-
-    @Override
-    public @NotNull String toString() {
-        return Enchantments.getImpl().translateEnchantmentId(id) + " " + lvl;
     }
 
     public String id() {

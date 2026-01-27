@@ -1,25 +1,26 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.reflection.Support;
+import dev.gxlg.librgetter.utils.chaining.support.Support;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.CanNotLockException;
-import dev.gxlg.librgetter.utils.types.signals.FinishSignal;
-import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.signals.FinishSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.item.trading.MerchantOffers;
+import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.item.trading.MerchantOfferWrapper;
+
+import java.util.List;
 
 public class FinalizeSearchTask extends TaskManager.Task {
-    private final MerchantOffers offers;
+    private final List<MerchantOfferWrapper> offers;
 
-    public FinalizeSearchTask(MerchantOffers offers) {
+    public FinalizeSearchTask(List<MerchantOfferWrapper> offers) {
         this.offers = offers;
     }
 
@@ -33,20 +34,19 @@ public class FinalizeSearchTask extends TaskManager.Task {
             throw new FinishSignal();
         }
 
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
+        MinecraftWrapper client = MinecraftWrapper.getInstance();
+        LocalPlayerWrapper player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
 
-        if (!Support.isUsingTradeCycling()) {
+        if (!Support.getImpl().isUsingTradeCycling()) {
             // TradeCycling process keeps the screen open, else we have to open it again
-            MultiPlayerGameMode manager = client.gameMode;
-            if (manager == null) {
-                throw new InternalErrorException("managerInstance");
+            MultiPlayerGameModeWrapper game = client.getGameModeField();
+            if (game == null) {
+                throw new InternalErrorException("game");
             }
-
-            manager.interact(player, taskContext.selectedVillager(), InteractionHand.MAIN_HAND);
+            game.interact(player, taskContext.selectedVillager(), InteractionHandWrapper.MAIN_HAND());
         }
 
         int buy = canBuy(player, offers.get(0)) ? 0 : (
@@ -59,9 +59,9 @@ public class FinalizeSearchTask extends TaskManager.Task {
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.nextTick(new LockTradesTask(buy), ctx));
     }
 
-    private static boolean canBuy(LocalPlayer player, MerchantOffer offer) {
-        ItemStack first = offer.getCostA();
-        ItemStack second = offer.getCostB();
+    private static boolean canBuy(LocalPlayerWrapper player, MerchantOfferWrapper offer) {
+        ItemStackWrapper first = offer.getCostA();
+        ItemStackWrapper second = offer.getCostB();
         int firstCount = player.getInventory().countItem(first.getItem());
         int secondCount = second.isEmpty() ? 0 : player.getInventory().countItem(second.getItem());
         return first.getCount() <= firstCount && second.getCount() <= secondCount;

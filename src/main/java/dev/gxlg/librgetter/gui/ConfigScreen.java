@@ -1,10 +1,13 @@
 package dev.gxlg.librgetter.gui;
 
-import net.minecraft.client.gui.screens.inventory.BookViewScreen;
+import dev.gxlg.multiversion.R;
+import dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreenWrapper;
 
-public class ConfigScreen extends BookViewScreen {
+public class ConfigScreen extends BookViewScreenWrapper {
+    public static final R.RClass clazz = R.extendWrapper(BookViewScreenWrapper.class, ConfigScreen.class);
+
     public ConfigScreen() {
-        super(ConfigMenu.getCachedContent());
+        super(clazz, ConfigMenu.getCachedContent());
     }
 
     @Override
@@ -33,6 +36,12 @@ public class ConfigScreen extends BookViewScreen {
             currentPage++;
         }
         super.pageForward();
+    }
+
+    @Override
+    protected void closeScreen() {
+        // used only with RUN_COMMAND in 1.21.5 and before
+        // by not executing super, we avoid the book actually closing
     }
 
     public void updateScreen() {

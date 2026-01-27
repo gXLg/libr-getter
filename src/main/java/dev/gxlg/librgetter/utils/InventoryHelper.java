@@ -1,24 +1,23 @@
 package dev.gxlg.librgetter.utils;
 
 import dev.gxlg.librgetter.utils.chaining.helper.Helper;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacketWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.entity.player.InventoryWrapper;
+import dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper;
 
 public class InventoryHelper {
-    public static void selectItem(LocalPlayer player, int slot, MultiPlayerGameMode manager, ClientPacketListener handler) {
-        Inventory inventory = player.getInventory();
-        if (!Inventory.isHotbarSlot(slot)) {
-            int syncId = player.inventoryMenu.containerId;
+    public static void selectItem(LocalPlayerWrapper player, int slot, MultiPlayerGameModeWrapper game, ClientPacketListenerWrapper clientNetwork) {
+        InventoryWrapper inventory = player.getInventory();
+        if (!InventoryWrapper.isHotbarSlot(slot)) {
+            int syncId = player.getInventoryMenuField().getContainerIdField();
             int swap = inventory.getSuitableHotbarSlot();
-            manager.handleInventoryMouseClick(syncId, slot, swap, ClickType.SWAP, player);
+            game.handleInventoryMouseClick(syncId, slot, swap, ClickTypeWrapper.SWAP(), player);
             slot = swap;
         }
         Helper.getImpl().setSelectedSlot(inventory, slot);
-        ServerboundSetCarriedItemPacket packetSelect = new ServerboundSetCarriedItemPacket(slot);
-        Helper.getImpl().getConnection(handler).send(packetSelect);
+        clientNetwork.send(new ServerboundSetCarriedItemPacketWrapper(slot));
     }
 }

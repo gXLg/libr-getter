@@ -4,7 +4,7 @@ import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.PickedAnotherProfessionException;
-import dev.gxlg.librgetter.utils.types.signals.StopTaskSignal;
+import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
 
 public class WaitVillagerAcceptProfessionTask extends TaskManager.Task {
