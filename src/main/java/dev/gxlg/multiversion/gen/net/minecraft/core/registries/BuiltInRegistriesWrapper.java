@@ -23,7 +23,7 @@ public class BuiltInRegistriesWrapper extends R.RWrapper<BuiltInRegistriesWrappe
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper ENCHANTMENT() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.inst(clazz.fld("field_41176/ENCHANTMENT", dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.inst(clazz.fld("field_41176/ENCHANTMENT", dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

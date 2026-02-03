@@ -23,7 +23,7 @@ public class ItemEnchantmentArgumentWrapper extends R.RWrapper<ItemEnchantmentAr
     }
 
     public static dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper enchantment(){
-        return dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper.inst(clazz.mthd("method_9336/enchantment", dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper.inst(clazz.mthd("method_9336/enchantment", dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper.clazz.self()).invk());
     }
 
     public static class Interceptor {

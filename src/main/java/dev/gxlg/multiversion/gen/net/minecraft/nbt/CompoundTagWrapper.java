@@ -31,11 +31,11 @@ public class CompoundTagWrapper extends dev.gxlg.multiversion.gen.net.minecraft.
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper getCompound(String name){
-        return dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.inst(clazz.inst(this.instance).mthd("method_10562/getCompound", dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.clazz, String.class).invk(name));
+        return dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.inst(clazz.inst(this.instance).mthd("method_10562/getCompound", dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.clazz.self(), String.class).invk(name));
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper getCompoundOrEmpty(String name){
-        return dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.inst(clazz.inst(this.instance).mthd("method_68568/getCompoundOrEmpty", dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.clazz, String.class).invk(name));
+        return dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.inst(clazz.inst(this.instance).mthd("method_68568/getCompoundOrEmpty", dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.clazz.self(), String.class).invk(name));
     }
 
     public java.util.Set<String> keySet(){

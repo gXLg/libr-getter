@@ -19,7 +19,7 @@ public class CommandDispatcherWrapper extends R.RWrapper<CommandDispatcherWrappe
     }
 
     public com.mojang.brigadier.tree.LiteralCommandNode register(dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper command){
-        return (com.mojang.brigadier.tree.LiteralCommandNode) clazz.inst(this.instance).mthd("register", com.mojang.brigadier.tree.LiteralCommandNode.class, dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.clazz).invk(command.unwrap());
+        return (com.mojang.brigadier.tree.LiteralCommandNode) clazz.inst(this.instance).mthd("register", com.mojang.brigadier.tree.LiteralCommandNode.class, dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.clazz.self()).invk(command.unwrap());
     }
 
     public static CommandDispatcherWrapper inst(Object instance) {

@@ -15,7 +15,7 @@ public class HoverEventWrapper extends R.RWrapper<HoverEventWrapper> {
     private int superCall = 0;
 
     public HoverEventWrapper(dev.gxlg.multiversion.gen.net.minecraft.network.chat.HoverEvent$ActionWrapper action, Object contents) {
-        this(clazz.constr(dev.gxlg.multiversion.gen.net.minecraft.network.chat.HoverEvent$ActionWrapper.clazz, Object.class).newInst(action.unwrap(), contents).self());
+        this(clazz.constr(dev.gxlg.multiversion.gen.net.minecraft.network.chat.HoverEvent$ActionWrapper.clazz.self(), Object.class).newInst(action.unwrap(), contents).self());
     }
 
     protected HoverEventWrapper(Object instance) {

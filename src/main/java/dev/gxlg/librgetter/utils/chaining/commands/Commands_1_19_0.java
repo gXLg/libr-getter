@@ -4,20 +4,21 @@ import dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrap
 import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper;
 import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper;
 import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandManagerWrapper;
-import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallbackWrapper;
 import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallbackWrapperInterface;
 import dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper;
 import dev.gxlg.multiversion.gen.net.minecraft.core.registries.BuiltInRegistriesWrapper;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 
 public class Commands_1_19_0 extends Commands_1_17_0 {
     @Override
     public void registerCommands() {
-        ClientCommandRegistrationCallbackWrapperInterface listener = (dispatcher, context) -> {
-            ArgumentTypeWrapper enchantmentArgumentType = getEnchantmentArgumentType(context);
-            registerLibrget(dispatcher, enchantmentArgumentType);
-        };
-        ClientCommandRegistrationCallbackWrapper.EVENT().register(listener.wrapper().unwrap());
+        ClientCommandRegistrationCallback.EVENT.register((
+                                                             (ClientCommandRegistrationCallbackWrapperInterface) (dispatcher, context) -> {
+                                                                 ArgumentTypeWrapper enchantmentArgumentType = getEnchantmentArgumentType(context);
+                                                                 registerLibrget(dispatcher, enchantmentArgumentType);
+                                                             }
+                                                         ).wrapper().unwrap(ClientCommandRegistrationCallback.class));
     }
 
     protected ArgumentTypeWrapper getEnchantmentArgumentType(CommandBuildContextWrapper context) {

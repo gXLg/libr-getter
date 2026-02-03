@@ -9,17 +9,13 @@ import net.bytebuddy.implementation.bind.annotation.SuperCall;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
-public class ClientPacketListenerWrapper extends R.RWrapper<ClientPacketListenerWrapper> {
+public class ClientPacketListenerWrapper extends dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientCommonPacketListenerImplWrapper {
     public static final R.RClass clazz = R.clz("net.minecraft.class_634/net.minecraft.client.multiplayer.ClientPacketListener");
 
     private int superCall = 0;
 
     protected ClientPacketListenerWrapper(Object instance) {
         super(instance);
-    }
-
-    public void send(dev.gxlg.multiversion.gen.net.minecraft.network.protocol.PacketWrapper packet){
-        clazz.inst(this.instance).mthd("method_2883/send", void.class, dev.gxlg.multiversion.gen.net.minecraft.network.protocol.PacketWrapper.clazz).invk(packet.unwrap());
     }
 
     public static ClientPacketListenerWrapper inst(Object instance) {
@@ -36,7 +32,7 @@ public class ClientPacketListenerWrapper extends R.RWrapper<ClientPacketListener
             }
             String methodName = method.getName();
 
-            return R.RWrapper.Interceptor.intercept(method, wrapper, args, superCall);
+            return dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientCommonPacketListenerImplWrapper.Interceptor.intercept(method, wrapper, args, superCall);
         }
     }
 }

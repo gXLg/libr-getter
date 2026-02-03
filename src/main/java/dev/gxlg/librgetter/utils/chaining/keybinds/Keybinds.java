@@ -14,8 +14,10 @@ public abstract class Keybinds {
         }
         if (V.lower("1.21.9")) {
             implementation = new Keybinds_1_17_0();
-        } else {
+        } else if (V.lower("26.1")) {
             implementation = new Keybinds_1_21_9();
+        } else {
+            implementation = new Keybinds_26_1_0();
         }
         return implementation;
     }

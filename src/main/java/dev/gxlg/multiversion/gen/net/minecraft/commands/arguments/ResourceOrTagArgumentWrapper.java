@@ -23,7 +23,7 @@ public class ResourceOrTagArgumentWrapper extends dev.gxlg.multiversion.gen.com.
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper resourceOrTag(dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper context, dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper registryKey){
-        return dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper.inst(clazz.mthd("method_45637/resourceOrTag", dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).invk(context.unwrap(), registryKey.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper.inst(clazz.mthd("method_45637/resourceOrTag", dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz.self()).invk(context.unwrap(), registryKey.unwrap()));
     }
 
     public static class Interceptor {

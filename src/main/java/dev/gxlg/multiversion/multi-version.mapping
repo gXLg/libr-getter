@@ -82,8 +82,21 @@ import net.minecraft.class_1914/net.minecraft.world.item.trading.MerchantOffer
 import net.minecraft.class_1792/net.minecraft.world.item.Item
 import net.minecraft.class_1802/net.minecraft.world.item.Items
 import net.minecraft.class_1263/net.minecraft.world.Container
+import net.minecraft.class_2863/net.minecraft.network.protocol.game.ServerboundSelectTradePacket
+import net.minecraft.class_1657/net.minecraft.world.entity.player.Player
+import net.minecraft.class_1723/net.minecraft.world.inventory.InventoryMenu
+import net.minecraft.class_1703/net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.class_1735/net.minecraft.world.inventory.Slot
+import net.minecraft.class_1743/net.minecraft.world.item.AxeItem
+import net.minecraft.class_2382/net.minecraft.core.Vec3i
+import net.minecraft.class_1713/net.minecraft.world.inventory.ClickType
+import net.minecraft.class_3532/net.minecraft.util.Mth
+import net.minecraft.class_2172/net.minecraft.commands.SharedSuggestionProvider
+import net.minecraft.class_2183$class_2184/net.minecraft.commands.arguments.EntityAnchorArgument$Anchor
+import net.minecraft.class_243/net.minecraft.world.phys.Vec3
+import net.minecraft.class_1309/net.minecraft.world.entity.LivingEntity
+import net.minecraft.class_8673/net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl
 
-import !net.fabricmc.fabric.api.event.Event
 import !com.mojang.brigadier.builder.LiteralArgumentBuilder
 import !com.mojang.brigadier.builder.ArgumentBuilder
 import !com.mojang.brigadier.CommandDispatcher
@@ -97,7 +110,11 @@ import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.tree.LiteralCommandNode
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTick
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.fabricmc.fabric.api.networking.v1.PacketSender
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Join
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Disconnect
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap$Entry
 import java.util.Set
@@ -108,37 +125,114 @@ import java.lang.Iterable
 import java.util.concurrent.CompletableFuture
 
 # ------------------------------------------------------------------------------------------------------------- #
+# Keybinds
 
-import net.minecraft.class_2172/net.minecraft.commands.SharedSuggestionProvider
+class KeyBindingHelper
+    static KeyMapping registerKeyBinding(KeyMapping keyBinding)
 
-SharedSuggestionProvider
+class KeyMappingHelper
+    static KeyMapping registerKeyMapping(KeyMapping keyBinding)
+
+class KeyMapping
+    <init>(String id, InputConstants$Type type, int keyCode, KeyMapping$Category category)
+    <init>(String id, InputConstants$Type type, int keyCode, String categoryId)
+
+    boolean method_1436/consumeClick()
+
+class KeyMapping$Category
+    static KeyMapping$Category method_74698/register(Identifier id)
+
+# ------------------------------------------------------------------------------------------------------------- #
+# Commands
+
+class SharedSuggestionProvider
     static boolean method_27136/matchesSubStr(String input, String search)
 
-KeyBindingHelper
-    static KeyMapping registerKeyBinding(KeyMapping keyBinding)
+class ResourceOrTagArgument extends ArgumentType
+    static ResourceOrTagArgument method_45637/resourceOrTag(CommandBuildContext context, ResourceKey registryKey)
+
+    class ResourceOrTagArgument$Result
+        Either method_45647/unwrap()
+        Optional method_45648/cast(ResourceKey registryKey)
+
+class ItemEnchantmentArgument
+    static ArgumentType method_9336/enchantment()
+
+class net.fabricmc.fabric.api.client.command.v1.ClientCommandManager
+    static CommandDispatcher DISPATCHER
+    static LiteralArgumentBuilder literal(String name)
+    static ArgumentBuilder argument(String name, ArgumentType argumentType)
+
+class net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
+    static LiteralArgumentBuilder literal(String name)
+    static ArgumentBuilder argument(String name, ArgumentType argumentType)
+
+class net.fabricmc.fabric.api.client.command.v2.ClientCommands
+    static LiteralArgumentBuilder literal(String name)
+    static ArgumentBuilder argument(String name, ArgumentType argumentType)
+
+class CommandDispatcher
+    LiteralCommandNode register(LiteralArgumentBuilder command)
+
+class ArgumentBuilder
+    ArgumentBuilder then(ArgumentBuilder argument)
+    ArgumentBuilder executes(Command command)
+
+class LiteralArgumentBuilder extends ArgumentBuilder
+
+# ------------------------------------------------------------------------------------------------------------- #
+# Fabric Events
 
 interface ClientTickEvents$EndTick
     void onEndTick(Minecraft client)
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Join
 interface ClientPlayConnectionEvents$Join
     void onPlayReady(ClientPacketListener handler, PacketSender sender, Minecraft client)
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Disconnect
 interface ClientPlayConnectionEvents$Disconnect
     void onPlayDisconnect(ClientPacketListener handler, Minecraft client)
 
-# ------------------------------------------------------------------------------------------------------------- #
+interface ClientCommandRegistrationCallback
+    void register(CommandDispatcher dispatcher, CommandBuildContext context)
 
-Block extends BlockBehaviour
+# ------------------------------------------------------------------------------------------------------------- #
+# Blocks
+
+class Block extends BlockBehaviour
     BlockState method_9564/defaultBlockState()
 
-BlockBehaviour
+class BlockBehaviour
     + boolean field_23159/hasCollision
 
-# ------------------------------------------------------------------------------------------------------------- #
+class BlockPos extends Vec3i
+    BlockPos method_10069/offset(int x, int y, int z)
+    BlockPos method_10093/relative(Direction direction)
+    BlockPos method_10086/above(int distance)
+    BlockPos method_10074/below()
 
-Minecraft
+class Direction
+    static Direction field_11036/UP
+    static Direction field_11033/DOWN
+    static Direction field_11034/EAST
+    static Direction field_11035/SOUTH
+    static Direction field_11039/WEST
+    static Direction field_11043/NORTH
+
+class BlockState extends BlockBehaviour$BlockStateBase
+
+class BlockBehaviour$BlockStateBase
+    boolean method_27852/is(Block block)
+    Block method_26204/getBlock()
+    boolean method_26215/isAir()
+
+class Blocks
+    static Block field_16330/LECTERN
+    static Block field_10124/AIR
+
+# ------------------------------------------------------------------------------------------------------------- #
+# Core
+
+class Minecraft
     static Minecraft method_1551/getInstance()
 
     ? Screen field_1755/screen
@@ -150,7 +244,62 @@ Minecraft
 
     void method_1507/setScreen(Screen screen)
 
-Entity
+class Vec3
+    <init>(double x, double y, double z)
+    double method_10216/x()
+    double method_10214/y()
+    double method_10215/z()
+    static Vec3 method_24955/atBottomCenterOf(Vec3i pos)
+    static Vec3 method_24953/atCenterOf(Vec3i pos)
+
+class HitResult
+    HitResult$Type method_17783/getType()
+
+    class HitResult$Type
+        static HitResult$Type field_1331/ENTITY
+        static HitResult$Type field_1332/BLOCK
+        static HitResult$Type field_1333/MISS
+
+class BlockHitResult extends HitResult
+    <init>(Vec3 hitPoint, Direction side, BlockPos hitBlockPos, boolean inside)
+    BlockPos method_17777/getBlockPos()
+    Direction method_17780/getDirection()
+
+class EntityHitResult extends HitResult
+    Entity method_17782/getEntity()
+
+class InteractionResult
+    static InteractionResult field_5814/FAIL
+
+class Vec3i
+    int method_10263/getX()
+    int method_10264/getY()
+    int method_10260/getZ()
+    boolean method_19771/closerThan(Vec3i target, double distance)
+
+class ClickType
+    static ClickType field_7790/PICKUP
+    static ClickType field_7791/SWAP
+
+class MultiPlayerGameMode
+    InteractionResult method_2896/useItemOn(LocalPlayer player, InteractionHand hand, BlockHitResult hit)
+    InteractionResult method_2896/useItemOn(LocalPlayer player, ClientLevel clientWorld, InteractionHand hand, BlockHitResult hit)
+    InteractionResult method_2905/interact(Player player, Entity target, InteractionHand hand)
+    void method_2906/handleInventoryMouseClick(int containerId, int slot, int otherSlot, ClickType clickType, Player player)
+    boolean method_2902/continueDestroyBlock(BlockPos pos, Direction side)
+
+class InteractionHand
+    static InteractionHand field_5808/MAIN_HAND
+    static InteractionHand field_5810/OFF_HAND
+
+class Mth
+    static float method_15393/wrapDegrees(float angle)
+    static double method_15349/atan2(double y, double x)
+
+# ------------------------------------------------------------------------------------------------------------- #
+# Entities
+
+class Entity
     boolean method_5765/isPassenger()
     BlockPos method_24515/blockPosition()
     float method_5739/distanceTo(Entity entity)
@@ -164,76 +313,45 @@ Entity
     float method_36455/getXRot()
     void method_36457/setXRot(float pitch)
 
-import net.minecraft.class_2183$class_2184/net.minecraft.commands.arguments.EntityAnchorArgument$Anchor
-import net.minecraft.class_243/net.minecraft.world.phys.Vec3
-import net.minecraft.class_1309/net.minecraft.world.entity.LivingEntity
-
-EntityAnchorArgument$Anchor
+class EntityAnchorArgument$Anchor
     static EntityAnchorArgument$Anchor field_9851/EYES
     Vec3 method_9302/apply(Entity entity)
 
-LivingEntity extends Entity
+class LivingEntity extends Entity
     ItemStack method_6047/getMainHandItem()
     void method_5702/lookAt(EntityAnchorArgument$Anchor anchor, Vec3 target)
     void method_5847/setYHeadRot(float headYaw)
 
-Vec3
-    <init>(double x, double y, double z)
-    double method_10216/x()
-    double method_10214/y()
-    double method_10215/z()
-    static Vec3 method_24955/atBottomCenterOf(Vec3i pos)
-    static Vec3 method_24953/atCenterOf(Vec3i pos)
-
-HitResult
-    HitResult$Type method_17783/getType()
-
-    HitResult$Type
-        static HitResult$Type field_1331/ENTITY
-        static HitResult$Type field_1332/BLOCK
-        static HitResult$Type field_1333/MISS
-
-BlockHitResult extends HitResult
-    <init>(Vec3 hitPoint, Direction side, BlockPos hitBlockPos, boolean inside)
-    BlockPos method_17777/getBlockPos()
-    Direction method_17780/getDirection()
-
-EntityHitResult extends HitResult
-    Entity method_17782/getEntity()
-
-
-Villager extends Entity
+class Villager extends Entity
     VillagerData method_7231/getVillagerData()
 
-BlockPos extends Vec3i
-    BlockPos method_10069/offset(int x, int y, int z)
-    BlockPos method_10093/relative(Direction direction)
-    BlockPos method_10086/above(int distance)
-    BlockPos method_10074/below()
+class Player extends LivingEntity
+    Inventory method_31548/getInventory()
+    InventoryMenu field_7498/inventoryMenu
+    AbstractContainerMenu field_7512/containerMenu
 
-Direction
-    static Direction field_11036/UP
-    static Direction field_11033/DOWN
-    static Direction field_11034/EAST
-    static Direction field_11035/SOUTH
-    static Direction field_11039/WEST
-    static Direction field_11043/NORTH
+class LocalPlayer extends Player
+    void method_7353/displayClientMessage(Component message, boolean actionBar)
+    ClientLevel method_73183/level()
+    ClientLevel method_37908/getLevel()
+    ClientLevel field_17892/clientLevel
 
-ClientLevel extends Level
+# ------------------------------------------------------------------------------------------------------------- #
+# World
+
+class ClientLevel extends Level
     Iterable<Entity> method_18112/entitiesForRendering()
 
-BlockState extends BlockBehaviour$BlockStateBase
+class Level
+    BlockState method_8320/getBlockState(BlockPos pos)
+    boolean method_8501/setBlockAndUpdate(BlockPos pos, BlockState state)
+    void method_8486/playLocalSound(double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay)
+    RegistryAccess method_30349/registryAccess()
 
-BlockBehaviour$BlockStateBase
-    boolean method_27852/is(Block block)
-    Block method_26204/getBlock()
-    boolean method_26215/isAir()
+# ------------------------------------------------------------------------------------------------------------- #
+# GUI
 
-Blocks
-    static Block field_16330/LECTERN
-    static Block field_10124/AIR
-
-BookViewScreen extends Screen
+class BookViewScreen extends Screen
     * <init>(BookViewScreen$BookAccess bookAccess)
     * protected boolean method_17789/forcePage(int page)
     * protected void method_25426/init()
@@ -242,74 +360,26 @@ BookViewScreen extends Screen
     * protected void method_34494/closeScreen()
     void method_17554/setBookAccess(BookViewScreen$BookAccess bookAccess)
 
-# ------------------------------------------------------------------------------------------------------------- #
+    class BookViewScreen$BookAccess
+        <init>(List<Component> pages)
 
-ClientboundMerchantOffersPacket extends Packet
-    boolean method_20722/canRestock()
-    List<MerchantOffer> method_17590/getOffers()
-
-ClientboundOpenScreenPacket extends Packet
-    MenuType method_17593/getType()
-    int method_17592/getContainerId()
-
-ServerboundContainerClosePacket extends Packet
-    <init>(int containerId)
-
-ServerboundSetCarriedItemPacket extends Packet
-    <init>(int slotId)
-
-import net.minecraft.class_2863/net.minecraft.network.protocol.game.ServerboundSelectTradePacket
-
-ServerboundSelectTradePacket extends Packet
-    <init>(int index)
-
-MenuType
+class MenuType
     static MenuType field_17340/MERCHANT
 
-# ------------------------------------------------------------------------------------------------------------- #
-
-Items
-    static Item field_8529/BOOK
-    static Item field_8598/ENCHANTED_BOOK
-    static Item field_8687/EMERALD
-    static Item field_16312/LECTERN
-
-MerchantOffer
-    ItemStack method_8250/getResult()
-    ItemStack method_19272/getCostA()
-    ItemStack method_8247/getCostB()
-
-import net.minecraft.class_1657/net.minecraft.world.entity.player.Player
-
-Player extends LivingEntity
-    Inventory method_31548/getInventory()
-    InventoryMenu field_7498/inventoryMenu
-    AbstractContainerMenu field_7512/containerMenu
-
-LocalPlayer extends Player
-    void method_7353/displayClientMessage(Component message, boolean actionBar)
-    ClientLevel method_73183/level()
-    ClientLevel method_37908/getLevel()
-    ClientLevel field_17892/clientLevel
-
-import net.minecraft.class_1723/net.minecraft.world.inventory.InventoryMenu
-import net.minecraft.class_1703/net.minecraft.world.inventory.AbstractContainerMenu
-import net.minecraft.class_1735/net.minecraft.world.inventory.Slot
-
-Slot
+class Slot
     Container field_7871/container
 
-InventoryMenu extends AbstractContainerMenu
+class InventoryMenu extends AbstractContainerMenu
 
-AbstractContainerMenu
+class AbstractContainerMenu
     int field_7763/containerId
     Slot method_7611/getSlot(int slotId)
 
-Container
+class Container
     int method_18861/countItem(Item item)
     ItemStack method_5438/getItem(int index)
 
-Inventory extends Container
+class Inventory extends Container
     void method_61496/setSelectedSlot(int slot)
     int field_7545/selected
     int method_7386/getSuitableHotbarSlot()
@@ -318,52 +388,64 @@ Inventory extends Container
     static int field_30639/SLOT_OFFHAND
     static int field_30638/INVENTORY_SIZE
 
-InteractionResult
-    static InteractionResult field_5814/FAIL
+interface BookViewScreen$BookAccess
+    int method_17560/getPageCount()
+    Component method_17563/getPage(int index)
 
-Level
-    BlockState method_8320/getBlockState(BlockPos pos)
-    boolean method_8501/setBlockAndUpdate(BlockPos pos, BlockState state)
-    void method_8486/playLocalSound(double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay)
-    RegistryAccess method_30349/registryAccess()
+# ------------------------------------------------------------------------------------------------------------- #
+# Networking
 
-SoundEvents
-    static SoundEvent field_14709/PLAYER_LEVELUP
+class ClientboundMerchantOffersPacket extends Packet
+    boolean method_20722/canRestock()
+    List<MerchantOffer> method_17590/getOffers()
 
-SoundSource
-    static SoundSource field_15254/NEUTRAL
+class ClientboundOpenScreenPacket extends Packet
+    MenuType method_17593/getType()
+    int method_17592/getContainerId()
 
-Holder
-    boolean method_40225/is(ResourceKey resourceKey)
-    boolean method_40220/is(TagKey resourceKey)
-    String method_55840/getRegisteredName()
+class ServerboundContainerClosePacket extends Packet
+    <init>(int containerId)
 
-    Holder$Reference extends Holder
-        ResourceKey method_40237/key()
-        Object comp_349/value()
+class ServerboundSetCarriedItemPacket extends Packet
+    <init>(int slotId)
 
-EnchantmentTags
-    static TagKey field_51545/TRADEABLE
+class ServerboundSelectTradePacket extends Packet
+    <init>(int index)
 
-DataComponentHolder
-    Object method_58694/get(DataComponentType type)
+class ClientPacketListener extends ClientCommonPacketListenerImpl
 
-CustomData
-    CompoundTag method_57461/copyTag()
+class ClientCommonPacketListenerImpl
+    void method_2883/send(Packet packet)
 
-DataComponents
-    static DataComponentType field_49628/CUSTOM_DATA
-    static DataComponentType field_49633/ENCHANTMENTS
-    static DataComponentType field_49643/STORED_ENCHANTMENTS
+class net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+    static void send(CustomPacketPayload customPayload)
 
-Item
+class de.maxhenkel.tradecycling.net.CycleTradesPacket extends CustomPacketPayload
+    <init>()
+
+class de.maxhenkel.tradecycling.TradeCyclingClientMod
+    static void sendCycleTradesPacket()
+
+# ------------------------------------------------------------------------------------------------------------- #
+# Items
+
+class Items
+    static Item field_8529/BOOK
+    static Item field_8598/ENCHANTED_BOOK
+    static Item field_8687/EMERALD
+    static Item field_16312/LECTERN
+
+class MerchantOffer
+    ItemStack method_8250/getResult()
+    ItemStack method_19272/getCostA()
+    ItemStack method_8247/getCostB()
+
+class Item
     ItemStack method_7854/getDefaultInstance()
 
-import net.minecraft.class_1743/net.minecraft.world.item.AxeItem
+class AxeItem extends Item
 
-AxeItem extends Item
-
-ItemStack extends DataComponentHolder
+class ItemStack extends DataComponentHolder
     CompoundTag method_7969/getTag()
     ItemEnchantments method_58657/getEnchantments()
     boolean method_31574/is(Item item)
@@ -377,85 +459,144 @@ ItemStack extends DataComponentHolder
 
     static boolean method_7973/matches(ItemStack stackA, ItemStack stackB)
 
-ItemEnchantments
-    Set<Object2IntMap$Entry<Holder>> method_57539/entrySet()
+# ------------------------------------------------------------------------------------------------------------- #
+# Sounds
 
-Enchantment
-    boolean method_25949/isTradeable()
-    int method_8183/getMaxLevel()
+class SoundEvents
+    static SoundEvent field_14709/PLAYER_LEVELUP
 
-Enchantments
-    # 1.17
-    static Enchantment field_9131/EFFICIENCY
-    # 1.21
-    static ResourceKey field_9131/EFFICIENCY
+class SoundSource
+    static SoundSource field_15254/NEUTRAL
 
-EnchantmentHelper
-    static int method_8225/getItemEnchantmentLevel(Enchantment enchantment, ItemStack stack)
+# ------------------------------------------------------------------------------------------------------------- #
+# Data
 
-VillagerData
+class Holder
+    boolean method_40225/is(ResourceKey resourceKey)
+    boolean method_40220/is(TagKey resourceKey)
+    String method_55840/getRegisteredName()
+
+    Holder$Reference extends Holder
+        ResourceKey method_40237/key()
+        Object comp_349/value()
+
+class EnchantmentTags
+    static TagKey field_51545/TRADEABLE
+
+class DataComponentHolder
+    Object method_58694/get(DataComponentType type)
+
+class CustomData
+    CompoundTag method_57461/copyTag()
+
+class DataComponents
+    static DataComponentType field_49628/CUSTOM_DATA
+    static DataComponentType field_49633/ENCHANTMENTS
+    static DataComponentType field_49643/STORED_ENCHANTMENTS
+
+class VillagerData
     Holder comp_3521/profession()
     VillagerProfession method_16924/getProfession()
 
-VillagerProfession
+class VillagerProfession
     static VillagerProfession field_17060/LIBRARIAN
     static ResourceKey field_17060/LIBRARIAN
 
     static VillagerProfession field_17051/NONE
     static ResourceKey field_17051/NONE
 
-Language
+class Registries
+    static ResourceKey field_41265/ENCHANTMENT
+
+class Registry
+    ResourceKey method_30517/key()
+    Identifier method_10221/getKey(Object resource)
+    Holder method_47983/wrapAsHolder(Object value)
+
+    static Registry field_11160/ENCHANTMENT
+
+class BuiltInRegistries
+    static Registry field_41176/ENCHANTMENT
+
+class RegistryAccess
+    Registry method_30530/registryOrThrow/lookupOrThrow(ResourceKey key)
+
+class HolderSet$Named
+    Stream<Holder> method_40239/stream()
+
+class Tag
+    byte method_10711/getId()
+
+class CompoundTag extends Tag
+    String method_10558/getString(String name)
+    String method_68564/getStringOr(String name, String or)
+
+    boolean method_33133/isEmpty()
+
+    CompoundTag method_10562/getCompound(String name)
+    CompoundTag method_68568/getCompoundOrEmpty(String name)
+
+    Set<String> method_10541/keySet()
+
+    List<Tag> method_10554/getList(String name, int type)
+    List<Tag> method_68569/getListOrEmpty(String name)
+
+    short method_10568/getShort(String name)
+    short method_68565/getShortOr(String name, short or)
+
+    boolean method_10545/contains(String name)
+
+    String toString()
+
+class Identifier
+    static Identifier method_12829/tryParse(String location)
+    static Identifier method_43902/tryBuild(String namespace, String path)
+    String method_12836/getNamespace()
+    String method_12832/getPath()
+    String toString()
+
+# ------------------------------------------------------------------------------------------------------------- #
+# Enchantments
+
+class ItemEnchantments
+    Set<Object2IntMap$Entry<Holder>> method_57539/entrySet()
+
+class Enchantment
+    boolean method_25949/isTradeable()
+    int method_8183/getMaxLevel()
+
+class Enchantments
+    # 1.17
+    static Enchantment field_9131/EFFICIENCY
+    # 1.21
+    static ResourceKey field_9131/EFFICIENCY
+
+class EnchantmentHelper
+    static int method_8225/getItemEnchantmentLevel(Enchantment enchantment, ItemStack stack)
+
+# ------------------------------------------------------------------------------------------------------------- #
+# Texts
+
+class Language
     static Language method_10517/getInstance()
     String method_4679/getOrDefault(String translationKey)
     String method_48307/getOrDefault(String translationKey)
 
-ClientPacketListener
-    void method_2883/send(Packet packet)
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-import net.minecraft.class_2382/net.minecraft.core.Vec3i
-
-Vec3i
-    int method_10263/getX()
-    int method_10264/getY()
-    int method_10260/getZ()
-    boolean method_19771/closerThan(Vec3i target, double distance)
-
-import net.minecraft.class_1713/net.minecraft.world.inventory.ClickType
-
-ClickType
-    static ClickType field_7790/PICKUP
-    static ClickType field_7791/SWAP
-
-MultiPlayerGameMode
-    InteractionResult method_2896/useItemOn(LocalPlayer player, InteractionHand hand, BlockHitResult hit)
-    InteractionResult method_2896/useItemOn(LocalPlayer player, ClientLevel clientWorld, InteractionHand hand, BlockHitResult hit)
-    InteractionResult method_2905/interact(Player player, Entity target, InteractionHand hand)
-    void method_2906/handleInventoryMouseClick(int containerId, int slot, int otherSlot, ClickType clickType, Player player)
-    boolean method_2902/continueDestroyBlock(BlockPos pos, Direction side)
-
-InteractionHand
-    static InteractionHand field_5808/MAIN_HAND
-    static InteractionHand field_5810/OFF_HAND
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-Component
+class Component
     MutableComponent method_27662/plainCopy()
     static MutableComponent method_43469/translatable(String key, Object[] args)
     static Component method_30163/nullToEmpty(String text)
 
-MutableComponent extends Component
+class MutableComponent extends Component
     MutableComponent method_27692/withStyle(ChatFormatting formatting)
     MutableComponent method_27696/withStyle(Style style)
     MutableComponent method_27693/append(String string)
     MutableComponent method_10852/append(Component component)
 
-TranslatableContents extends MutableComponent
+class TranslatableContents extends MutableComponent
     <init>(String key, Object[] args)
 
-ChatFormatting
+class ChatFormatting
     static ChatFormatting field_1051/OBFUSCATED
     static ChatFormatting field_1054/YELLOW
     static ChatFormatting field_1055/STRIKETHROUGH
@@ -479,170 +620,30 @@ ChatFormatting
     static ChatFormatting field_1079/DARK_RED
     static ChatFormatting field_1080/GRAY
 
-Style
+class Style
     static Style field_24360/EMPTY
     Style method_10958/withClickEvent(ClickEvent event)
     Style method_10949/withHoverEvent(HoverEvent event)
     Style method_10977/withColor(ChatFormatting formatting)
 
-# ------------------------------------------------------------------------------------------------------------- #
-
-Registries
-    static ResourceKey field_41265/ENCHANTMENT
-
-Registry
-    ResourceKey method_30517/key()
-    Identifier method_10221/getKey(Object resource)
-    Holder method_47983/wrapAsHolder(Object value)
-
-    static Registry field_11160/ENCHANTMENT
-
-BuiltInRegistries
-    static Registry field_41176/ENCHANTMENT
-
-RegistryAccess
-    Registry method_30530/registryOrThrow/lookupOrThrow(ResourceKey key)
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-HolderSet$Named
-    Stream<Holder> method_40239/stream()
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-ClickEvent
+class ClickEvent
     <init>(ClickEvent$Action action, String value)
 
-    ClickEvent$Action
+    class ClickEvent$Action
         static ClickEvent$Action field_11750/RUN_COMMAND
         static ClickEvent$Action field_11748/CHANGE_PAGE
 
-    ClickEvent$RunCommand extends ClickEvent
+    class ClickEvent$RunCommand extends ClickEvent
         <init>(String command)
 
-    ClickEvent$ChangePage extends ClickEvent
+    class ClickEvent$ChangePage extends ClickEvent
         <init>(int page)
 
-HoverEvent
+class HoverEvent
     <init>(HoverEvent$Action action, Object contents)
 
-    HoverEvent$Action
+    class HoverEvent$Action
         static HoverEvent$Action field_24342/SHOW_TEXT
 
-    HoverEvent$ShowText extends HoverEvent
+    class HoverEvent$ShowText extends HoverEvent
         <init>(Component text)
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-Event
-    void register(Object listener)
-
-net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
-    static Event EVENT
-
-interface net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
-    void register(CommandDispatcher dispatcher, CommandBuildContext context)
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-ResourceOrTagArgument extends ArgumentType
-    static ResourceOrTagArgument method_45637/resourceOrTag(CommandBuildContext context, ResourceKey registryKey)
-
-    ResourceOrTagArgument$Result
-        Either method_45647/unwrap()
-        Optional method_45648/cast(ResourceKey registryKey)
-
-ItemEnchantmentArgument
-    static ArgumentType method_9336/enchantment()
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-net.fabricmc.fabric.api.client.command.v1.ClientCommandManager
-    static CommandDispatcher DISPATCHER
-    static LiteralArgumentBuilder literal(String name)
-    static ArgumentBuilder argument(String name, ArgumentType argumentType)
-
-net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
-    static LiteralArgumentBuilder literal(String name)
-    static ArgumentBuilder argument(String name, ArgumentType argumentType)
-
-CommandDispatcher
-    LiteralCommandNode register(LiteralArgumentBuilder command)
-
-ArgumentBuilder
-    ArgumentBuilder then(ArgumentBuilder argument)
-    ArgumentBuilder executes(Command command)
-
-LiteralArgumentBuilder extends ArgumentBuilder
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-Tag
-    byte method_10711/getId()
-
-CompoundTag extends Tag
-    String method_10558/getString(String name)
-    String method_68564/getStringOr(String name, String or)
-
-    boolean method_33133/isEmpty()
-
-    CompoundTag method_10562/getCompound(String name)
-    CompoundTag method_68568/getCompoundOrEmpty(String name)
-
-    Set<String> method_10541/keySet()
-
-    List<Tag> method_10554/getList(String name, int type)
-    List<Tag> method_68569/getListOrEmpty(String name)
-
-    short method_10568/getShort(String name)
-    short method_68565/getShortOr(String name, short or)
-
-    boolean method_10545/contains(String name)
-
-    String toString()
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-Identifier
-    static Identifier method_12829/tryParse(String location)
-    static Identifier method_43902/tryBuild(String namespace, String path)
-    String method_12836/getNamespace()
-    String method_12832/getPath()
-    String toString()
-
-KeyMapping
-    <init>(String id, InputConstants$Type type, int keyCode, KeyMapping$Category category)
-    <init>(String id, InputConstants$Type type, int keyCode, String categoryId)
-
-    boolean method_1436/consumeClick()
-
-KeyMapping$Category
-    static KeyMapping$Category method_74698/register(Identifier id)
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-BookViewScreen$BookAccess
-    <init>(List<Component> pages)
-
-interface BookViewScreen$BookAccess
-    int method_17560/getPageCount()
-    Component method_17563/getPage(int index)
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-    static void send(CustomPacketPayload customPayload)
-
-de.maxhenkel.tradecycling.net.CycleTradesPacket extends CustomPacketPayload
-    <init>()
-
-de.maxhenkel.tradecycling.TradeCyclingClientMod
-    static void sendCycleTradesPacket()
-
-# ------------------------------------------------------------------------------------------------------------- #
-
-import net.minecraft.class_3532/net.minecraft.util.Mth
-
-Mth
-    static float method_15393/wrapDegrees(float angle)
-    static double method_15349/atan2(double y, double x)

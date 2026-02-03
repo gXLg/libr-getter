@@ -31,7 +31,7 @@ public class LanguageWrapper extends R.RWrapper<LanguageWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.locale.LanguageWrapper getInstance(){
-        return dev.gxlg.multiversion.gen.net.minecraft.locale.LanguageWrapper.inst(clazz.mthd("method_10517/getInstance", dev.gxlg.multiversion.gen.net.minecraft.locale.LanguageWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.locale.LanguageWrapper.inst(clazz.mthd("method_10517/getInstance", dev.gxlg.multiversion.gen.net.minecraft.locale.LanguageWrapper.clazz.self()).invk());
     }
 
     public static class Interceptor {

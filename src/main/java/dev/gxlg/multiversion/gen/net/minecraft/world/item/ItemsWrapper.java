@@ -23,19 +23,19 @@ public class ItemsWrapper extends R.RWrapper<ItemsWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper BOOK() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.inst(clazz.fld("field_8529/BOOK", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.inst(clazz.fld("field_8529/BOOK", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper ENCHANTED_BOOK() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.inst(clazz.fld("field_8598/ENCHANTED_BOOK", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.inst(clazz.fld("field_8598/ENCHANTED_BOOK", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper EMERALD() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.inst(clazz.fld("field_8687/EMERALD", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.inst(clazz.fld("field_8687/EMERALD", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper LECTERN() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.inst(clazz.fld("field_16312/LECTERN", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.inst(clazz.fld("field_16312/LECTERN", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

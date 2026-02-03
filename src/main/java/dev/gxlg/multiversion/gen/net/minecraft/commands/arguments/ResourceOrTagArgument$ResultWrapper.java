@@ -23,7 +23,7 @@ public class ResourceOrTagArgument$ResultWrapper extends R.RWrapper<ResourceOrTa
     }
 
     public java.util.Optional cast(dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper registryKey){
-        return (java.util.Optional) clazz.inst(this.instance).mthd("method_45648/cast", java.util.Optional.class, dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).invk(registryKey.unwrap());
+        return (java.util.Optional) clazz.inst(this.instance).mthd("method_45648/cast", java.util.Optional.class, dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz.self()).invk(registryKey.unwrap());
     }
 
     public static ResourceOrTagArgument$ResultWrapper inst(Object instance) {

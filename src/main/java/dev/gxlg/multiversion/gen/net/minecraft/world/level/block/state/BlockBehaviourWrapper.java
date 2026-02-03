@@ -14,12 +14,12 @@ public class BlockBehaviourWrapper extends R.RWrapper<BlockBehaviourWrapper> {
 
     private int superCall = 0;
 
-    private final R.RDeclField hasCollisionAccessibleField;
+    private final R.RField hasCollisionAccessibleField;
 
     protected BlockBehaviourWrapper(Object instance) {
         super(instance);
         R.RInstance rInstance = clazz.inst(instance);
-        this.hasCollisionAccessibleField = rInstance.dfld("field_23159/hasCollision", boolean.class);
+        this.hasCollisionAccessibleField = rInstance.fld("field_23159/hasCollision", boolean.class);
     }
 
     public boolean getHasCollisionAccessibleField() {

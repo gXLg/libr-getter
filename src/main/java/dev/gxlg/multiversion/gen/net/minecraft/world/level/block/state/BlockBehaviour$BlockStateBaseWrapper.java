@@ -19,11 +19,11 @@ public class BlockBehaviour$BlockStateBaseWrapper extends R.RWrapper<BlockBehavi
     }
 
     public boolean is(dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper block){
-        return (boolean) clazz.inst(this.instance).mthd("method_27852/is", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.clazz).invk(block.unwrap());
+        return (boolean) clazz.inst(this.instance).mthd("method_27852/is", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.clazz.self()).invk(block.unwrap());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper getBlock(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.inst(clazz.inst(this.instance).mthd("method_26204/getBlock", dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.inst(clazz.inst(this.instance).mthd("method_26204/getBlock", dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.clazz.self()).invk());
     }
 
     public boolean isAir(){

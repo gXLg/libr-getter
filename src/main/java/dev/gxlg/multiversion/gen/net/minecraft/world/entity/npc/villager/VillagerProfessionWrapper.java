@@ -23,19 +23,19 @@ public class VillagerProfessionWrapper extends R.RWrapper<VillagerProfessionWrap
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper LIBRARIAN() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.inst(clazz.fld("field_17060/LIBRARIAN", dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.inst(clazz.fld("field_17060/LIBRARIAN", dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper LIBRARIAN2() {
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.fld("field_17060/LIBRARIAN", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.fld("field_17060/LIBRARIAN", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper NONE() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.inst(clazz.fld("field_17051/NONE", dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.inst(clazz.fld("field_17051/NONE", dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper NONE2() {
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.fld("field_17051/NONE", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.fld("field_17051/NONE", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

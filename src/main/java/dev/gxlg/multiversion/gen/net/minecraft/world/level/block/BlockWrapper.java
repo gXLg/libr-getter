@@ -19,7 +19,7 @@ public class BlockWrapper extends dev.gxlg.multiversion.gen.net.minecraft.world.
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper defaultBlockState(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.inst(clazz.inst(this.instance).mthd("method_9564/defaultBlockState", dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.inst(clazz.inst(this.instance).mthd("method_9564/defaultBlockState", dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.clazz.self()).invk());
     }
 
     public static BlockWrapper inst(Object instance) {

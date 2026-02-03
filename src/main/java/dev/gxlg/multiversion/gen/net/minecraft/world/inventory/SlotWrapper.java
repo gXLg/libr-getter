@@ -19,7 +19,7 @@ public class SlotWrapper extends R.RWrapper<SlotWrapper> {
     protected SlotWrapper(Object instance) {
         super(instance);
         R.RInstance rInstance = clazz.inst(instance);
-        this.containerField = rInstance.fld("field_7871/container", dev.gxlg.multiversion.gen.net.minecraft.world.ContainerWrapper.clazz);
+        this.containerField = rInstance.fld("field_7871/container", dev.gxlg.multiversion.gen.net.minecraft.world.ContainerWrapper.clazz.self());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.ContainerWrapper getContainerField() {

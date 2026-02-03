@@ -19,15 +19,15 @@ public class StyleWrapper extends R.RWrapper<StyleWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper withClickEvent(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEventWrapper event){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.inst(clazz.inst(this.instance).mthd("method_10958/withClickEvent", dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEventWrapper.clazz).invk(event.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.inst(clazz.inst(this.instance).mthd("method_10958/withClickEvent", dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEventWrapper.clazz.self()).invk(event.unwrap()));
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper withHoverEvent(dev.gxlg.multiversion.gen.net.minecraft.network.chat.HoverEventWrapper event){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.inst(clazz.inst(this.instance).mthd("method_10949/withHoverEvent", dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.network.chat.HoverEventWrapper.clazz).invk(event.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.inst(clazz.inst(this.instance).mthd("method_10949/withHoverEvent", dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.network.chat.HoverEventWrapper.clazz.self()).invk(event.unwrap()));
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper withColor(dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper formatting){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.inst(clazz.inst(this.instance).mthd("method_10977/withColor", dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).invk(formatting.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.inst(clazz.inst(this.instance).mthd("method_10977/withColor", dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).invk(formatting.unwrap()));
     }
 
     public static StyleWrapper inst(Object instance) {
@@ -35,7 +35,7 @@ public class StyleWrapper extends R.RWrapper<StyleWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper EMPTY() {
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.inst(clazz.fld("field_24360/EMPTY", dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.inst(clazz.fld("field_24360/EMPTY", dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

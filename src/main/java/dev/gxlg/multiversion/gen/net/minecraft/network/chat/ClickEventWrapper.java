@@ -15,7 +15,7 @@ public class ClickEventWrapper extends R.RWrapper<ClickEventWrapper> {
     private int superCall = 0;
 
     public ClickEventWrapper(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper action, String value) {
-        this(clazz.constr(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper.clazz, String.class).newInst(action.unwrap(), value).self());
+        this(clazz.constr(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper.clazz.self(), String.class).newInst(action.unwrap(), value).self());
     }
 
     protected ClickEventWrapper(Object instance) {

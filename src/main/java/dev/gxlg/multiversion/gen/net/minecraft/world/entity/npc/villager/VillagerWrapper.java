@@ -19,7 +19,7 @@ public class VillagerWrapper extends dev.gxlg.multiversion.gen.net.minecraft.wor
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerDataWrapper getVillagerData(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerDataWrapper.inst(clazz.inst(this.instance).mthd("method_7231/getVillagerData", dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerDataWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerDataWrapper.inst(clazz.inst(this.instance).mthd("method_7231/getVillagerData", dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerDataWrapper.clazz.self()).invk());
     }
 
     public static VillagerWrapper inst(Object instance) {

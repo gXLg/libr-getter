@@ -23,11 +23,11 @@ public class BlocksWrapper extends R.RWrapper<BlocksWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper LECTERN() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.inst(clazz.fld("field_16330/LECTERN", dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.inst(clazz.fld("field_16330/LECTERN", dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper AIR() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.inst(clazz.fld("field_10124/AIR", dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.inst(clazz.fld("field_10124/AIR", dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlockWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

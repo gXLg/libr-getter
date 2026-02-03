@@ -19,19 +19,19 @@ public class LocalPlayerWrapper extends dev.gxlg.multiversion.gen.net.minecraft.
     protected LocalPlayerWrapper(Object instance) {
         super(instance);
         R.RInstance rInstance = clazz.inst(instance);
-        this.clientLevelField = rInstance.fld("field_17892/clientLevel", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.clazz);
+        this.clientLevelField = rInstance.fld("field_17892/clientLevel", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.clazz.self());
     }
 
     public void displayClientMessage(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper message, boolean actionBar){
-        clazz.inst(this.instance).mthd("method_7353/displayClientMessage", void.class, dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz, boolean.class).invk(message.unwrap(), actionBar);
+        clazz.inst(this.instance).mthd("method_7353/displayClientMessage", void.class, dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz.self(), boolean.class).invk(message.unwrap(), actionBar);
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper level(){
-        return dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.inst(clazz.inst(this.instance).mthd("method_73183/level", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.inst(clazz.inst(this.instance).mthd("method_73183/level", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.clazz.self()).invk());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper getLevel(){
-        return dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.inst(clazz.inst(this.instance).mthd("method_37908/getLevel", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.inst(clazz.inst(this.instance).mthd("method_37908/getLevel", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.clazz.self()).invk());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper getClientLevelField() {

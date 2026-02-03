@@ -21,12 +21,12 @@ public class PlayerWrapper extends dev.gxlg.multiversion.gen.net.minecraft.world
     protected PlayerWrapper(Object instance) {
         super(instance);
         R.RInstance rInstance = clazz.inst(instance);
-        this.inventoryMenuField = rInstance.fld("field_7498/inventoryMenu", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.InventoryMenuWrapper.clazz);
-        this.containerMenuField = rInstance.fld("field_7512/containerMenu", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.AbstractContainerMenuWrapper.clazz);
+        this.inventoryMenuField = rInstance.fld("field_7498/inventoryMenu", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.InventoryMenuWrapper.clazz.self());
+        this.containerMenuField = rInstance.fld("field_7512/containerMenu", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.AbstractContainerMenuWrapper.clazz.self());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.entity.player.InventoryWrapper getInventory(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.player.InventoryWrapper.inst(clazz.inst(this.instance).mthd("method_31548/getInventory", dev.gxlg.multiversion.gen.net.minecraft.world.entity.player.InventoryWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.player.InventoryWrapper.inst(clazz.inst(this.instance).mthd("method_31548/getInventory", dev.gxlg.multiversion.gen.net.minecraft.world.entity.player.InventoryWrapper.clazz.self()).invk());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.inventory.InventoryMenuWrapper getInventoryMenuField() {

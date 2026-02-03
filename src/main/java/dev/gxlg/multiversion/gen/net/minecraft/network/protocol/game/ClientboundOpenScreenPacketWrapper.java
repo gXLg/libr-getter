@@ -19,7 +19,7 @@ public class ClientboundOpenScreenPacketWrapper extends dev.gxlg.multiversion.ge
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.inventory.MenuTypeWrapper getType(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.inventory.MenuTypeWrapper.inst(clazz.inst(this.instance).mthd("method_17593/getType", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.MenuTypeWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.inventory.MenuTypeWrapper.inst(clazz.inst(this.instance).mthd("method_17593/getType", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.MenuTypeWrapper.clazz.self()).invk());
     }
 
     public int getContainerId(){

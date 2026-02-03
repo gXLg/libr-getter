@@ -23,15 +23,15 @@ public class ClientCommandManagerWrapper extends R.RWrapper<ClientCommandManager
     }
 
     public static dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper DISPATCHER() {
-        return dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper.inst(clazz.fld("DISPATCHER", dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper.inst(clazz.fld("DISPATCHER", dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper literal(String name){
-        return dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.inst(clazz.mthd("literal", dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.clazz, String.class).invk(name));
+        return dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.inst(clazz.mthd("literal", dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper.clazz.self(), String.class).invk(name));
     }
 
     public static dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper argument(String name, dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper argumentType){
-        return dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper.inst(clazz.mthd("argument", dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper.clazz, String.class, dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper.clazz).invk(name, argumentType.unwrap()));
+        return dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper.inst(clazz.mthd("argument", dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper.clazz.self(), String.class, dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper.clazz.self()).invk(name, argumentType.unwrap()));
     }
 
     public static class Interceptor {

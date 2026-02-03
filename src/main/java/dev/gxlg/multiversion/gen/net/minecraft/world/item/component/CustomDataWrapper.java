@@ -19,7 +19,7 @@ public class CustomDataWrapper extends R.RWrapper<CustomDataWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper copyTag(){
-        return dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.inst(clazz.inst(this.instance).mthd("method_57461/copyTag", dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.inst(clazz.inst(this.instance).mthd("method_57461/copyTag", dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.clazz.self()).invk());
     }
 
     public static CustomDataWrapper inst(Object instance) {

@@ -23,15 +23,15 @@ public class HitResult$TypeWrapper extends R.RWrapper<HitResult$TypeWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper ENTITY() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.inst(clazz.fld("field_1331/ENTITY", dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.inst(clazz.fld("field_1331/ENTITY", dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper BLOCK() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.inst(clazz.fld("field_1332/BLOCK", dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.inst(clazz.fld("field_1332/BLOCK", dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper MISS() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.inst(clazz.fld("field_1333/MISS", dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.inst(clazz.fld("field_1333/MISS", dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

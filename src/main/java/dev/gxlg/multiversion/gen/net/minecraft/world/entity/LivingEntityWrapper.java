@@ -19,11 +19,11 @@ public class LivingEntityWrapper extends dev.gxlg.multiversion.gen.net.minecraft
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper getMainHandItem(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_6047/getMainHandItem", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_6047/getMainHandItem", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz.self()).invk());
     }
 
     public void lookAt(dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper anchor, dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper target){
-        clazz.inst(this.instance).mthd("method_5702/lookAt", void.class, dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.clazz).invk(anchor.unwrap(), target.unwrap());
+        clazz.inst(this.instance).mthd("method_5702/lookAt", void.class, dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.clazz.self()).invk(anchor.unwrap(), target.unwrap());
     }
 
     public void setYHeadRot(float headYaw){

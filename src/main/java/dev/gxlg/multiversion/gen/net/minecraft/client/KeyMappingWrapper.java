@@ -15,7 +15,7 @@ public class KeyMappingWrapper extends R.RWrapper<KeyMappingWrapper> {
     private int superCall = 0;
 
     public KeyMappingWrapper(String id, com.mojang.blaze3d.platform.InputConstants.Type type, int keyCode, dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper category) {
-        this(clazz.constr(String.class, com.mojang.blaze3d.platform.InputConstants.Type.class, int.class, dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper.clazz).newInst(id, type, keyCode, category.unwrap()).self());
+        this(clazz.constr(String.class, com.mojang.blaze3d.platform.InputConstants.Type.class, int.class, dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper.clazz.self()).newInst(id, type, keyCode, category.unwrap()).self());
     }
 
     public KeyMappingWrapper(String id, com.mojang.blaze3d.platform.InputConstants.Type type, int keyCode, String categoryId) {

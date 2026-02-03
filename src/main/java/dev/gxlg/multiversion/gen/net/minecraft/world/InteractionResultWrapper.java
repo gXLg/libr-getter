@@ -23,7 +23,7 @@ public class InteractionResultWrapper extends R.RWrapper<InteractionResultWrappe
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.InteractionResultWrapper FAIL() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.InteractionResultWrapper.inst(clazz.fld("field_5814/FAIL", dev.gxlg.multiversion.gen.net.minecraft.world.InteractionResultWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.InteractionResultWrapper.inst(clazz.fld("field_5814/FAIL", dev.gxlg.multiversion.gen.net.minecraft.world.InteractionResultWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

@@ -15,7 +15,7 @@ public class BookViewScreenWrapper extends dev.gxlg.multiversion.gen.net.minecra
     private int superCall = 0;
 
     protected BookViewScreenWrapper(R.RClass eClazz, dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapper bookAccess) {
-        this(eClazz, eClazz.dconstr(dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapper.clazz).newInst(bookAccess.unwrap()).self());
+        this(eClazz, eClazz.constr(dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapper.clazz.self()).newInst(bookAccess.unwrap()).self());
     }
 
     protected BookViewScreenWrapper(R.RClass eClazz, Object instance) {
@@ -29,31 +29,31 @@ public class BookViewScreenWrapper extends dev.gxlg.multiversion.gen.net.minecra
 
     protected boolean forcePage(int page){
         if (this instanceof BookViewScreenWrapper && this.getClass() != BookViewScreenWrapper.class) superCall++;
-        return (boolean) clazz.inst(this.instance).dmthd("method_17789/forcePage", boolean.class, int.class).invk(page);
+        return (boolean) clazz.inst(this.instance).mthd("method_17789/forcePage", boolean.class, int.class).invk(page);
     }
 
     protected void init(){
         if (this instanceof BookViewScreenWrapper && this.getClass() != BookViewScreenWrapper.class) superCall++;
-        clazz.inst(this.instance).dmthd("method_25426/init", void.class).invk();
+        clazz.inst(this.instance).mthd("method_25426/init", void.class).invk();
     }
 
     protected void pageBack(){
         if (this instanceof BookViewScreenWrapper && this.getClass() != BookViewScreenWrapper.class) superCall++;
-        clazz.inst(this.instance).dmthd("method_17057/pageBack", void.class).invk();
+        clazz.inst(this.instance).mthd("method_17057/pageBack", void.class).invk();
     }
 
     protected void pageForward(){
         if (this instanceof BookViewScreenWrapper && this.getClass() != BookViewScreenWrapper.class) superCall++;
-        clazz.inst(this.instance).dmthd("method_17058/pageForward", void.class).invk();
+        clazz.inst(this.instance).mthd("method_17058/pageForward", void.class).invk();
     }
 
     protected void closeScreen(){
         if (this instanceof BookViewScreenWrapper && this.getClass() != BookViewScreenWrapper.class) superCall++;
-        clazz.inst(this.instance).dmthd("method_34494/closeScreen", void.class).invk();
+        clazz.inst(this.instance).mthd("method_34494/closeScreen", void.class).invk();
     }
 
     public void setBookAccess(dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapper bookAccess){
-        clazz.inst(this.instance).mthd("method_17554/setBookAccess", void.class, dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapper.clazz).invk(bookAccess.unwrap());
+        clazz.inst(this.instance).mthd("method_17554/setBookAccess", void.class, dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapper.clazz.self()).invk(bookAccess.unwrap());
     }
 
     public static BookViewScreenWrapper inst(Object instance) {

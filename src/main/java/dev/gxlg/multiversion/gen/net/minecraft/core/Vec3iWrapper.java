@@ -31,7 +31,7 @@ public class Vec3iWrapper extends R.RWrapper<Vec3iWrapper> {
     }
 
     public boolean closerThan(dev.gxlg.multiversion.gen.net.minecraft.core.Vec3iWrapper target, double distance){
-        return (boolean) clazz.inst(this.instance).mthd("method_19771/closerThan", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.core.Vec3iWrapper.clazz, double.class).invk(target.unwrap(), distance);
+        return (boolean) clazz.inst(this.instance).mthd("method_19771/closerThan", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.core.Vec3iWrapper.clazz.self(), double.class).invk(target.unwrap(), distance);
     }
 
     public static Vec3iWrapper inst(Object instance) {

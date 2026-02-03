@@ -13,7 +13,7 @@ public class Keybinds_1_17_0 extends Keybinds {
     @Override
     public void registerKeybinds() {
         KeyMappingWrapper configMenuKeyMapping = createKeyMapping(new KeybindData("librgetter.keys.open", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K));
-        KeyBindingHelperWrapper.registerKeyBinding(configMenuKeyMapping);
+        register(configMenuKeyMapping);
 
         ClientTickEvents.END_CLIENT_TICK.register((
                                                       (ClientTickEvents$EndTickWrapperInterface) client -> {
@@ -22,6 +22,10 @@ public class Keybinds_1_17_0 extends Keybinds {
                                                           }
                                                       }
                                                   ).wrapper().unwrap(ClientTickEvents.EndTick.class));
+    }
+
+    protected void register(KeyMappingWrapper keyMapping) {
+        KeyBindingHelperWrapper.registerKeyBinding(keyMapping);
     }
 
     protected KeyMappingWrapper createKeyMapping(KeybindData keybindData) {

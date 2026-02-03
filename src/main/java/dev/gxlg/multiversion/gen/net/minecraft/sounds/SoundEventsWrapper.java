@@ -23,7 +23,7 @@ public class SoundEventsWrapper extends R.RWrapper<SoundEventsWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundEventWrapper PLAYER_LEVELUP() {
-        return dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundEventWrapper.inst(clazz.fld("field_14709/PLAYER_LEVELUP", dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundEventWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundEventWrapper.inst(clazz.fld("field_14709/PLAYER_LEVELUP", dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundEventWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

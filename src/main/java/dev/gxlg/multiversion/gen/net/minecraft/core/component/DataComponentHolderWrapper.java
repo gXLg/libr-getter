@@ -19,7 +19,7 @@ public class DataComponentHolderWrapper extends R.RWrapper<DataComponentHolderWr
     }
 
     public Object get(dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper type){
-        return clazz.inst(this.instance).mthd("method_58694/get", Object.class, dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.clazz).invk(type.unwrap());
+        return clazz.inst(this.instance).mthd("method_58694/get", Object.class, dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.clazz.self()).invk(type.unwrap());
     }
 
     public static DataComponentHolderWrapper inst(Object instance) {

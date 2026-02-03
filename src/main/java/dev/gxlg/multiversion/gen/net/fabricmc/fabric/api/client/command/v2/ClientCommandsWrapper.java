@@ -9,17 +9,17 @@ import net.bytebuddy.implementation.bind.annotation.SuperCall;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
-public class ClientCommandManagerWrapper extends R.RWrapper<ClientCommandManagerWrapper> {
-    public static final R.RClass clazz = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommandManager");
+public class ClientCommandsWrapper extends R.RWrapper<ClientCommandsWrapper> {
+    public static final R.RClass clazz = R.clz("net.fabricmc.fabric.api.client.command.v2.ClientCommands");
 
     private int superCall = 0;
 
-    protected ClientCommandManagerWrapper(Object instance) {
+    protected ClientCommandsWrapper(Object instance) {
         super(instance);
     }
 
-    public static ClientCommandManagerWrapper inst(Object instance) {
-        return instance == null ? null : new ClientCommandManagerWrapper(instance);
+    public static ClientCommandsWrapper inst(Object instance) {
+        return instance == null ? null : new ClientCommandsWrapper(instance);
     }
 
     public static dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper literal(String name){
@@ -33,7 +33,7 @@ public class ClientCommandManagerWrapper extends R.RWrapper<ClientCommandManager
     public static class Interceptor {
         @SuppressWarnings("unused")
         @RuntimeType
-        public static Object intercept(@Origin Method method, @FieldValue("__wrapper") ClientCommandManagerWrapper wrapper, @AllArguments Object[] args, @SuperCall Callable<?> superCall) throws Exception {
+        public static Object intercept(@Origin Method method, @FieldValue("__wrapper") ClientCommandsWrapper wrapper, @AllArguments Object[] args, @SuperCall Callable<?> superCall) throws Exception {
             if (wrapper.superCall > 0) {
                 wrapper.superCall--;
                 return superCall.call();

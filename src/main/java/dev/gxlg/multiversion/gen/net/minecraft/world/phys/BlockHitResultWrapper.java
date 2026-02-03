@@ -15,7 +15,7 @@ public class BlockHitResultWrapper extends dev.gxlg.multiversion.gen.net.minecra
     private int superCall = 0;
 
     public BlockHitResultWrapper(dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper hitPoint, dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper side, dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper hitBlockPos, boolean inside) {
-        this(clazz.constr(dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz, boolean.class).newInst(hitPoint.unwrap(), side.unwrap(), hitBlockPos.unwrap(), inside).self());
+        this(clazz.constr(dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz.self(), boolean.class).newInst(hitPoint.unwrap(), side.unwrap(), hitBlockPos.unwrap(), inside).self());
     }
 
     protected BlockHitResultWrapper(Object instance) {
@@ -23,11 +23,11 @@ public class BlockHitResultWrapper extends dev.gxlg.multiversion.gen.net.minecra
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper getBlockPos(){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_17777/getBlockPos", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_17777/getBlockPos", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz.self()).invk());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper getDirection(){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.inst(this.instance).mthd("method_17780/getDirection", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.inst(this.instance).mthd("method_17780/getDirection", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz.self()).invk());
     }
 
     public static BlockHitResultWrapper inst(Object instance) {

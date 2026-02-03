@@ -19,7 +19,7 @@ public class Holder$ReferenceWrapper extends dev.gxlg.multiversion.gen.net.minec
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper key(){
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.inst(this.instance).mthd("method_40237/key", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.inst(this.instance).mthd("method_40237/key", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz.self()).invk());
     }
 
     public Object value(){

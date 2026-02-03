@@ -23,7 +23,7 @@ public class MenuTypeWrapper extends R.RWrapper<MenuTypeWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.inventory.MenuTypeWrapper MERCHANT() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.inventory.MenuTypeWrapper.inst(clazz.fld("field_17340/MERCHANT", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.MenuTypeWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.inventory.MenuTypeWrapper.inst(clazz.fld("field_17340/MERCHANT", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.MenuTypeWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

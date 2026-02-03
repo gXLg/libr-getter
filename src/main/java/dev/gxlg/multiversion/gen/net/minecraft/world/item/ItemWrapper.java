@@ -19,7 +19,7 @@ public class ItemWrapper extends R.RWrapper<ItemWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper getDefaultInstance(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_7854/getDefaultInstance", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_7854/getDefaultInstance", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz.self()).invk());
     }
 
     public static ItemWrapper inst(Object instance) {

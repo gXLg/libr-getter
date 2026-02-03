@@ -23,15 +23,15 @@ public class DataComponentsWrapper extends R.RWrapper<DataComponentsWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper CUSTOM_DATA() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.inst(clazz.fld("field_49628/CUSTOM_DATA", dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.inst(clazz.fld("field_49628/CUSTOM_DATA", dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper ENCHANTMENTS() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.inst(clazz.fld("field_49633/ENCHANTMENTS", dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.inst(clazz.fld("field_49633/ENCHANTMENTS", dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper STORED_ENCHANTMENTS() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.inst(clazz.fld("field_49643/STORED_ENCHANTMENTS", dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.inst(clazz.fld("field_49643/STORED_ENCHANTMENTS", dev.gxlg.multiversion.gen.net.minecraft.core.component.DataComponentTypeWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

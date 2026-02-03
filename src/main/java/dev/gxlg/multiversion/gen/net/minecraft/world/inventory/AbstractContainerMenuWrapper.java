@@ -31,7 +31,7 @@ public class AbstractContainerMenuWrapper extends R.RWrapper<AbstractContainerMe
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.inventory.SlotWrapper getSlot(int slotId){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.inventory.SlotWrapper.inst(clazz.inst(this.instance).mthd("method_7611/getSlot", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.SlotWrapper.clazz, int.class).invk(slotId));
+        return dev.gxlg.multiversion.gen.net.minecraft.world.inventory.SlotWrapper.inst(clazz.inst(this.instance).mthd("method_7611/getSlot", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.SlotWrapper.clazz.self(), int.class).invk(slotId));
     }
 
     public static AbstractContainerMenuWrapper inst(Object instance) {

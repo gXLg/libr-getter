@@ -1,7 +1,7 @@
 package dev.gxlg.multiversion;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
 public class V {
@@ -14,11 +14,11 @@ public class V {
         R.RClass constants = R.clz("net.minecraft.class_155/net.minecraft.SharedConstants");
         try {
             R.RClass gameVersionClz = R.clz("net.minecraft.class_6489/com.mojang.bridge.game.GameVersion");
-            Object gameVersion = constants.mthd("method_16673/getCurrentVersion", gameVersionClz).invk();
+            Object gameVersion = constants.mthd("method_16673/getCurrentVersion", gameVersionClz.self()).invk();
             version = new MinecraftVersion((String) gameVersionClz.inst(gameVersion).mthd("method_48019/getName", String.class).invk());
         } catch (Exception ignored) {
             R.RClass gameVersionClz = R.clz("net.minecraft.class_6489/net.minecraft.WorldVersion");
-            Object gameVersion = constants.mthd("method_16673/getCurrentVersion", gameVersionClz).invk();
+            Object gameVersion = constants.mthd("method_16673/getCurrentVersion", gameVersionClz.self()).invk();
             version = new MinecraftVersion((String) gameVersionClz.inst(gameVersion).mthd("comp_4025/name", String.class).invk());
         }
         return version;
@@ -43,10 +43,10 @@ public class V {
 
         private final int patch;
 
-        private final Map<String, Integer> cache = new HashMap<>();
+        private final Map<String, Integer> cache = new ConcurrentHashMap<>();
 
         public MinecraftVersion(String version) {
-            String[] mainParts = version.split("-", 2);
+            String[] mainParts = version.split("[^0-9.]", 2);
             String[] nums = mainParts[0].split("\\.");
             this.major = nums.length > 0 ? Integer.parseInt(nums[0]) : 0;
             this.minor = nums.length > 1 ? Integer.parseInt(nums[1]) : 0;

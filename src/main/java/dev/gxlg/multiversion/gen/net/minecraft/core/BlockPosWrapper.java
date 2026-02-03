@@ -19,19 +19,19 @@ public class BlockPosWrapper extends dev.gxlg.multiversion.gen.net.minecraft.cor
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper offset(int x, int y, int z){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_10069/offset", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz, int.class, int.class, int.class).invk(x, y, z));
+        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_10069/offset", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz.self(), int.class, int.class, int.class).invk(x, y, z));
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper relative(dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper direction){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_10093/relative", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz).invk(direction.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_10093/relative", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz.self()).invk(direction.unwrap()));
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper above(int distance){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_10086/above", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz, int.class).invk(distance));
+        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_10086/above", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz.self(), int.class).invk(distance));
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper below(){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_10074/below", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_10074/below", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz.self()).invk());
     }
 
     public static BlockPosWrapper inst(Object instance) {

@@ -19,11 +19,11 @@ public class ContainerWrapper extends R.RWrapper<ContainerWrapper> {
     }
 
     public int countItem(dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper item){
-        return (int) clazz.inst(this.instance).mthd("method_18861/countItem", int.class, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz).invk(item.unwrap());
+        return (int) clazz.inst(this.instance).mthd("method_18861/countItem", int.class, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz.self()).invk(item.unwrap());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper getItem(int index){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_5438/getItem", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz, int.class).invk(index));
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_5438/getItem", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz.self(), int.class).invk(index));
     }
 
     public static ContainerWrapper inst(Object instance) {

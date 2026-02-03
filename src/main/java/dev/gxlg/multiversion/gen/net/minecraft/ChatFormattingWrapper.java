@@ -23,91 +23,91 @@ public class ChatFormattingWrapper extends R.RWrapper<ChatFormattingWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper OBFUSCATED() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1051/OBFUSCATED", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1051/OBFUSCATED", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper YELLOW() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1054/YELLOW", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1054/YELLOW", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper STRIKETHROUGH() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1055/STRIKETHROUGH", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1055/STRIKETHROUGH", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper ITALIC() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1056/ITALIC", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1056/ITALIC", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper DARK_BLUE() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1058/DARK_BLUE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1058/DARK_BLUE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper GREEN() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1060/GREEN", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1060/GREEN", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper RED() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1061/RED", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1061/RED", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper DARK_AQUA() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1062/DARK_AQUA", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1062/DARK_AQUA", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper DARK_GRAY() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1063/DARK_GRAY", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1063/DARK_GRAY", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper DARK_PURPLE() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1064/DARK_PURPLE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1064/DARK_PURPLE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper GOLD() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1065/GOLD", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1065/GOLD", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper BOLD() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1067/BOLD", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1067/BOLD", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper WHITE() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1068/WHITE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1068/WHITE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper RESET() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1070/RESET", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1070/RESET", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper UNDERLINE() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1073/UNDERLINE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1073/UNDERLINE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper BLACK() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1074/BLACK", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1074/BLACK", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper AQUA() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1075/AQUA", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1075/AQUA", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper LIGHT_PURPLE() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1076/LIGHT_PURPLE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1076/LIGHT_PURPLE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper DARK_GREEN() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1077/DARK_GREEN", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1077/DARK_GREEN", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper BLUE() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1078/BLUE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1078/BLUE", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper DARK_RED() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1079/DARK_RED", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1079/DARK_RED", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper GRAY() {
-        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1080/GRAY", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.inst(clazz.fld("field_1080/GRAY", dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

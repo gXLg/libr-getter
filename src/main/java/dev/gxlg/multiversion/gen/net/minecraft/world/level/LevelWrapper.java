@@ -19,19 +19,19 @@ public class LevelWrapper extends R.RWrapper<LevelWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper getBlockState(dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper pos){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.inst(clazz.inst(this.instance).mthd("method_8320/getBlockState", dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz).invk(pos.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.inst(clazz.inst(this.instance).mthd("method_8320/getBlockState", dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz.self()).invk(pos.unwrap()));
     }
 
     public boolean setBlockAndUpdate(dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper pos, dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper state){
-        return (boolean) clazz.inst(this.instance).mthd("method_8501/setBlockAndUpdate", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.clazz).invk(pos.unwrap(), state.unwrap());
+        return (boolean) clazz.inst(this.instance).mthd("method_8501/setBlockAndUpdate", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.clazz.self()).invk(pos.unwrap(), state.unwrap());
     }
 
     public void playLocalSound(double x, double y, double z, dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundEventWrapper sound, dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundSourceWrapper source, float volume, float pitch, boolean distanceDelay){
-        clazz.inst(this.instance).mthd("method_8486/playLocalSound", void.class, double.class, double.class, double.class, dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundEventWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundSourceWrapper.clazz, float.class, float.class, boolean.class).invk(x, y, z, sound.unwrap(), source.unwrap(), volume, pitch, distanceDelay);
+        clazz.inst(this.instance).mthd("method_8486/playLocalSound", void.class, double.class, double.class, double.class, dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundEventWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundSourceWrapper.clazz.self(), float.class, float.class, boolean.class).invk(x, y, z, sound.unwrap(), source.unwrap(), volume, pitch, distanceDelay);
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.RegistryAccessWrapper registryAccess(){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.RegistryAccessWrapper.inst(clazz.inst(this.instance).mthd("method_30349/registryAccess", dev.gxlg.multiversion.gen.net.minecraft.core.RegistryAccessWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.RegistryAccessWrapper.inst(clazz.inst(this.instance).mthd("method_30349/registryAccess", dev.gxlg.multiversion.gen.net.minecraft.core.RegistryAccessWrapper.clazz.self()).invk());
     }
 
     public static LevelWrapper inst(Object instance) {

@@ -23,7 +23,7 @@ public class RegistriesWrapper extends R.RWrapper<RegistriesWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper ENCHANTMENT() {
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.fld("field_41265/ENCHANTMENT", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.fld("field_41265/ENCHANTMENT", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

@@ -23,7 +23,7 @@ public class SoundSourceWrapper extends R.RWrapper<SoundSourceWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundSourceWrapper NEUTRAL() {
-        return dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundSourceWrapper.inst(clazz.fld("field_15254/NEUTRAL", dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundSourceWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundSourceWrapper.inst(clazz.fld("field_15254/NEUTRAL", dev.gxlg.multiversion.gen.net.minecraft.sounds.SoundSourceWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

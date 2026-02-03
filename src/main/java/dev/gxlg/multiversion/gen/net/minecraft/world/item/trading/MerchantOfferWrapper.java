@@ -19,15 +19,15 @@ public class MerchantOfferWrapper extends R.RWrapper<MerchantOfferWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper getResult(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_8250/getResult", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_8250/getResult", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz.self()).invk());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper getCostA(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_19272/getCostA", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_19272/getCostA", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz.self()).invk());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper getCostB(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_8247/getCostB", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.inst(clazz.inst(this.instance).mthd("method_8247/getCostB", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz.self()).invk());
     }
 
     public static MerchantOfferWrapper inst(Object instance) {

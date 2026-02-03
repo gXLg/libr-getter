@@ -23,7 +23,7 @@ public class KeyBindingHelperWrapper extends R.RWrapper<KeyBindingHelperWrapper>
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper registerKeyBinding(dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper keyBinding){
-        return dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper.inst(clazz.mthd("registerKeyBinding", dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper.clazz).invk(keyBinding.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper.inst(clazz.mthd("registerKeyBinding", dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper.clazz.self()).invk(keyBinding.unwrap()));
     }
 
     public static class Interceptor {

@@ -19,7 +19,7 @@ public class RegistryAccessWrapper extends R.RWrapper<RegistryAccessWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper lookupOrThrow(dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper key){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.inst(clazz.inst(this.instance).mthd("method_30530/registryOrThrow/lookupOrThrow", dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).invk(key.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.inst(clazz.inst(this.instance).mthd("method_30530/registryOrThrow/lookupOrThrow", dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz.self()).invk(key.unwrap()));
     }
 
     public static RegistryAccessWrapper inst(Object instance) {

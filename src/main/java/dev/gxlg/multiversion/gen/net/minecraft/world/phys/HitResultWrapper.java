@@ -19,7 +19,7 @@ public class HitResultWrapper extends R.RWrapper<HitResultWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper getType(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.inst(clazz.inst(this.instance).mthd("method_17783/getType", dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.inst(clazz.inst(this.instance).mthd("method_17783/getType", dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResult$TypeWrapper.clazz.self()).invk());
     }
 
     public static HitResultWrapper inst(Object instance) {

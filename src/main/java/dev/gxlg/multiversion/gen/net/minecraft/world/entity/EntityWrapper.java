@@ -23,11 +23,11 @@ public class EntityWrapper extends R.RWrapper<EntityWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper blockPosition(){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_24515/blockPosition", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.inst(clazz.inst(this.instance).mthd("method_24515/blockPosition", dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper.clazz.self()).invk());
     }
 
     public float distanceTo(dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper entity){
-        return (float) clazz.inst(this.instance).mthd("method_5739/distanceTo", float.class, dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper.clazz).invk(entity.unwrap());
+        return (float) clazz.inst(this.instance).mthd("method_5739/distanceTo", float.class, dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper.clazz.self()).invk(entity.unwrap());
     }
 
     public double getX(){

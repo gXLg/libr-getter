@@ -23,27 +23,27 @@ public class DirectionWrapper extends R.RWrapper<DirectionWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper UP() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11036/UP", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11036/UP", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper DOWN() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11033/DOWN", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11033/DOWN", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper EAST() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11034/EAST", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11034/EAST", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper SOUTH() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11035/SOUTH", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11035/SOUTH", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper WEST() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11039/WEST", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11039/WEST", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper NORTH() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11043/NORTH", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.inst(clazz.fld("field_11043/NORTH", dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

@@ -19,7 +19,7 @@ public class ComponentWrapper extends R.RWrapper<ComponentWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper plainCopy(){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_27662/plainCopy", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_27662/plainCopy", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz.self()).invk());
     }
 
     public static ComponentWrapper inst(Object instance) {
@@ -27,11 +27,11 @@ public class ComponentWrapper extends R.RWrapper<ComponentWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper translatable(String key, Object[] args){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.mthd("method_43469/translatable", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz, String.class, Object.class.arrayType()).invk(key, args));
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.mthd("method_43469/translatable", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz.self(), String.class, Object.class.arrayType()).invk(key, args));
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper nullToEmpty(String text){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.inst(clazz.mthd("method_30163/nullToEmpty", dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz, String.class).invk(text));
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.inst(clazz.mthd("method_30163/nullToEmpty", dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz.self(), String.class).invk(text));
     }
 
     public static class Interceptor {

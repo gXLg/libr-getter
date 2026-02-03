@@ -12,7 +12,7 @@ public interface ClientPlayConnectionEvents$DisconnectWrapperInterface extends R
         return ClientPlayConnectionEvents$DisconnectWrapper.inst(Proxy.newProxyInstance(
             Thread.currentThread().getContextClassLoader(), new Class[]{ ClientPlayConnectionEvents$DisconnectWrapper.clazz.self() }, (proxy, method, args) -> {
                 String methodName = method.getName();
-                if ((methodName.equals("onPlayDisconnect")) && R.methodMatches(method, void.class, dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper.clazz)) {
+                if ((methodName.equals("onPlayDisconnect")) && R.methodMatches(method, void.class, dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper.clazz.self())) {
                     this.onPlayDisconnect(dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper.inst(args[0]), dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper.inst(args[1]));
                     return null;
                 }

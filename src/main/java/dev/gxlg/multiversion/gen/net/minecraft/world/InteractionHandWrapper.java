@@ -23,11 +23,11 @@ public class InteractionHandWrapper extends R.RWrapper<InteractionHandWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper MAIN_HAND() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper.inst(clazz.fld("field_5808/MAIN_HAND", dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper.inst(clazz.fld("field_5808/MAIN_HAND", dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper OFF_HAND() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper.inst(clazz.fld("field_5810/OFF_HAND", dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper.inst(clazz.fld("field_5810/OFF_HAND", dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

@@ -19,11 +19,11 @@ public class VillagerDataWrapper extends R.RWrapper<VillagerDataWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper profession(){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper.inst(clazz.inst(this.instance).mthd("comp_3521/profession", dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper.inst(clazz.inst(this.instance).mthd("comp_3521/profession", dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper.clazz.self()).invk());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper getProfession(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.inst(clazz.inst(this.instance).mthd("method_16924/getProfession", dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.inst(clazz.inst(this.instance).mthd("method_16924/getProfession", dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerProfessionWrapper.clazz.self()).invk());
     }
 
     public static VillagerDataWrapper inst(Object instance) {

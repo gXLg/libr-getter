@@ -23,7 +23,7 @@ public class ClientPlayNetworkingWrapper extends R.RWrapper<ClientPlayNetworking
     }
 
     public static void send(dev.gxlg.multiversion.gen.net.minecraft.network.protocol.common.custom.CustomPacketPayloadWrapper customPayload){
-        clazz.mthd("send", void.class, dev.gxlg.multiversion.gen.net.minecraft.network.protocol.common.custom.CustomPacketPayloadWrapper.clazz).invk(customPayload.unwrap());
+        clazz.mthd("send", void.class, dev.gxlg.multiversion.gen.net.minecraft.network.protocol.common.custom.CustomPacketPayloadWrapper.clazz.self()).invk(customPayload.unwrap());
     }
 
     public static class Interceptor {

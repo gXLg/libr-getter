@@ -23,7 +23,7 @@ public class EnchantmentTagsWrapper extends R.RWrapper<EnchantmentTagsWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.tags.TagKeyWrapper TRADEABLE() {
-        return dev.gxlg.multiversion.gen.net.minecraft.tags.TagKeyWrapper.inst(clazz.fld("field_51545/TRADEABLE", dev.gxlg.multiversion.gen.net.minecraft.tags.TagKeyWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.tags.TagKeyWrapper.inst(clazz.fld("field_51545/TRADEABLE", dev.gxlg.multiversion.gen.net.minecraft.tags.TagKeyWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

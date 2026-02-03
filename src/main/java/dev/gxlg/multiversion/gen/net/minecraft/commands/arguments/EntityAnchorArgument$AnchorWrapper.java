@@ -19,7 +19,7 @@ public class EntityAnchorArgument$AnchorWrapper extends R.RWrapper<EntityAnchorA
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper apply(dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper entity){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.inst(clazz.inst(this.instance).mthd("method_9302/apply", dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper.clazz).invk(entity.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.inst(clazz.inst(this.instance).mthd("method_9302/apply", dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper.clazz.self()).invk(entity.unwrap()));
     }
 
     public static EntityAnchorArgument$AnchorWrapper inst(Object instance) {
@@ -27,7 +27,7 @@ public class EntityAnchorArgument$AnchorWrapper extends R.RWrapper<EntityAnchorA
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper EYES() {
-        return dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper.inst(clazz.fld("field_9851/EYES", dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper.inst(clazz.fld("field_9851/EYES", dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

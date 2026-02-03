@@ -5,7 +5,7 @@ import dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrap
 
 public class Texts_1_19_0 extends Texts_1_17_0 {
     @Override
-    public MutableComponentWrapper translatable(String message, Object... args) {
+    protected MutableComponentWrapper createTranslatable(String message, Object... args) {
         return ComponentWrapper.translatable(message, args);
     }
 }

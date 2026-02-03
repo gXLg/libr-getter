@@ -23,7 +23,7 @@ public class ClientCommandRegistrationCallbackWrapper extends R.RWrapper<ClientC
     }
 
     public static dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.event.EventWrapper EVENT() {
-        return dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.event.EventWrapper.inst(clazz.fld("EVENT", dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.event.EventWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.event.EventWrapper.inst(clazz.fld("EVENT", dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.event.EventWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

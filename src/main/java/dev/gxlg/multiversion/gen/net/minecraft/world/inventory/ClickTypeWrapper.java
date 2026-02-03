@@ -23,11 +23,11 @@ public class ClickTypeWrapper extends R.RWrapper<ClickTypeWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper PICKUP() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper.inst(clazz.fld("field_7790/PICKUP", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper.inst(clazz.fld("field_7790/PICKUP", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper SWAP() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper.inst(clazz.fld("field_7791/SWAP", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper.inst(clazz.fld("field_7791/SWAP", dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

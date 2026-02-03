@@ -35,11 +35,11 @@ public class IdentifierWrapper extends R.RWrapper<IdentifierWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper tryParse(String location){
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.inst(clazz.mthd("method_12829/tryParse", dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.clazz, String.class).invk(location));
+        return dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.inst(clazz.mthd("method_12829/tryParse", dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.clazz.self(), String.class).invk(location));
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper tryBuild(String namespace, String path){
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.inst(clazz.mthd("method_43902/tryBuild", dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.clazz, String.class, String.class).invk(namespace, path));
+        return dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.inst(clazz.mthd("method_43902/tryBuild", dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.clazz.self(), String.class, String.class).invk(namespace, path));
     }
 
     public static class Interceptor {

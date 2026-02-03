@@ -19,7 +19,7 @@ public class EntityHitResultWrapper extends dev.gxlg.multiversion.gen.net.minecr
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper getEntity(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper.inst(clazz.inst(this.instance).mthd("method_17782/getEntity", dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper.inst(clazz.inst(this.instance).mthd("method_17782/getEntity", dev.gxlg.multiversion.gen.net.minecraft.world.entity.EntityWrapper.clazz.self()).invk());
     }
 
     public static EntityHitResultWrapper inst(Object instance) {

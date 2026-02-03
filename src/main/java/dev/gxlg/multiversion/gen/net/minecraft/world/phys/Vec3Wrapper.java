@@ -39,11 +39,11 @@ public class Vec3Wrapper extends R.RWrapper<Vec3Wrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper atBottomCenterOf(dev.gxlg.multiversion.gen.net.minecraft.core.Vec3iWrapper pos){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.inst(clazz.mthd("method_24955/atBottomCenterOf", dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.core.Vec3iWrapper.clazz).invk(pos.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.inst(clazz.mthd("method_24955/atBottomCenterOf", dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.core.Vec3iWrapper.clazz.self()).invk(pos.unwrap()));
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper atCenterOf(dev.gxlg.multiversion.gen.net.minecraft.core.Vec3iWrapper pos){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.inst(clazz.mthd("method_24953/atCenterOf", dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.core.Vec3iWrapper.clazz).invk(pos.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.inst(clazz.mthd("method_24953/atCenterOf", dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.core.Vec3iWrapper.clazz.self()).invk(pos.unwrap()));
     }
 
     public static class Interceptor {

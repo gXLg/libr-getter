@@ -23,7 +23,7 @@ public class KeyMapping$CategoryWrapper extends R.RWrapper<KeyMapping$CategoryWr
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper register(dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper id){
-        return dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper.inst(clazz.mthd("method_74698/register", dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.clazz).invk(id.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper.inst(clazz.mthd("method_74698/register", dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.clazz.self()).invk(id.unwrap()));
     }
 
     public static class Interceptor {

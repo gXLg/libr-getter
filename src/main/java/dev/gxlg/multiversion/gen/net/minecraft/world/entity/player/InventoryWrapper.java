@@ -39,7 +39,7 @@ public class InventoryWrapper extends dev.gxlg.multiversion.gen.net.minecraft.wo
     }
 
     public int findSlotMatchingItem(dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper stack){
-        return (int) clazz.inst(this.instance).mthd("method_7395/findSlotMatchingItem", int.class, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz).invk(stack.unwrap());
+        return (int) clazz.inst(this.instance).mthd("method_7395/findSlotMatchingItem", int.class, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz.self()).invk(stack.unwrap());
     }
 
     public static InventoryWrapper inst(Object instance) {

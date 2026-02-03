@@ -19,15 +19,15 @@ public class RegistryWrapper extends R.RWrapper<RegistryWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper key(){
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.inst(this.instance).mthd("method_30517/key", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.inst(this.instance).mthd("method_30517/key", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz.self()).invk());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper getKey(Object resource){
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.inst(clazz.inst(this.instance).mthd("method_10221/getKey", dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.clazz, Object.class).invk(resource));
+        return dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.inst(clazz.inst(this.instance).mthd("method_10221/getKey", dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper.clazz.self(), Object.class).invk(resource));
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper wrapAsHolder(Object value){
-        return dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper.inst(clazz.inst(this.instance).mthd("method_47983/wrapAsHolder", dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper.clazz, Object.class).invk(value));
+        return dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper.inst(clazz.inst(this.instance).mthd("method_47983/wrapAsHolder", dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper.clazz.self(), Object.class).invk(value));
     }
 
     public static RegistryWrapper inst(Object instance) {
@@ -35,7 +35,7 @@ public class RegistryWrapper extends R.RWrapper<RegistryWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper ENCHANTMENT() {
-        return dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.inst(clazz.fld("field_11160/ENCHANTMENT", dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.inst(clazz.fld("field_11160/ENCHANTMENT", dev.gxlg.multiversion.gen.net.minecraft.core.RegistryWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

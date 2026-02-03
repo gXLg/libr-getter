@@ -7,6 +7,7 @@ import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.exceptions.runtime.UnexpectedConfigurableTypeException;
+import dev.gxlg.librgetter.utils.types.messages.Message;
 import dev.gxlg.librgetter.utils.types.messages.objects.trades.TradeMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.TranslatableMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.config.TranslatableCategory;
@@ -171,7 +172,21 @@ public class Texts_1_17_0 extends Texts {
 
     @Override
     public MutableComponentWrapper translatable(String message, Object... args) {
-        return new TranslatableContentsWrapper(message, args);
+        Object[] convertedArgs = new Object[args.length];
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (arg instanceof ComponentWrapper componentWrapper) {
+                arg = componentWrapper.unwrap();
+            } else if (arg instanceof Message messageObj) {
+                arg = messageObj.getComponent().unwrap();
+            }
+            convertedArgs[i] = arg;
+        }
+        return createTranslatable(message, convertedArgs);
+    }
+
+    protected MutableComponentWrapper createTranslatable(String key, Object... args) {
+        return new TranslatableContentsWrapper(key, args);
     }
 
     @Override

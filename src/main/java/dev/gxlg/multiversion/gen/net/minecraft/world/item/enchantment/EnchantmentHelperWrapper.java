@@ -23,7 +23,7 @@ public class EnchantmentHelperWrapper extends R.RWrapper<EnchantmentHelperWrappe
     }
 
     public static int getItemEnchantmentLevel(dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper enchantment, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper stack){
-        return (int) clazz.mthd("method_8225/getItemEnchantmentLevel", int.class, dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz).invk(enchantment.unwrap(), stack.unwrap());
+        return (int) clazz.mthd("method_8225/getItemEnchantmentLevel", int.class, dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz.self()).invk(enchantment.unwrap(), stack.unwrap());
     }
 
     public static class Interceptor {

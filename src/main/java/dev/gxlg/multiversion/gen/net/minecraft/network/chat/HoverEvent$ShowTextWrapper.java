@@ -15,7 +15,7 @@ public class HoverEvent$ShowTextWrapper extends dev.gxlg.multiversion.gen.net.mi
     private int superCall = 0;
 
     public HoverEvent$ShowTextWrapper(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper text) {
-        this(clazz.constr(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz).newInst(text.unwrap()).self());
+        this(clazz.constr(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz.self()).newInst(text.unwrap()).self());
     }
 
     protected HoverEvent$ShowTextWrapper(Object instance) {

@@ -33,8 +33,7 @@ public class TaskManager {
 
     static {
         ClientPlayConnectionEvents.JOIN.register(((ClientPlayConnectionEvents$JoinWrapperInterface) (h, s, c) -> reset()).wrapper().unwrap(ClientPlayConnectionEvents.Join.class));
-        ClientPlayConnectionEvents.DISCONNECT.register(((ClientPlayConnectionEvents$DisconnectWrapperInterface) (handler, client) -> reset()).wrapper()
-                                                                                                                                             .unwrap(ClientPlayConnectionEvents.Disconnect.class));
+        ClientPlayConnectionEvents.DISCONNECT.register(((ClientPlayConnectionEvents$DisconnectWrapperInterface) (h, c) -> reset()).wrapper().unwrap(ClientPlayConnectionEvents.Disconnect.class));
     }
 
     public static void updateContext(Function<TaskContext, TaskContext> updater) {

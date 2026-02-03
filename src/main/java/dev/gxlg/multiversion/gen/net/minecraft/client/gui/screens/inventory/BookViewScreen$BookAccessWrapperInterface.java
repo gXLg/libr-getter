@@ -18,7 +18,7 @@ public interface BookViewScreen$BookAccessWrapperInterface extends R.RWrapperInt
                     return this.getPageCount();
                 }
 
-                if ((methodName.equals("method_17563") || methodName.equals("getPage")) && R.methodMatches(method, dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz, int.class)) {
+                if ((methodName.equals("method_17563") || methodName.equals("getPage")) && R.methodMatches(method, dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz.self(), int.class)) {
                     return this.getPage((int) args[0]).unwrap();
                 }
                 return method.invoke(proxy, args);

@@ -23,11 +23,11 @@ public class ClickEvent$ActionWrapper extends R.RWrapper<ClickEvent$ActionWrappe
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper RUN_COMMAND() {
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper.inst(clazz.fld("field_11750/RUN_COMMAND", dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper.inst(clazz.fld("field_11750/RUN_COMMAND", dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper CHANGE_PAGE() {
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper.inst(clazz.fld("field_11748/CHANGE_PAGE", dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper.inst(clazz.fld("field_11748/CHANGE_PAGE", dev.gxlg.multiversion.gen.net.minecraft.network.chat.ClickEvent$ActionWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

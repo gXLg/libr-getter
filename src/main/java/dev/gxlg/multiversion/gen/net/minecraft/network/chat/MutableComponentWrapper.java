@@ -19,19 +19,19 @@ public class MutableComponentWrapper extends dev.gxlg.multiversion.gen.net.minec
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper withStyle(dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper formatting){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_27692/withStyle", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz).invk(formatting.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_27692/withStyle", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper.clazz.self()).invk(formatting.unwrap()));
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper withStyle(dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper style){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_27696/withStyle", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.clazz).invk(style.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_27696/withStyle", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.network.chat.StyleWrapper.clazz.self()).invk(style.unwrap()));
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper append(String string){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_27693/append", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz, String.class).invk(string));
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_27693/append", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz.self(), String.class).invk(string));
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper append(dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper component){
-        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_10852/append", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz).invk(component.unwrap()));
+        return dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.inst(clazz.inst(this.instance).mthd("method_10852/append", dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper.clazz.self()).invk(component.unwrap()));
     }
 
     public static MutableComponentWrapper inst(Object instance) {

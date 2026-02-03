@@ -19,11 +19,11 @@ public class HolderWrapper extends R.RWrapper<HolderWrapper> {
     }
 
     public boolean is(dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper resourceKey){
-        return (boolean) clazz.inst(this.instance).mthd("method_40225/is", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).invk(resourceKey.unwrap());
+        return (boolean) clazz.inst(this.instance).mthd("method_40225/is", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz.self()).invk(resourceKey.unwrap());
     }
 
     public boolean is(dev.gxlg.multiversion.gen.net.minecraft.tags.TagKeyWrapper resourceKey){
-        return (boolean) clazz.inst(this.instance).mthd("method_40220/is", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.tags.TagKeyWrapper.clazz).invk(resourceKey.unwrap());
+        return (boolean) clazz.inst(this.instance).mthd("method_40220/is", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.tags.TagKeyWrapper.clazz.self()).invk(resourceKey.unwrap());
     }
 
     public String getRegisteredName(){

@@ -23,11 +23,11 @@ public class EnchantmentsWrapper extends R.RWrapper<EnchantmentsWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper EFFICIENCY() {
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper.inst(clazz.fld("field_9131/EFFICIENCY", dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper.inst(clazz.fld("field_9131/EFFICIENCY", dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper.clazz.self()).get());
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper EFFICIENCY2() {
-        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.fld("field_9131/EFFICIENCY", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz).get());
+        return dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.inst(clazz.fld("field_9131/EFFICIENCY", dev.gxlg.multiversion.gen.net.minecraft.resources.ResourceKeyWrapper.clazz.self()).get());
     }
 
     public static class Interceptor {

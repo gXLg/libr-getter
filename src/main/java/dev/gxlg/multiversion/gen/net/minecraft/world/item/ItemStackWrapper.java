@@ -19,19 +19,19 @@ public class ItemStackWrapper extends dev.gxlg.multiversion.gen.net.minecraft.co
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper getTag(){
-        return dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.inst(clazz.inst(this.instance).mthd("method_7969/getTag", dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.inst(clazz.inst(this.instance).mthd("method_7969/getTag", dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper.clazz.self()).invk());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.ItemEnchantmentsWrapper getEnchantments(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.ItemEnchantmentsWrapper.inst(clazz.inst(this.instance).mthd("method_58657/getEnchantments", dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.ItemEnchantmentsWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.ItemEnchantmentsWrapper.inst(clazz.inst(this.instance).mthd("method_58657/getEnchantments", dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.ItemEnchantmentsWrapper.clazz.self()).invk());
     }
 
     public boolean is(dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper item){
-        return (boolean) clazz.inst(this.instance).mthd("method_31574/is", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz).invk(item.unwrap());
+        return (boolean) clazz.inst(this.instance).mthd("method_31574/is", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz.self()).invk(item.unwrap());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper getItem(){
-        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.inst(clazz.inst(this.instance).mthd("method_7909/getItem", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.inst(clazz.inst(this.instance).mthd("method_7909/getItem", dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemWrapper.clazz.self()).invk());
     }
 
     public int getCount(){
@@ -55,7 +55,7 @@ public class ItemStackWrapper extends dev.gxlg.multiversion.gen.net.minecraft.co
     }
 
     public float getDestroySpeed(dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper state){
-        return (float) clazz.inst(this.instance).mthd("method_7924/getDestroySpeed", float.class, dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.clazz).invk(state.unwrap());
+        return (float) clazz.inst(this.instance).mthd("method_7924/getDestroySpeed", float.class, dev.gxlg.multiversion.gen.net.minecraft.world.level.block.state.BlockStateWrapper.clazz.self()).invk(state.unwrap());
     }
 
     public static ItemStackWrapper inst(Object instance) {
@@ -63,7 +63,7 @@ public class ItemStackWrapper extends dev.gxlg.multiversion.gen.net.minecraft.co
     }
 
     public static boolean matches(dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper stackA, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper stackB){
-        return (boolean) clazz.mthd("method_7973/matches", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz).invk(stackA.unwrap(), stackB.unwrap());
+        return (boolean) clazz.mthd("method_7973/matches", boolean.class, dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz.self(), dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper.clazz.self()).invk(stackA.unwrap(), stackB.unwrap());
     }
 
     public static class Interceptor {

@@ -27,11 +27,11 @@ public class MinecraftWrapper extends R.RWrapper<MinecraftWrapper> {
     protected MinecraftWrapper(Object instance) {
         super(instance);
         R.RInstance rInstance = clazz.inst(instance);
-        this.screenField = rInstance.fld("field_1755/screen", dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.ScreenWrapper.clazz);
-        this.playerField = rInstance.fld("field_1724/player", dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper.clazz);
-        this.levelField = rInstance.fld("field_1687/level", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.clazz);
-        this.hitResultField = rInstance.fld("field_1765/hitResult", dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResultWrapper.clazz);
-        this.gameModeField = rInstance.fld("field_1761/gameMode", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper.clazz);
+        this.screenField = rInstance.fld("field_1755/screen", dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.ScreenWrapper.clazz.self());
+        this.playerField = rInstance.fld("field_1724/player", dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper.clazz.self());
+        this.levelField = rInstance.fld("field_1687/level", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper.clazz.self());
+        this.hitResultField = rInstance.fld("field_1765/hitResult", dev.gxlg.multiversion.gen.net.minecraft.world.phys.HitResultWrapper.clazz.self());
+        this.gameModeField = rInstance.fld("field_1761/gameMode", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper.clazz.self());
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.ScreenWrapper getScreenField() {
@@ -80,12 +80,12 @@ public class MinecraftWrapper extends R.RWrapper<MinecraftWrapper> {
     }
 
     public dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper getConnection(){
-        Object __return = clazz.inst(this.instance).mthd("method_1562/getConnection", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper.clazz).invk();
+        Object __return = clazz.inst(this.instance).mthd("method_1562/getConnection", dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper.clazz.self()).invk();
         return __return == null ? null : dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper.inst(__return);
     }
 
     public void setScreen(dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.ScreenWrapper screen){
-        clazz.inst(this.instance).mthd("method_1507/setScreen", void.class, dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.ScreenWrapper.clazz).invk(screen.unwrap());
+        clazz.inst(this.instance).mthd("method_1507/setScreen", void.class, dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.ScreenWrapper.clazz.self()).invk(screen.unwrap());
     }
 
     public static MinecraftWrapper inst(Object instance) {
@@ -93,7 +93,7 @@ public class MinecraftWrapper extends R.RWrapper<MinecraftWrapper> {
     }
 
     public static dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper getInstance(){
-        return dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper.inst(clazz.mthd("method_1551/getInstance", dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper.clazz).invk());
+        return dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper.inst(clazz.mthd("method_1551/getInstance", dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper.clazz.self()).invk());
     }
 
     public static class Interceptor {
