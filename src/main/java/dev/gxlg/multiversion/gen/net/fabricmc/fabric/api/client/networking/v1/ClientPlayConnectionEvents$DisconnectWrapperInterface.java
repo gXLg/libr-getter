@@ -7,6 +7,10 @@ import java.lang.reflect.Proxy;
 public interface ClientPlayConnectionEvents$DisconnectWrapperInterface extends R.RWrapperInterface<ClientPlayConnectionEvents$DisconnectWrapper> {
     void onPlayDisconnect(dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper handler, dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper client);
 
+    default Object unwrap() {
+        return null;
+    }
+
     @Override
     default ClientPlayConnectionEvents$DisconnectWrapper wrapper() {
         return ClientPlayConnectionEvents$DisconnectWrapper.inst(Proxy.newProxyInstance(

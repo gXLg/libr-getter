@@ -10,18 +10,20 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class Keybinds_1_17_0 extends Keybinds {
+    private final KeybindData configMenuData = new KeybindData("librgetter.keys.open", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K);
+
     @Override
     public void registerKeybinds() {
-        KeyMappingWrapper configMenuKeyMapping = createKeyMapping(new KeybindData("librgetter.keys.open", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K));
+        KeyMappingWrapper configMenuKeyMapping = createKeyMapping(configMenuData);
         register(configMenuKeyMapping);
-
-        ClientTickEvents.END_CLIENT_TICK.register((
-                                                      (ClientTickEvents$EndTickWrapperInterface) client -> {
-                                                          while (configMenuKeyMapping.consumeClick()) {
-                                                              client.setScreen(new ConfigScreen());
-                                                          }
-                                                      }
-                                                  ).wrapper().unwrap(ClientTickEvents.EndTick.class));
+        ClientTickEvents.EndTick endTick = (
+            (ClientTickEvents$EndTickWrapperInterface) client -> {
+                while (configMenuKeyMapping.consumeClick()) {
+                    client.setScreen(new ConfigScreen());
+                }
+            }
+        ).wrapper().unwrap(ClientTickEvents.EndTick.class);
+        ClientTickEvents.END_CLIENT_TICK.register(endTick);
     }
 
     protected void register(KeyMappingWrapper keyMapping) {

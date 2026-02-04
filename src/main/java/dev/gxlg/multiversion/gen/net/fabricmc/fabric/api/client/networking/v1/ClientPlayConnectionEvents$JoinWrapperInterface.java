@@ -7,6 +7,10 @@ import java.lang.reflect.Proxy;
 public interface ClientPlayConnectionEvents$JoinWrapperInterface extends R.RWrapperInterface<ClientPlayConnectionEvents$JoinWrapper> {
     void onPlayReady(dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper handler, net.fabricmc.fabric.api.networking.v1.PacketSender sender, dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper client);
 
+    default Object unwrap() {
+        return null;
+    }
+
     @Override
     default ClientPlayConnectionEvents$JoinWrapper wrapper() {
         return ClientPlayConnectionEvents$JoinWrapper.inst(Proxy.newProxyInstance(

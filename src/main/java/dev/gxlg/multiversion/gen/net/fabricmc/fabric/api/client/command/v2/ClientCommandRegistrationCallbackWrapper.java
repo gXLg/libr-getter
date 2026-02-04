@@ -22,10 +22,6 @@ public class ClientCommandRegistrationCallbackWrapper extends R.RWrapper<ClientC
         return instance == null ? null : new ClientCommandRegistrationCallbackWrapper(instance);
     }
 
-    public static dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.event.EventWrapper EVENT() {
-        return dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.event.EventWrapper.inst(clazz.fld("EVENT", dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.event.EventWrapper.clazz.self()).get());
-    }
-
     public static class Interceptor {
         @SuppressWarnings("unused")
         @RuntimeType

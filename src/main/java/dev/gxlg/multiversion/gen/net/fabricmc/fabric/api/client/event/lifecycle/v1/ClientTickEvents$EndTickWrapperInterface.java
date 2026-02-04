@@ -7,6 +7,10 @@ import java.lang.reflect.Proxy;
 public interface ClientTickEvents$EndTickWrapperInterface extends R.RWrapperInterface<ClientTickEvents$EndTickWrapper> {
     void onEndTick(dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper client);
 
+    default Object unwrap() {
+        return null;
+    }
+
     @Override
     default ClientTickEvents$EndTickWrapper wrapper() {
         return ClientTickEvents$EndTickWrapper.inst(Proxy.newProxyInstance(

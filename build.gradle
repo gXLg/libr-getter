@@ -44,4 +44,33 @@ jar {
     }
 }
 
+def generatedSourceDir = layout.buildDirectory.dir("generated/sources/multiversion/java").get().asFile
+def inputMappingFile = file("src/main/resources/multi-version.mapping")
+
+tasks.register("generateMultiversionCode", Exec) {
+    group = "generation"
+    description = "Generates reflection layer using Node.js"
+
+    // Inputs/Outputs for Gradle caching (UP-TO-DATE checks)
+    inputs.file inputMappingFile
+    outputs.dir generatedSourceDir
+
+    // Command to run your script
+    commandLine "node", "MultiVersion/generate-mappings.js", inputMappingFile.absolutePath, generatedSourceDir.absolutePath
+}
+
+sourceSets {
+    main {
+        java {
+            // Register the generated directory as a source root
+            srcDir generatedSourceDir
+        }
+    }
+}
+
+// Ensure code is generated before compilation and before IDE sync
+tasks.named('compileJava') {
+    dependsOn generateMultiversionCode
+}
+
 apply from: './MultiVersion/multi-version.gradle'

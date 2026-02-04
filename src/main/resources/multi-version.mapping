@@ -476,7 +476,7 @@ class Holder
     boolean method_40220/is(TagKey resourceKey)
     String method_55840/getRegisteredName()
 
-    Holder$Reference extends Holder
+    class Holder$Reference extends Holder
         ResourceKey method_40237/key()
         Object comp_349/value()
 

@@ -9,6 +9,10 @@ public interface BookViewScreen$BookAccessWrapperInterface extends R.RWrapperInt
 
     dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper getPage(int index);
 
+    default Object unwrap() {
+        return null;
+    }
+
     @Override
     default BookViewScreen$BookAccessWrapper wrapper() {
         return BookViewScreen$BookAccessWrapper.inst(Proxy.newProxyInstance(

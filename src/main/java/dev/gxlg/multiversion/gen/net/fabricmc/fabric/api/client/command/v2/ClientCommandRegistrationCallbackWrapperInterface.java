@@ -7,6 +7,10 @@ import java.lang.reflect.Proxy;
 public interface ClientCommandRegistrationCallbackWrapperInterface extends R.RWrapperInterface<ClientCommandRegistrationCallbackWrapper> {
     void register(dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper dispatcher, dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper context);
 
+    default Object unwrap() {
+        return null;
+    }
+
     @Override
     default ClientCommandRegistrationCallbackWrapper wrapper() {
         return ClientCommandRegistrationCallbackWrapper.inst(Proxy.newProxyInstance(
