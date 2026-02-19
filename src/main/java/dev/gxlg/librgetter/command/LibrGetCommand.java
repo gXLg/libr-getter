@@ -55,7 +55,7 @@ public class LibrGetCommand {
     }
 
     public static void list() {
-        Texts.getImpl().sendListOfGoals();
+        Texts.sendListOfGoals();
     }
 
     public static <T> void config(CommandContext context, Configurable<T> config) {
@@ -72,7 +72,7 @@ public class LibrGetCommand {
         if (screen instanceof ConfigScreen configScreen) {
             configScreen.updateScreen();
         } else {
-            Texts.getImpl().sendTranslatable(new ConfigValueMessage(config.name(), value));
+            Texts.sendTranslatable(new ConfigValueMessage(config.name(), value));
         }
     }
 
@@ -126,7 +126,7 @@ public class LibrGetCommand {
         float minDistance = Float.MAX_VALUE;
         for (Entity entity : worldEntities) {
             if (entity instanceof Villager villager) {
-                if (Villagers.getImpl().isVillagerLibrarian(villager)) {
+                if (Villagers.isVillagerLibrarian(villager)) {
                     float distance = villager.distanceTo(player);
                     if (distance < minDistance && distance < 10) {
                         foundVillager = villager;
@@ -147,7 +147,7 @@ public class LibrGetCommand {
     public static void clearGoals() {
         LibrGetter.config.goals.clear();
         LibrGetter.configManager.save();
-        Texts.getImpl().sendTranslatable(new GoalsListClearedMessage());
+        Texts.sendTranslatable(new GoalsListClearedMessage());
     }
 
     public static void stopWorking() throws ProcessNotRunningException {
@@ -197,19 +197,19 @@ public class LibrGetCommand {
                 throw new BlockNotLecternException();
             }
             TaskManager.updateContext(ctx -> ctx.withLecternPos(blockPos));
-            Texts.getImpl().sendTranslatable(new LecternSelectedMessage());
+            Texts.sendTranslatable(new LecternSelectedMessage());
 
         } else if (hitType.equals(HitResult$Type.ENTITY())) {
             Entity entity = ((EntityHitResult) hit).getEntity();
             if (!(entity instanceof Villager villager)) {
                 throw new EntityNotVillagerException();
             }
-            if (!Villagers.getImpl().isVillagerLibrarian(villager)) {
+            if (!Villagers.isVillagerLibrarian(villager)) {
                 throw new VillagerNotLibrarianException();
             }
 
             TaskManager.updateContext(ctx -> ctx.withVillager(villager));
-            Texts.getImpl().sendTranslatable(new LibrarianSelectedMessage());
+            Texts.sendTranslatable(new LibrarianSelectedMessage());
         }
     }
 }

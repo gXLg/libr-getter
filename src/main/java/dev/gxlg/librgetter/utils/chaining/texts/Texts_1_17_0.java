@@ -35,7 +35,7 @@ import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 import java.util.List;
 import java.util.Map;
 
-public class Texts_1_17_0 extends Texts {
+public class Texts_1_17_0 extends Texts.Base {
     protected void sendMessage(Component text, boolean actionbar) {
         Minecraft client = Minecraft.getInstance();
         LocalPlayer player = client.getPlayerField();
@@ -147,8 +147,7 @@ public class Texts_1_17_0 extends Texts {
 
         } else if (configurable.type() == OptionsConfig.class) {
             OptionsConfig<?> value = (OptionsConfig<?>) configurable.get();
-            Style optionValueStyle = Style.EMPTY().withClickEvent(runnable("/librget config " + config + " " + value.next().getName()))
-                                          .withColor(value.getName().equals("NONE") ? red : green);
+            Style optionValueStyle = Style.EMPTY().withClickEvent(runnable("/librget config " + config + " " + value.next().getName())).withColor(value.getName().equals("NONE") ? red : green);
 
             resetCommand = runnable("/librget config " + config + " " + ((OptionsConfig<?>) configurable.getDefault()).getName());
             leftText = literal("[" + value.getName() + "]").withStyle(optionValueStyle);

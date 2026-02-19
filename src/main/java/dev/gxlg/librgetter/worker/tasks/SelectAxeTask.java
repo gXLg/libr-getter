@@ -40,7 +40,7 @@ public class SelectAxeTask extends TaskManager.Task {
                     continue;
                 }
                 float breakingSpeed = stack.getDestroySpeed(Blocks.LECTERN().defaultBlockState());
-                int efficiencyLevel = Enchantments.getImpl().getEfficiencyLevel(stack);
+                int efficiencyLevel = Enchantments.getEfficiencyLevel(stack);
                 if (stack.getItem() instanceof AxeItem) {
                     breakingSpeed += (float) (efficiencyLevel * efficiencyLevel + 1);
                 }

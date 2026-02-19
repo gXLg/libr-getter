@@ -15,7 +15,7 @@ public class TradeCyclingClickTask extends TaskManager.Task {
         if (currentScreen == null) {
             throw new StopCyclingSignal();
         }
-        Support.getImpl().sendCycleTradesPacket();
+        Support.sendCycleTradesPacket();
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx.withIncreasedAttemptsCounter()));
     }
 }

@@ -3,14 +3,18 @@ package dev.gxlg.librgetter.utils.chaining.villagers;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
 
-public abstract class Villagers {
-    public abstract boolean isVillagerLibrarian(Villager villager);
+public class Villagers {
+    private static Base implementation = null;
 
-    public abstract boolean isVillagerUnemployed(Villager villager);
+    public static boolean isVillagerLibrarian(Villager villager) {
+        return getImpl().isVillagerLibrarian(villager);
+    }
 
-    private static Villagers implementation = null;
+    public static boolean isVillagerUnemployed(Villager villager) {
+        return getImpl().isVillagerUnemployed(villager);
+    }
 
-    public static Villagers getImpl() {
+    private static Base getImpl() {
         if (implementation != null) {
             return implementation;
         }
@@ -20,5 +24,11 @@ public abstract class Villagers {
             implementation = new Villagers_1_21_5();
         }
         return implementation;
+    }
+
+    public abstract static class Base {
+        public abstract boolean isVillagerLibrarian(Villager villager);
+
+        public abstract boolean isVillagerUnemployed(Villager villager);
     }
 }

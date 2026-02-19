@@ -39,7 +39,7 @@ public class FinalizeSearchTask extends TaskManager.Task {
             throw new InternalErrorException("player");
         }
 
-        if (!Support.getImpl().isUsingTradeCycling()) {
+        if (!Support.isUsingTradeCycling()) {
             // TradeCycling process keeps the screen open, else we have to open it again
             MultiPlayerGameMode game = client.getGameModeField();
             if (game == null) {

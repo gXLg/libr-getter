@@ -55,7 +55,7 @@ public class TaskManager {
             } catch (StopTaskSignal signal) {
                 signal.switchTask();
             } catch (LibrGetterException e) {
-                Texts.getImpl().sendTranslatable(e.getTranslatableErrorMessage());
+                Texts.sendTranslatable(e.getTranslatableErrorMessage());
                 switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), ctx));
             }
         } while (updateContextAndTaskAndReturnIsNextTick());
@@ -88,7 +88,7 @@ public class TaskManager {
         if (!isWorking()) {
             throw new ProcessNotRunningException();
         }
-        Texts.getImpl().sendTranslatable(new ProcessStoppedMessage());
+        Texts.sendTranslatable(new ProcessStoppedMessage());
         switchTask(ctx -> TaskSwitch.nextTick(new StandbyTask(), TaskContext.EMPTY));
     }
 

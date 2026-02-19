@@ -5,7 +5,7 @@ import dev.gxlg.versiont.gen.net.minecraft.nbt.Tag;
 
 import java.util.List;
 
-public class Tags_1_17_0 extends Tags {
+public class Tags_1_17_0 extends Tags.Base {
     @Override
     public String getString(CompoundTag element, String name) {
         return element.getString(name);

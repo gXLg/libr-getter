@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class Bukkit {
     public static EnchantmentTrade.EnchantmentOnly parse(CompoundTag tag) throws LibrGetterException {
-        CompoundTag element = Tags.getImpl().getCompound(tag, "PublicBukkitValues");
+        CompoundTag element = Tags.getCompound(tag, "PublicBukkitValues");
         Set<String> keys = element.keySet();
 
         for (String key : keys) {
@@ -31,7 +31,7 @@ public class Bukkit {
         for (String key : keys) {
             if (key.startsWith("enchantmentsolution:") && keys.contains(key + "_level")) {
                 id = key;
-                String lvls = Tags.getImpl().getString(element, key + "_level");
+                String lvls = Tags.getString(element, key + "_level");
                 lvl = Integer.parseInt(lvls);
                 break;
             }

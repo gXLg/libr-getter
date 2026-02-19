@@ -4,7 +4,7 @@ import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.versiont.gen.de.maxhenkel.tradecycling.TradeCyclingClientMod;
 import net.fabricmc.loader.api.FabricLoader;
 
-public class Support_1_17_0 extends Support {
+public class Support_1_17_0 extends Support.Base {
     private final FabricLoader fabricLoader;
 
     private final boolean tradeCycling;

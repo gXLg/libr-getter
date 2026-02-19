@@ -12,8 +12,8 @@ public class WaitVillagerAcceptProfessionTask extends TaskManager.Task {
 
     @Override
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
-        if (!Villagers.getImpl().isVillagerUnemployed(taskContext.selectedVillager())) {
-            if (!Villagers.getImpl().isVillagerLibrarian(taskContext.selectedVillager())) {
+        if (!Villagers.isVillagerUnemployed(taskContext.selectedVillager())) {
+            if (!Villagers.isVillagerLibrarian(taskContext.selectedVillager())) {
                 throw new PickedAnotherProfessionException();
             }
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RequestTradesTask(), ctx));

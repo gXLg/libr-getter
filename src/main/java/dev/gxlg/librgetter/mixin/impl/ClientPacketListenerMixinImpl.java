@@ -25,7 +25,7 @@ public class ClientPacketListenerMixinImpl {
     }
 
     public static Optional<Object> handleOpenScreen(ClientboundOpenScreenPacket packet) {
-        if (!packet.getType().equals(MenuType.MERCHANT()) || !TaskManager.isWorking() || Support.getImpl().isUsingTradeCycling()) {
+        if (!packet.getType().equals(MenuType.MERCHANT()) || !TaskManager.isWorking() || Support.isUsingTradeCycling()) {
             return Optional.empty();
         }
         Minecraft client = Minecraft.getInstance();

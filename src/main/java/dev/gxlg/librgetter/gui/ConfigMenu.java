@@ -49,26 +49,26 @@ public class ConfigMenu {
     }
 
     public static BookViewScreen$BookAccess getUpdatedContent() {
-        cachedContent = Gui.getImpl().createBookAccess(list);
+        cachedContent = Gui.createBookAccess(list);
         return cachedContent;
     }
 
     public static void updatePage(int index) {
         MutableComponent text;
         if (index == 0) {
-            text = Texts.getImpl().bookMainPage(categories);
+            text = Texts.bookMainPage(categories);
 
         } else {
             List<String> reversed = new ArrayList<>(ConfigManager.CATEGORIES);
             Collections.reverse(reversed);
             String category = reversed.stream().filter(c -> categories.get(c) <= index).findFirst().orElseThrow(() -> new RuntimeException("Invalid index " + index));
-            text = Texts.getImpl().bookTitle(category);
+            text = Texts.bookTitle(category);
 
             int j = index - categories.get(category);
             int finish = Math.min(j * CONFIGS_PER_PAGE + CONFIGS_PER_PAGE, LibrGetter.configManager.getConfigurablesForCategory(category).size());
             for (int i = j * CONFIGS_PER_PAGE; i < finish; i++) {
                 Configurable<?> config = LibrGetter.configManager.getConfigurablesForCategory(category).get(i);
-                text = Texts.getImpl().bookEntry(text, config);
+                text = Texts.bookEntry(text, config);
             }
         }
         list.set(index, text);

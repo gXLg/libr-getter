@@ -34,10 +34,10 @@ public class LibrGetter implements ClientModInitializer {
         R.preload(ConfigScreen.clazz);
 
         // register commands
-        Commands.getImpl().registerCommands();
+        Commands.registerCommands();
 
         // register keybinds
-        Keybinds.getImpl().registerKeybinds();
+        Keybinds.registerKeybinds();
 
         // checking for a new update
         Updater.checkUpdates();

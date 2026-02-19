@@ -94,7 +94,7 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
         // place
         Vec3 lowBlockPos = Vec3.atBottomCenterOf(taskContext.selectedLecternPos());
         BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP(), taskContext.selectedLecternPos().below(), false);
-        Players.getImpl().interactBlock(game, player, lowBlock, mainhand);
+        Players.interactBlock(game, player, lowBlock, mainhand);
     }
 
     @Override

@@ -109,7 +109,7 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
 
         Compatibility modCompatibilityCondition = configurableField.getDeclaredAnnotation(Compatibility.class);
         //noinspection RedundantIfStatement
-        if (modCompatibilityCondition != null && !Support.getImpl().isModPresent(modCompatibilityCondition.value())) {
+        if (modCompatibilityCondition != null && !Support.isModPresent(modCompatibilityCondition.value())) {
             return false;
         }
 

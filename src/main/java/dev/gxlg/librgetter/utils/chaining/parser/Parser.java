@@ -5,12 +5,14 @@ import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
 
-public abstract class Parser {
-    public abstract EnchantmentTrade parseTrade(MerchantOffer offer) throws LibrGetterException;
+public class Parser {
+    private static Base implementation = null;
 
-    private static Parser implementation = null;
+    public static EnchantmentTrade parseTrade(MerchantOffer offer) throws LibrGetterException {
+        return getImpl().parseTrade(offer);
+    }
 
-    public static Parser getImpl() {
+    private static Base getImpl() {
         if (implementation != null) {
             return implementation;
         }
@@ -20,5 +22,9 @@ public abstract class Parser {
             implementation = new Parser_1_20_5();
         }
         return implementation;
+    }
+
+    public abstract static class Base {
+        public abstract EnchantmentTrade parseTrade(MerchantOffer offer) throws LibrGetterException;
     }
 }

@@ -6,6 +6,6 @@ import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessSto
 public class StopCyclingSignal extends FinishSignal {
     @Override
     protected void notifyPlayer() {
-        Texts.getImpl().sendTranslatable(new ProcessStoppedMessage());
+        Texts.sendTranslatable(new ProcessStoppedMessage());
     }
 }

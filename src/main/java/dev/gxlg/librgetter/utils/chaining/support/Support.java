@@ -2,16 +2,22 @@ package dev.gxlg.librgetter.utils.chaining.support;
 
 import dev.gxlg.versiont.api.V;
 
-public abstract class Support {
-    public abstract void sendCycleTradesPacket();
+public class Support {
+    private static Base implementation;
 
-    public abstract boolean isUsingTradeCycling();
+    public static void sendCycleTradesPacket() {
+        getImpl().sendCycleTradesPacket();
+    }
 
-    public abstract boolean isModPresent(String modID);
+    public static boolean isUsingTradeCycling() {
+        return getImpl().isUsingTradeCycling();
+    }
 
-    private static Support implementation;
+    public static boolean isModPresent(String modID) {
+        return getImpl().isModPresent(modID);
+    }
 
-    public static Support getImpl() {
+    private static Base getImpl() {
         if (implementation != null) {
             return implementation;
         }
@@ -21,5 +27,13 @@ public abstract class Support {
             implementation = new Support_1_20_2();
         }
         return implementation;
+    }
+
+    public abstract static class Base {
+        public abstract void sendCycleTradesPacket();
+
+        public abstract boolean isUsingTradeCycling();
+
+        public abstract boolean isModPresent(String modID);
     }
 }

@@ -46,7 +46,7 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
             if (!isEnchantmentTrade(offer)) {
                 continue;
             }
-            EnchantmentTrade trade = Parser.getImpl().parseTrade(offer);
+            EnchantmentTrade trade = Parser.parseTrade(offer);
             if (trade != null) {
                 offeredEnchantments.add(trade);
             }
@@ -54,15 +54,15 @@ public class ParseAndMatchTradesTask extends TaskManager.Task {
                 break;
             }
         }
-        Texts.getImpl().sendTradeLog(offeredEnchantments);
+        Texts.sendTradeLog(offeredEnchantments);
         Optional<List<EnchantmentTrade>> matching = LibrGetter.config.matchMode.match(offeredEnchantments);
         if (matching.isEmpty()) {
-            throw new StopTaskSignal(ctx -> Support.getImpl().isUsingTradeCycling() ? TaskManager.TaskSwitch.nextTick(new TradeCyclingClickTask(), ctx) :
+            throw new StopTaskSignal(ctx -> Support.isUsingTradeCycling() ? TaskManager.TaskSwitch.nextTick(new TradeCyclingClickTask(), ctx) :
                                             TaskManager.TaskSwitch.sameTick(new SelectAxeTask(), ctx));
         }
 
-        Players.getImpl().playFoundNotification(player);
-        matching.get().forEach(e -> Texts.getImpl().sendFound(e, taskContext.attemptsCounter()));
+        Players.playFoundNotification(player);
+        matching.get().forEach(e -> Texts.sendFound(e, taskContext.attemptsCounter()));
 
         if (LibrGetter.config.removeGoal) {
             for (EnchantmentTrade trade : matching.get()) {

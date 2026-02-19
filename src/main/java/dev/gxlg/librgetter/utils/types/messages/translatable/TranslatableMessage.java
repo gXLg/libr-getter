@@ -16,6 +16,6 @@ public abstract class TranslatableMessage extends Message {
 
     @Override
     protected MutableComponent buildComponent() {
-        return Texts.getImpl().translatable(translationKey, args);
+        return Texts.translatable(translationKey, args);
     }
 }

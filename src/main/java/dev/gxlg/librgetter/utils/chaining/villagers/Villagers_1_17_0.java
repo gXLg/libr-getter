@@ -4,7 +4,7 @@ import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.VillagerData;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.VillagerProfession;
 
-public class Villagers_1_17_0 extends Villagers {
+public class Villagers_1_17_0 extends Villagers.Base {
     @Override
     public boolean isVillagerLibrarian(Villager villager) {
         VillagerData villagerData = villager.getVillagerData();

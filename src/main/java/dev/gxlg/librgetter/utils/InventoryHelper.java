@@ -17,7 +17,7 @@ public class InventoryHelper {
             game.handleInventoryMouseClick(syncId, slot, swap, ClickType.SWAP(), player);
             slot = swap;
         }
-        Players.getImpl().setSelectedSlot(inventory, slot);
+        Players.setSelectedSlot(inventory, slot);
         clientNetwork.send(new ServerboundSetCarriedItemPacket(slot));
     }
 }

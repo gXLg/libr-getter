@@ -59,7 +59,7 @@ public class StartTask extends TaskManager.Task {
             }
         }
 
-        Texts.getImpl().sendTranslatable(new ProcessStartedMessage());
+        Texts.sendTranslatable(new ProcessStartedMessage());
 
         throw new StopTaskSignal(ctx -> {
             if (!LibrGetter.config.autoTool) {

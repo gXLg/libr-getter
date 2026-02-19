@@ -28,7 +28,7 @@ import java.util.List;
 
 public class CommandHelper {
     public static void manageGoals(CommandContext context, boolean remove) throws LibrGetterException {
-        List<Enchantment> enchantments = Commands.getImpl().getEnchantmentsFromCommandContext(context);
+        List<Enchantment> enchantments = Commands.getEnchantmentsFromCommandContext(context);
 
         int globalLvlCriteria;
         try {
@@ -46,7 +46,7 @@ public class CommandHelper {
         List<EnchantmentTrade> trades = new ArrayList<>();
         List<Integer> maxLevels = new ArrayList<>();
         for (Enchantment enchantment : enchantments) {
-            Identifier enchantmentId = Enchantments.getImpl().enchantmentId(enchantment);
+            Identifier enchantmentId = Enchantments.enchantmentId(enchantment);
             if (enchantmentId == null) {
                 throw new InternalErrorException("enchantmentId");
             }
@@ -72,7 +72,7 @@ public class CommandHelper {
                     EnchantmentTrade trade = trades.get(i);
                     int maxLevel = maxLevels.get(i);
                     if (LibrGetter.config.warning && globalLvlCriteria > maxLevel) {
-                        Texts.getImpl().sendTranslatable(new LevelOverMaxMessage(trade, maxLevel));
+                        Texts.sendTranslatable(new LevelOverMaxMessage(trade, maxLevel));
                     }
                     try {
                         removeGoal(trade);
@@ -91,8 +91,8 @@ public class CommandHelper {
                 EnchantmentTrade trade = trades.get(i);
                 int maxLevel = maxLevels.get(i);
 
-                if (LibrGetter.config.warning && !Enchantments.getImpl().canBeTraded(enchantment)) {
-                    Texts.getImpl().sendTranslatable(new CanNotBeTradedMessage(trade));
+                if (LibrGetter.config.warning && !Enchantments.canBeTraded(enchantment)) {
+                    Texts.sendTranslatable(new CanNotBeTradedMessage(trade));
                 }
 
                 if (LibrGetter.config.warning && trade.lvl() > maxLevel) {
@@ -105,7 +105,7 @@ public class CommandHelper {
     }
 
     public static void manageGoalsCustom(CommandContext context, boolean remove) throws LibrGetterException {
-        String enchantment = Commands.getImpl().getCustomEnchantmentFromCommandContext(context);
+        String enchantment = Commands.getCustomEnchantmentFromCommandContext(context);
         if (Identifier.tryParse(enchantment) == null) {
             throw new CouldNotParseCustomException();
         }
@@ -124,7 +124,7 @@ public class CommandHelper {
             removeGoal(trade);
         } else {
             if (LibrGetter.config.warning) {
-                Texts.getImpl().sendTranslatable(new AddingCustomEnchantmentMessage(trade));
+                Texts.sendTranslatable(new AddingCustomEnchantmentMessage(trade));
             }
             addGoal(trade, true);
         }
@@ -140,11 +140,11 @@ public class CommandHelper {
         }
 
         if (alreadyPresentTrade != null) {
-            Texts.getImpl().sendTranslatable(new PriceChangedMessage(alreadyPresentTrade, newTrade.price()));
+            Texts.sendTranslatable(new PriceChangedMessage(alreadyPresentTrade, newTrade.price()));
             LibrGetter.config.goals.remove(alreadyPresentTrade);
         } else {
             TranslatableSuccessMessage message = custom ? new CustomTradeAddedMessage(newTrade, newTrade.price()) : new TradeAddedMessage(newTrade, newTrade.price());
-            Texts.getImpl().sendTranslatable(message);
+            Texts.sendTranslatable(message);
         }
         LibrGetter.config.goals.add(newTrade);
         LibrGetter.configManager.save();
@@ -162,7 +162,7 @@ public class CommandHelper {
         }
         for (EnchantmentTrade trade : alreadyPresentTrades) {
             LibrGetter.config.goals.remove(trade);
-            Texts.getImpl().sendTranslatable(new EnchantmentRemovedMessage(trade));
+            Texts.sendTranslatable(new EnchantmentRemovedMessage(trade));
         }
         LibrGetter.configManager.save();
     }
@@ -180,7 +180,7 @@ public class CommandHelper {
         }
         LibrGetter.config.goals.remove(alreadyPresentTrade);
         LibrGetter.configManager.save();
-        Texts.getImpl().sendTranslatable(new EnchantmentRemovedMessage(tradeToRemove));
+        Texts.sendTranslatable(new EnchantmentRemovedMessage(tradeToRemove));
     }
 
     public static Command<?> commandWrapper(CommandRunnable runnable) {
@@ -188,7 +188,7 @@ public class CommandHelper {
             try {
                 runnable.run(R.wrapperInst(CommandContext.class, ctx));
             } catch (LibrGetterException e) {
-                Texts.getImpl().sendTranslatable(e.getTranslatableErrorMessage());
+                Texts.sendTranslatable(e.getTranslatableErrorMessage());
                 return 1;
             }
             return 0;
