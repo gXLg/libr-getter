@@ -9,8 +9,8 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
-import dev.gxlg.multiversion.gen.net.minecraft.commands.SharedSuggestionProviderWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.commands.SharedSuggestionProvider;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,7 +37,7 @@ public class EnumArgumentType<T extends Enum<T> & OptionsConfig<T>> implements A
         String input = builder.getRemaining().toLowerCase(Locale.ROOT);
         for (T option : this.values) {
             String optionName = option.getName();
-            if (SharedSuggestionProviderWrapper.matchesSubStr(input, optionName.toLowerCase(Locale.ROOT))) {
+            if (SharedSuggestionProvider.matchesSubStr(input, optionName.toLowerCase(Locale.ROOT))) {
                 builder.suggest(optionName);
             }
         }
@@ -49,7 +49,7 @@ public class EnumArgumentType<T extends Enum<T> & OptionsConfig<T>> implements A
         return Arrays.stream(this.values).map(Enum::name).limit(2).collect(Collectors.toList());
     }
 
-    private static final DynamicCommandExceptionType INVALID_ENUM_EXCEPTION = new DynamicCommandExceptionType(value -> ComponentWrapper.nullToEmpty("Invalid enum value").unwrap(Message.class));
+    private static final DynamicCommandExceptionType INVALID_ENUM_EXCEPTION = new DynamicCommandExceptionType(value -> Component.nullToEmpty("Invalid enum value").unwrap(Message.class));
 
     public static <S extends Enum<S> & OptionsConfig<S>> EnumArgumentType<S> of(S[] values) {
         return new EnumArgumentType<>(values);

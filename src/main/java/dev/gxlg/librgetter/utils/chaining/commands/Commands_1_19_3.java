@@ -1,16 +1,17 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
-import com.mojang.brigadier.context.CommandContext;
 import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.ArgumentNotSupportedException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.WrongEnchantmentException;
-import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgument$ResultWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.core.Holder$ReferenceWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.core.HolderSet$NamedWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.core.HolderWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.core.registries.BuiltInRegistriesWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
+import dev.gxlg.versiont.gen.java.lang.Object;
+import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.ResourceOrTagArgument$Result;
+import dev.gxlg.versiont.gen.net.minecraft.core.Holder;
+import dev.gxlg.versiont.gen.net.minecraft.core.Holder$Reference;
+import dev.gxlg.versiont.gen.net.minecraft.core.HolderSet$Named;
+import dev.gxlg.versiont.gen.net.minecraft.core.registries.BuiltInRegistries;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -19,30 +20,30 @@ import java.util.stream.Stream;
 
 public class Commands_1_19_3 extends Commands_1_19_0 {
     @Override
-    public List<EnchantmentWrapper> getEnchantmentsFromCommandContext(CommandContext<?> context) throws LibrGetterException {
-        ResourceOrTagArgument$ResultWrapper argument = ResourceOrTagArgument$ResultWrapper.inst(context.getArgument("enchantment", ResourceOrTagArgument$ResultWrapper.clazz.self()));
+    public List<Enchantment> getEnchantmentsFromCommandContext(CommandContext context) throws LibrGetterException {
+        ResourceOrTagArgument$Result argument = (ResourceOrTagArgument$Result) context.getArgument("enchantment", ResourceOrTagArgument$Result.clazz);
 
         Optional<?> optionalResult = fromArgument(argument);
         if (optionalResult.isEmpty()) {
             throw new ArgumentNotSupportedException();
         }
 
-        Either<?, ?> entry = (Either<?, ?>) ResourceOrTagArgument$ResultWrapper.inst(optionalResult.get()).unwrap2();
-        Optional<?> optEnchantment = entry.left();
-        Optional<?> optTag = entry.right();
+        Either<Object, Object> entry = ((ResourceOrTagArgument$Result) optionalResult.get()).unwrap2();
+        Optional<Object> optEnchantment = entry.left();
+        Optional<Object> optTag = entry.right();
 
         if (optEnchantment.isEmpty()) {
             if (optTag.isEmpty()) {
                 throw new WrongEnchantmentException();
             }
-            Stream<HolderWrapper> stream = HolderSet$NamedWrapper.inst(optTag.get()).stream();
-            return stream.map(ref -> EnchantmentWrapper.inst(ref.downcast(Holder$ReferenceWrapper.class).value())).toList();
+            Stream<Holder> stream = ((HolderSet$Named) optTag.get()).stream();
+            return stream.map(ref -> ((Enchantment) ((Holder$Reference) ref).value())).toList();
         } else {
-            return List.of(EnchantmentWrapper.inst(Holder$ReferenceWrapper.inst(optEnchantment.get()).value()));
+            return List.of(((Enchantment) ((Holder$Reference) optEnchantment.get()).value()));
         }
     }
 
-    protected @NotNull Optional<?> fromArgument(ResourceOrTagArgument$ResultWrapper argument) {
-        return (Optional<?>) argument.cast(BuiltInRegistriesWrapper.ENCHANTMENT().key());
+    protected @NotNull Optional<Object> fromArgument(ResourceOrTagArgument$Result argument) {
+        return argument.cast(BuiltInRegistries.ENCHANTMENT().key());
     }
 }

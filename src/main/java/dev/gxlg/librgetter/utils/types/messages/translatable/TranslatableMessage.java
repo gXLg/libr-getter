@@ -2,7 +2,7 @@ package dev.gxlg.librgetter.utils.types.messages.translatable;
 
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.messages.Message;
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
 
 public abstract class TranslatableMessage extends Message {
     private final String translationKey;
@@ -15,7 +15,7 @@ public abstract class TranslatableMessage extends Message {
     }
 
     @Override
-    protected MutableComponentWrapper buildComponent() {
+    protected MutableComponent buildComponent() {
         return Texts.getImpl().translatable(translationKey, args);
     }
 }

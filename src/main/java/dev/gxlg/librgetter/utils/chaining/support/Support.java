@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.support;
 
-import dev.gxlg.multiversion.V;
+import dev.gxlg.versiont.api.V;
 
 public abstract class Support {
     public abstract void sendCycleTradesPacket();

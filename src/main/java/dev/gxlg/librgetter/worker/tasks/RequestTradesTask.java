@@ -6,10 +6,10 @@ import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErro
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.VillagerTooFarException;
 import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
-import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
+import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
+import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
 
 public class RequestTradesTask extends TaskManager.Task {
     @Override
@@ -18,12 +18,12 @@ public class RequestTradesTask extends TaskManager.Task {
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
         }
 
-        MinecraftWrapper client = MinecraftWrapper.getInstance();
-        LocalPlayerWrapper player = client.getPlayerField();
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
-        MultiPlayerGameModeWrapper game = client.getGameModeField();
+        MultiPlayerGameMode game = client.getGameModeField();
         if (game == null) {
             throw new InternalErrorException("game");
         }
@@ -32,7 +32,7 @@ public class RequestTradesTask extends TaskManager.Task {
             throw new VillagerTooFarException();
         }
 
-        game.interact(player, taskContext.selectedVillager(), InteractionHandWrapper.MAIN_HAND());
+        game.interact(player, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
     }
 }

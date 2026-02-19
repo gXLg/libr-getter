@@ -1,37 +1,36 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
-import dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper;
-import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper;
-import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper;
-import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandManagerWrapper;
-import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallbackWrapperInterface;
-import dev.gxlg.multiversion.gen.net.minecraft.commands.CommandBuildContextWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ResourceOrTagArgumentWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.core.registries.BuiltInRegistriesWrapper;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.arguments.ArgumentType;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.ArgumentBuilder;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallbackI;
+import dev.gxlg.versiont.gen.net.minecraft.commands.CommandBuildContext;
+import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.ResourceOrTagArgument;
+import dev.gxlg.versiont.gen.net.minecraft.core.registries.BuiltInRegistries;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 
 public class Commands_1_19_0 extends Commands_1_17_0 {
     @Override
     public void registerCommands() {
-        ClientCommandRegistrationCallback.EVENT.register((
-                                                             (ClientCommandRegistrationCallbackWrapperInterface) (dispatcher, context) -> {
-                                                                 ArgumentTypeWrapper enchantmentArgumentType = getEnchantmentArgumentType(context);
-                                                                 registerLibrget(dispatcher, enchantmentArgumentType);
-                                                             }
-                                                         ).wrapper().unwrap(ClientCommandRegistrationCallback.class));
+        ClientCommandRegistrationCallbackI callback = (dispatcher, context) -> {
+            ArgumentType enchantmentArgumentType = getEnchantmentArgumentType(context);
+            registerLibrget(dispatcher, enchantmentArgumentType);
+        };
+        ClientCommandRegistrationCallback.EVENT.register(callback.unwrap(ClientCommandRegistrationCallback.class));
     }
 
-    protected ArgumentTypeWrapper getEnchantmentArgumentType(CommandBuildContextWrapper context) {
-        return ResourceOrTagArgumentWrapper.resourceOrTag(context, BuiltInRegistriesWrapper.ENCHANTMENT().key());
-    }
-
-    @Override
-    protected LiteralArgumentBuilderWrapper literal(String command) {
-        return ClientCommandManagerWrapper.literal(command);
+    protected ArgumentType getEnchantmentArgumentType(CommandBuildContext context) {
+        return ResourceOrTagArgument.resourceOrTag(context, BuiltInRegistries.ENCHANTMENT().key());
     }
 
     @Override
-    protected ArgumentBuilderWrapper argument(String command, ArgumentTypeWrapper argumentType) {
-        return ClientCommandManagerWrapper.argument(command, argumentType);
+    protected LiteralArgumentBuilder literal(String command) {
+        return ClientCommandManager.literal(command);
+    }
+
+    @Override
+    protected ArgumentBuilder argument(String command, ArgumentType argumentType) {
+        return ClientCommandManager.argument(command, argumentType);
     }
 }

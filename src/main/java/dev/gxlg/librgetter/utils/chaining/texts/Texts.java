@@ -3,8 +3,8 @@ package dev.gxlg.librgetter.utils.chaining.texts;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.messages.translatable.TranslatableMessage;
-import dev.gxlg.multiversion.V;
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
+import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
 
 import java.util.List;
 import java.util.Map;
@@ -20,17 +20,17 @@ public abstract class Texts {
 
     abstract public void sendListOfGoals();
 
-    abstract public MutableComponentWrapper bookMainPage(Map<String, Integer> categories);
+    abstract public MutableComponent bookMainPage(Map<String, Integer> categories);
 
-    abstract public MutableComponentWrapper bookTitle(String category);
+    abstract public MutableComponent bookTitle(String category);
 
-    abstract public MutableComponentWrapper bookEntry(MutableComponentWrapper text, Configurable<?> configurable);
+    abstract public MutableComponent bookEntry(MutableComponent text, Configurable<?> configurable);
 
-    abstract public MutableComponentWrapper literal(String text);
+    abstract public MutableComponent literal(String text);
 
-    abstract public MutableComponentWrapper translatable(String message, Object... args);
+    abstract public MutableComponent translatable(String message, Object... args);
 
-    abstract public MutableComponentWrapper enchantmentTradeToComponent(EnchantmentTrade trade);
+    abstract public MutableComponent enchantmentTradeToComponent(EnchantmentTrade trade);
 
     private static Texts implementation = null;
 

@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.types.messages.translatable.warning;
 
 import dev.gxlg.librgetter.utils.types.messages.translatable.TranslatableMessage;
-import dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.ChatFormatting;
 
 public class TranslatableWarningMessage extends TranslatableMessage {
     public TranslatableWarningMessage(String key, Object... arguments) {
@@ -9,7 +9,7 @@ public class TranslatableWarningMessage extends TranslatableMessage {
     }
 
     @Override
-    protected ChatFormattingWrapper getColor() {
-        return ChatFormattingWrapper.YELLOW();
+    protected ChatFormatting getColor() {
+        return ChatFormatting.YELLOW();
     }
 }

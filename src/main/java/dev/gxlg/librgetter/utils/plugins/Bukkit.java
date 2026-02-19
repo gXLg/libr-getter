@@ -4,13 +4,13 @@ import dev.gxlg.librgetter.utils.chaining.tags.Tags;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.parser.UnknownPluginDataException;
-import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.nbt.CompoundTag;
 
 import java.util.Set;
 
 public class Bukkit {
-    public static EnchantmentTrade.EnchantmentOnly parse(CompoundTagWrapper tag) throws LibrGetterException {
-        CompoundTagWrapper element = Tags.getImpl().getCompound(tag, "PublicBukkitValues");
+    public static EnchantmentTrade.EnchantmentOnly parse(CompoundTag tag) throws LibrGetterException {
+        CompoundTag element = Tags.getImpl().getCompound(tag, "PublicBukkitValues");
         Set<String> keys = element.keySet();
 
         for (String key : keys) {
@@ -24,7 +24,7 @@ public class Bukkit {
 
     /* different Bukkit plugins */
 
-    private static EnchantmentTrade.EnchantmentOnly enchantmentSolution(CompoundTagWrapper element, Set<String> keys) throws LibrGetterException {
+    private static EnchantmentTrade.EnchantmentOnly enchantmentSolution(CompoundTag element, Set<String> keys) throws LibrGetterException {
         String id = null;
         int lvl = -1;
 

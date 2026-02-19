@@ -1,28 +1,28 @@
 package dev.gxlg.librgetter.utils.chaining.gui;
 
-import dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapperInterface;
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessI;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 import java.util.List;
 
 public class Gui_1_17_0 extends Gui {
     @Override
-    public BookViewScreen$BookAccessWrapper getBookAccess(List<ComponentWrapper> list) {
+    public BookViewScreen$BookAccess createBookAccess(List<Component> list) {
         int pageCount = list.size();
-        return new BookViewScreen$BookAccessWrapperInterface() {
+        return new BookViewScreen$BookAccessI() {
             @Override
             public int getPageCount() {
                 return pageCount;
             }
 
             @Override
-            public ComponentWrapper getPage(int index) {
+            public Component getPage(int index) {
                 if (index < 0 || index >= pageCount) {
-                    return ComponentWrapper.nullToEmpty("");
+                    return Component.nullToEmpty("");
                 }
                 return list.get(index);
             }
-        }.wrapper();
+        }.asBookViewScreen$BookAccess();
     }
 }

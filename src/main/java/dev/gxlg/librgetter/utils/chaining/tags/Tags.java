@@ -1,20 +1,20 @@
 package dev.gxlg.librgetter.utils.chaining.tags;
 
-import dev.gxlg.multiversion.V;
-import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.nbt.TagWrapper;
+import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.net.minecraft.nbt.CompoundTag;
+import dev.gxlg.versiont.gen.net.minecraft.nbt.Tag;
 
 import java.util.List;
 
 public abstract class Tags {
 
-    public abstract String getString(CompoundTagWrapper element, String name);
+    public abstract String getString(CompoundTag element, String name);
 
-    public abstract CompoundTagWrapper getCompound(CompoundTagWrapper element, String name);
+    public abstract CompoundTag getCompound(CompoundTag element, String name);
 
-    public abstract List<TagWrapper> getList(CompoundTagWrapper element, String name, int type);
+    public abstract List<Tag> getList(CompoundTag element, String name, int type);
 
-    public abstract short getShort(CompoundTagWrapper element, String name);
+    public abstract short getShort(CompoundTag element, String name);
 
     private static Tags implementation = null;
 

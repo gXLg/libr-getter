@@ -4,14 +4,14 @@ import dev.gxlg.librgetter.utils.chaining.support.Support;
 import dev.gxlg.librgetter.utils.types.exceptions.signals.StopCyclingSignal;
 import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
-import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.ScreenWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 
 public class TradeCyclingClickTask extends TaskManager.Task {
     @Override
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
-        MinecraftWrapper client = MinecraftWrapper.getInstance();
-        ScreenWrapper currentScreen = client.getScreenField();
+        Minecraft client = Minecraft.getInstance();
+        Screen currentScreen = client.getScreenField();
         if (currentScreen == null) {
             throw new StopCyclingSignal();
         }

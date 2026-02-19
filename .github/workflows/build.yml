@@ -8,7 +8,6 @@ on:
       - "gradle.properties"
       - "build.gradle"
       - "MultiVersion"
-      - ".gitmodules"
       - ".github/workflows/build.yml"
     tags-ignore: [ "**" ]
 
@@ -29,7 +28,7 @@ jobs:
         uses: actions/setup-java@v4.0.0
         with:
           distribution: "temurin"
-          java-version: 21
+          java-version: 25
 
       - name: Setup Node
         uses: actions/setup-node@v6

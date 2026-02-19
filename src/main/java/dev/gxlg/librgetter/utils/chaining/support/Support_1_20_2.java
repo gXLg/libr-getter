@@ -1,11 +1,11 @@
 package dev.gxlg.librgetter.utils.chaining.support;
 
-import dev.gxlg.multiversion.gen.de.maxhenkel.tradecycling.net.CycleTradesPacketWrapper;
-import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworkingWrapper;
+import dev.gxlg.versiont.gen.de.maxhenkel.tradecycling.net.CycleTradesPacket;
+import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public class Support_1_20_2 extends Support_1_17_0 {
     @Override
     public void sendCycleTradesPacket() {
-        ClientPlayNetworkingWrapper.send(new CycleTradesPacketWrapper());
+        ClientPlayNetworking.send(new CycleTradesPacket());
     }
 }

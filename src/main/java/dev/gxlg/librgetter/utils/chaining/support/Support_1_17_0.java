@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.chaining.support;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.multiversion.gen.de.maxhenkel.tradecycling.TradeCyclingClientModWrapper;
+import dev.gxlg.versiont.gen.de.maxhenkel.tradecycling.TradeCyclingClientMod;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class Support_1_17_0 extends Support {
@@ -16,7 +16,7 @@ public class Support_1_17_0 extends Support {
 
     @Override
     public void sendCycleTradesPacket() {
-        TradeCyclingClientModWrapper.sendCycleTradesPacket();
+        TradeCyclingClientMod.sendCycleTradesPacket();
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
+import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$JoinI;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
 import java.io.IOException;
@@ -42,12 +43,13 @@ public class Updater {
         });
 
         // notifying about update
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+        ClientPlayConnectionEvents$JoinI join = (h, s, c) -> {
             NewVersion version = Updater.newVersion.getAndSet(null);
             if (version != null) {
                 Texts.getImpl().sendNewVersion(version.version(), version.changelog());
             }
-        });
+        };
+        ClientPlayConnectionEvents.JOIN.register(join.unwrap(ClientPlayConnectionEvents.Join.class));
     }
 
     private record NewVersion(String version, String changelog) { }

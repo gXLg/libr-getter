@@ -8,19 +8,18 @@ import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.CanNotLockExc
 import dev.gxlg.librgetter.utils.types.exceptions.signals.FinishSignal;
 import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
-import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.InteractionHandWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.trading.MerchantOfferWrapper;
-
-import java.util.List;
+import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
+import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
+import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffers;
 
 public class FinalizeSearchTask extends TaskManager.Task {
-    private final List<MerchantOfferWrapper> offers;
+    private final MerchantOffers offers;
 
-    public FinalizeSearchTask(List<MerchantOfferWrapper> offers) {
+    public FinalizeSearchTask(MerchantOffers offers) {
         this.offers = offers;
     }
 
@@ -34,23 +33,23 @@ public class FinalizeSearchTask extends TaskManager.Task {
             throw new FinishSignal();
         }
 
-        MinecraftWrapper client = MinecraftWrapper.getInstance();
-        LocalPlayerWrapper player = client.getPlayerField();
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
 
         if (!Support.getImpl().isUsingTradeCycling()) {
             // TradeCycling process keeps the screen open, else we have to open it again
-            MultiPlayerGameModeWrapper game = client.getGameModeField();
+            MultiPlayerGameMode game = client.getGameModeField();
             if (game == null) {
                 throw new InternalErrorException("game");
             }
-            game.interact(player, taskContext.selectedVillager(), InteractionHandWrapper.MAIN_HAND());
+            game.interact(player, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
         }
 
-        int buy = canBuy(player, offers.get(0)) ? 0 : (
-            canBuy(player, offers.get(1)) ? 1 : -1
+        int buy = canBuy(player, (MerchantOffer) offers.get(0)) ? 0 : (
+            canBuy(player, (MerchantOffer) offers.get(1)) ? 1 : -1
         );
         if (buy == -1) {
             throw new CanNotLockException();
@@ -59,9 +58,9 @@ public class FinalizeSearchTask extends TaskManager.Task {
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.nextTick(new LockTradesTask(buy), ctx));
     }
 
-    private static boolean canBuy(LocalPlayerWrapper player, MerchantOfferWrapper offer) {
-        ItemStackWrapper first = offer.getCostA();
-        ItemStackWrapper second = offer.getCostB();
+    private static boolean canBuy(LocalPlayer player, MerchantOffer offer) {
+        ItemStack first = offer.getCostA();
+        ItemStack second = offer.getCostB();
         int firstCount = player.getInventory().countItem(first.getItem());
         int secondCount = second.isEmpty() ? 0 : player.getInventory().countItem(second.getItem());
         return first.getCount() <= firstCount && second.getCount() <= secondCount;

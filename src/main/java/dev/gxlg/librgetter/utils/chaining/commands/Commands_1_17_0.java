@@ -1,51 +1,51 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.command.CommandHelper;
 import dev.gxlg.librgetter.command.LibrGetCommand;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
-import dev.gxlg.multiversion.gen.com.mojang.brigadier.CommandDispatcherWrapper;
-import dev.gxlg.multiversion.gen.com.mojang.brigadier.arguments.ArgumentTypeWrapper;
-import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.ArgumentBuilderWrapper;
-import dev.gxlg.multiversion.gen.com.mojang.brigadier.builder.LiteralArgumentBuilderWrapper;
-import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.command.v1.ClientCommandManagerWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.ItemEnchantmentArgumentWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper;
+import dev.gxlg.versiont.api.R;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.CommandDispatcher;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.arguments.ArgumentType;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.ArgumentBuilder;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
+import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.ItemEnchantmentArgument;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.List;
 
-public class Commands_1_17_0 extends Commands {
+public class Commands_1_17_0 extends Commands.Base {
     @Override
-    public List<EnchantmentWrapper> getEnchantmentsFromCommandContext(CommandContext<?> context) throws LibrGetterException {
-        EnchantmentWrapper enchantment = EnchantmentWrapper.inst(context.getArgument("enchantment", EnchantmentWrapper.clazz.self()));
+    public List<Enchantment> getEnchantmentsFromCommandContext(CommandContext context) throws LibrGetterException {
+        Enchantment enchantment = (Enchantment) context.getArgument("enchantment", Enchantment.clazz);
         return List.of(enchantment);
     }
 
     @Override
-    public String getCustomEnchantmentFromCommandContext(CommandContext<?> context) {
-        return context.getArgument("enchantment_custom", String.class);
+    public String getCustomEnchantmentFromCommandContext(CommandContext context) {
+        return context.getArgument("enchantment_custom", R.clz(String.class)).unwrap(String.class);
     }
 
     @Override
     public void registerCommands() {
-        registerLibrget(ClientCommandManagerWrapper.DISPATCHER(), ItemEnchantmentArgumentWrapper.enchantment());
+        registerLibrget(ClientCommandManager.DISPATCHER(), ItemEnchantmentArgument.enchantment());
     }
 
-    protected void registerLibrget(CommandDispatcherWrapper dispatcher, ArgumentTypeWrapper enchantmentArgumentType) {
-        ArgumentBuilderWrapper baseCommand = literal("librget");
+    protected void registerLibrget(CommandDispatcher dispatcher, ArgumentType enchantmentArgumentType) {
+        ArgumentBuilder baseCommand = literal("librget");
 
-        ArgumentBuilderWrapper subCommand;
+        ArgumentBuilder subCommand;
 
         // add subcommand
         {
             subCommand = literal("add");
 
-            ArgumentBuilderWrapper enchantmentArgument, levelArgument, priceArgument;
+            ArgumentBuilder enchantmentArgument, levelArgument, priceArgument;
 
             enchantmentArgument = argument("enchantment", enchantmentArgumentType).executes(CommandHelper.commandWrapper(LibrGetCommand::add));
             levelArgument = argument("level", IntegerArgumentType.integer(1)).executes(CommandHelper.commandWrapper(LibrGetCommand::add));
@@ -53,7 +53,7 @@ public class Commands_1_17_0 extends Commands {
             subCommand = subCommand.then(enchantmentArgument.then(levelArgument.then(priceArgument)));
 
             enchantmentArgument = argument("enchantment_custom", StringArgumentType.string());
-            levelArgument = argument("level", IntegerArgumentType.integer(1));
+            levelArgument = argument("level", IntegerArgumentType.integer(1)).executes(CommandHelper.commandWrapper(LibrGetCommand::addCustom));
             priceArgument = argument("maxprice", IntegerArgumentType.integer(1, 64)).executes(CommandHelper.commandWrapper(LibrGetCommand::addCustom));
             subCommand = subCommand.then(enchantmentArgument.then(levelArgument.then(priceArgument)));
 
@@ -63,7 +63,7 @@ public class Commands_1_17_0 extends Commands {
         // remove subcommand
         {
             subCommand = literal("remove");
-            ArgumentBuilderWrapper enchantmentArgument, levelArgument;
+            ArgumentBuilder enchantmentArgument, levelArgument;
 
             enchantmentArgument = argument("enchantment", enchantmentArgumentType).executes(CommandHelper.commandWrapper(LibrGetCommand::remove));
             levelArgument = argument("level", IntegerArgumentType.integer(1)).executes(CommandHelper.commandWrapper(LibrGetCommand::remove));
@@ -103,8 +103,8 @@ public class Commands_1_17_0 extends Commands {
             for (Configurable<?> configurable : LibrGetter.configManager.getConfigurables()) {
                 String name = configurable.name();
 
-                ArgumentBuilderWrapper configArgument = literal(name).executes(CommandHelper.commandWrapper(ctx -> LibrGetCommand.config(ctx, configurable)));
-                ArgumentBuilderWrapper valueArgument = argument("value", configurable.commandArgument()).executes(CommandHelper.commandWrapper(ctx -> LibrGetCommand.config(ctx, configurable)));
+                ArgumentBuilder configArgument = literal(name).executes(CommandHelper.commandWrapper(ctx -> LibrGetCommand.config(ctx, configurable)));
+                ArgumentBuilder valueArgument = argument("value", configurable.commandArgument()).executes(CommandHelper.commandWrapper(ctx -> LibrGetCommand.config(ctx, configurable)));
 
                 subCommand = subCommand.then(configArgument.then(valueArgument));
             }
@@ -116,18 +116,18 @@ public class Commands_1_17_0 extends Commands {
             baseCommand = baseCommand.executes(CommandHelper.commandWrapper(ctx -> LibrGetCommand.selector()));
         }
 
-        dispatcher.register(baseCommand.downcast(LiteralArgumentBuilderWrapper.class));
+        dispatcher.register((LiteralArgumentBuilder) baseCommand);
     }
 
-    protected LiteralArgumentBuilderWrapper literal(String command) {
-        return ClientCommandManagerWrapper.literal(command);
+    protected LiteralArgumentBuilder literal(String command) {
+        return ClientCommandManager.literal(command);
     }
 
-    protected ArgumentBuilderWrapper argument(String command, ArgumentTypeWrapper argumentType) {
-        return ClientCommandManagerWrapper.argument(command, argumentType);
+    protected ArgumentBuilder argument(String command, ArgumentType argumentType) {
+        return ClientCommandManager.argument(command, argumentType);
     }
 
-    protected ArgumentBuilderWrapper argument(String command, ArgumentType<?> argumentType) {
-        return argument(command, ArgumentTypeWrapper.inst(argumentType));
+    protected ArgumentBuilder argument(String command, com.mojang.brigadier.arguments.ArgumentType<?> argumentType) {
+        return argument(command, R.wrapperInst(ArgumentType.class, argumentType));
     }
 }

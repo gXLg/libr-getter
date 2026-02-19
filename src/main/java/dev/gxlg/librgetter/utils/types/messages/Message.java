@@ -1,16 +1,16 @@
 package dev.gxlg.librgetter.utils.types.messages;
 
-import dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.ChatFormatting;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
 
 public abstract class Message {
-    public final MutableComponentWrapper getComponent() {
+    public final MutableComponent getComponent() {
         return buildComponent().withStyle(getColor());
     }
 
-    protected abstract MutableComponentWrapper buildComponent();
+    protected abstract MutableComponent buildComponent();
 
-    protected ChatFormattingWrapper getColor() {
-        return ChatFormattingWrapper.RESET();
+    protected ChatFormatting getColor() {
+        return ChatFormatting.RESET();
     }
 }

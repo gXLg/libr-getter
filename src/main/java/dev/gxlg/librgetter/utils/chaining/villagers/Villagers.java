@@ -1,12 +1,12 @@
 package dev.gxlg.librgetter.utils.chaining.villagers;
 
-import dev.gxlg.multiversion.V;
-import dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerWrapper;
+import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
 
 public abstract class Villagers {
-    public abstract boolean isVillagerLibrarian(VillagerWrapper villager);
+    public abstract boolean isVillagerLibrarian(Villager villager);
 
-    public abstract boolean isVillagerUnemployed(VillagerWrapper villager);
+    public abstract boolean isVillagerUnemployed(Villager villager);
 
     private static Villagers implementation = null;
 

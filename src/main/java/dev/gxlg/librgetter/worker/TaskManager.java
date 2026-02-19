@@ -7,11 +7,11 @@ import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.ProcessNotRun
 import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStoppedMessage;
 import dev.gxlg.librgetter.worker.tasks.StandbyTask;
-import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$DisconnectWrapperInterface;
-import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$JoinWrapperInterface;
-import dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.entity.npc.villager.VillagerWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper;
+import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$DisconnectI;
+import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$JoinI;
+import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,8 +32,8 @@ public class TaskManager {
     private static TaskContext taskContext = TaskContext.EMPTY;
 
     static {
-        ClientPlayConnectionEvents.JOIN.register(((ClientPlayConnectionEvents$JoinWrapperInterface) (h, s, c) -> reset()).wrapper().unwrap(ClientPlayConnectionEvents.Join.class));
-        ClientPlayConnectionEvents.DISCONNECT.register(((ClientPlayConnectionEvents$DisconnectWrapperInterface) (h, c) -> reset()).wrapper().unwrap(ClientPlayConnectionEvents.Disconnect.class));
+        ClientPlayConnectionEvents.JOIN.register(((ClientPlayConnectionEvents$JoinI) (h, s, c) -> reset()).unwrap(ClientPlayConnectionEvents.Join.class));
+        ClientPlayConnectionEvents.DISCONNECT.register(((ClientPlayConnectionEvents$DisconnectI) (h, c) -> reset()).unwrap(ClientPlayConnectionEvents.Disconnect.class));
     }
 
     public static void updateContext(Function<TaskContext, TaskContext> updater) {
@@ -139,19 +139,19 @@ public class TaskManager {
     }
 
     public record TaskContext(
-        BlockPosWrapper selectedLecternPos, ItemStackWrapper defaultItem, VillagerWrapper selectedVillager, int attemptsCounter, TradeOfferData tradeOfferData
+        BlockPos selectedLecternPos, ItemStack defaultItem, Villager selectedVillager, int attemptsCounter, TradeOfferData tradeOfferData
     ) {
         public static final TaskContext EMPTY = new TaskContext(null, null, null, 0, null);
 
-        public TaskContext withLecternPos(BlockPosWrapper pos) {
+        public TaskContext withLecternPos(BlockPos pos) {
             return new TaskContext(pos, defaultItem, selectedVillager, attemptsCounter, tradeOfferData);
         }
 
-        public TaskContext withDefaultItem(ItemStackWrapper item) {
+        public TaskContext withDefaultItem(ItemStack item) {
             return new TaskContext(selectedLecternPos, item, selectedVillager, attemptsCounter, tradeOfferData);
         }
 
-        public TaskContext withVillager(VillagerWrapper villager) {
+        public TaskContext withVillager(Villager villager) {
             return new TaskContext(selectedLecternPos, defaultItem, villager, attemptsCounter, tradeOfferData);
         }
 

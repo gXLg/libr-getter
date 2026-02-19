@@ -6,11 +6,11 @@ import dev.gxlg.librgetter.utils.plugins.Plugins;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
-import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.nbt.TagWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemStackWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemsWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.trading.MerchantOfferWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.nbt.CompoundTag;
+import dev.gxlg.versiont.gen.net.minecraft.nbt.Tag;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.Items;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,10 +20,10 @@ import java.util.Set;
 
 public class Parser_1_17_0 extends Parser {
     @Override
-    public EnchantmentTrade parseTrade(MerchantOfferWrapper offer) throws LibrGetterException {
-        ItemStackWrapper stack = offer.getResult();
+    public EnchantmentTrade parseTrade(MerchantOffer offer) throws LibrGetterException {
+        ItemStack stack = offer.getResult();
 
-        CompoundTagWrapper tag = getCustomData(stack);
+        CompoundTag tag = getCustomData(stack);
         EnchantmentTrade.EnchantmentOnly finalEnchantment = Plugins.parse(tag);
 
 
@@ -41,11 +41,11 @@ public class Parser_1_17_0 extends Parser {
         }
 
         int price;
-        ItemStackWrapper firstBuyItem = offer.getCostA();
-        ItemStackWrapper secondBuyItem = offer.getCostB();
-        if (firstBuyItem.is(ItemsWrapper.EMERALD())) {
+        ItemStack firstBuyItem = offer.getCostA();
+        ItemStack secondBuyItem = offer.getCostB();
+        if (firstBuyItem.is(Items.EMERALD())) {
             price = firstBuyItem.getCount();
-        } else if (secondBuyItem.is(ItemsWrapper.EMERALD())) {
+        } else if (secondBuyItem.is(Items.EMERALD())) {
             price = secondBuyItem.getCount();
         } else {
             throw new InternalErrorException("buyItem");
@@ -54,17 +54,17 @@ public class Parser_1_17_0 extends Parser {
         return finalEnchantment.tradeWithPrice(price);
     }
 
-    protected CompoundTagWrapper getCustomData(ItemStackWrapper stack) {
+    protected CompoundTag getCustomData(ItemStack stack) {
         return stack.getTag();
     }
 
-    protected EnchantmentTrade.EnchantmentOnly parseStored(ItemStackWrapper stack) {
-        CompoundTagWrapper tag = getCustomData(stack);
+    protected EnchantmentTrade.EnchantmentOnly parseStored(ItemStack stack) {
+        CompoundTag tag = getCustomData(stack);
         if (tag == null) {
             return null;
         }
 
-        List<TagWrapper> list = null;
+        List<Tag> list = null;
         // Legacy enchantment books
         if (tag.contains("Enchantments")) {
             list = Tags.getImpl().getList(tag, "Enchantments", 10);
@@ -81,11 +81,11 @@ public class Parser_1_17_0 extends Parser {
             return null;
         }
 
-        CompoundTagWrapper element = list.get(0).downcast(CompoundTagWrapper.class);
+        CompoundTag element = (CompoundTag) list.get(0);
         return new EnchantmentTrade.EnchantmentOnly(Tags.getImpl().getString(element, "id"), Tags.getImpl().getShort(element, "lvl"));
     }
 
-    private EnchantmentTrade.EnchantmentOnly fallbackParse(CompoundTagWrapper tag) {
+    private EnchantmentTrade.EnchantmentOnly fallbackParse(CompoundTag tag) {
         if (!LibrGetter.config.fallback) {
             return null;
         }

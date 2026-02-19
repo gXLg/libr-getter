@@ -2,11 +2,11 @@ package dev.gxlg.librgetter.utils.chaining.parser;
 
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
-import dev.gxlg.multiversion.V;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.trading.MerchantOfferWrapper;
+import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
 
 public abstract class Parser {
-    public abstract EnchantmentTrade parseTrade(MerchantOfferWrapper offer) throws LibrGetterException;
+    public abstract EnchantmentTrade parseTrade(MerchantOffer offer) throws LibrGetterException;
 
     private static Parser implementation = null;
 

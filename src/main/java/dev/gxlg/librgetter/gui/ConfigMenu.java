@@ -5,9 +5,9 @@ import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,11 +20,11 @@ public class ConfigMenu {
 
     public static final int pageCount;
 
-    private static final List<ComponentWrapper> list = new ArrayList<>();
+    private static final List<Component> list = new ArrayList<>();
 
     private static final Map<String, Integer> categories = new HashMap<>();
 
-    private static BookViewScreen$BookAccessWrapper cachedContent = null;
+    private static BookViewScreen$BookAccess cachedContent = null;
 
     static {
         int pages = 1;
@@ -41,20 +41,20 @@ public class ConfigMenu {
         }
     }
 
-    public static BookViewScreen$BookAccessWrapper getCachedContent() {
+    public static BookViewScreen$BookAccess getCachedContent() {
         if (cachedContent == null) {
-            updateAndReturnContent();
+            getUpdatedContent();
         }
         return cachedContent;
     }
 
-    public static BookViewScreen$BookAccessWrapper updateAndReturnContent() {
-        cachedContent = Gui.getImpl().getBookAccess(list);
+    public static BookViewScreen$BookAccess getUpdatedContent() {
+        cachedContent = Gui.getImpl().createBookAccess(list);
         return cachedContent;
     }
 
     public static void updatePage(int index) {
-        MutableComponentWrapper text;
+        MutableComponent text;
         if (index == 0) {
             text = Texts.getImpl().bookMainPage(categories);
 

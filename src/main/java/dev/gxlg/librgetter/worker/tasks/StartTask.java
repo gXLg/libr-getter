@@ -12,11 +12,11 @@ import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.UnsafeSetupEx
 import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStartedMessage;
 import dev.gxlg.librgetter.worker.TaskManager;
-import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
+import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
+import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
+import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.EntityAnchorArgument$Anchor;
+import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
 
 import java.util.List;
 
@@ -39,20 +39,20 @@ public class StartTask extends TaskManager.Task {
             throw new EmptyGoalsListException();
         }
 
-        MinecraftWrapper client = MinecraftWrapper.getInstance();
-        LocalPlayerWrapper player = client.getPlayerField();
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
 
         if (LibrGetter.config.safeChecker) {
-            ClientLevelWrapper world = client.getLevelField();
+            ClientLevel world = client.getLevelField();
             if (world == null) {
                 throw new InternalErrorException("world");
             }
             // If the villager is sitting, assume it cannot move
             if (!taskContext.selectedVillager().isPassenger()) {
-                List<BlockPosWrapper> path = PathFinding.findPath(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), world, 2);
+                List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), world, 2);
                 if (path != null) {
                     throw new UnsafeSetupException();
                 }
@@ -69,7 +69,7 @@ public class StartTask extends TaskManager.Task {
                 ctx = ctx.withResetAttemptsCounter();
             }
 
-            return TaskManager.TaskSwitch.nextTick(new RotationTask(player, EntityAnchorArgument$AnchorWrapper.EYES().apply(ctx.selectedVillager()), new WaitVillagerAcceptProfessionTask()), ctx);
+            return TaskManager.TaskSwitch.nextTick(new RotationTask(player, EntityAnchorArgument$Anchor.EYES().apply(ctx.selectedVillager()), new WaitVillagerAcceptProfessionTask()), ctx);
         });
     }
 }

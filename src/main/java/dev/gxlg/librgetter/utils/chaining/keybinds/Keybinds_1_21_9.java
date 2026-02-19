@@ -1,15 +1,15 @@
 package dev.gxlg.librgetter.utils.chaining.keybinds;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.multiversion.gen.net.minecraft.client.KeyMapping$CategoryWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.client.KeyMapping;
+import dev.gxlg.versiont.gen.net.minecraft.client.KeyMapping$Category;
+import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 
 public class Keybinds_1_21_9 extends Keybinds_1_17_0 {
     @Override
-    protected KeyMappingWrapper createKeyMapping(KeybindData keybindData) {
-        return new KeyMappingWrapper(keybindData.id(), keybindData.type(), keybindData.key(), modCategory);
+    protected KeyMapping createKeyMapping(KeybindData keybindData) {
+        return new KeyMapping(keybindData.id(), keybindData.type(), keybindData.key(), modCategory);
     }
 
-    private final static KeyMapping$CategoryWrapper modCategory = KeyMapping$CategoryWrapper.register(IdentifierWrapper.tryBuild(LibrGetter.MOD_ID, "category"));
+    private final static KeyMapping$Category modCategory = KeyMapping$Category.register(Identifier.tryBuild(LibrGetter.MOD_ID, "category"));
 }

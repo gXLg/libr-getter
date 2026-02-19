@@ -1,19 +1,19 @@
 package dev.gxlg.librgetter.utils.chaining.tags;
 
-import dev.gxlg.multiversion.gen.net.minecraft.nbt.CompoundTagWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.nbt.TagWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.nbt.CompoundTag;
+import dev.gxlg.versiont.gen.net.minecraft.nbt.Tag;
 
 import java.util.List;
 
 public class Tags_1_21_5 extends Tags_1_17_0 {
     @Override
-    public String getString(CompoundTagWrapper element, String name) {
+    public String getString(CompoundTag element, String name) {
         return element.getStringOr(name, null);
     }
 
     @Override
-    public CompoundTagWrapper getCompound(CompoundTagWrapper element, String name) {
-        CompoundTagWrapper tag = element.getCompoundOrEmpty(name);
+    public CompoundTag getCompound(CompoundTag element, String name) {
+        CompoundTag tag = element.getCompoundOrEmpty(name);
         if (tag.isEmpty()) {
             return null;
         }
@@ -21,12 +21,12 @@ public class Tags_1_21_5 extends Tags_1_17_0 {
     }
 
     @Override
-    public List<TagWrapper> getList(CompoundTagWrapper element, String name, int type) {
-        List<TagWrapper> list = element.getListOrEmpty(name);
+    public List<Tag> getList(CompoundTag element, String name, int type) {
+        List<Tag> list = element.getListOrEmpty(name);
         if (list.isEmpty()) {
             return null;
         }
-        TagWrapper t = list.get(0);
+        Tag t = list.get(0);
         if (t.getId() != type) {
             return null;
         }
@@ -34,7 +34,7 @@ public class Tags_1_21_5 extends Tags_1_17_0 {
     }
 
     @Override
-    public short getShort(CompoundTagWrapper element, String name) {
+    public short getShort(CompoundTag element, String name) {
         return element.getShortOr(name, (short) 0);
     }
 }

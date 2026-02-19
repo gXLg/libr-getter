@@ -2,35 +2,35 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.InventoryHelper;
-import dev.gxlg.librgetter.utils.chaining.helper.Helper;
+import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.VillagerTooFarException;
 import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
-import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientPacketListenerWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.MultiPlayerGameModeWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.commands.arguments.EntityAnchorArgument$AnchorWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.core.DirectionWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.entity.player.InventoryWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.inventory.ClickTypeWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.ItemsWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlocksWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.phys.BlockHitResultWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.phys.Vec3Wrapper;
+import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
+import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
+import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientPacketListener;
+import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
+import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.EntityAnchorArgument$Anchor;
+import dev.gxlg.versiont.gen.net.minecraft.core.Direction;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
+import dev.gxlg.versiont.gen.net.minecraft.world.inventory.ClickType;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.Items;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
+import dev.gxlg.versiont.gen.net.minecraft.world.phys.BlockHitResult;
+import dev.gxlg.versiont.gen.net.minecraft.world.phys.Vec3;
 
 public class SelectAndPlaceLecternTask extends TaskManager.Task {
     @Override
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
-        MinecraftWrapper client = MinecraftWrapper.getInstance();
-        LocalPlayerWrapper player = client.getPlayerField();
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.getPlayerField();
         if (player == null) {
             throw new InternalErrorException("player");
         }
-        ClientLevelWrapper world = client.getLevelField();
+        ClientLevel world = client.getLevelField();
         if (world == null) {
             throw new InternalErrorException("world");
         }
@@ -39,12 +39,12 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
             throw new VillagerTooFarException();
         }
 
-        if (world.getBlockState(taskContext.selectedLecternPos()).is(BlocksWrapper.LECTERN())) {
+        if (world.getBlockState(taskContext.selectedLecternPos()).is(Blocks.LECTERN())) {
             // the lectern is placed down now
             throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(
                 new RotationTask(
                     player,
-                    EntityAnchorArgument$AnchorWrapper.EYES().apply(ctx.selectedVillager()),
+                    EntityAnchorArgument$Anchor.EYES().apply(ctx.selectedVillager()),
                     new WaitVillagerAcceptProfessionTask()
                 ), ctx
             ));
@@ -55,34 +55,34 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
         }
 
         // select
-        InventoryWrapper inventory = player.getInventory();
+        Inventory inventory = player.getInventory();
         int slot;
         boolean mainhand = true;
 
-        if (inventory.getItem(InventoryWrapper.SLOT_OFFHAND()).is(ItemsWrapper.LECTERN())) {
-            slot = InventoryWrapper.SLOT_OFFHAND();
+        if (inventory.getItem(Inventory.SLOT_OFFHAND()).is(Items.LECTERN())) {
+            slot = Inventory.SLOT_OFFHAND();
         } else {
-            slot = inventory.findSlotMatchingItem(ItemsWrapper.LECTERN().getDefaultInstance());
+            slot = inventory.findSlotMatchingItem(Items.LECTERN().getDefaultInstance());
         }
         if (slot == -1) {
             return;
         }
 
-        MultiPlayerGameModeWrapper game = client.getGameModeField();
+        MultiPlayerGameMode game = client.getGameModeField();
         if (game == null) {
             throw new InternalErrorException("game");
         }
-        ClientPacketListenerWrapper clientNetwork = client.getConnection();
+        ClientPacketListener clientNetwork = client.getConnection();
         if (clientNetwork == null) {
             throw new InternalErrorException("clientNetwork");
         }
 
-        if (slot != InventoryWrapper.SLOT_OFFHAND()) {
+        if (slot != Inventory.SLOT_OFFHAND()) {
             if (LibrGetter.config.offhand) {
-                if (InventoryWrapper.isHotbarSlot(slot)) {
+                if (Inventory.isHotbarSlot(slot)) {
                     slot += 36;
                 }
-                game.handleInventoryMouseClick(player.getInventoryMenuField().getContainerIdField(), slot, InventoryWrapper.SLOT_OFFHAND(), ClickTypeWrapper.SWAP(), player);
+                game.handleInventoryMouseClick(player.getInventoryMenuField().getContainerIdField(), slot, Inventory.SLOT_OFFHAND(), ClickType.SWAP(), player);
                 mainhand = false;
             } else {
                 InventoryHelper.selectItem(player, slot, game, clientNetwork);
@@ -92,9 +92,9 @@ public class SelectAndPlaceLecternTask extends TaskManager.Task {
         }
 
         // place
-        Vec3Wrapper lowBlockPos = Vec3Wrapper.atBottomCenterOf(taskContext.selectedLecternPos());
-        BlockHitResultWrapper lowBlock = new BlockHitResultWrapper(lowBlockPos, DirectionWrapper.UP(), taskContext.selectedLecternPos().below(), false);
-        Helper.getImpl().interactBlock(game, player, lowBlock, mainhand);
+        Vec3 lowBlockPos = Vec3.atBottomCenterOf(taskContext.selectedLecternPos());
+        BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP(), taskContext.selectedLecternPos().below(), false);
+        Players.getImpl().interactBlock(game, player, lowBlock, mainhand);
     }
 
     @Override

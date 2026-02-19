@@ -1,13 +1,13 @@
 package dev.gxlg.librgetter.mixin.impl;
 
 import dev.gxlg.librgetter.worker.TaskManager;
-import dev.gxlg.multiversion.gen.net.minecraft.client.MinecraftWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.multiplayer.ClientLevelWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.player.LocalPlayerWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.core.BlockPosWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.InteractionResultWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.level.block.BlocksWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.phys.BlockHitResultWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
+import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
+import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
+import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
+import dev.gxlg.versiont.gen.net.minecraft.world.InteractionResult;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
+import dev.gxlg.versiont.gen.net.minecraft.world.phys.BlockHitResult;
 
 import java.util.Optional;
 
@@ -17,14 +17,14 @@ public class MultiPlayerGameModeMixinImpl {
         TaskManager.work();
     }
 
-    public static Optional<Boolean> startDestroyBlock(BlockPosWrapper blockPos) {
-        MinecraftWrapper client = MinecraftWrapper.getInstance();
-        LocalPlayerWrapper player = client.getPlayerField();
-        ClientLevelWrapper world = client.getLevelField();
+    public static Optional<Boolean> startDestroyBlock(BlockPos blockPos) {
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.getPlayerField();
+        ClientLevel world = client.getLevelField();
         if (player == null || world == null) {
             return Optional.empty();
         }
-        if (!world.getBlockState(blockPos).is(BlocksWrapper.LECTERN())) {
+        if (!world.getBlockState(blockPos).is(Blocks.LECTERN())) {
             return Optional.empty();
         }
         if (!TaskManager.getCurrentTask().allowsBreaking()) {
@@ -33,18 +33,18 @@ public class MultiPlayerGameModeMixinImpl {
         return Optional.empty();
     }
 
-    public static Optional<InteractionResultWrapper> useItemOn(BlockHitResultWrapper hitResult) {
-        MinecraftWrapper client = MinecraftWrapper.getInstance();
-        LocalPlayerWrapper player = client.getPlayerField();
+    public static Optional<InteractionResult> useItemOn(BlockHitResult hitResult) {
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.getPlayerField();
         if (player == null) {
             return Optional.empty();
         }
-        BlockPosWrapper pos = hitResult.getBlockPos().relative(hitResult.getDirection());
+        BlockPos pos = hitResult.getBlockPos().relative(hitResult.getDirection());
         if (!pos.equals(TaskManager.getTaskContext().selectedLecternPos())) {
             return Optional.empty();
         }
         if (!TaskManager.getCurrentTask().allowsPlacing()) {
-            return Optional.of(InteractionResultWrapper.FAIL());
+            return Optional.of(InteractionResult.FAIL());
         }
         return Optional.empty();
     }

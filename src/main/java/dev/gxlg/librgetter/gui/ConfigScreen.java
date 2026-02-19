@@ -1,13 +1,13 @@
 package dev.gxlg.librgetter.gui;
 
-import dev.gxlg.multiversion.R;
-import dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreenWrapper;
+import dev.gxlg.versiont.api.R;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen;
 
-public class ConfigScreen extends BookViewScreenWrapper {
-    public static final R.RClass clazz = R.extendWrapper(BookViewScreenWrapper.class, ConfigScreen.class);
+public class ConfigScreen extends BookViewScreen {
+    public static final R.RClass clazz = R.extendWrapper(BookViewScreen.class, ConfigScreen.class);
 
     public ConfigScreen() {
-        super(clazz, ConfigMenu.getCachedContent());
+        super(ConfigMenu.getCachedContent());
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ConfigScreen extends BookViewScreenWrapper {
 
     public void updateScreen() {
         ConfigMenu.updatePage(currentPage);
-        this.setBookAccess(ConfigMenu.updateAndReturnContent());
+        setBookAccess(ConfigMenu.getUpdatedContent());
     }
 
     private static int currentPage = 0;

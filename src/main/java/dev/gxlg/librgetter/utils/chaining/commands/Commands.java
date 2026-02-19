@@ -1,22 +1,28 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
-import com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
-import dev.gxlg.multiversion.V;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper;
+import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.List;
 
-public abstract class Commands {
-    public abstract List<EnchantmentWrapper> getEnchantmentsFromCommandContext(CommandContext<?> context) throws LibrGetterException;
+public class Commands {
+    private static Base implementation = null;
 
-    public abstract String getCustomEnchantmentFromCommandContext(CommandContext<?> context);
+    public static List<Enchantment> getEnchantmentsFromCommandContext(CommandContext context) throws LibrGetterException {
+        return getImpl().getEnchantmentsFromCommandContext(context);
+    }
 
-    public abstract void registerCommands();
+    public static String getCustomEnchantmentFromCommandContext(CommandContext context) {
+        return getImpl().getCustomEnchantmentFromCommandContext(context);
+    }
 
-    private static Commands implementation = null;
+    public static void registerCommands() {
+        getImpl().registerCommands();
+    }
 
-    public static Commands getImpl() {
+    private static Base getImpl() {
         if (implementation != null) {
             return implementation;
         }
@@ -32,5 +38,13 @@ public abstract class Commands {
             implementation = new Commands_26_1_0();
         }
         return implementation;
+    }
+
+    public abstract static class Base {
+        public abstract List<Enchantment> getEnchantmentsFromCommandContext(CommandContext context) throws LibrGetterException;
+
+        public abstract String getCustomEnchantmentFromCommandContext(CommandContext context);
+
+        public abstract void registerCommands();
     }
 }

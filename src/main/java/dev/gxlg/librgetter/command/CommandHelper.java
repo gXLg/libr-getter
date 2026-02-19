@@ -1,7 +1,6 @@
 package dev.gxlg.librgetter.command;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.chaining.commands.Commands;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
@@ -19,33 +18,35 @@ import dev.gxlg.librgetter.utils.types.messages.translatable.success.Translatabl
 import dev.gxlg.librgetter.utils.types.messages.translatable.warning.AddingCustomEnchantmentMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.warning.CanNotBeTradedMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.warning.LevelOverMaxMessage;
-import dev.gxlg.multiversion.gen.net.minecraft.resources.IdentifierWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.world.item.enchantment.EnchantmentWrapper;
+import dev.gxlg.versiont.api.R;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
+import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommandHelper {
-    public static void manageGoals(CommandContext<?> context, boolean remove) throws LibrGetterException {
-        List<EnchantmentWrapper> enchantments = Commands.getImpl().getEnchantmentsFromCommandContext(context);
+    public static void manageGoals(CommandContext context, boolean remove) throws LibrGetterException {
+        List<Enchantment> enchantments = Commands.getImpl().getEnchantmentsFromCommandContext(context);
 
         int globalLvlCriteria;
         try {
-            globalLvlCriteria = context.getArgument("level", Integer.class);
+            globalLvlCriteria = context.getArgument("level", R.clz(Integer.class)).unwrap(Integer.class);
         } catch (IllegalArgumentException ignored) {
             globalLvlCriteria = -1;
         }
 
         int price = 64;
         try {
-            price = context.getArgument("maxprice", Integer.class);
+            price = context.getArgument("maxprice", R.clz(Integer.class)).unwrap(Integer.class);
         } catch (IllegalArgumentException ignored) {
         }
 
         List<EnchantmentTrade> trades = new ArrayList<>();
         List<Integer> maxLevels = new ArrayList<>();
-        for (EnchantmentWrapper enchantment : enchantments) {
-            IdentifierWrapper enchantmentId = Enchantments.getImpl().enchantmentId(enchantment);
+        for (Enchantment enchantment : enchantments) {
+            Identifier enchantmentId = Enchantments.getImpl().enchantmentId(enchantment);
             if (enchantmentId == null) {
                 throw new InternalErrorException("enchantmentId");
             }
@@ -86,7 +87,7 @@ public class CommandHelper {
             }
         } else {
             for (int i = 0; i < enchantments.size(); i++) {
-                EnchantmentWrapper enchantment = enchantments.get(i);
+                Enchantment enchantment = enchantments.get(i);
                 EnchantmentTrade trade = trades.get(i);
                 int maxLevel = maxLevels.get(i);
 
@@ -103,16 +104,17 @@ public class CommandHelper {
         }
     }
 
-    public static void manageGoalsCustom(CommandContext<?> context, boolean remove) throws LibrGetterException {
+    public static void manageGoalsCustom(CommandContext context, boolean remove) throws LibrGetterException {
         String enchantment = Commands.getImpl().getCustomEnchantmentFromCommandContext(context);
-        if (IdentifierWrapper.tryParse(enchantment) == null) {
+        if (Identifier.tryParse(enchantment) == null) {
             throw new CouldNotParseCustomException();
         }
-        int enchantmentLevel = context.getArgument("level", Integer.class);
+
+        int enchantmentLevel = context.getArgument("level", R.clz(Integer.class)).unwrap(Integer.class);
 
         int price = 64;
         try {
-            price = context.getArgument("maxprice", Integer.class);
+            price = context.getArgument("maxprice", R.clz(Integer.class)).unwrap(Integer.class);
         } catch (IllegalArgumentException ignored) {
         }
 
@@ -184,7 +186,7 @@ public class CommandHelper {
     public static Command<?> commandWrapper(CommandRunnable runnable) {
         return ctx -> {
             try {
-                runnable.run(ctx);
+                runnable.run(R.wrapperInst(CommandContext.class, ctx));
             } catch (LibrGetterException e) {
                 Texts.getImpl().sendTranslatable(e.getTranslatableErrorMessage());
                 return 1;
@@ -195,6 +197,6 @@ public class CommandHelper {
 
     @FunctionalInterface
     public interface CommandRunnable {
-        void run(CommandContext<?> context) throws LibrGetterException;
+        void run(CommandContext context) throws LibrGetterException;
     }
 }

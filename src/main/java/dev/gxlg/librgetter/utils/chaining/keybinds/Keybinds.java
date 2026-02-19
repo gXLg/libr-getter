@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.chaining.keybinds;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import dev.gxlg.multiversion.V;
+import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 
 public abstract class Keybinds {
     public abstract void registerKeybinds();
@@ -22,5 +22,5 @@ public abstract class Keybinds {
         return implementation;
     }
 
-    protected record KeybindData(String id, InputConstants.Type type, int key) { }
+    protected record KeybindData(String id, InputConstants$Type type, int key) { }
 }

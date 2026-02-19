@@ -1,11 +1,11 @@
 package dev.gxlg.librgetter.utils.chaining.texts;
 
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.MutableComponentWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
 
 public class Texts_1_19_0 extends Texts_1_17_0 {
     @Override
-    protected MutableComponentWrapper createTranslatable(String message, Object... args) {
-        return ComponentWrapper.translatable(message, args);
+    protected MutableComponent createTranslatable(String message, Object... args) {
+        return Component.translatable(message, args);
     }
 }

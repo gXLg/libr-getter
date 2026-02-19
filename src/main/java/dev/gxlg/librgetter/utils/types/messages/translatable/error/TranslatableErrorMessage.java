@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.types.messages.translatable.error;
 
 import dev.gxlg.librgetter.utils.types.messages.translatable.TranslatableMessage;
-import dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.ChatFormatting;
 
 public abstract class TranslatableErrorMessage extends TranslatableMessage {
     public TranslatableErrorMessage(String key, Object... arguments) {
@@ -9,7 +9,7 @@ public abstract class TranslatableErrorMessage extends TranslatableMessage {
     }
 
     @Override
-    protected ChatFormattingWrapper getColor() {
-        return ChatFormattingWrapper.RED();
+    protected ChatFormatting getColor() {
+        return ChatFormatting.RED();
     }
 }

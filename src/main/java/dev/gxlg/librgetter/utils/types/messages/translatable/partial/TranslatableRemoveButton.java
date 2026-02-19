@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.types.messages.translatable.partial;
 
-import dev.gxlg.multiversion.gen.net.minecraft.ChatFormattingWrapper;
+import dev.gxlg.versiont.gen.net.minecraft.ChatFormatting;
 
 public class TranslatableRemoveButton extends TranslatablePartialMessage {
     public TranslatableRemoveButton() {
@@ -8,7 +8,7 @@ public class TranslatableRemoveButton extends TranslatablePartialMessage {
     }
 
     @Override
-    public ChatFormattingWrapper getColor() {
-        return ChatFormattingWrapper.GOLD();
+    public ChatFormatting getColor() {
+        return ChatFormatting.GOLD();
     }
 }

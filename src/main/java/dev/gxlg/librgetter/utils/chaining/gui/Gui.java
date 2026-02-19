@@ -1,13 +1,13 @@
 package dev.gxlg.librgetter.utils.chaining.gui;
 
-import dev.gxlg.multiversion.V;
-import dev.gxlg.multiversion.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.network.chat.ComponentWrapper;
+import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 import java.util.List;
 
 public abstract class Gui {
-    public abstract BookViewScreen$BookAccessWrapper getBookAccess(List<ComponentWrapper> list);
+    public abstract BookViewScreen$BookAccess createBookAccess(List<Component> list);
 
     private static Gui implementation = null;
 

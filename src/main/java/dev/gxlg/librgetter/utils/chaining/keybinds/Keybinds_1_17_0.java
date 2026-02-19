@@ -1,37 +1,35 @@
 package dev.gxlg.librgetter.utils.chaining.keybinds;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.gui.ConfigScreen;
-import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTickWrapperInterface;
-import dev.gxlg.multiversion.gen.net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelperWrapper;
-import dev.gxlg.multiversion.gen.net.minecraft.client.KeyMappingWrapper;
+import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
+import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTickI;
+import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import dev.gxlg.versiont.gen.net.minecraft.client.KeyMapping;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class Keybinds_1_17_0 extends Keybinds {
-    private final KeybindData configMenuData = new KeybindData("librgetter.keys.open", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K);
+    private final KeybindData configMenuData = new KeybindData("librgetter.keys.open", InputConstants$Type.KEYSYM(), GLFW.GLFW_KEY_K);
 
     @Override
     public void registerKeybinds() {
-        KeyMappingWrapper configMenuKeyMapping = createKeyMapping(configMenuData);
+        KeyMapping configMenuKeyMapping = createKeyMapping(configMenuData);
         register(configMenuKeyMapping);
-        ClientTickEvents.EndTick endTick = (
-            (ClientTickEvents$EndTickWrapperInterface) client -> {
-                while (configMenuKeyMapping.consumeClick()) {
-                    client.setScreen(new ConfigScreen());
-                }
+        ClientTickEvents$EndTickI endTick = client -> {
+            while (configMenuKeyMapping.consumeClick()) {
+                client.setScreen(new ConfigScreen());
             }
-        ).wrapper().unwrap(ClientTickEvents.EndTick.class);
-        ClientTickEvents.END_CLIENT_TICK.register(endTick);
+        };
+        ClientTickEvents.END_CLIENT_TICK.register(endTick.unwrap(ClientTickEvents.EndTick.class));
     }
 
-    protected void register(KeyMappingWrapper keyMapping) {
-        KeyBindingHelperWrapper.registerKeyBinding(keyMapping);
+    protected void register(KeyMapping keyMapping) {
+        KeyBindingHelper.registerKeyBinding(keyMapping);
     }
 
-    protected KeyMappingWrapper createKeyMapping(KeybindData keybindData) {
-        return new KeyMappingWrapper(keybindData.id(), keybindData.type(), keybindData.key(), modCategory);
+    protected KeyMapping createKeyMapping(KeybindData keybindData) {
+        return new KeyMapping(keybindData.id(), keybindData.type(), keybindData.key(), modCategory);
     }
 
     private final static String modCategory = "key.category." + LibrGetter.MOD_ID + ".category";
