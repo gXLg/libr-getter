@@ -68,6 +68,7 @@ public class StartTask extends TaskManager.Task {
             if (resetCounter) {
                 ctx = ctx.withResetAttemptsCounter();
             }
+            ctx = ctx.withTradeOfferData(null);
 
             return TaskManager.TaskSwitch.nextTick(new RotationTask(player, EntityAnchorArgument$Anchor.EYES().apply(ctx.selectedVillager()), new WaitVillagerAcceptProfessionTask()), ctx);
         });

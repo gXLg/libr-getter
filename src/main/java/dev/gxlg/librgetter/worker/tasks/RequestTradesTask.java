@@ -35,4 +35,9 @@ public class RequestTradesTask extends TaskManager.Task {
         game.interact(player, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
     }
+
+    @Override
+    public boolean allowsOpenedScreen() {
+        return false;
+    }
 }

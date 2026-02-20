@@ -6,6 +6,7 @@ import dev.gxlg.librgetter.utils.types.exceptions.signals.FinishSignal;
 import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
 import dev.gxlg.librgetter.worker.TaskManager;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientPacketListener;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
@@ -23,6 +24,12 @@ public class LockTradesTask extends TaskManager.Task {
     public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
         Minecraft client = Minecraft.getInstance();
         LocalPlayer player = client.getPlayerField();
+
+        // Wait for the screen to open
+        if (!(client.getScreenField() instanceof MerchantScreen)) {
+            return;
+        }
+
         if (player == null) {
             throw new InternalErrorException("player");
         }

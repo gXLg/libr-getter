@@ -16,4 +16,9 @@ public class WaitTradesTask extends TaskManager.Task {
         }
         throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new ParseAndMatchTradesTask(ctx.tradeOfferData().getTradeOfferList()), ctx.withTradeOfferData(null)));
     }
+
+    @Override
+    public boolean allowsOpenedScreen() {
+        return false;
+    }
 }

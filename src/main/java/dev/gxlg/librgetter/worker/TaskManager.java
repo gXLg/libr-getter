@@ -178,5 +178,9 @@ public class TaskManager {
         public boolean allowsPlacing() {
             return false;
         }
+
+        public boolean allowsOpenedScreen() {
+            return true;
+        }
     }
 }

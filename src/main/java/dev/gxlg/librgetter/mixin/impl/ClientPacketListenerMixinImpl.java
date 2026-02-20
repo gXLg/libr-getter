@@ -17,15 +17,16 @@ public class ClientPacketListenerMixinImpl {
         if (!TaskManager.isWorking()) {
             return;
         }
-        if (packet.canRestock()) {
-            TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.offers(packet.getOffers())));
-        } else {
+
+        if (packet.getVillagerXp() > 0) {
             TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.noRefresh()));
+        } else {
+            TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.offers(packet.getOffers())));
         }
     }
 
     public static Optional<Object> handleOpenScreen(ClientboundOpenScreenPacket packet) {
-        if (!packet.getType().equals(MenuType.MERCHANT()) || !TaskManager.isWorking() || Support.isUsingTradeCycling()) {
+        if (!packet.getType().equals(MenuType.MERCHANT()) || !TaskManager.isWorking() || Support.isUsingTradeCycling() || TaskManager.getCurrentTask().allowsOpenedScreen()) {
             return Optional.empty();
         }
         Minecraft client = Minecraft.getInstance();
