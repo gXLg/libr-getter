@@ -7,7 +7,7 @@ public class ConfigScreen extends BookViewScreen {
     public static final R.RClass clazz = R.extendWrapper(BookViewScreen.class, ConfigScreen.class);
 
     public ConfigScreen() {
-        super(ConfigMenu.getCachedContent());
+        super(ConfigMenu.createNewBookAccess());
     }
 
     @Override
@@ -45,8 +45,7 @@ public class ConfigScreen extends BookViewScreen {
     }
 
     public void updateScreen() {
-        ConfigMenu.updatePage(currentPage);
-        setBookAccess(ConfigMenu.getUpdatedContent());
+        setBookAccess(ConfigMenu.getUpdatedBookAccess(currentPage));
     }
 
     private static int currentPage = 0;

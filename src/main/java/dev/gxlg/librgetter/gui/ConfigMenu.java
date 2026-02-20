@@ -22,49 +22,46 @@ public class ConfigMenu {
 
     private static final List<Component> list = new ArrayList<>();
 
-    private static final Map<String, Integer> categories = new HashMap<>();
-
-    private static BookViewScreen$BookAccess cachedContent = null;
+    private static final Map<String, Integer> categoryPageIndices = new HashMap<>();
 
     static {
-        int pages = 1;
+        int pageIndex = 1;
         for (String cat : ConfigManager.CATEGORIES) {
-            categories.put(cat, pages);
-            pages += (int) Math.ceil(LibrGetter.configManager.getConfigurablesForCategory(cat).size() / ((float) CONFIGS_PER_PAGE));
+            categoryPageIndices.put(cat, pageIndex);
+            pageIndex += (int) Math.ceil(LibrGetter.configManager.getConfigurablesForCategory(cat).size() / ((float) CONFIGS_PER_PAGE));
         }
-        pageCount = pages;
+        pageCount = pageIndex;
 
         // pre-fill pages
         for (int i = 0; i < pageCount; i++) {
-            list.add(null);
-            updatePage(i);
+            list.add(Component.nullToEmpty(""));
         }
     }
 
-    public static BookViewScreen$BookAccess getCachedContent() {
-        if (cachedContent == null) {
-            getUpdatedContent();
+    public static BookViewScreen$BookAccess createNewBookAccess() {
+        for (int i = 0; i < pageCount; i++) {
+            updatePageContent(i);
         }
-        return cachedContent;
+        return Gui.createBookAccess(list);
     }
 
-    public static BookViewScreen$BookAccess getUpdatedContent() {
-        cachedContent = Gui.createBookAccess(list);
-        return cachedContent;
+    public static BookViewScreen$BookAccess getUpdatedBookAccess(int updatePageIndex) {
+        updatePageContent(updatePageIndex);
+        return Gui.createBookAccess(list);
     }
 
-    public static void updatePage(int index) {
+    private static void updatePageContent(int index) {
         MutableComponent text;
         if (index == 0) {
-            text = Texts.bookMainPage(categories);
+            text = Texts.bookMainPage(categoryPageIndices);
 
         } else {
             List<String> reversed = new ArrayList<>(ConfigManager.CATEGORIES);
             Collections.reverse(reversed);
-            String category = reversed.stream().filter(c -> categories.get(c) <= index).findFirst().orElseThrow(() -> new RuntimeException("Invalid index " + index));
+            String category = reversed.stream().filter(c -> categoryPageIndices.get(c) <= index).findFirst().orElseThrow(() -> new RuntimeException("Invalid index " + index));
             text = Texts.bookTitle(category);
 
-            int j = index - categories.get(category);
+            int j = index - categoryPageIndices.get(category);
             int finish = Math.min(j * CONFIGS_PER_PAGE + CONFIGS_PER_PAGE, LibrGetter.configManager.getConfigurablesForCategory(category).size());
             for (int i = j * CONFIGS_PER_PAGE; i < finish; i++) {
                 Configurable<?> config = LibrGetter.configManager.getConfigurablesForCategory(category).get(i);
