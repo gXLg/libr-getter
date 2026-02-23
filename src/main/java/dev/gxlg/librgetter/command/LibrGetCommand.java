@@ -19,8 +19,11 @@ import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ConfigValu
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.GoalsListClearedMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.LecternSelectedMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.LibrarianSelectedMessage;
-import dev.gxlg.librgetter.worker.TaskManager;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStoppedMessage;
+import dev.gxlg.librgetter.worker.tasks.StandbyTask;
 import dev.gxlg.librgetter.worker.tasks.StartTask;
+import dev.gxlg.librgetter.worker.types.scheduling.AbstractSchedulerController;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
@@ -77,7 +80,7 @@ public class LibrGetCommand {
     }
 
     public static void autostart() throws LibrGetterException {
-        if (TaskManager.isWorking()) {
+        if (LibrGetter.worker.getStateView().isWorking()) {
             throw new AlreadyRunningException();
         }
 
@@ -141,7 +144,10 @@ public class LibrGetCommand {
 
         BlockPos finalLecTernPos = foundLecternPos;
         Villager finalVi = foundVillager;
-        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(true), ctx.withLecternPos(finalLecTernPos).withVillager(finalVi)));
+
+        AbstractSchedulerController controller = LibrGetter.worker.getUserSchedulerController();
+        controller.scheduleContextUpdate(ctx -> ctx.setLecternPos(finalLecTernPos).setVillager(finalVi));
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
     }
 
     public static void clearGoals() {
@@ -151,25 +157,31 @@ public class LibrGetCommand {
     }
 
     public static void stopWorking() throws ProcessNotRunningException {
-        TaskManager.stop();
+        if (!LibrGetter.worker.getStateView().isWorking()) {
+            throw new ProcessNotRunningException();
+        }
+        LibrGetter.worker.getUserSchedulerController().scheduleTaskSwitch(TaskSwitch.nextTick(() -> {
+            Texts.sendTranslatable(new ProcessStoppedMessage());
+            return new StandbyTask();
+        }));
     }
 
     public static void startWorking() throws AlreadyRunningException {
-        if (TaskManager.isWorking()) {
+        if (LibrGetter.worker.getStateView().isWorking()) {
             throw new AlreadyRunningException();
         }
-        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(true), ctx));
+        LibrGetter.worker.getUserSchedulerController().scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
     }
 
     public static void continueWorking() throws AlreadyRunningException {
-        if (TaskManager.isWorking()) {
+        if (LibrGetter.worker.getStateView().isWorking()) {
             throw new AlreadyRunningException();
         }
-        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(false), ctx));
+        LibrGetter.worker.getUserSchedulerController().scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(false)));
     }
 
     public static void selector() throws LibrGetterException {
-        if (TaskManager.isWorking()) {
+        if (LibrGetter.worker.getStateView().isWorking()) {
             throw new AlreadyRunningException();
         }
 
@@ -196,8 +208,10 @@ public class LibrGetCommand {
             if (!world.getBlockState(blockPos).is(Blocks.LECTERN())) {
                 throw new BlockNotLecternException();
             }
-            TaskManager.updateContext(ctx -> ctx.withLecternPos(blockPos));
-            Texts.sendTranslatable(new LecternSelectedMessage());
+            LibrGetter.worker.getUserSchedulerController().scheduleContextUpdate(ctx -> {
+                ctx.setLecternPos(blockPos);
+                Texts.sendTranslatable(new LecternSelectedMessage());
+            });
 
         } else if (hitType.equals(HitResult$Type.ENTITY())) {
             Entity entity = ((EntityHitResult) hit).getEntity();
@@ -207,9 +221,10 @@ public class LibrGetCommand {
             if (!Villagers.isVillagerLibrarian(villager)) {
                 throw new VillagerNotLibrarianException();
             }
-
-            TaskManager.updateContext(ctx -> ctx.withVillager(villager));
-            Texts.sendTranslatable(new LibrarianSelectedMessage());
+            LibrGetter.worker.getUserSchedulerController().scheduleContextUpdate(ctx -> {
+                ctx.setVillager(villager);
+                Texts.sendTranslatable(new LibrarianSelectedMessage());
+            });
         }
     }
 }

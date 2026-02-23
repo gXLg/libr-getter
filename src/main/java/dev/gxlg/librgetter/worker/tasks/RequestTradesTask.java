@@ -2,42 +2,34 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.VillagerTooFarException;
-import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
-import dev.gxlg.librgetter.worker.TaskManager;
-import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
-import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.MinecraftData;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
 
-public class RequestTradesTask extends TaskManager.Task {
+public class RequestTradesTask extends Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
         if (LibrGetter.config.manual) {
-            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
+            controller.scheduleTaskSwitch(TaskSwitch.sameTick(WaitTradesTask::new));
+            return;
         }
 
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.getPlayerField();
-        if (player == null) {
-            throw new InternalErrorException("player");
-        }
-        MultiPlayerGameMode game = client.getGameModeField();
-        if (game == null) {
-            throw new InternalErrorException("game");
-        }
-
-        if (taskContext.selectedVillager().distanceTo(player) > 3.4f) {
+        MinecraftData minecraftData = taskContext.minecraftData();
+        if (taskContext.selectedVillager().distanceTo(minecraftData.localPlayer) > 3.4f) {
             throw new VillagerTooFarException();
         }
 
-        game.interact(player, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
-        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
+        minecraftData.gameMode.interact(minecraftData.localPlayer, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
+
+        controller.scheduleTaskSwitch(TaskSwitch.sameTick(WaitTradesTask::new));
     }
 
     @Override
-    public boolean allowsOpenedScreen() {
-        return false;
+    protected boolean allowsSettingTradeOffers() {
+        return true;
     }
 }

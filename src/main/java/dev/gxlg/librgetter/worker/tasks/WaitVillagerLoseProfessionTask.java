@@ -2,14 +2,16 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
-import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
-import dev.gxlg.librgetter.worker.TaskManager;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.librgetter.worker.types.task.Task;
 
-public class WaitVillagerLoseProfessionTask extends TaskManager.Task {
+public class WaitVillagerLoseProfessionTask extends Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+    public void work(TaskContext taskContext, TaskSchedulerController controller) {
         if (!LibrGetter.config.waitLose || Villagers.isVillagerUnemployed(taskContext.selectedVillager())) {
-            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new SelectAndPlaceLecternTask(), ctx));
+            controller.scheduleTaskSwitch(TaskSwitch.sameTick(SelectAndPlaceLecternTask::new));
         }
     }
 }

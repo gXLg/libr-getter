@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.mixin.impl;
 
+import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.chaining.support.Support;
 import dev.gxlg.librgetter.utils.types.TradeOfferData;
-import dev.gxlg.librgetter.worker.TaskManager;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientPacketListener;
 import dev.gxlg.versiont.gen.net.minecraft.network.protocol.game.ClientboundMerchantOffersPacket;
@@ -14,19 +14,21 @@ import java.util.Optional;
 
 public class ClientPacketListenerMixinImpl {
     public static void handleMerchantOffers(ClientboundMerchantOffersPacket packet) {
-        if (!TaskManager.isWorking()) {
+        if (!LibrGetter.worker.getStateView().getPermissions().allowsSettingTradeOffers()) {
             return;
         }
-
         if (packet.getVillagerXp() > 0) {
-            TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.noRefresh()));
+            LibrGetter.worker.getSystemSchedulerController().scheduleContextUpdate(ctx -> ctx.setTradeOfferData(TradeOfferData.noRefresh()));
         } else {
-            TaskManager.updateContext(ctx -> ctx.withTradeOfferData(TradeOfferData.offers(packet.getOffers())));
+            LibrGetter.worker.getSystemSchedulerController().scheduleContextUpdate(ctx -> ctx.setTradeOfferData(TradeOfferData.offers(packet.getOffers())));
         }
     }
 
     public static Optional<Object> handleOpenScreen(ClientboundOpenScreenPacket packet) {
-        if (!packet.getType().equals(MenuType.MERCHANT()) || !TaskManager.isWorking() || Support.isUsingTradeCycling() || TaskManager.getCurrentTask().allowsOpenedScreen()) {
+        if (!packet.getType().equals(MenuType.MERCHANT())) {
+            return Optional.empty();
+        }
+        if (!LibrGetter.worker.getStateView().isWorking() || Support.isUsingTradeCycling()) {
             return Optional.empty();
         }
         Minecraft client = Minecraft.getInstance();

@@ -1,24 +1,31 @@
 package dev.gxlg.librgetter.worker.tasks;
 
+import dev.gxlg.librgetter.utils.types.TradeOfferData;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.LibrarianCanNotUpdateTradesException;
-import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
-import dev.gxlg.librgetter.worker.TaskManager;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.librgetter.worker.types.task.Task;
 
-public class WaitTradesTask extends TaskManager.Task {
+public class WaitTradesTask extends Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
-        if (taskContext.tradeOfferData() == null) {
+    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
+        TradeOfferData offerData = taskContext.tradeOfferData();
+        if (offerData == null) {
             return;
         }
-        if (!taskContext.tradeOfferData().canRefresh()) {
+        if (!offerData.canRefresh()) {
             throw new LibrarianCanNotUpdateTradesException();
         }
-        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new ParseAndMatchTradesTask(ctx.tradeOfferData().getTradeOfferList()), ctx.withTradeOfferData(null)));
+
+        Task parseTask = new ParseAndMatchTradesTask(offerData.getTradeOfferList());
+        controller.scheduleContextUpdate(ctx -> ctx.setTradeOfferData(null));
+        controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> parseTask));
     }
 
     @Override
-    public boolean allowsOpenedScreen() {
-        return false;
+    protected boolean allowsSettingTradeOffers() {
+        return true;
     }
 }

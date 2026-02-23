@@ -3,20 +3,19 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.chaining.support.Support;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.CanNotLockException;
-import dev.gxlg.librgetter.utils.types.exceptions.signals.FinishSignal;
-import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
-import dev.gxlg.librgetter.worker.TaskManager;
-import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
-import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.MinecraftData;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffers;
 
-public class FinalizeSearchTask extends TaskManager.Task {
+public class FinalizeSearchTask extends Task {
     private final MerchantOffers offers;
 
     public FinalizeSearchTask(MerchantOffers offers) {
@@ -24,45 +23,39 @@ public class FinalizeSearchTask extends TaskManager.Task {
     }
 
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
         if (LibrGetter.config.manual) {
-            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new ManualModeWaitTask(), ctx));
+            controller.scheduleTaskSwitch(TaskSwitch.sameTick(ManualModeWaitTask::new));
+            return;
         }
 
         if (!LibrGetter.config.lock) {
-            throw new FinishSignal();
+            controller.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
+            return;
         }
 
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.getPlayerField();
-        if (player == null) {
-            throw new InternalErrorException("player");
-        }
-
+        MinecraftData minecraftData = taskContext.minecraftData();
         if (!Support.isUsingTradeCycling()) {
             // TradeCycling process keeps the screen open, else we have to open it again
-            MultiPlayerGameMode game = client.getGameModeField();
-            if (game == null) {
-                throw new InternalErrorException("game");
-            }
-            game.interact(player, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
+            minecraftData.gameMode.interact(minecraftData.localPlayer, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
         }
 
-        int buy = canBuy(player, (MerchantOffer) offers.get(0)) ? 0 : (
-            canBuy(player, (MerchantOffer) offers.get(1)) ? 1 : -1
+        Inventory inventory = minecraftData.localPlayer.getInventory();
+        int buy = canBuy(inventory, (MerchantOffer) offers.get(0)) ? 0 : (
+            canBuy(inventory, (MerchantOffer) offers.get(1)) ? 1 : -1
         );
         if (buy == -1) {
             throw new CanNotLockException();
         }
 
-        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.nextTick(new LockTradesTask(buy), ctx));
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new LockTradesTask(buy)));
     }
 
-    private static boolean canBuy(LocalPlayer player, MerchantOffer offer) {
+    private static boolean canBuy(Inventory inventory, MerchantOffer offer) {
         ItemStack first = offer.getCostA();
         ItemStack second = offer.getCostB();
-        int firstCount = player.getInventory().countItem(first.getItem());
-        int secondCount = second.isEmpty() ? 0 : player.getInventory().countItem(second.getItem());
+        int firstCount = inventory.countItem(first.getItem());
+        int secondCount = second.isEmpty() ? 0 : inventory.countItem(second.getItem());
         return first.getCount() <= firstCount && second.getCount() <= secondCount;
     }
 }
