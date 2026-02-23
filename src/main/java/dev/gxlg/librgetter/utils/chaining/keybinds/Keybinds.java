@@ -3,12 +3,14 @@ package dev.gxlg.librgetter.utils.chaining.keybinds;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 
-public abstract class Keybinds {
-    public abstract void registerKeybinds();
+public class Keybinds {
+    private static Base implementation = null;
 
-    private static Keybinds implementation = null;
+    public static void registerKeybinds() {
+        getImpl().registerKeybinds();
+    }
 
-    public static Keybinds getImpl() {
+    private static Base getImpl() {
         if (implementation != null) {
             return implementation;
         }
@@ -22,5 +24,9 @@ public abstract class Keybinds {
         return implementation;
     }
 
-    protected record KeybindData(String id, InputConstants$Type type, int key) { }
+    public abstract static class Base {
+        public abstract void registerKeybinds();
+
+        protected record KeybindData(String id, InputConstants$Type type, int key) { }
+    }
 }

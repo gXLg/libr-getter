@@ -6,7 +6,7 @@ import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 
-public abstract class Enchantments {
+public class Enchantments {
     private static Base implementation = null;
 
     public static Identifier enchantmentId(Enchantment enchantment) {

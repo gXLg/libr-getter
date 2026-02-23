@@ -1,19 +1,21 @@
 package dev.gxlg.librgetter.worker.tasks;
 
-import dev.gxlg.librgetter.worker.TaskManager;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.task.Task;
 
-public class StandbyTask extends TaskManager.Task {
+public class StandbyTask extends Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) {
+    public void work(TaskContext taskContext, TaskSchedulerController controller) {
     }
 
     @Override
-    public boolean allowsBreaking() {
+    protected boolean allowsBreakingLecterns() {
         return true;
     }
 
     @Override
-    public boolean allowsPlacing() {
+    protected boolean allowsPlacingLectern() {
         return true;
     }
 }

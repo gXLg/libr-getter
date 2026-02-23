@@ -9,32 +9,54 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Texts {
-    abstract public void sendTranslatable(TranslatableMessage translatableMessage);
+public class Texts {
+    private static Base implementation = null;
 
-    abstract public void sendFound(EnchantmentTrade enchant, int counter);
+    public static void sendTranslatable(TranslatableMessage translatableMessage) {
+        getImpl().sendTranslatable(translatableMessage);
+    }
 
-    abstract public void sendTradeLog(List<EnchantmentTrade> offeredEnchantments);
+    public static void sendFound(EnchantmentTrade enchant, int counter) {
+        getImpl().sendFound(enchant, counter);
+    }
 
-    abstract public void sendNewVersion(String message, String hover);
+    public static void sendTradeLog(List<EnchantmentTrade> offeredEnchantments) {
+        getImpl().sendTradeLog(offeredEnchantments);
+    }
 
-    abstract public void sendListOfGoals();
+    public static void sendNewVersion(String message, String hover) {
+        getImpl().sendNewVersion(message, hover);
+    }
 
-    abstract public MutableComponent bookMainPage(Map<String, Integer> categories);
+    public static void sendListOfGoals() {
+        getImpl().sendListOfGoals();
+    }
 
-    abstract public MutableComponent bookTitle(String category);
+    public static MutableComponent bookMainPage(Map<String, Integer> categories) {
+        return getImpl().bookMainPage(categories);
+    }
 
-    abstract public MutableComponent bookEntry(MutableComponent text, Configurable<?> configurable);
+    public static MutableComponent bookTitle(String category) {
+        return getImpl().bookTitle(category);
+    }
 
-    abstract public MutableComponent literal(String text);
+    public static MutableComponent bookEntry(MutableComponent text, Configurable<?> configurable) {
+        return getImpl().bookEntry(text, configurable);
+    }
 
-    abstract public MutableComponent translatable(String message, Object... args);
+    public static MutableComponent literal(String text) {
+        return getImpl().literal(text);
+    }
 
-    abstract public MutableComponent enchantmentTradeToComponent(EnchantmentTrade trade);
+    public static MutableComponent translatable(String message, Object... args) {
+        return getImpl().translatable(message, args);
+    }
 
-    private static Texts implementation = null;
+    public static MutableComponent enchantmentTradeToComponent(EnchantmentTrade trade) {
+        return getImpl().enchantmentTradeToComponent(trade);
+    }
 
-    public static Texts getImpl() {
+    private static Base getImpl() {
         if (implementation != null) {
             return implementation;
         }
@@ -48,5 +70,29 @@ public abstract class Texts {
             implementation = new Texts_1_21_5();
         }
         return implementation;
+    }
+
+    public abstract static class Base {
+        public abstract void sendTranslatable(TranslatableMessage translatableMessage);
+
+        public abstract void sendFound(EnchantmentTrade enchant, int counter);
+
+        public abstract void sendTradeLog(List<EnchantmentTrade> offeredEnchantments);
+
+        public abstract void sendNewVersion(String message, String hover);
+
+        public abstract void sendListOfGoals();
+
+        public abstract MutableComponent bookMainPage(Map<String, Integer> categories);
+
+        public abstract MutableComponent bookTitle(String category);
+
+        public abstract MutableComponent bookEntry(MutableComponent text, Configurable<?> configurable);
+
+        public abstract MutableComponent literal(String text);
+
+        public abstract MutableComponent translatable(String message, Object... args);
+
+        public abstract MutableComponent enchantmentTradeToComponent(EnchantmentTrade trade);
     }
 }

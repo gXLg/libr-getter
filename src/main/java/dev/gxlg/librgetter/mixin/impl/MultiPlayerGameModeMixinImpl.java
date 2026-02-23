@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.mixin.impl;
 
-import dev.gxlg.librgetter.worker.TaskManager;
+import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
@@ -14,7 +14,7 @@ import java.util.Optional;
 public class MultiPlayerGameModeMixinImpl {
 
     public static void tick() {
-        TaskManager.work();
+        LibrGetter.worker.work();
     }
 
     public static Optional<Boolean> startDestroyBlock(BlockPos blockPos) {
@@ -27,7 +27,7 @@ public class MultiPlayerGameModeMixinImpl {
         if (!world.getBlockState(blockPos).is(Blocks.LECTERN())) {
             return Optional.empty();
         }
-        if (!TaskManager.getCurrentTask().allowsBreaking()) {
+        if (!LibrGetter.worker.getStateView().getPermissions().allowsBreakingLecterns()) {
             return Optional.of(false);
         }
         return Optional.empty();
@@ -40,13 +40,12 @@ public class MultiPlayerGameModeMixinImpl {
             return Optional.empty();
         }
         BlockPos pos = hitResult.getBlockPos().relative(hitResult.getDirection());
-        if (!pos.equals(TaskManager.getTaskContext().selectedLecternPos())) {
+        if (!pos.equals(LibrGetter.worker.getStateView().getTaskContext().selectedLecternPos())) {
             return Optional.empty();
         }
-        if (!TaskManager.getCurrentTask().allowsPlacing()) {
+        if (!LibrGetter.worker.getStateView().getPermissions().allowsPlacingLectern()) {
             return Optional.of(InteractionResult.FAIL());
         }
         return Optional.empty();
     }
-
 }

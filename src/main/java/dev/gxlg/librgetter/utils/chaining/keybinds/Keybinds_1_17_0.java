@@ -9,7 +9,7 @@ import dev.gxlg.versiont.gen.net.minecraft.client.KeyMapping;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import org.lwjgl.glfw.GLFW;
 
-public class Keybinds_1_17_0 extends Keybinds {
+public class Keybinds_1_17_0 extends Keybinds.Base {
     private final KeybindData configMenuData = new KeybindData("librgetter.keys.open", InputConstants$Type.KEYSYM(), GLFW.GLFW_KEY_K);
 
     @Override

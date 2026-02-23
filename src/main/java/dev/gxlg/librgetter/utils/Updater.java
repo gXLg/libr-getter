@@ -46,7 +46,7 @@ public class Updater {
         ClientPlayConnectionEvents$JoinI join = (h, s, c) -> {
             NewVersion version = Updater.newVersion.getAndSet(null);
             if (version != null) {
-                Texts.getImpl().sendNewVersion(version.version(), version.changelog());
+                Texts.sendNewVersion(version.version(), version.changelog());
             }
         };
         ClientPlayConnectionEvents.JOIN.register(join.unwrap(ClientPlayConnectionEvents.Join.class));

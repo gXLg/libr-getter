@@ -6,16 +6,22 @@ import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
 import dev.gxlg.versiont.gen.net.minecraft.world.phys.BlockHitResult;
 
-public abstract class Players {
-    public abstract void interactBlock(MultiPlayerGameMode game, LocalPlayer player, BlockHitResult lowBlock, boolean useMainHand);
+public class Players {
+    private static Base implementation = null;
 
-    public abstract void playFoundNotification(LocalPlayer player);
+    public static void interactBlock(MultiPlayerGameMode game, LocalPlayer player, BlockHitResult lowBlock, boolean useMainHand) {
+        getImpl().interactBlock(game, player, lowBlock, useMainHand);
+    }
 
-    public abstract void setSelectedSlot(Inventory inventory, int slot);
+    public static void playFoundNotification(LocalPlayer player) {
+        getImpl().playFoundNotification(player);
+    }
 
-    private static Players implementation = null;
+    public static void setSelectedSlot(Inventory inventory, int slot) {
+        getImpl().setSelectedSlot(inventory, slot);
+    }
 
-    public static Players getImpl() {
+    private static Base getImpl() {
         if (implementation != null) {
             return implementation;
         }
@@ -29,5 +35,14 @@ public abstract class Players {
             implementation = new Players_1_21_9();
         }
         return implementation;
+    }
+
+    public abstract static class Base {
+        public abstract void interactBlock(MultiPlayerGameMode game, LocalPlayer player, BlockHitResult lowBlock, boolean useMainHand);
+
+        public abstract void playFoundNotification(LocalPlayer player);
+
+        public abstract void setSelectedSlot(Inventory inventory, int slot);
+
     }
 }

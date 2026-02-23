@@ -479,6 +479,7 @@ import net.minecraft.class_1661/net.minecraft.world.entity.player.Inventory
 import net.minecraft.class_3917/net.minecraft.world.inventory.MenuType
 import net.minecraft.class_1735/net.minecraft.world.inventory.Slot
 import net.minecraft.class_1713/net.minecraft.world.inventory.ClickType
+import net.minecraft.class_492/net.minecraft.client.gui.screens.inventory.MerchantScreen
 
 class BookViewScreen extends Screen
     <init>(BookViewScreen$BookAccess bookAccess)
@@ -495,6 +496,8 @@ class BookViewScreen extends Screen
     interface BookViewScreen$BookAccess
         int method_17560/getPageCount()
         Component method_17563/getPage(int index)
+
+class MerchantScreen extends Screen
 
 class AbstractContainerMenu
     int field_7763/containerId
@@ -643,7 +646,7 @@ import net.minecraft.class_2596/net.minecraft.network.protocol.Packet
 import net.minecraft.class_8673/net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl
 
 class ClientboundMerchantOffersPacket extends Packet
-    boolean method_20722/canRestock()
+    int method_19459/getVillagerXp()
     MerchantOffers method_17590/getOffers()
 
 class ClientboundOpenScreenPacket extends Packet

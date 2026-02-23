@@ -4,12 +4,11 @@ import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.InventoryHelper;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
-import dev.gxlg.librgetter.utils.types.exceptions.signals.StopTaskSignal;
-import dev.gxlg.librgetter.worker.TaskManager;
-import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
-import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientPacketListener;
-import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.MinecraftData;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.AxeItem;
@@ -17,18 +16,16 @@ import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
 import dev.gxlg.versiont.gen.net.minecraft.world.phys.Vec3;
 
-public class SelectAxeTask extends TaskManager.Task {
+public class SelectAxeTask extends Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal, LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
         if (LibrGetter.config.manual) {
-            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new BreakLecternTask(), ctx));
+            controller.scheduleTaskSwitch(TaskSwitch.sameTick(BreakLecternTask::new));
+            return;
         }
 
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.getPlayerField();
-        if (player == null) {
-            throw new InternalErrorException("player");
-        }
+        MinecraftData minecraftData = taskContext.minecraftData();
+        LocalPlayer player = minecraftData.localPlayer;
         Inventory inventory = player.getInventory();
 
         int slot = -1;
@@ -40,7 +37,7 @@ public class SelectAxeTask extends TaskManager.Task {
                     continue;
                 }
                 float breakingSpeed = stack.getDestroySpeed(Blocks.LECTERN().defaultBlockState());
-                int efficiencyLevel = Enchantments.getImpl().getEfficiencyLevel(stack);
+                int efficiencyLevel = Enchantments.getEfficiencyLevel(stack);
                 if (stack.getItem() instanceof AxeItem) {
                     breakingSpeed += (float) (efficiencyLevel * efficiencyLevel + 1);
                 }
@@ -61,17 +58,10 @@ public class SelectAxeTask extends TaskManager.Task {
             }
         }
         if (slot != -1) {
-            MultiPlayerGameMode game = client.getGameModeField();
-            if (game == null) {
-                throw new InternalErrorException("game");
-            }
-            ClientPacketListener clientNetwork = client.getConnection();
-            if (clientNetwork == null) {
-                throw new InternalErrorException("clientNetwork");
-            }
-            InventoryHelper.selectItem(player, slot, game, clientNetwork);
+            InventoryHelper.selectItem(player, slot, minecraftData.gameMode, minecraftData.clientNetwork);
         }
 
-        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RotationTask(player, Vec3.atCenterOf(ctx.selectedLecternPos()), new BreakLecternTask()), ctx));
+        Task rotationTask = new RotationTask(player, Vec3.atCenterOf(taskContext.selectedLecternPos()), new BreakLecternTask());
+        controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> rotationTask));
     }
 }

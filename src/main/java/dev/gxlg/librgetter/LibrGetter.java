@@ -6,6 +6,7 @@ import dev.gxlg.librgetter.utils.chaining.commands.Commands;
 import dev.gxlg.librgetter.utils.chaining.keybinds.Keybinds;
 import dev.gxlg.librgetter.utils.config.ConfigData;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.worker.Worker;
 import dev.gxlg.versiont.api.R;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -27,6 +28,8 @@ public class LibrGetter implements ClientModInitializer {
 
     public static final ConfigData config = configManager.getData();
 
+    public static final Worker worker = new Worker();
+
     @Override
     public void onInitializeClient() {
         LOGGER.info("Hello World from LibrGetter!");
@@ -34,10 +37,10 @@ public class LibrGetter implements ClientModInitializer {
         R.preload(ConfigScreen.clazz);
 
         // register commands
-        Commands.getImpl().registerCommands();
+        Commands.registerCommands();
 
         // register keybinds
-        Keybinds.getImpl().registerKeybinds();
+        Keybinds.registerKeybinds();
 
         // checking for a new update
         Updater.checkUpdates();

@@ -6,7 +6,7 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 import java.util.List;
 
-public class Gui_1_17_0 extends Gui {
+public class Gui_1_17_0 extends Gui.Base {
     @Override
     public BookViewScreen$BookAccess createBookAccess(List<Component> list) {
         int pageCount = list.size();

@@ -6,10 +6,9 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-        /*maven {
+        maven {
             name = "gXLg Repo"
             url = "https://gxlg.github.io/maven-repo/"
-        }*/
-        mavenLocal()
+        }
     }
 }

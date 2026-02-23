@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Parser_1_17_0 extends Parser {
+public class Parser_1_17_0 extends Parser.Base {
     @Override
     public EnchantmentTrade parseTrade(MerchantOffer offer) throws LibrGetterException {
         ItemStack stack = offer.getResult();
@@ -67,11 +67,11 @@ public class Parser_1_17_0 extends Parser {
         List<Tag> list = null;
         // Legacy enchantment books
         if (tag.contains("Enchantments")) {
-            list = Tags.getImpl().getList(tag, "Enchantments", 10);
+            list = Tags.getList(tag, "Enchantments", 10);
         }
         // Vanilla minecraft
         if (list == null && tag.contains("StoredEnchantments")) {
-            list = Tags.getImpl().getList(tag, "StoredEnchantments", 10);
+            list = Tags.getList(tag, "StoredEnchantments", 10);
         }
 
         // Insert more methods to find an enchantment here
@@ -82,7 +82,7 @@ public class Parser_1_17_0 extends Parser {
         }
 
         CompoundTag element = (CompoundTag) list.get(0);
-        return new EnchantmentTrade.EnchantmentOnly(Tags.getImpl().getString(element, "id"), Tags.getImpl().getShort(element, "lvl"));
+        return new EnchantmentTrade.EnchantmentOnly(Tags.getString(element, "id"), Tags.getShort(element, "lvl"));
     }
 
     private EnchantmentTrade.EnchantmentOnly fallbackParse(CompoundTag tag) {

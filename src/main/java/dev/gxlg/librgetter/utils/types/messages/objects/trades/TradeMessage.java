@@ -20,6 +20,6 @@ public class TradeMessage extends Message {
 
     @Override
     protected MutableComponent buildComponent() {
-        return Texts.getImpl().enchantmentTradeToComponent(trade);
+        return Texts.enchantmentTradeToComponent(trade);
     }
 }

@@ -22,13 +22,13 @@ public class TradeListMessage extends Message {
 
     @Override
     protected MutableComponent buildComponent() {
-        MutableComponent text = Texts.getImpl().literal("[");
+        MutableComponent text = Texts.literal("[");
         for (int i = 0; i < tradeList.size(); i++) {
             text = text.append(new TradeMessage(tradeList.get(i)).getComponent());
             if (i < tradeList.size() - 1) {
-                text = text.append(Texts.getImpl().literal(", "));
+                text = text.append(Texts.literal(", "));
             }
         }
-        return text.append(Texts.getImpl().literal("]"));
+        return text.append(Texts.literal("]"));
     }
 }

@@ -6,12 +6,14 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 import java.util.List;
 
-public abstract class Gui {
-    public abstract BookViewScreen$BookAccess createBookAccess(List<Component> list);
+public class Gui {
+    private static Base implementation = null;
 
-    private static Gui implementation = null;
+    public static BookViewScreen$BookAccess createBookAccess(List<Component> list) {
+        return getImpl().createBookAccess(list);
+    }
 
-    public static Gui getImpl() {
+    private static Base getImpl() {
         if (implementation != null) {
             return implementation;
         }
@@ -21,5 +23,9 @@ public abstract class Gui {
             implementation = new Gui_1_21_5();
         }
         return implementation;
+    }
+
+    public abstract static class Base {
+        public abstract BookViewScreen$BookAccess createBookAccess(List<Component> list);
     }
 }

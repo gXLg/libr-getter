@@ -10,7 +10,7 @@ import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
 import dev.gxlg.versiont.gen.net.minecraft.world.phys.BlockHitResult;
 
-public class Players_1_17_0 extends Players {
+public class Players_1_17_0 extends Players.Base {
     protected ClientLevel getWorld(LocalPlayer player) {
         return player.getClientLevelField();
     }
