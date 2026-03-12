@@ -5,6 +5,7 @@ import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import dev.gxlg.librgetter.utils.types.exceptions.runtime.InvalidBookIndexException;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
@@ -56,8 +57,7 @@ public class ConfigMenu {
 
         } else {
             List<ConfigManager.Category> categories = List.of(ConfigManager.Category.values());
-            ConfigManager.Category category = categories.reversed().stream().filter(c -> categoryPageIndices.get(c) <= index).findFirst()
-                                                        .orElseThrow(() -> new RuntimeException("Invalid index " + index));
+            ConfigManager.Category category = categories.reversed().stream().filter(c -> categoryPageIndices.get(c) <= index).findFirst().orElseThrow(() -> new InvalidBookIndexException(index));
             text = Texts.bookTitle(category);
 
             int startingPage = index - categoryPageIndices.get(category);
