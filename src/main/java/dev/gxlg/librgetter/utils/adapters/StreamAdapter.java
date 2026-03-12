@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 public class StreamAdapter {
     public static <S> Function<Object, Stream<S>> wrapper(Function<Object, S> wrapperS) {
-        return obj -> ((Stream<?>) obj).map(wrapperS);
+        return object -> ((Stream<?>) object).map(wrapperS);
     }
 
     public static <S> Function<Stream<S>, Object> unwrapper(Function<S, Object> unwrapperS) {
