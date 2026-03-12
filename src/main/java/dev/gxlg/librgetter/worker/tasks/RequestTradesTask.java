@@ -19,7 +19,7 @@ public class RequestTradesTask extends Task {
         }
 
         MinecraftData minecraftData = taskContext.minecraftData();
-        if (taskContext.selectedVillager().distanceTo(minecraftData.localPlayer) > 3.4f) {
+        if (taskContext.selectedVillager().distanceTo(minecraftData.localPlayer) > MAX_INTERACTION_DISTANCE) {
             throw new VillagerTooFarException();
         }
 

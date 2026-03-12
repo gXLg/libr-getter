@@ -26,7 +26,7 @@ public class SelectAndPlaceLecternTask extends Task {
     public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
         MinecraftData minecraftData = taskContext.minecraftData();
         LocalPlayer player = minecraftData.localPlayer;
-        if (!taskContext.selectedLecternPos().closerThan(player.blockPosition(), 3.4f)) {
+        if (!taskContext.selectedLecternPos().closerThan(player.blockPosition(), MAX_INTERACTION_DISTANCE)) {
             throw new VillagerTooFarException();
         }
 
