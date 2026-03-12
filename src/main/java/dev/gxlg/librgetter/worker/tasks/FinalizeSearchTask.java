@@ -41,10 +41,12 @@ public class FinalizeSearchTask extends Task {
         }
 
         Inventory inventory = minecraftData.localPlayer.getInventory();
-        int buy = canBuy(inventory, (MerchantOffer) offers.get(0)) ? 0 : (
-            canBuy(inventory, (MerchantOffer) offers.get(1)) ? 1 : -1
-        );
-        if (buy == -1) {
+        int buy;
+        if (canBuy(inventory, (MerchantOffer) offers.get(0))) {
+            buy = 0;
+        } else if (canBuy(inventory, (MerchantOffer) offers.get(1))) {
+            buy = 1;
+        } else {
             throw new CanNotLockException();
         }
 
