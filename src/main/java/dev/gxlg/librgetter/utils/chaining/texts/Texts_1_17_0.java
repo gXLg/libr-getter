@@ -82,9 +82,9 @@ public class Texts_1_17_0 extends Texts.Base {
     @Override
     public void sendListOfGoals() {
         MutableComponent text = new TranslatableGoalsListName().getComponent();
-        for (EnchantmentTrade l : LibrGetter.config.goals) {
-            text = text.append("\n- ").append(new TradeMessage(l).getComponent()).append(" (" + l.price() + ") ");
-            Style style = Style.EMPTY().withClickEvent(runnable("/librget remove \"" + l.id() + "\" " + l.lvl()));
+        for (EnchantmentTrade goal : LibrGetter.config.goals) {
+            text = text.append("\n- ").append(new TradeMessage(goal).getComponent()).append(" (" + goal.price() + ") ");
+            Style style = Style.EMPTY().withClickEvent(runnable("/librget remove \"" + goal.id() + "\" " + goal.lvl()));
             text = text.append(new TranslatableRemoveButton().getComponent().withStyle(style));
         }
         sendMessage(text, false);
