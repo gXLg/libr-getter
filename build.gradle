@@ -29,8 +29,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    //noinspection GroovyAssignabilityCheck, GroovyAccessibility
-    it.options.release = 16
+    options.release = 16
 }
 
 java {
