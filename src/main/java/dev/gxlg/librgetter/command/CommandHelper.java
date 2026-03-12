@@ -57,36 +57,7 @@ public class CommandHelper {
             trades.add(new EnchantmentTrade(enchantmentId.toString(), level, price));
         }
 
-        if (remove) {
-            boolean anyRemoved = false;
-            if (globalLvlCriteria == -1) {
-                for (EnchantmentTrade trade : trades) {
-                    try {
-                        removeGoalAllLevels(trade);
-                    } catch (NotInGoalsException e) {
-                        continue;
-                    }
-                    anyRemoved = true;
-                }
-            } else {
-                for (int i = 0; i < enchantments.size(); i++) {
-                    EnchantmentTrade trade = trades.get(i);
-                    int maxLevel = maxLevels.get(i);
-                    if (LibrGetter.config.warning && globalLvlCriteria > maxLevel) {
-                        Texts.sendTranslatable(new LevelOverMaxMessage(trade, maxLevel));
-                    }
-                    try {
-                        removeGoal(trade);
-                    } catch (NotInGoalsException e) {
-                        continue;
-                    }
-                    anyRemoved = true;
-                }
-            }
-            if (!anyRemoved) {
-                throw new NotInGoalsException(trades);
-            }
-        } else {
+        if (!remove) {
             for (int i = 0; i < enchantments.size(); i++) {
                 Enchantment enchantment = enchantments.get(i);
                 EnchantmentTrade trade = trades.get(i);
@@ -102,6 +73,36 @@ public class CommandHelper {
 
                 addGoal(trade, false);
             }
+            return;
+        }
+
+        boolean anyRemoved = false;
+        if (globalLvlCriteria == -1) {
+            for (EnchantmentTrade trade : trades) {
+                try {
+                    removeGoalAllLevels(trade);
+                } catch (NotInGoalsException e) {
+                    continue;
+                }
+                anyRemoved = true;
+            }
+        } else {
+            for (int i = 0; i < enchantments.size(); i++) {
+                EnchantmentTrade trade = trades.get(i);
+                int maxLevel = maxLevels.get(i);
+                if (LibrGetter.config.warning && globalLvlCriteria > maxLevel) {
+                    Texts.sendTranslatable(new LevelOverMaxMessage(trade, maxLevel));
+                }
+                try {
+                    removeGoal(trade);
+                } catch (NotInGoalsException e) {
+                    continue;
+                }
+                anyRemoved = true;
+            }
+        }
+        if (!anyRemoved) {
+            throw new NotInGoalsException(trades);
         }
     }
 
