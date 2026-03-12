@@ -112,18 +112,20 @@ public class Parser_1_17_0 extends Parser.Base {
         int indexDistance = Integer.MAX_VALUE;
 
         for (String id : found.keySet()) {
-            int i = found.get(id) + id.length();
+            int foundIdEnd = found.get(id) + id.length();
             for (int lvl : searching.get(id)) {
-                int j = string.indexOf(":\"" + lvl + "\"", i);
-                if (j == -1) {
-                    j = string.indexOf(":" + lvl, i);
+                // search string
+                int foundLvlIndex = string.indexOf(":\"" + lvl + "\"", foundIdEnd);
+                if (foundLvlIndex == -1) {
+                    // search number
+                    foundLvlIndex = string.indexOf(":" + lvl, foundIdEnd);
                 }
-                if (j == -1) {
+                if (foundLvlIndex == -1) {
                     continue;
                 }
 
-                if (j < indexDistance) {
-                    indexDistance = j;
+                if (foundLvlIndex < indexDistance) {
+                    indexDistance = foundLvlIndex;
                     finalId = id;
                     finalLvl = lvl;
                 }
