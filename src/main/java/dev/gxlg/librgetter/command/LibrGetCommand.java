@@ -142,11 +142,11 @@ public class LibrGetCommand {
             throw new CouldNotFindLibrarianException();
         }
 
-        BlockPos finalLecTernPos = foundLecternPos;
-        Villager finalVi = foundVillager;
+        BlockPos finalLecternPos = foundLecternPos;
+        Villager finalVillager = foundVillager;
 
         AbstractSchedulerController controller = LibrGetter.worker.getUserSchedulerController();
-        controller.scheduleContextUpdate(ctx -> ctx.setLecternPos(finalLecTernPos).setVillager(finalVi));
+        controller.scheduleContextUpdate(ctx -> ctx.setLecternPos(finalLecternPos).setVillager(finalVillager));
         controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
     }
 
