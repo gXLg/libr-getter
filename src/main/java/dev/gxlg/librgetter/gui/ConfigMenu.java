@@ -5,6 +5,7 @@ import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import dev.gxlg.librgetter.utils.types.exceptions.runtime.InvalidBookIndexException;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
@@ -69,6 +70,9 @@ public class ConfigMenu {
         if (pageIndex == 0) {
             cachedPageTexts[0] = Texts.bookMainPage(categoryPageIndices);
             return;
+        }
+        if (pageIndex < 0 || pageIndex >= pageCount) {
+            throw new InvalidBookIndexException(pageIndex);
         }
         cachedPageTexts[pageIndex] = pages.get(pageIndex).buildText();
     }
