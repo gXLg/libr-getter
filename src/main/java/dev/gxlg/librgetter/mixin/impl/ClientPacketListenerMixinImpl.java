@@ -17,11 +17,9 @@ public class ClientPacketListenerMixinImpl {
         if (!LibrGetter.worker.getStateView().getPermissionManager().allowsSettingTradeOffers()) {
             return;
         }
-        if (packet.getVillagerXp() > 0) {
-            LibrGetter.worker.getSystemSchedulerController().scheduleContextUpdate(ctx -> ctx.setTradeOfferData(TradeOfferData.noRefresh()));
-        } else {
-            LibrGetter.worker.getSystemSchedulerController().scheduleContextUpdate(ctx -> ctx.setTradeOfferData(TradeOfferData.offers(packet.getOffers())));
-        }
+
+        TradeOfferData tradeOfferData = packet.getVillagerXp() > 0 ? TradeOfferData.noRefresh() : TradeOfferData.offers(packet.getOffers());
+        LibrGetter.worker.getSystemSchedulerController().scheduleContextUpdate(ctx -> ctx.setTradeOfferData(tradeOfferData));
     }
 
     public static Optional<Object> handleOpenScreen(ClientboundOpenScreenPacket packet) {
