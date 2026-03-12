@@ -21,6 +21,7 @@ import dev.gxlg.librgetter.utils.types.messages.translatable.warning.LevelOverMa
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.Items;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class CommandHelper {
             globalLvlCriteria = -1;
         }
 
-        int price = 64;
+        int price = Items.EMERALD().getDefaultMaxStackSize();
         try {
             price = context.getArgument("maxprice", R.clz(Integer.class)).unwrap(Integer.class);
         } catch (IllegalArgumentException ignored) {
@@ -112,7 +113,7 @@ public class CommandHelper {
 
         int enchantmentLevel = context.getArgument("level", R.clz(Integer.class)).unwrap(Integer.class);
 
-        int price = 64;
+        int price = Items.EMERALD().getDefaultMaxStackSize();
         try {
             price = context.getArgument("maxprice", R.clz(Integer.class)).unwrap(Integer.class);
         } catch (IllegalArgumentException ignored) {

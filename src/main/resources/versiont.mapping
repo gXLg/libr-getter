@@ -324,6 +324,7 @@ import net.minecraft.class_1914/net.minecraft.world.item.trading.MerchantOffer
 
 class Item
     ItemStack method_7854/getDefaultInstance()
+    int method_7882/getMaxStackSize/getDefaultMaxStackSize()
 
 class AxeItem extends Item
 
