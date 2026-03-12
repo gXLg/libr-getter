@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class ClientPacketListenerMixinImpl {
     public static void handleMerchantOffers(ClientboundMerchantOffersPacket packet) {
-        if (!LibrGetter.worker.getStateView().getPermissions().allowsSettingTradeOffers()) {
+        if (!LibrGetter.worker.getStateView().getPermissionManager().allowsSettingTradeOffers()) {
             return;
         }
         if (packet.getVillagerXp() > 0) {

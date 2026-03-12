@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.worker.state.base;
 
 import dev.gxlg.librgetter.worker.tasks.StandbyTask;
-import dev.gxlg.librgetter.worker.types.task.Permissions;
+import dev.gxlg.librgetter.worker.types.task.PermissionManager;
 import dev.gxlg.librgetter.worker.types.task.Task;
 
 public class TaskState {
@@ -11,8 +11,8 @@ public class TaskState {
         return !(currentTask instanceof StandbyTask);
     }
 
-    public Permissions getPermissions() {
-        return currentTask.getPermissions();
+    public PermissionManager getPermissionManager() {
+        return currentTask.getPermissionManager();
     }
 
     public void setTask(Task currentTask) {

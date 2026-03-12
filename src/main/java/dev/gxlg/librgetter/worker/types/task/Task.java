@@ -8,19 +8,19 @@ public abstract class Task {
     public abstract void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException;
 
     protected boolean allowsBreakingLecterns() {
-        return Permissions.DEFAULT.allowsBreakingLecterns();
+        return PermissionManager.DEFAULT.allowsBreakingLecterns();
     }
 
     protected boolean allowsPlacingLectern() {
-        return Permissions.DEFAULT.allowsPlacingLectern();
+        return PermissionManager.DEFAULT.allowsPlacingLectern();
     }
 
     protected boolean allowsSettingTradeOffers() {
-        return Permissions.DEFAULT.allowsSettingTradeOffers();
+        return PermissionManager.DEFAULT.allowsSettingTradeOffers();
     }
 
-    public Permissions getPermissions() {
-        return new Permissions(allowsBreakingLecterns(), allowsPlacingLectern(), allowsSettingTradeOffers());
+    public PermissionManager getPermissionManager() {
+        return new PermissionManager(allowsBreakingLecterns(), allowsPlacingLectern(), allowsSettingTradeOffers());
     }
 
 

@@ -27,7 +27,7 @@ public class MultiPlayerGameModeMixinImpl {
         if (!world.getBlockState(blockPos).is(Blocks.LECTERN())) {
             return Optional.empty();
         }
-        if (!LibrGetter.worker.getStateView().getPermissions().allowsBreakingLecterns()) {
+        if (!LibrGetter.worker.getStateView().getPermissionManager().allowsBreakingLecterns()) {
             return Optional.of(false);
         }
         return Optional.empty();
@@ -43,7 +43,7 @@ public class MultiPlayerGameModeMixinImpl {
         if (!pos.equals(LibrGetter.worker.getStateView().getTaskContext().selectedLecternPos())) {
             return Optional.empty();
         }
-        if (!LibrGetter.worker.getStateView().getPermissions().allowsPlacingLectern()) {
+        if (!LibrGetter.worker.getStateView().getPermissionManager().allowsPlacingLectern()) {
             return Optional.of(InteractionResult.FAIL());
         }
         return Optional.empty();
