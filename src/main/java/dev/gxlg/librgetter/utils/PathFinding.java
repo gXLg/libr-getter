@@ -18,6 +18,10 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 public class PathFinding {
+    private static final Direction[] directions = new Direction[]{
+        Direction.UP(), Direction.DOWN(), Direction.NORTH(), Direction.SOUTH(), Direction.EAST(), Direction.WEST()
+    };
+
     private static int manhattan(BlockPos from, BlockPos to) {
         return Math.abs(from.getX() - to.getX()) + Math.abs(from.getY() - to.getY()) + Math.abs(from.getZ() - to.getZ());
     }
@@ -37,7 +41,6 @@ public class PathFinding {
             return false;
         }
         // Beneath is air and beneath goal is also air
-
         Block blockBelow = world.getBlockState(pos.below()).getBlock();
         Block blockBelowGoal = world.getBlockState(pos.relative(dir).below()).getBlock();
 
@@ -77,9 +80,7 @@ public class PathFinding {
 
             close.add(current.pos);
 
-            for (Direction dir : new Direction[]{
-                Direction.UP(), Direction.DOWN(), Direction.NORTH(), Direction.SOUTH(), Direction.EAST(), Direction.WEST()
-            }) {
+            for (Direction dir : directions) {
                 BlockPos nextpos = current.pos.relative(dir);
                 if (notEnoughHeight(nextpos, world, minHeight) || isAirMove(nextpos, world, dir) || close.contains(nextpos) || current.gCost > 20) {
                     continue;
