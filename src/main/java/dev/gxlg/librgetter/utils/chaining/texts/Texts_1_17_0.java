@@ -91,19 +91,19 @@ public class Texts_1_17_0 extends Texts.Base {
     }
 
     @Override
-    public MutableComponent bookMainPage(Map<String, Integer> categories) {
+    public MutableComponent bookMainPage(Map<ConfigManager.Category, Integer> categories) {
         MutableComponent text = title();
         text = text.append(new TranslatableConfigMenuName().getComponent());
         text = text.append("\n");
-        for (String cat : ConfigManager.CATEGORIES) {
+        for (ConfigManager.Category category : ConfigManager.Category.values()) {
             text = text.append("\n* ");
-            text = text.append(new TranslatableCategory(cat).getComponent().withStyle(Style.EMPTY().withClickEvent(paging(categories.get(cat) + 1))));
+            text = text.append(new TranslatableCategory(category).getComponent().withStyle(Style.EMPTY().withClickEvent(paging(categories.get(category) + 1))));
         }
         return text;
     }
 
     @Override
-    public MutableComponent bookTitle(String category) {
+    public MutableComponent bookTitle(ConfigManager.Category category) {
         MutableComponent text = title();
         text = text.append(literal("↩").withStyle(Style.EMPTY().withClickEvent(paging(1))));
         text = text.append(literal(" "));

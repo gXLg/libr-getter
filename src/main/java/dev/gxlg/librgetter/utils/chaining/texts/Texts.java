@@ -1,5 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.texts;
 
+import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.messages.translatable.TranslatableMessage;
@@ -32,11 +33,11 @@ public class Texts {
         getImpl().sendListOfGoals();
     }
 
-    public static MutableComponent bookMainPage(Map<String, Integer> categories) {
+    public static MutableComponent bookMainPage(Map<ConfigManager.Category, Integer> categories) {
         return getImpl().bookMainPage(categories);
     }
 
-    public static MutableComponent bookTitle(String category) {
+    public static MutableComponent bookTitle(ConfigManager.Category category) {
         return getImpl().bookTitle(category);
     }
 
@@ -83,9 +84,9 @@ public class Texts {
 
         public abstract void sendListOfGoals();
 
-        public abstract MutableComponent bookMainPage(Map<String, Integer> categories);
+        public abstract MutableComponent bookMainPage(Map<ConfigManager.Category, Integer> categories);
 
-        public abstract MutableComponent bookTitle(String category);
+        public abstract MutableComponent bookTitle(ConfigManager.Category category);
 
         public abstract MutableComponent bookEntry(MutableComponent text, Configurable<?> configurable);
 

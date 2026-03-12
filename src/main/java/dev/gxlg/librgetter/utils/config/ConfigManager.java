@@ -2,9 +2,10 @@ package dev.gxlg.librgetter.utils.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.gxlg.librgetter.utils.types.config.Compatibility;
+import dev.gxlg.librgetter.utils.types.config.ConfigCategory;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
+import dev.gxlg.librgetter.utils.types.exceptions.runtime.UncategorizedConfigException;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,16 +15,13 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ConfigManager {
-    public static final List<String> CATEGORIES;
-
-    public static final ConfigManager DEFAULT;
+    public static final ConfigManager DEFAULT = new DefaultConfig();
 
     private final ConfigData data;
 
@@ -31,7 +29,7 @@ public class ConfigManager {
 
     private final Map<String, Configurable<?>> configurableMap = new HashMap<>();
 
-    private final Map<String, List<Configurable<?>>> categoryMap = new HashMap<>();
+    private final Map<Category, List<Configurable<?>>> categoryMap = new HashMap<>();
 
     private final Path configPath;
 
@@ -52,13 +50,15 @@ public class ConfigManager {
             }
             configurable.add(conf);
             configurableMap.put(f.getName(), conf);
-            String key = categoriesMap.entrySet().stream().filter(e -> e.getValue().contains(f.getName())).findFirst().map(Map.Entry::getKey)
-                                      .orElseThrow(() -> new RuntimeException("Uncategorized config '" + f.getName() + "'"));
-            categoryMap.computeIfAbsent(key, k -> new ArrayList<>()).add(conf);
-        }
 
+            ConfigCategory configCategory = f.getAnnotation(ConfigCategory.class);
+            if (configCategory == null) {
+                throw new UncategorizedConfigException(f.getName());
+            }
+            Category category = configCategory.value();
+            categoryMap.computeIfAbsent(category, k -> new ArrayList<>()).add(conf);
+        }
         configurable.sort(Comparator.comparing(Configurable::name));
-        categoryMap.forEach((key, value) -> value.sort(Comparator.comparing(c -> categoriesMap.get(key).indexOf(c.name()))));
     }
 
     public ConfigData getData() {
@@ -90,7 +90,7 @@ public class ConfigManager {
         return configurable;
     }
 
-    public List<Configurable<?>> getConfigurablesForCategory(String category) {
+    public List<Configurable<?>> getConfigurablesForCategory(Category category) {
         return categoryMap.getOrDefault(category, List.of());
     }
 
@@ -98,27 +98,7 @@ public class ConfigManager {
         return configurableMap.getOrDefault(field, null);
     }
 
-    private static final Map<String, List<String>> categoriesMap;
-
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
-    static {
-        CATEGORIES = List.of("process", "success", "messages", "matching", "compatibility");
-        categoriesMap = Map.of(
-            "process",
-            List.of("autoTool", "offhand", "rotationMode", "manual", "waitLose", "safeChecker", "timeout"),
-            "success",
-            List.of("notify", "removeGoal", "lock"),
-            "messages",
-            List.of("logMode", "warning", "checkUpdate"),
-            "matching",
-            List.of("fallback", "matchMode", "matchAtLeast"),
-            "compatibility",
-            Arrays.stream(ConfigData.class.getFields()).filter(f -> f.getAnnotation(Compatibility.class) != null).map(Field::getName).sorted().toList()
-        );
-
-        DEFAULT = new DefaultConfig();
-    }
 
     public static ConfigManager init(Path configPath) {
         ConfigData data;
@@ -139,6 +119,24 @@ public class ConfigManager {
         ConfigManager config = new ConfigManager(data, configPath);
         config.save();
         return config;
+    }
+
+    public enum Category {
+        PROCESS("process"),
+        SUCCESS("success"),
+        MESSAGES("messages"),
+        MATCHING("matching"),
+        COMPATIBILITY("compatibility");
+
+        private final String id;
+
+        Category(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
     }
 
     private static class DefaultConfig extends ConfigManager {

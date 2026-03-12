@@ -10,7 +10,6 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +21,13 @@ public class ConfigMenu {
 
     private static final List<Component> list = new ArrayList<>();
 
-    private static final Map<String, Integer> categoryPageIndices = new HashMap<>();
+    private static final Map<ConfigManager.Category, Integer> categoryPageIndices = new HashMap<>();
 
     static {
         int pageIndex = 1;
-        for (String cat : ConfigManager.CATEGORIES) {
-            categoryPageIndices.put(cat, pageIndex);
-            pageIndex += (int) Math.ceil(LibrGetter.configManager.getConfigurablesForCategory(cat).size() / ((float) CONFIGS_PER_PAGE));
+        for (ConfigManager.Category category : ConfigManager.Category.values()) {
+            categoryPageIndices.put(category, pageIndex);
+            pageIndex += (int) Math.ceil(LibrGetter.configManager.getConfigurablesForCategory(category).size() / ((float) CONFIGS_PER_PAGE));
         }
         pageCount = pageIndex;
 
@@ -56,15 +55,16 @@ public class ConfigMenu {
             text = Texts.bookMainPage(categoryPageIndices);
 
         } else {
-            List<String> reversed = new ArrayList<>(ConfigManager.CATEGORIES);
-            Collections.reverse(reversed);
-            String category = reversed.stream().filter(c -> categoryPageIndices.get(c) <= index).findFirst().orElseThrow(() -> new RuntimeException("Invalid index " + index));
+            List<ConfigManager.Category> categories = List.of(ConfigManager.Category.values());
+            ConfigManager.Category category = categories.reversed().stream().filter(c -> categoryPageIndices.get(c) <= index).findFirst()
+                                                        .orElseThrow(() -> new RuntimeException("Invalid index " + index));
             text = Texts.bookTitle(category);
 
-            int j = index - categoryPageIndices.get(category);
-            int finish = Math.min(j * CONFIGS_PER_PAGE + CONFIGS_PER_PAGE, LibrGetter.configManager.getConfigurablesForCategory(category).size());
-            for (int i = j * CONFIGS_PER_PAGE; i < finish; i++) {
-                Configurable<?> config = LibrGetter.configManager.getConfigurablesForCategory(category).get(i);
+            int startingPage = index - categoryPageIndices.get(category);
+            int firstConfigIndex = startingPage * CONFIGS_PER_PAGE;
+            int lastConfigIndex = Math.min(startingPage * CONFIGS_PER_PAGE + CONFIGS_PER_PAGE, LibrGetter.configManager.getConfigurablesForCategory(category).size());
+            for (int configIndex = firstConfigIndex; configIndex < lastConfigIndex; configIndex++) {
+                Configurable<?> config = LibrGetter.configManager.getConfigurablesForCategory(category).get(configIndex);
                 text = Texts.bookEntry(text, config);
             }
         }
