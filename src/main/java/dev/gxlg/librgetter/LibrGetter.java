@@ -28,7 +28,7 @@ public class LibrGetter implements ClientModInitializer {
 
     public static final ConfigData config = configManager.getData();
 
-    public static final Worker worker = new Worker();
+    public static final Worker worker = Worker.getInstance();
 
     @Override
     public void onInitializeClient() {

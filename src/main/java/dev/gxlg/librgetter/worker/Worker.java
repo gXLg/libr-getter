@@ -34,8 +34,7 @@ public class Worker {
 
     private final StateController stateController;
 
-
-    public Worker() {
+    private Worker() {
         TaskState taskState = new TaskState();
         TaskContextState taskContextState = new TaskContextState();
         TaskContextUpdateScheduler taskContextUpdateScheduler = new TaskContextUpdateScheduler();
@@ -87,5 +86,11 @@ public class Worker {
     public void reset() {
         systemSchedulerController.scheduleContextUpdate(TaskContextBuilder::reset);
         systemSchedulerController.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
+    }
+
+    private static final Worker INSTANCE = new Worker();
+
+    public static Worker getInstance() {
+        return INSTANCE;
     }
 }
