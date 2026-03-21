@@ -24,12 +24,12 @@
     "librgetter.mixins.json"
   ],
   "depends": {
-    "fabric": ">=0.31.0",
-    "fabric-key-binding-api-v1": "*",
-    "minecraft": ">=1.17 <=1.21.11"
+    "fabric-api": ">=0.31.0",
+    "minecraft": ">=1.17",
+    "versiont": "0.0.6"
   },
   "conflicts": {
-    "offershud": "*"
+    "offershud": "<1.9.0"
   },
   "custom": {
     "modmenu": {

@@ -1,11 +1,11 @@
 package dev.gxlg.librgetter.utils;
 
-import dev.gxlg.librgetter.mixin.AbstractBlockAccessor;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
+import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
+import dev.gxlg.versiont.gen.net.minecraft.core.Direction;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Block;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -18,41 +18,44 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 public class PathFinding {
+    private static final Direction[] directions = new Direction[]{
+        Direction.UP(), Direction.DOWN(), Direction.NORTH(), Direction.SOUTH(), Direction.EAST(), Direction.WEST()
+    };
+
     private static int manhattan(BlockPos from, BlockPos to) {
         return Math.abs(from.getX() - to.getX()) + Math.abs(from.getY() - to.getY()) + Math.abs(from.getZ() - to.getZ());
     }
 
-    private static boolean notEnoughHeight(BlockPos pos, ClientWorld world, int minHeight) {
-        for (int i = 0; i < minHeight; i++) {
-            if (((AbstractBlockAccessor) world.getBlockState(pos.up(i)).getBlock()).getCollidable()) {
+    private static boolean notEnoughHeight(BlockPos pos, ClientLevel world, int minHeight) {
+        for (int distance = 0; distance < minHeight; distance++) {
+            if (world.getBlockState(pos.above(distance)).getBlock().getHasCollisionAccessibleField()) {
                 return true;
             }
         }
         return false;
     }
 
-    private static boolean isAirMove(BlockPos pos, ClientWorld world, Direction dir) {
+    private static boolean isAirMove(BlockPos pos, ClientLevel world, Direction dir) {
         // Can always move down
-        if (dir == Direction.DOWN) {
+        if (dir.equals(Direction.DOWN())) {
             return false;
         }
         // Beneath is air and beneath goal is also air
+        Block blockBelow = world.getBlockState(pos.below()).getBlock();
+        Block blockBelowGoal = world.getBlockState(pos.relative(dir).below()).getBlock();
 
-        net.minecraft.block.Block blockBelow = world.getBlockState(pos.down()).getBlock();
-        net.minecraft.block.Block blockBelowGoal = world.getBlockState(pos.offset(dir).down()).getBlock();
-
-        return !((AbstractBlockAccessor) blockBelow).getCollidable() && !((AbstractBlockAccessor) blockBelowGoal).getCollidable();
+        return !blockBelow.getHasCollisionAccessibleField() && !blockBelowGoal.getHasCollisionAccessibleField();
     }
 
-    public static List<BlockPos> findPath(BlockPos from, BlockPos to, ClientWorld world, int minHeight) {
+    public static List<BlockPos> findPath(BlockPos from, BlockPos to, ClientLevel world, int minHeight) {
         BlockState original = world.getBlockState(to);
-        world.setBlockState(to, Blocks.AIR.getDefaultState());
+        world.setBlockAndUpdate(to, Blocks.AIR().defaultBlockState());
         List<BlockPos> path = findPathInternal(from, to, world, minHeight);
-        world.setBlockState(to, original);
+        world.setBlockAndUpdate(to, original);
         return path;
     }
 
-    private static List<BlockPos> findPathInternal(BlockPos from, BlockPos to, ClientWorld world, int minHeight) {
+    private static List<BlockPos> findPathInternal(BlockPos from, BlockPos to, ClientLevel world, int minHeight) {
         if (notEnoughHeight(from, world, minHeight)) {
             return null;
         }
@@ -77,8 +80,8 @@ public class PathFinding {
 
             close.add(current.pos);
 
-            for (Direction dir : new Direction[]{ Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN }) {
-                BlockPos nextpos = current.pos.offset(dir);
+            for (Direction dir : directions) {
+                BlockPos nextpos = current.pos.relative(dir);
                 if (notEnoughHeight(nextpos, world, minHeight) || isAirMove(nextpos, world, dir) || close.contains(nextpos) || current.gCost > 20) {
                     continue;
                 }

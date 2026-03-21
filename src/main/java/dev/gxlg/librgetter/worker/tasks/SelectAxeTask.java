@@ -1,48 +1,43 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.reflection.Minecraft;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
-import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
-import net.minecraft.screen.slot.SlotActionType;
+import dev.gxlg.librgetter.utils.InventoryHelper;
+import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.MinecraftData;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.librgetter.worker.types.task.Task;
+import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.AxeItem;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
+import dev.gxlg.versiont.gen.net.minecraft.world.phys.Vec3;
 
-public class SelectAxeTask extends TaskManager.Task {
+public class SelectAxeTask extends Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
         if (LibrGetter.config.manual) {
-            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new BreakLecternTask(), ctx));
+            controller.scheduleTaskSwitch(TaskSwitch.sameTick(BreakLecternTask::new));
+            return;
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
-        if (player == null) {
-            throw new InternalTaskException("player", this);
-        }
-        PlayerInventory inventory = player.getInventory();
-        if (inventory == null) {
-            throw new InternalTaskException("inventory", this);
-        }
+        MinecraftData minecraftData = taskContext.minecraftData();
+        LocalPlayer player = minecraftData.localPlayer;
+        Inventory inventory = player.getInventory();
 
         int slot = -1;
         if (LibrGetter.config.autoTool) {
             float maxBreakingSpeed = -1;
-            for (int i = 0; i < PlayerInventory.MAIN_SIZE; i++) {
-                ItemStack stack = inventory.getStack(i);
-                if (stack.isDamageable() && stack.getMaxDamage() - stack.getDamage() < 10) {
+            for (int i = 0; i < Inventory.INVENTORY_SIZE(); i++) {
+                ItemStack stack = inventory.getItem(i);
+                if (stack.isDamageableItem() && stack.getMaxDamage() - stack.getDamageValue() < 10) {
                     continue;
                 }
-                float breakingSpeed = stack.getMiningSpeedMultiplier(Blocks.LECTERN.getDefaultState());
-                int efficiencyLevel = Minecraft.getEfficiencyLevel(stack);
+                float breakingSpeed = stack.getDestroySpeed(Blocks.LECTERN().defaultBlockState());
+                int efficiencyLevel = Enchantments.getEfficiencyLevel(stack);
                 if (stack.getItem() instanceof AxeItem) {
                     breakingSpeed += (float) (efficiencyLevel * efficiencyLevel + 1);
                 }
@@ -52,10 +47,10 @@ public class SelectAxeTask extends TaskManager.Task {
                 }
             }
         } else {
-            if (taskContext.defaultItem() != null && taskContext.defaultItem().isDamageable()) {
-                for (int i = 0; i < PlayerInventory.MAIN_SIZE; i++) {
-                    ItemStack stack = inventory.getStack(i);
-                    if (ItemStack.areEqual(stack, taskContext.defaultItem())) {
+            if (taskContext.defaultItem() != null && taskContext.defaultItem().isDamageableItem()) {
+                for (int i = 0; i < Inventory.INVENTORY_SIZE(); i++) {
+                    ItemStack stack = inventory.getItem(i);
+                    if (ItemStack.matches(stack, taskContext.defaultItem())) {
                         slot = i;
                         break;
                     }
@@ -63,27 +58,10 @@ public class SelectAxeTask extends TaskManager.Task {
             }
         }
         if (slot != -1) {
-            ClientPlayerInteractionManager manager = client.interactionManager;
-            if (manager == null) {
-                throw new InternalTaskException("manager", this);
-            }
-
-            ClientPlayNetworkHandler handler = client.getNetworkHandler();
-            if (handler == null) {
-                throw new InternalTaskException("handler", this);
-            }
-
-            if (!PlayerInventory.isValidHotbarIndex(slot)) {
-                int syncId = player.playerScreenHandler.syncId;
-                int swap = inventory.getSwappableHotbarSlot();
-                manager.clickSlot(syncId, slot, swap, SlotActionType.SWAP, player);
-                slot = swap;
-            }
-            Minecraft.setSelectedSlot(inventory, slot);
-            UpdateSelectedSlotC2SPacket packetSelect = new UpdateSelectedSlotC2SPacket(slot);
-            Minecraft.getConnection(handler).send(packetSelect);
+            InventoryHelper.selectItem(player, slot, minecraftData.gameMode, minecraftData.clientNetwork);
         }
 
-        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new RotationTask(player, ctx.selectedLecternPos().toCenterPos(), new BreakLecternTask()), ctx));
+        Task rotationTask = new RotationTask(player, Vec3.atCenterOf(taskContext.selectedLecternPos()), new BreakLecternTask());
+        controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> rotationTask));
     }
 }

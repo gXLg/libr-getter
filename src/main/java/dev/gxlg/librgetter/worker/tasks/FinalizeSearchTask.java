@@ -1,69 +1,63 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.reflection.Minecraft;
-import dev.gxlg.librgetter.utils.reflection.Support;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.FinishSignal;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
-import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradeOfferList;
+import dev.gxlg.librgetter.utils.chaining.support.Support;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.CanNotLockException;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.MinecraftData;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.librgetter.worker.types.task.Task;
+import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffers;
 
-public class FinalizeSearchTask extends TaskManager.Task {
-    private final TradeOfferList offers;
+public class FinalizeSearchTask extends Task {
+    private final MerchantOffers offers;
 
-    public FinalizeSearchTask(TradeOfferList offers) {
+    public FinalizeSearchTask(MerchantOffers offers) {
         this.offers = offers;
     }
 
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
         if (LibrGetter.config.manual) {
-            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new ManualModeWaitTask(), ctx));
+            controller.scheduleTaskSwitch(TaskSwitch.sameTick(ManualModeWaitTask::new));
+            return;
         }
 
         if (!LibrGetter.config.lock) {
-            throw new FinishSignal();
+            controller.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
+            return;
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
-        if (player == null) {
-            throw new InternalTaskException("player", this);
-        }
-
+        MinecraftData minecraftData = taskContext.minecraftData();
         if (!Support.isUsingTradeCycling()) {
             // TradeCycling process keeps the screen open, else we have to open it again
-            ClientPlayerInteractionManager manager = client.interactionManager;
-            if (manager == null) {
-                throw new InternalTaskException("manager", this);
-            }
-
-            manager.interactEntity(player, taskContext.selectedVillager(), Hand.MAIN_HAND);
+            minecraftData.gameMode.interact(minecraftData.localPlayer, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
         }
 
-        int buy = canBuy(player, offers.get(0)) ? 0 : (
-            canBuy(player, offers.get(1)) ? 1 : -1
-        );
-        if (buy == -1) {
-            throw new TaskException("librgetter.lock");
+        Inventory inventory = minecraftData.localPlayer.getInventory();
+        int buy;
+        if (canBuy(inventory, (MerchantOffer) offers.get(0))) {
+            buy = 0;
+        } else if (canBuy(inventory, (MerchantOffer) offers.get(1))) {
+            buy = 1;
+        } else {
+            throw new CanNotLockException();
         }
 
-        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.nextTick(new LockTradesTask(buy), ctx));
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new LockTradesTask(buy)));
     }
 
-    private static boolean canBuy(ClientPlayerEntity player, TradeOffer offer) {
-        ItemStack first = Minecraft.getFirstBuyItem(offer);
-        ItemStack second = Minecraft.getSecondBuyItem(offer);
-        int firstCount = player.getInventory().count(first.getItem());
-        int secondCount = second.isEmpty() ? 0 : player.getInventory().count(second.getItem());
+    private static boolean canBuy(Inventory inventory, MerchantOffer offer) {
+        ItemStack first = offer.getCostA();
+        ItemStack second = offer.getCostB();
+        int firstCount = inventory.countItem(first.getItem());
+        int secondCount = second.isEmpty() ? 0 : inventory.countItem(second.getItem());
         return first.getCount() <= firstCount && second.getCount() <= secondCount;
     }
 }

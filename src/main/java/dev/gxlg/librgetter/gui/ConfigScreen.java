@@ -1,60 +1,52 @@
 package dev.gxlg.librgetter.gui;
 
-import dev.gxlg.librgetter.mixin.BookScreenAccessor;
-import dev.gxlg.librgetter.utils.reflection.ConfigMenu;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.BookScreen;
+import dev.gxlg.versiont.api.R;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen;
 
-public class ConfigScreen extends BookScreen {
+public class ConfigScreen extends BookViewScreen {
+    public static final R.RClass clazz = R.extendWrapper(BookViewScreen.class, ConfigScreen.class);
+
     public ConfigScreen() {
-        super(CONTENT);
+        super(ConfigMenu.createNewBookAccess());
     }
 
     @Override
     protected void init() {
         super.init();
-        jumpToPage(currentPage);
+        forcePage(currentPage);
     }
 
     @Override
-    protected boolean jumpToPage(int page) {
+    protected boolean forcePage(int page) {
         currentPage = page;
-        updateScreen();
-        return super.jumpToPage(page);
+        return super.forcePage(page);
     }
 
     @Override
-    protected void goToPreviousPage() {
+    protected void pageBack() {
         if (currentPage > 0) {
             currentPage--;
         }
-        updateScreen();
-        super.goToPreviousPage();
+        super.pageBack();
     }
 
     @Override
-    protected void goToNextPage() {
+    protected void pageForward() {
         if (currentPage < ConfigMenu.pageCount - 1) {
             currentPage++;
         }
-        updateScreen();
-        super.goToNextPage();
+        super.pageForward();
+    }
+
+    @Override
+    protected void closeScreen() {
+        // used only with RUN_COMMAND in 1.21.5 and before
+        // by not executing super, we avoid the book actually closing
     }
 
     public void updateScreen() {
-        ConfigMenu.updatePage(currentPage);
-        ((BookScreenAccessor) this).setCachedPageIndex(-1);
+        setBookAccess(ConfigMenu.getUpdatedBookAccess(currentPage));
     }
-
-    private static final Contents CONTENT = ConfigMenu.getContent();
 
     private static int currentPage = 0;
-
-    public static boolean configChange() {
-        if (MinecraftClient.getInstance().currentScreen instanceof ConfigScreen cs) {
-            cs.updateScreen();
-            return true;
-        }
-        return false;
-    }
 }

@@ -2,20 +2,24 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.PathFinding;
-import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
-import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.util.math.BlockPos;
+import dev.gxlg.librgetter.utils.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.EmptyGoalsListException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.NoLecternSetException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.NoLibrarianSetException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.UnsafeSetupException;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStartedMessage;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.MinecraftData;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.librgetter.worker.types.task.Task;
+import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.EntityAnchorArgument$Anchor;
+import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
 
 import java.util.List;
 
-public class StartTask extends TaskManager.Task {
+public class StartTask extends Task {
     private final boolean resetCounter;
 
     public StartTask(boolean resetCounter) {
@@ -23,51 +27,42 @@ public class StartTask extends TaskManager.Task {
     }
 
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
         if (taskContext.selectedLecternPos() == null) {
-            throw new TaskException("librgetter.no_lectern");
+            throw new NoLecternSetException();
         }
         if (taskContext.selectedVillager() == null) {
-            throw new TaskException("librgetter.no_librarian");
+            throw new NoLibrarianSetException();
         }
         if (LibrGetter.config.goals.isEmpty()) {
-            throw new TaskException("librgetter.goals");
+            throw new EmptyGoalsListException();
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
-        if (player == null) {
-            throw new InternalTaskException("player", this);
-        }
-
+        MinecraftData minecraftData = new MinecraftData();
         if (LibrGetter.config.safeChecker) {
-            ClientWorld world = client.world;
-            if (world == null) {
-                throw new InternalTaskException("world", this);
-            }
             // If the villager is sitting, assume it cannot move
-            if (!taskContext.selectedVillager().hasVehicle()) {
-                List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().getBlockPos(), taskContext.selectedLecternPos(), world, 2);
+            if (!taskContext.selectedVillager().isPassenger()) {
+                List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), minecraftData.clientLevel, 2);
                 if (path != null) {
-                    throw new TaskException("librgetter.unsafe");
+                    throw new UnsafeSetupException();
                 }
             }
         }
 
-        Texts.getImpl().sendTranslatableSuccess("librgetter.start");
-
-        throw new StopTaskSignal(ctx -> {
+        controller.scheduleContextUpdate(ctx -> {
             if (!LibrGetter.config.autoTool) {
-                ctx = ctx.withDefaultItem(player.getMainHandStack());
+                ctx.setDefaultItem(minecraftData.localPlayer.getMainHandItem());
             }
             if (resetCounter) {
-                ctx = ctx.withResetAttemptsCounter();
+                ctx.resetAttemptsCounter();
             }
-
-            return TaskManager.TaskSwitch.nextTick(
-                new RotationTask(player, EntityAnchorArgumentType.EntityAnchor.EYES.positionAt(ctx.selectedVillager()), new WaitVillagerAcceptProfessionTask()),
-                ctx
-            );
+            ctx.setTradeOfferData(null).setMinecraftData(minecraftData);
         });
+
+        Task rotationTask = new RotationTask(minecraftData.localPlayer, EntityAnchorArgument$Anchor.EYES().apply(taskContext.selectedVillager()), new WaitVillagerAcceptProfessionTask());
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> {
+            Texts.sendTranslatable(new ProcessStartedMessage());
+            return rotationTask;
+        }));
     }
 }

@@ -1,43 +1,38 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
-import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.Direction;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.MinecraftData;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.context.TaskContextBuilder;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.librgetter.worker.types.task.Task;
+import dev.gxlg.versiont.gen.net.minecraft.core.Direction;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.state.BlockState;
 
-public class BreakLecternTask extends TaskManager.Task {
+public class BreakLecternTask extends Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientWorld world = client.world;
-        if (world == null) {
-            throw new InternalTaskException("world", this);
-        }
+    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
+        MinecraftData minecraftData = taskContext.minecraftData();
 
-        BlockState targetBlock = world.getBlockState(taskContext.selectedLecternPos());
+        BlockState targetBlock = minecraftData.clientLevel.getBlockState(taskContext.selectedLecternPos());
         if (targetBlock.isAir()) {
             // lectern is broken now
-            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitVillagerLoseProfessionTask(), ctx.withIncreasedAttemptsCounter()));
+            controller.scheduleContextUpdate(TaskContextBuilder::increaseAttemptsCounter);
+            controller.scheduleTaskSwitch(TaskSwitch.sameTick(WaitVillagerLoseProfessionTask::new));
+            return;
         }
 
         if (LibrGetter.config.manual) {
             return;
         }
 
-        ClientPlayerInteractionManager manager = client.interactionManager;
-        if (manager == null) {
-            throw new InternalTaskException("manager", this);
-        }
-        manager.updateBlockBreakingProgress(taskContext.selectedLecternPos(), Direction.UP);
+        minecraftData.gameMode.continueDestroyBlock(taskContext.selectedLecternPos(), Direction.UP());
     }
 
     @Override
-    public boolean allowsBreaking() {
+    protected boolean allowsBreakingLecterns() {
         return true;
     }
 }

@@ -1,42 +1,35 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.InternalTaskException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.StopTaskSignal;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.TaskException;
-import dev.gxlg.librgetter.worker.TaskManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.util.Hand;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.VillagerTooFarException;
+import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
+import dev.gxlg.librgetter.worker.types.context.MinecraftData;
+import dev.gxlg.librgetter.worker.types.context.TaskContext;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.librgetter.worker.types.task.Task;
+import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
 
-public class RequestTradesTask extends TaskManager.Task {
+public class RequestTradesTask extends Task {
     @Override
-    public void work(TaskManager.TaskContext taskContext) throws StopTaskSignal {
+    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
         if (LibrGetter.config.manual) {
-            throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
+            controller.scheduleTaskSwitch(TaskSwitch.sameTick(WaitTradesTask::new));
+            return;
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
-        if (player == null) {
-            throw new InternalTaskException("player", this);
-        }
-        ClientPlayNetworkHandler handler = client.getNetworkHandler();
-        if (handler == null) {
-            throw new InternalTaskException("handler", this);
-        }
-        ClientPlayerInteractionManager manager = client.interactionManager;
-        if (manager == null) {
-            throw new InternalTaskException("manager", this);
+        MinecraftData minecraftData = taskContext.minecraftData();
+        if (taskContext.selectedVillager().distanceTo(minecraftData.localPlayer) > MAX_INTERACTION_DISTANCE) {
+            throw new VillagerTooFarException();
         }
 
-        if (taskContext.selectedVillager().distanceTo(player) > 3.4f) {
-            throw new TaskException("librgetter.far");
-        }
+        minecraftData.gameMode.interact(minecraftData.localPlayer, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
 
-        manager.interactEntity(player, taskContext.selectedVillager(), Hand.MAIN_HAND);
-        throw new StopTaskSignal(ctx -> TaskManager.TaskSwitch.sameTick(new WaitTradesTask(), ctx));
+        controller.scheduleTaskSwitch(TaskSwitch.sameTick(WaitTradesTask::new));
+    }
+
+    @Override
+    protected boolean allowsSettingTradeOffers() {
+        return true;
     }
 }

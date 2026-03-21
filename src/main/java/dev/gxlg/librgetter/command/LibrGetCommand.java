@@ -1,73 +1,97 @@
 package dev.gxlg.librgetter.command;
 
-import com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.gui.ConfigScreen;
-import dev.gxlg.librgetter.utils.reflection.Minecraft;
-import dev.gxlg.librgetter.utils.reflection.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import dev.gxlg.librgetter.worker.TaskManager;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.AlreadyRunningException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.BlockNotLecternException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.CouldNotFindLecternException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.CouldNotFindLibrarianException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.EntityNotVillagerException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.NothingTargetedException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.commands.VillagerNotLibrarianException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.ProcessNotRunningException;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ConfigValueMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.GoalsListClearedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.LecternSelectedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.LibrarianSelectedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStoppedMessage;
+import dev.gxlg.librgetter.worker.tasks.StandbyTask;
 import dev.gxlg.librgetter.worker.tasks.StartTask;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
+import dev.gxlg.librgetter.worker.types.scheduling.AbstractSchedulerController;
+import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
+import dev.gxlg.versiont.api.R;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
+import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
+import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
+import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
+import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.Entity;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
+import dev.gxlg.versiont.gen.net.minecraft.world.phys.BlockHitResult;
+import dev.gxlg.versiont.gen.net.minecraft.world.phys.EntityHitResult;
+import dev.gxlg.versiont.gen.net.minecraft.world.phys.HitResult;
+import dev.gxlg.versiont.gen.net.minecraft.world.phys.HitResult$Type;
 
-@SuppressWarnings("SameReturnValue")
 public class LibrGetCommand {
 
-    public static int remove(CommandContext<?> context) {
-        return CommandHelper.manageGoals(context, true);
+    public static void add(CommandContext context) throws LibrGetterException {
+        CommandHelper.manageGoals(context, false);
     }
 
-    public static int add(CommandContext<?> context) {
-        return CommandHelper.manageGoals(context, false);
+    public static void addCustom(CommandContext context) throws LibrGetterException {
+        CommandHelper.manageGoalsCustom(context, false);
     }
 
-    public static int list() {
-        Texts.getImpl().sendListOfGoals();
-        return 0;
+    public static void remove(CommandContext context) throws LibrGetterException {
+        CommandHelper.manageGoals(context, true);
     }
 
-    public static <T> int config(CommandContext<?> context, Configurable<T> config) {
+    public static void removeCustom(CommandContext context) throws LibrGetterException {
+        CommandHelper.manageGoalsCustom(context, true);
+    }
+
+    public static void list() {
+        Texts.sendListOfGoals();
+    }
+
+    public static <T> void config(CommandContext context, Configurable<T> config) {
         T value = config.get();
         try {
-            value = context.getArgument("value", config.type());
+            Class<T> type = config.type();
+            value = context.getArgument("value", R.clz(type)).unwrap(type);
+            config.set(value);
+            config.managerInstance().save();
         } catch (IllegalArgumentException ignored) {
         }
 
-        config.set(value);
-        config.instance().save();
-
-        if (!ConfigScreen.configChange()) {
-            Texts.getImpl().sendTranslatableFeedback("librgetter.config", config.name(), value);
+        Screen screen = Minecraft.getInstance().getScreenField();
+        if (screen instanceof ConfigScreen configScreen) {
+            configScreen.updateScreen();
+        } else {
+            Texts.sendTranslatable(new ConfigValueMessage(config.name(), value));
         }
-
-        return 0;
     }
 
-    public static int autostart() {
-        if (TaskManager.isWorking()) {
-            Texts.getImpl().sendTranslatableError("librgetter.running");
-            return 1;
+    public static void autostart() throws LibrGetterException {
+        if (LibrGetter.worker.getStateView().isWorking()) {
+            throw new AlreadyRunningException();
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.getPlayerField();
         if (player == null) {
-            Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "LibrGetCommand#autostart");
-            return 1;
+            throw new InternalErrorException("player");
         }
-        ClientWorld world = client.world;
+        ClientLevel world = client.getLevelField();
         if (world == null) {
-            Texts.getImpl().sendTranslatableError("librgetter.internal", "world", "LibrGetCommand#autostart");
-            return 1;
+            throw new InternalErrorException("world");
         }
 
         BlockPos foundLecternPos = null;
@@ -79,8 +103,8 @@ public class LibrGetCommand {
                             continue;
                         }
 
-                        BlockPos pos = player.getBlockPos().add(deltaX, deltaY, deltaZ);
-                        if (world.getBlockState(pos).isOf(Blocks.LECTERN)) {
+                        BlockPos pos = player.blockPosition().offset(deltaX, deltaY, deltaZ);
+                        if (world.getBlockState(pos).is(Blocks.LECTERN())) {
                             foundLecternPos = pos;
                             break;
                         }
@@ -98,15 +122,14 @@ public class LibrGetCommand {
             }
         }
         if (foundLecternPos == null) {
-            Texts.getImpl().sendTranslatableError("librgetter.find_lectern");
-            return 1;
+            throw new CouldNotFindLecternException();
         }
-        Iterable<Entity> worldEntities = world.getEntities();
-        VillagerEntity foundVillager = null;
+        Iterable<Entity> worldEntities = world.entitiesForRendering();
+        Villager foundVillager = null;
         float minDistance = Float.MAX_VALUE;
         for (Entity entity : worldEntities) {
-            if (entity instanceof VillagerEntity villager) {
-                if (Minecraft.isVillagerLibrarian(villager)) {
+            if (entity instanceof Villager villager) {
+                if (Villagers.isVillagerLibrarian(villager)) {
                     float distance = villager.distanceTo(player);
                     if (distance < minDistance && distance < 10) {
                         foundVillager = villager;
@@ -116,101 +139,92 @@ public class LibrGetCommand {
             }
         }
         if (foundVillager == null) {
-            Texts.getImpl().sendTranslatableError("librgetter.find_librarian");
-            return 1;
+            throw new CouldNotFindLibrarianException();
         }
 
-        BlockPos finalLecTernPos = foundLecternPos;
-        VillagerEntity finalVi = foundVillager;
-        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(true), ctx.withLecternPos(finalLecTernPos).withVillager(finalVi)));
+        BlockPos finalLecternPos = foundLecternPos;
+        Villager finalVillager = foundVillager;
 
-        return 0;
+        AbstractSchedulerController controller = LibrGetter.worker.getUserSchedulerController();
+        controller.scheduleContextUpdate(ctx -> ctx.setLecternPos(finalLecternPos).setVillager(finalVillager));
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
     }
 
-    public static int clearGoals() {
+    public static void clearGoals() {
         LibrGetter.config.goals.clear();
-        LibrGetter.config.save();
-        Texts.getImpl().sendTranslatableWarning("librgetter.cleared");
-        return 0;
+        LibrGetter.configManager.save();
+        Texts.sendTranslatable(new GoalsListClearedMessage());
     }
 
-    public static int stopWorking() {
-        TaskManager.stop();
-        return 0;
-    }
-
-    public static int startWorking() {
-        if (TaskManager.isWorking()) {
-            Texts.getImpl().sendTranslatableError("librgetter.running");
-            return 1;
+    public static void stopWorking() throws ProcessNotRunningException {
+        if (!LibrGetter.worker.getStateView().isWorking()) {
+            throw new ProcessNotRunningException();
         }
-        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(true), ctx));
-        return 0;
+        LibrGetter.worker.getUserSchedulerController().scheduleTaskSwitch(TaskSwitch.nextTick(() -> {
+            Texts.sendTranslatable(new ProcessStoppedMessage());
+            return new StandbyTask();
+        }));
     }
 
-    public static int continueWorking() {
-        if (TaskManager.isWorking()) {
-            Texts.getImpl().sendTranslatableError("librgetter.running");
-            return 1;
+    public static void startWorking() throws AlreadyRunningException {
+        if (LibrGetter.worker.getStateView().isWorking()) {
+            throw new AlreadyRunningException();
         }
-        TaskManager.switchTask(ctx -> TaskManager.TaskSwitch.nextTick(new StartTask(false), ctx));
-        return 0;
+        LibrGetter.worker.getUserSchedulerController().scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
     }
 
-    public static int selector() {
-        if (TaskManager.isWorking()) {
-            Texts.getImpl().sendTranslatableError("librgetter.running");
-            return 1;
+    public static void continueWorking() throws AlreadyRunningException {
+        if (LibrGetter.worker.getStateView().isWorking()) {
+            throw new AlreadyRunningException();
+        }
+        LibrGetter.worker.getUserSchedulerController().scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(false)));
+    }
+
+    public static void selector() throws LibrGetterException {
+        if (LibrGetter.worker.getStateView().isWorking()) {
+            throw new AlreadyRunningException();
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientWorld world = client.world;
+        Minecraft client = Minecraft.getInstance();
+        ClientLevel world = client.getLevelField();
         if (world == null) {
-            Texts.getImpl().sendTranslatableError("librgetter.internal", "world", "LibrGetCommand#selector");
-            return 1;
+            throw new InternalErrorException("world");
         }
-        ClientPlayerEntity player = client.player;
+        LocalPlayer player = client.getPlayerField();
         if (player == null) {
-            Texts.getImpl().sendTranslatableError("librgetter.internal", "player", "LibrGetCommand#selector");
-            return 1;
+            throw new InternalErrorException("player");
         }
-        HitResult hit = client.crosshairTarget;
+        HitResult hit = client.getHitResultField();
         if (hit == null) {
-            Texts.getImpl().sendTranslatableError("librgetter.internal", "hit", "LibrGetCommand#selector");
-            return 1;
+            throw new InternalErrorException("hit");
         }
-        HitResult.Type hitType = hit.getType();
-        if (hitType == HitResult.Type.MISS) {
-            Texts.getImpl().sendTranslatableError("librgetter.nothing");
-            return 1;
+        HitResult$Type hitType = hit.getType();
+        if (hitType.equals(HitResult$Type.MISS())) {
+            throw new NothingTargetedException();
         }
 
-        if (hitType == HitResult.Type.BLOCK) {
+        if (hitType.equals(HitResult$Type.BLOCK())) {
             BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
-            if (!world.getBlockState(blockPos).isOf(Blocks.LECTERN)) {
-                Texts.getImpl().sendTranslatableError("librgetter.not_lectern");
-                return 1;
+            if (!world.getBlockState(blockPos).is(Blocks.LECTERN())) {
+                throw new BlockNotLecternException();
             }
+            LibrGetter.worker.getUserSchedulerController().scheduleContextUpdate(ctx -> {
+                ctx.setLecternPos(blockPos);
+                Texts.sendTranslatable(new LecternSelectedMessage());
+            });
 
-            TaskManager.updateContext(ctx -> ctx.withLecternPos(blockPos));
-            Texts.getImpl().sendTranslatableFeedback("librgetter.lectern");
-
-        } else if (hitType == HitResult.Type.ENTITY) {
-            EntityHitResult entityHitResult = (EntityHitResult) hit;
-            Entity entity = entityHitResult.getEntity();
-            if (!(entity instanceof VillagerEntity villager)) {
-                Texts.getImpl().sendTranslatableError("librgetter.not_villager");
-                return 1;
+        } else if (hitType.equals(HitResult$Type.ENTITY())) {
+            Entity entity = ((EntityHitResult) hit).getEntity();
+            if (!(entity instanceof Villager villager)) {
+                throw new EntityNotVillagerException();
             }
-            if (!Minecraft.isVillagerLibrarian(villager)) {
-                Texts.getImpl().sendTranslatableError("librgetter.not_librarian");
-                return 1;
+            if (!Villagers.isVillagerLibrarian(villager)) {
+                throw new VillagerNotLibrarianException();
             }
-
-            TaskManager.updateContext(ctx -> ctx.withVillager(villager));
-            Texts.getImpl().sendTranslatableFeedback("librgetter.librarian");
+            LibrGetter.worker.getUserSchedulerController().scheduleContextUpdate(ctx -> {
+                ctx.setVillager(villager);
+                Texts.sendTranslatable(new LibrarianSelectedMessage());
+            });
         }
-
-        return 0;
     }
 }
