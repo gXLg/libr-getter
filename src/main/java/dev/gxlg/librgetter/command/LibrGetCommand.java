@@ -19,6 +19,7 @@ import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ConfigValu
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.GoalsListClearedMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.LecternSelectedMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.LibrarianSelectedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ListGoalsMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStoppedMessage;
 import dev.gxlg.librgetter.worker.scheduling.controllers.UserSchedulerController;
 import dev.gxlg.librgetter.worker.tasks.StandbyTask;
@@ -59,7 +60,7 @@ public class LibrGetCommand {
     }
 
     public static void list() {
-        Texts.sendListOfGoals();
+        Texts.sendTranslatable(new ListGoalsMessage(LibrGetter.config.goals));
     }
 
     public static <T> void config(CommandContext context, Configurable<T> config) {

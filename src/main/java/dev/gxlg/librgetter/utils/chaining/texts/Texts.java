@@ -1,14 +1,12 @@
 package dev.gxlg.librgetter.utils.chaining.texts;
 
-import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.messages.translatable.TranslatableMessage;
 import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.ClickEvent;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.HoverEvent;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
-
-import java.util.List;
-import java.util.Map;
+import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 
 public class Texts {
     private static Base implementation = null;
@@ -17,32 +15,8 @@ public class Texts {
         getImpl().sendTranslatable(translatableMessage);
     }
 
-    public static void sendFound(EnchantmentTrade enchant, int counter) {
-        getImpl().sendFound(enchant, counter);
-    }
-
-    public static void sendTradeLog(List<EnchantmentTrade> offeredEnchantments) {
-        getImpl().sendTradeLog(offeredEnchantments);
-    }
-
-    public static void sendNewVersion(String message, String hover) {
-        getImpl().sendNewVersion(message, hover);
-    }
-
-    public static void sendListOfGoals() {
-        getImpl().sendListOfGoals();
-    }
-
-    public static MutableComponent bookMainPage(Map<ConfigManager.Category, Integer> categories) {
-        return getImpl().bookMainPage(categories);
-    }
-
-    public static MutableComponent bookTitle(ConfigManager.Category category) {
-        return getImpl().bookTitle(category);
-    }
-
-    public static MutableComponent bookEntry(MutableComponent text, Configurable<?> configurable) {
-        return getImpl().bookEntry(text, configurable);
+    public static void sendTranslatable(TranslatableMessage translatableMessage, boolean actionbar) {
+        getImpl().sendTranslatable(translatableMessage, actionbar);
     }
 
     public static MutableComponent literal(String text) {
@@ -53,8 +27,16 @@ public class Texts {
         return getImpl().translatable(message, args);
     }
 
-    public static MutableComponent enchantmentTradeToComponent(EnchantmentTrade trade) {
-        return getImpl().enchantmentTradeToComponent(trade);
+    public static ClickEvent runnable(String command) {
+        return getImpl().runnable(command);
+    }
+
+    public static HoverEvent hoverable(Component text) {
+        return getImpl().hoverable(text);
+    }
+
+    public static String translateIdentifier(IdentifierType type, Identifier id) {
+        return getImpl().translateIdentifier(type, id);
     }
 
     private static Base getImpl() {
@@ -73,27 +55,40 @@ public class Texts {
         return implementation;
     }
 
+    public static ClickEvent paging(int page) {
+        return getImpl().paging(page);
+    }
+
+    public enum IdentifierType {
+        ENCHANTMENT("enchantment");
+
+        private final String id;
+
+        IdentifierType(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+    }
+
     public abstract static class Base {
         public abstract void sendTranslatable(TranslatableMessage translatableMessage);
 
-        public abstract void sendFound(EnchantmentTrade enchant, int counter);
-
-        public abstract void sendTradeLog(List<EnchantmentTrade> offeredEnchantments);
-
-        public abstract void sendNewVersion(String message, String hover);
-
-        public abstract void sendListOfGoals();
-
-        public abstract MutableComponent bookMainPage(Map<ConfigManager.Category, Integer> categories);
-
-        public abstract MutableComponent bookTitle(ConfigManager.Category category);
-
-        public abstract MutableComponent bookEntry(MutableComponent text, Configurable<?> configurable);
+        public abstract void sendTranslatable(TranslatableMessage translatableMessage, boolean actionbar);
 
         public abstract MutableComponent literal(String text);
 
         public abstract MutableComponent translatable(String message, Object... args);
 
-        public abstract MutableComponent enchantmentTradeToComponent(EnchantmentTrade trade);
+        public abstract String translateIdentifier(IdentifierType type, Identifier id);
+
+        public abstract ClickEvent runnable(String command);
+
+        public abstract ClickEvent paging(int page);
+
+        public abstract HoverEvent hoverable(Component text);
     }
 }

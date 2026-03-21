@@ -6,9 +6,11 @@ import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.exceptions.runtime.InvalidBookIndexException;
+import dev.gxlg.librgetter.utils.types.messages.objects.configScreen.ConfigPageContent;
+import dev.gxlg.librgetter.utils.types.messages.objects.configScreen.FirstPageContent;
+import dev.gxlg.librgetter.utils.types.messages.objects.configScreen.PageContent;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
-import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,17 +25,15 @@ public class ConfigMenu {
 
     private static final Component[] cachedPageTexts;
 
-    private static final Map<ConfigManager.Category, Integer> categoryPageIndices;
-
-    private static final List<Page> pages;
+    private static final List<PageContent> pages;
 
     static {
-        List<Page> pageList = new ArrayList<>();
-        Map<ConfigManager.Category, Integer> pageIndices = new HashMap<>();
+        List<ConfigPageContent> configPageList = new ArrayList<>();
+        Map<ConfigManager.Category, Integer> categoryIndexMap = new HashMap<>();
 
         int pageNumber = 1;
         for (ConfigManager.Category category : ConfigManager.Category.values()) {
-            pageIndices.put(category, pageNumber);
+            categoryIndexMap.put(category, pageNumber);
 
             List<Configurable<?>> categoryConfigurables = LibrGetter.configManager.getConfigurablesForCategory(category);
             int categoryPagesCount = (int) Math.ceil(categoryConfigurables.size() / ((float) CONFIGS_PER_PAGE));
@@ -41,17 +41,21 @@ public class ConfigMenu {
                 int configSliceStart = categoryPageIndex * CONFIGS_PER_PAGE;
                 int configSliceEnd = Math.min(configSliceStart + CONFIGS_PER_PAGE, categoryConfigurables.size());
                 List<Configurable<?>> configurablesOnPage = categoryConfigurables.subList(configSliceStart, configSliceEnd);
-                pageList.add(new Page(category, configurablesOnPage));
+                configPageList.add(new ConfigPageContent(category, configurablesOnPage));
             }
             pageNumber += categoryPagesCount;
         }
         pageCount = pageNumber;
+
+        FirstPageContent firstPage = new FirstPageContent(categoryIndexMap);
+        List<PageContent> pageList = new ArrayList<>();
+        pageList.add(firstPage);
+        pageList.addAll(configPageList);
         pages = List.copyOf(pageList);
-        categoryPageIndices = Map.copyOf(pageIndices);
 
         // pre-fill pages with empty text
         cachedPageTexts = new Component[pageCount];
-        Arrays.fill(cachedPageTexts, Component.nullToEmpty(""));
+        Arrays.fill(cachedPageTexts, Texts.literal(""));
     }
 
     public static BookViewScreen$BookAccess createNewBookAccess() {
@@ -67,23 +71,9 @@ public class ConfigMenu {
     }
 
     private static void updatePageCache(int pageIndex) {
-        if (pageIndex == 0) {
-            cachedPageTexts[0] = Texts.bookMainPage(categoryPageIndices);
-            return;
-        }
         if (pageIndex < 0 || pageIndex >= pageCount) {
             throw new InvalidBookIndexException(pageIndex);
         }
-        cachedPageTexts[pageIndex] = pages.get(pageIndex).buildText();
-    }
-
-    private record Page(ConfigManager.Category category, List<Configurable<?>> configurables) {
-        public MutableComponent buildText() {
-            MutableComponent text = Texts.bookTitle(category);
-            for (Configurable<?> configurable : configurables) {
-                text = Texts.bookEntry(text, configurable);
-            }
-            return text;
-        }
+        cachedPageTexts[pageIndex] = pages.get(pageIndex).getComponent();
     }
 }

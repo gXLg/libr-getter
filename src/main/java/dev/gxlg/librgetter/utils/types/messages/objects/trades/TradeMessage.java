@@ -5,6 +5,7 @@ import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.messages.Message;
 import dev.gxlg.versiont.gen.net.minecraft.ChatFormatting;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
+import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 
 public class TradeMessage extends Message {
     private final EnchantmentTrade trade;
@@ -20,6 +21,11 @@ public class TradeMessage extends Message {
 
     @Override
     protected MutableComponent buildComponent() {
-        return Texts.enchantmentTradeToComponent(trade);
+        Identifier id = Identifier.tryParse(trade.id());
+        if (id == null) {
+            return Texts.literal(trade.id());
+        }
+        String enchantmentName = Texts.translateIdentifier(Texts.IdentifierType.ENCHANTMENT, id);
+        return Texts.literal(enchantmentName + (trade.lvl() == -1 ? "" : " " + trade.lvl()));
     }
 }

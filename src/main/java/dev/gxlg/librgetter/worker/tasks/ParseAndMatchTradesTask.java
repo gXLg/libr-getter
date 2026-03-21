@@ -7,8 +7,11 @@ import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.chaining.support.Support;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
+import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.enums.MatchMode;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.OfferMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.success.EnchantmentFoundMessage;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -48,7 +51,10 @@ public class ParseAndMatchTradesTask extends Task {
                 break;
             }
         }
-        Texts.sendTradeLog(offeredEnchantments);
+        LogMode logMode = LibrGetter.config.logMode;
+        if (logMode != LogMode.NONE) {
+            Texts.sendTranslatable(new OfferMessage(offeredEnchantments), logMode == LogMode.ACTIONBAR);
+        }
         Optional<List<EnchantmentTrade>> matching = LibrGetter.config.matchMode.match(offeredEnchantments);
         if (matching.isEmpty()) {
             TaskSwitch taskSwitch;
@@ -63,7 +69,10 @@ public class ParseAndMatchTradesTask extends Task {
 
         MinecraftData minecraftData = taskContext.minecraftData();
         Players.playFoundNotification(minecraftData.localPlayer);
-        matching.get().forEach(e -> Texts.sendFound(e, taskContext.attemptsCounter()));
+        matching.get().forEach(e -> {
+            EnchantmentFoundMessage message = new EnchantmentFoundMessage(e, taskContext.attemptsCounter(), !LibrGetter.config.removeGoal);
+            Texts.sendTranslatable(message);
+        });
 
         if (LibrGetter.config.removeGoal) {
             for (EnchantmentTrade trade : matching.get()) {
