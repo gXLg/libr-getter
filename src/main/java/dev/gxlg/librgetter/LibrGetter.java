@@ -34,6 +34,7 @@ public class LibrGetter implements ClientModInitializer {
     public void onInitializeClient() {
         LOGGER.info("Hello World from LibrGetter!");
 
+        // preload
         R.preload(ConfigScreen.clazz);
 
         // register commands

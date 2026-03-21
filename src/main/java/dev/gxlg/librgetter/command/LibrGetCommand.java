@@ -20,9 +20,9 @@ import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.GoalsListC
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.LecternSelectedMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.LibrarianSelectedMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStoppedMessage;
+import dev.gxlg.librgetter.worker.scheduling.controllers.UserSchedulerController;
 import dev.gxlg.librgetter.worker.tasks.StandbyTask;
 import dev.gxlg.librgetter.worker.tasks.StartTask;
-import dev.gxlg.librgetter.worker.types.scheduling.AbstractSchedulerController;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
@@ -40,6 +40,7 @@ import dev.gxlg.versiont.gen.net.minecraft.world.phys.HitResult;
 import dev.gxlg.versiont.gen.net.minecraft.world.phys.HitResult$Type;
 
 public class LibrGetCommand {
+    private static final UserSchedulerController controller = LibrGetter.worker.getUserSchedulerController();
 
     public static void add(CommandContext context) throws LibrGetterException {
         CommandHelper.manageGoals(context, false);
@@ -145,7 +146,6 @@ public class LibrGetCommand {
         BlockPos finalLecternPos = foundLecternPos;
         Villager finalVillager = foundVillager;
 
-        AbstractSchedulerController controller = LibrGetter.worker.getUserSchedulerController();
         controller.scheduleContextUpdate(ctx -> ctx.setLecternPos(finalLecternPos).setVillager(finalVillager));
         controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
     }
@@ -160,7 +160,7 @@ public class LibrGetCommand {
         if (!LibrGetter.worker.getStateView().isWorking()) {
             throw new ProcessNotRunningException();
         }
-        LibrGetter.worker.getUserSchedulerController().scheduleTaskSwitch(TaskSwitch.nextTick(() -> {
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> {
             Texts.sendTranslatable(new ProcessStoppedMessage());
             return new StandbyTask();
         }));
@@ -170,14 +170,14 @@ public class LibrGetCommand {
         if (LibrGetter.worker.getStateView().isWorking()) {
             throw new AlreadyRunningException();
         }
-        LibrGetter.worker.getUserSchedulerController().scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
     }
 
     public static void continueWorking() throws AlreadyRunningException {
         if (LibrGetter.worker.getStateView().isWorking()) {
             throw new AlreadyRunningException();
         }
-        LibrGetter.worker.getUserSchedulerController().scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(false)));
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(false)));
     }
 
     public static void selector() throws LibrGetterException {
@@ -208,7 +208,7 @@ public class LibrGetCommand {
             if (!world.getBlockState(blockPos).is(Blocks.LECTERN())) {
                 throw new BlockNotLecternException();
             }
-            LibrGetter.worker.getUserSchedulerController().scheduleContextUpdate(ctx -> {
+            controller.scheduleContextUpdate(ctx -> {
                 ctx.setLecternPos(blockPos);
                 Texts.sendTranslatable(new LecternSelectedMessage());
             });
@@ -221,7 +221,7 @@ public class LibrGetCommand {
             if (!Villagers.isVillagerLibrarian(villager)) {
                 throw new VillagerNotLibrarianException();
             }
-            LibrGetter.worker.getUserSchedulerController().scheduleContextUpdate(ctx -> {
+            controller.scheduleContextUpdate(ctx -> {
                 ctx.setVillager(villager);
                 Texts.sendTranslatable(new LibrarianSelectedMessage());
             });
