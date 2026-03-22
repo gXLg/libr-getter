@@ -1,8 +1,13 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
+import dev.gxlg.librgetter.command.CommandsManager;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.arguments.ArgumentType;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.ArgumentBuilder;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
+import dev.gxlg.versiont.gen.net.minecraft.commands.CommandBuildContext;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.List;
@@ -18,8 +23,24 @@ public class Commands {
         return getImpl().getCustomEnchantmentFromCommandContext(context);
     }
 
-    public static void registerCommands() {
-        getImpl().registerCommands();
+    public static void registerCommands(CommandsManager.Command callback) {
+        getImpl().registerCommands(callback);
+    }
+
+    public static ArgumentType getEnchantmentArgumentType(CommandBuildContext context) {
+        return getImpl().getEnchantmentArgumentType(context);
+    }
+
+    public static LiteralArgumentBuilder literal(String command) {
+        return getImpl().literal(command);
+    }
+
+    public static ArgumentBuilder argument(String command, ArgumentType argumentType) {
+        return getImpl().argument(command, argumentType);
+    }
+
+    public static ArgumentBuilder argument(String command, com.mojang.brigadier.arguments.ArgumentType<?> argumentType) {
+        return getImpl().argument(command, argumentType);
     }
 
     private static Base getImpl() {
@@ -45,6 +66,14 @@ public class Commands {
 
         public abstract String getCustomEnchantmentFromCommandContext(CommandContext context);
 
-        public abstract void registerCommands();
+        public abstract void registerCommands(CommandsManager.Command callback);
+
+        public abstract ArgumentType getEnchantmentArgumentType(CommandBuildContext context);
+
+        public abstract LiteralArgumentBuilder literal(String command);
+
+        public abstract ArgumentBuilder argument(String command, ArgumentType argumentType);
+
+        public abstract ArgumentBuilder argument(String command, com.mojang.brigadier.arguments.ArgumentType<?> argumentType);
     }
 }

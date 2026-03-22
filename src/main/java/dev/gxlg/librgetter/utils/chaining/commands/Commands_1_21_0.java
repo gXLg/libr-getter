@@ -17,7 +17,7 @@ public class Commands_1_21_0 extends Commands_1_19_3 {
     }
 
     @Override
-    protected ArgumentType getEnchantmentArgumentType(CommandBuildContext context) {
+    public ArgumentType getEnchantmentArgumentType(CommandBuildContext context) {
         return ResourceOrTagArgument.resourceOrTag(context, Registries.ENCHANTMENT());
     }
 }
