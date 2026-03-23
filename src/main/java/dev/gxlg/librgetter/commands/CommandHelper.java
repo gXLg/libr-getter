@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.command;
+package dev.gxlg.librgetter.commands;
 
 import com.mojang.brigadier.Command;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
@@ -12,7 +12,7 @@ public class CommandHelper {
             try {
                 runnable.run(R.wrapperInst(CommandContext.class, ctx));
             } catch (LibrGetterException e) {
-                Texts.sendTranslatable(e.getTranslatableErrorMessage());
+                Texts.sendMessage(e.getTranslatableErrorMessage());
                 return 1;
             }
             return 0;

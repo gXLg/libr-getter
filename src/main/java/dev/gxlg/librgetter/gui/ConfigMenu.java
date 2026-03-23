@@ -1,6 +1,5 @@
 package dev.gxlg.librgetter.gui;
 
-import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
@@ -21,13 +20,13 @@ import java.util.Map;
 public class ConfigMenu {
     public static final int CONFIGS_PER_PAGE = 4;
 
-    public static final int pageCount;
+    private final int pageCount;
 
-    private static final Component[] cachedPageTexts;
+    private final Component[] cachedPageTexts;
 
-    private static final List<PageContent> pages;
+    private final List<PageContent> pages;
 
-    static {
+    public ConfigMenu(String modVersion, ConfigManager configManager) {
         List<ConfigPageContent> configPageList = new ArrayList<>();
         Map<ConfigManager.Category, Integer> categoryIndexMap = new HashMap<>();
 
@@ -35,19 +34,19 @@ public class ConfigMenu {
         for (ConfigManager.Category category : ConfigManager.Category.values()) {
             categoryIndexMap.put(category, pageNumber);
 
-            List<Configurable<?>> categoryConfigurables = LibrGetter.configManager.getConfigurablesForCategory(category);
+            List<Configurable<?>> categoryConfigurables = configManager.getConfigurablesForCategory(category);
             int categoryPagesCount = (int) Math.ceil(categoryConfigurables.size() / ((float) CONFIGS_PER_PAGE));
             for (int categoryPageIndex = 0; categoryPageIndex < categoryPagesCount; categoryPageIndex++) {
                 int configSliceStart = categoryPageIndex * CONFIGS_PER_PAGE;
                 int configSliceEnd = Math.min(configSliceStart + CONFIGS_PER_PAGE, categoryConfigurables.size());
                 List<Configurable<?>> configurablesOnPage = categoryConfigurables.subList(configSliceStart, configSliceEnd);
-                configPageList.add(new ConfigPageContent(category, configurablesOnPage));
+                configPageList.add(new ConfigPageContent(modVersion, category, configurablesOnPage));
             }
             pageNumber += categoryPagesCount;
         }
         pageCount = pageNumber;
 
-        FirstPageContent firstPage = new FirstPageContent(categoryIndexMap);
+        FirstPageContent firstPage = new FirstPageContent(modVersion, categoryIndexMap);
         List<PageContent> pageList = new ArrayList<>();
         pageList.add(firstPage);
         pageList.addAll(configPageList);
@@ -58,22 +57,26 @@ public class ConfigMenu {
         Arrays.fill(cachedPageTexts, Texts.literal(""));
     }
 
-    public static BookViewScreen$BookAccess createNewBookAccess() {
+    public BookViewScreen$BookAccess createNewBookAccess() {
         for (int pageIndex = 0; pageIndex < pageCount; pageIndex++) {
             updatePageCache(pageIndex);
         }
         return Gui.createBookAccess(Arrays.asList(cachedPageTexts));
     }
 
-    public static BookViewScreen$BookAccess getUpdatedBookAccess(int updatePageIndex) {
+    public BookViewScreen$BookAccess getUpdatedBookAccess(int updatePageIndex) {
         updatePageCache(updatePageIndex);
         return Gui.createBookAccess(Arrays.asList(cachedPageTexts));
     }
 
-    private static void updatePageCache(int pageIndex) {
+    private void updatePageCache(int pageIndex) {
         if (pageIndex < 0 || pageIndex >= pageCount) {
             throw new InvalidBookIndexException(pageIndex);
         }
         cachedPageTexts[pageIndex] = pages.get(pageIndex).getComponent();
+    }
+
+    public int getPageCount() {
+        return pageCount;
     }
 }

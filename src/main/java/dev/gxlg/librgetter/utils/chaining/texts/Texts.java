@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.texts;
 
-import dev.gxlg.librgetter.utils.types.messages.translatable.TranslatableMessage;
+import dev.gxlg.librgetter.utils.types.messages.Message;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.ClickEvent;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
@@ -9,40 +9,9 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
 import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 
 public class Texts {
-    private static Base implementation = null;
+    private static final Base implementation;
 
-    public static void sendTranslatable(TranslatableMessage translatableMessage) {
-        getImpl().sendTranslatable(translatableMessage);
-    }
-
-    public static void sendTranslatable(TranslatableMessage translatableMessage, boolean actionbar) {
-        getImpl().sendTranslatable(translatableMessage, actionbar);
-    }
-
-    public static MutableComponent literal(String text) {
-        return getImpl().literal(text);
-    }
-
-    public static MutableComponent translatable(String message, Object... args) {
-        return getImpl().translatable(message, args);
-    }
-
-    public static ClickEvent runnable(String command) {
-        return getImpl().runnable(command);
-    }
-
-    public static HoverEvent hoverable(Component text) {
-        return getImpl().hoverable(text);
-    }
-
-    public static String translateIdentifier(IdentifierType type, Identifier id) {
-        return getImpl().translateIdentifier(type, id);
-    }
-
-    private static Base getImpl() {
-        if (implementation != null) {
-            return implementation;
-        }
+    static {
         if (V.lower("1.19")) {
             implementation = new Texts_1_17_0();
         } else if (V.lower("1.19.4")) {
@@ -52,11 +21,38 @@ public class Texts {
         } else {
             implementation = new Texts_1_21_5();
         }
-        return implementation;
+    }
+
+    public static void sendMessage(Message message) {
+        implementation.sendMessage(message);
+    }
+
+    public static void sendMessage(Message message, boolean actionbar) {
+        implementation.sendMessage(message, actionbar);
+    }
+
+    public static MutableComponent literal(String text) {
+        return implementation.literal(text);
+    }
+
+    public static MutableComponent translatable(String message, Object... args) {
+        return implementation.translatable(message, args);
+    }
+
+    public static ClickEvent runnable(String command) {
+        return implementation.runnable(command);
+    }
+
+    public static HoverEvent hoverable(Component text) {
+        return implementation.hoverable(text);
+    }
+
+    public static String translateIdentifier(IdentifierType type, Identifier id) {
+        return implementation.translateIdentifier(type, id);
     }
 
     public static ClickEvent paging(int page) {
-        return getImpl().paging(page);
+        return implementation.paging(page);
     }
 
     public enum IdentifierType {
@@ -71,13 +67,12 @@ public class Texts {
         public String getId() {
             return id;
         }
-
     }
 
     public abstract static class Base {
-        public abstract void sendTranslatable(TranslatableMessage translatableMessage);
+        public abstract void sendMessage(Message message);
 
-        public abstract void sendTranslatable(TranslatableMessage translatableMessage, boolean actionbar);
+        public abstract void sendMessage(Message message, boolean actionbar);
 
         public abstract MutableComponent literal(String text);
 

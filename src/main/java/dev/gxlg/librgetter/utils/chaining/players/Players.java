@@ -7,24 +7,9 @@ import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
 import dev.gxlg.versiont.gen.net.minecraft.world.phys.BlockHitResult;
 
 public class Players {
-    private static Base implementation = null;
+    private static final Base implementation;
 
-    public static void interactBlock(MultiPlayerGameMode game, LocalPlayer player, BlockHitResult lowBlock, boolean useMainHand) {
-        getImpl().interactBlock(game, player, lowBlock, useMainHand);
-    }
-
-    public static void playFoundNotification(LocalPlayer player) {
-        getImpl().playFoundNotification(player);
-    }
-
-    public static void setSelectedSlot(Inventory inventory, int slot) {
-        getImpl().setSelectedSlot(inventory, slot);
-    }
-
-    private static Base getImpl() {
-        if (implementation != null) {
-            return implementation;
-        }
+    static {
         if (V.lower("1.19.0")) {
             implementation = new Players_1_17_0();
         } else if (V.lower("1.21.5")) {
@@ -34,7 +19,18 @@ public class Players {
         } else {
             implementation = new Players_1_21_9();
         }
-        return implementation;
+    }
+
+    public static void interactBlock(MultiPlayerGameMode game, LocalPlayer player, BlockHitResult lowBlock, boolean useMainHand) {
+        implementation.interactBlock(game, player, lowBlock, useMainHand);
+    }
+
+    public static void playFoundNotification(LocalPlayer player) {
+        implementation.playFoundNotification(player);
+    }
+
+    public static void setSelectedSlot(Inventory inventory, int slot) {
+        implementation.setSelectedSlot(inventory, slot);
     }
 
     public abstract static class Base {

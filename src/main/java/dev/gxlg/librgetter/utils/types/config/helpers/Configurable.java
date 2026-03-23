@@ -3,10 +3,11 @@ package dev.gxlg.librgetter.utils.types.config.helpers;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import dev.gxlg.librgetter.utils.chaining.support.Support;
+import dev.gxlg.librgetter.utils.chaining.compatibility.Compatibility;
+import dev.gxlg.librgetter.utils.config.Config;
 import dev.gxlg.librgetter.utils.config.ConfigData;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.config.Compatibility;
+import dev.gxlg.librgetter.utils.types.config.CompatibilityWith;
 import dev.gxlg.librgetter.utils.types.config.IntRange;
 import dev.gxlg.librgetter.utils.types.config.OnlyEffective;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
@@ -14,10 +15,11 @@ import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-public record Configurable<T>(String name, Class<T> type, ConfigManager managerInstance) {
+public record Configurable<T>(Config config, Class<T> type, ConfigManager managerInstance) {
     public T get() {
         try {
-            Field configurableField = ConfigData.class.getField(name);
+            Field configurableField = ConfigData.class.getDeclaredField(config.getId());
+            configurableField.setAccessible(true);
             T configurableType = type.cast(configurableField.get(managerInstance.getData()));
             if (configurableType != null) {
                 return configurableType;
@@ -31,7 +33,8 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
 
     public void set(T value) {
         try {
-            Field configurableField = ConfigData.class.getField(name);
+            Field configurableField = ConfigData.class.getDeclaredField(config.getId());
+            configurableField.setAccessible(true);
             configurableField.set(managerInstance.getData(), value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -39,13 +42,13 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
     }
 
     public T getDefault() {
-        return type.cast(ConfigManager.DEFAULT.getConfigurableForName(name).get());
+        return type.cast(ConfigManager.DEFAULT.getConfigurable(config).get());
     }
 
     public ArgumentType<?> commandArgument() {
         Field configurableField;
         try {
-            configurableField = ConfigData.class.getField(name);
+            configurableField = ConfigData.class.getDeclaredField(config.getId());
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -74,7 +77,7 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
         }
         Field configurableField;
         try {
-            configurableField = ConfigData.class.getField(name);
+            configurableField = ConfigData.class.getDeclaredField(config.getId());
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -89,13 +92,13 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
     public boolean hasEffect() {
         Field configurableField;
         try {
-            configurableField = ConfigData.class.getField(name);
+            configurableField = ConfigData.class.getDeclaredField(config.getId());
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
 
         for (OnlyEffective onlyEffectiveCondition : configurableField.getAnnotationsByType(OnlyEffective.class)) {
-            Configurable<?> configurable = managerInstance.getConfigurableForName(onlyEffectiveCondition.when());
+            Configurable<?> configurable = managerInstance.getConfigurable(onlyEffectiveCondition.when());
             String current;
             if (configurable.type() == OptionsConfig.class) {
                 current = ((OptionsConfig<?>) configurable.get()).getName();
@@ -107,9 +110,9 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
             }
         }
 
-        Compatibility modCompatibilityCondition = configurableField.getDeclaredAnnotation(Compatibility.class);
+        CompatibilityWith modCompatibilityCondition = configurableField.getDeclaredAnnotation(CompatibilityWith.class);
         //noinspection RedundantIfStatement
-        if (modCompatibilityCondition != null && !Support.isModPresent(modCompatibilityCondition.value())) {
+        if (modCompatibilityCondition != null && !Compatibility.isModPresent(modCompatibilityCondition.value())) {
             return false;
         }
 
@@ -120,5 +123,16 @@ public record Configurable<T>(String name, Class<T> type, ConfigManager managerI
 
     public boolean isDefault() {
         return get().equals(getDefault());
+    }
+
+    public boolean isCompatibility() {
+        Field configurableField;
+        try {
+            configurableField = ConfigData.class.getDeclaredField(config.getId());
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+        CompatibilityWith modCompatibilityCondition = configurableField.getDeclaredAnnotation(CompatibilityWith.class);
+        return modCompatibilityCondition != null;
     }
 }

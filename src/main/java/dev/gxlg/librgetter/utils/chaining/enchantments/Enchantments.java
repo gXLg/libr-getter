@@ -7,24 +7,9 @@ import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 
 public class Enchantments {
-    private static Base implementation = null;
+    private static final Base implementation;
 
-    public static Identifier enchantmentId(Enchantment enchantment) {
-        return getImpl().enchantmentId(enchantment);
-    }
-
-    public static int getEfficiencyLevel(ItemStack stack) {
-        return getImpl().getEfficiencyLevel(stack);
-    }
-
-    public static boolean canBeTraded(Enchantment enchantment) throws InternalErrorException {
-        return getImpl().canBeTraded(enchantment);
-    }
-
-    private static Base getImpl() {
-        if (implementation != null) {
-            return implementation;
-        }
+    static {
         if (V.lower("1.19.3")) {
             implementation = new Enchantments_1_17_0();
         } else if (V.lower("1.21")) {
@@ -32,7 +17,18 @@ public class Enchantments {
         } else {
             implementation = new Enchantments_1_21_0();
         }
-        return implementation;
+    }
+
+    public static Identifier enchantmentId(Enchantment enchantment) {
+        return implementation.enchantmentId(enchantment);
+    }
+
+    public static int getEfficiencyLevel(ItemStack stack) {
+        return implementation.getEfficiencyLevel(stack);
+    }
+
+    public static boolean canBeTraded(Enchantment enchantment) throws InternalErrorException {
+        return implementation.canBeTraded(enchantment);
     }
 
     public abstract static class Base {

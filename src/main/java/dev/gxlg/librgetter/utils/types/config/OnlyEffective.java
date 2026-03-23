@@ -1,5 +1,7 @@
 package dev.gxlg.librgetter.utils.types.config;
 
+import dev.gxlg.librgetter.utils.config.Config;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
@@ -10,7 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Repeatable(OnlyEffective.Container.class)
 public @interface OnlyEffective {
-    String when();
+    Config when();
 
     String[] equals();
 

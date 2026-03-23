@@ -12,7 +12,8 @@ import java.util.Map;
 public class FirstPageContent extends PageContent {
     private final Map<ConfigManager.Category, Integer> categoryIndexMap;
 
-    public FirstPageContent(Map<ConfigManager.Category, Integer> categoryIndexMap) {
+    public FirstPageContent(String modVersion, Map<ConfigManager.Category, Integer> categoryIndexMap) {
+        super(modVersion);
         this.categoryIndexMap = Map.copyOf(categoryIndexMap);
     }
 

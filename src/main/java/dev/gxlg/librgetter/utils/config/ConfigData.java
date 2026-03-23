@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.config;
 
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.config.Compatibility;
+import dev.gxlg.librgetter.utils.types.config.CompatibilityWith;
 import dev.gxlg.librgetter.utils.types.config.ConfigCategory;
 import dev.gxlg.librgetter.utils.types.config.IntRange;
 import dev.gxlg.librgetter.utils.types.config.OnlyEffective;
@@ -13,67 +13,83 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("CanBeFinal")
+@SuppressWarnings({ "unused", "FieldMayBeFinal", "UnusedReturnValue" })
 public class ConfigData {
-    @OnlyEffective(when = "manual", equals = "false")
-    @ConfigCategory(ConfigManager.Category.PROCESS)
-    public boolean autoTool = true;
+    private final List<EnchantmentTrade> goals = new ArrayList<>();
 
-    @OnlyEffective(when = "manual", equals = "false")
+    @OnlyEffective(when = Config.MANUAL, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
-    public boolean offhand = false;
+    private boolean autoTool = true;
 
+    @OnlyEffective(when = Config.MANUAL, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
-    public boolean manual = false;
-
-    @OnlyEffective(when = "manual", equals = "false")
-    @ConfigCategory(ConfigManager.Category.PROCESS)
-    public RotationMode rotationMode = RotationMode.INSTANT;
+    private boolean offhand = false;
 
     @ConfigCategory(ConfigManager.Category.PROCESS)
-    public boolean waitLose = false;
+    private boolean manual = false;
+
+    @OnlyEffective(when = Config.MANUAL, equals = "false")
+    @ConfigCategory(ConfigManager.Category.PROCESS)
+    private RotationMode rotationMode = RotationMode.INSTANT;
 
     @ConfigCategory(ConfigManager.Category.PROCESS)
-    public boolean safeChecker = true;
+    private boolean waitLose = false;
+
+    @ConfigCategory(ConfigManager.Category.PROCESS)
+    private boolean safeChecker = true;
 
     @IntRange(min = 0, max = 20)
     @ConfigCategory(ConfigManager.Category.PROCESS)
-    public int timeout = 0;
+    private int timeout = 0;
 
     @ConfigCategory(ConfigManager.Category.SUCCESS)
-    public boolean notify = false;
+    private boolean notify = false;
 
     @ConfigCategory(ConfigManager.Category.SUCCESS)
-    public boolean removeGoal = false;
+    private boolean removeGoal = false;
 
-    @OnlyEffective(when = "manual", equals = "false")
+    @OnlyEffective(when = Config.MANUAL, equals = "false")
     @ConfigCategory(ConfigManager.Category.SUCCESS)
-    public boolean lock = false;
+    private boolean lock = false;
 
     @ConfigCategory(ConfigManager.Category.MESSAGES)
-    public LogMode logMode = LogMode.CHAT;
+    private LogMode logMode = LogMode.CHAT;
 
     @ConfigCategory(ConfigManager.Category.MESSAGES)
-    public boolean warning = true;
+    private boolean warning = true;
 
     @ConfigCategory(ConfigManager.Category.MESSAGES)
-    public boolean checkUpdate = true;
+    private boolean checkUpdate = true;
 
     @ConfigCategory(ConfigManager.Category.MATCHING)
-    public boolean fallback = false;
+    private boolean fallback = false;
 
     @NotNull
     @ConfigCategory(ConfigManager.Category.MATCHING)
-    public MatchMode matchMode = MatchMode.VANILLA;
+    private MatchMode matchMode = MatchMode.VANILLA;
 
-    @OnlyEffective(when = "matchMode", equals = "ATLEAST")
+    @OnlyEffective(when = Config.MATCH_MODE, equals = "ATLEAST")
     @IntRange(min = 1)
     @ConfigCategory(ConfigManager.Category.MATCHING)
-    public int matchAtLeast = 1;
+    private int matchAtLeast = 1;
 
-    @Compatibility("trade_cycling")
+    @CompatibilityWith("trade_cycling")
     @ConfigCategory(ConfigManager.Category.COMPATIBILITY)
-    public boolean tradeCycling = false;
+    private boolean tradeCycling = false;
 
-    public List<EnchantmentTrade> goals = new ArrayList<>();
+    public List<EnchantmentTrade> getGoals() {
+        return List.copyOf(goals);
+    }
+
+    public boolean addGoal(EnchantmentTrade goal) {
+        return goals.add(goal);
+    }
+
+    public boolean removeGoal(EnchantmentTrade goal) {
+        return goals.remove(goal);
+    }
+
+    public void clearGoals() {
+        goals.clear();
+    }
 }

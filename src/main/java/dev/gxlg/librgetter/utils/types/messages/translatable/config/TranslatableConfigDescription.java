@@ -5,6 +5,6 @@ import dev.gxlg.librgetter.utils.types.messages.translatable.TranslatableMessage
 
 public class TranslatableConfigDescription extends TranslatableMessage {
     public TranslatableConfigDescription(Configurable<?> configurable) {
-        super("librgetter.config." + configurable.name());
+        super("librgetter.config." + configurable.config().getId());
     }
 }

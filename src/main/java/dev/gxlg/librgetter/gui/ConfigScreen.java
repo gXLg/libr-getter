@@ -6,8 +6,11 @@ import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookView
 public class ConfigScreen extends BookViewScreen {
     public static final R.RClass clazz = R.extendWrapper(BookViewScreen.class, ConfigScreen.class);
 
-    public ConfigScreen() {
-        super(ConfigMenu.createNewBookAccess());
+    private final ConfigMenu configMenu;
+
+    public ConfigScreen(ConfigMenu configMenu) {
+        super(configMenu.createNewBookAccess());
+        this.configMenu = configMenu;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class ConfigScreen extends BookViewScreen {
 
     @Override
     protected void pageForward() {
-        if (currentPage < ConfigMenu.pageCount - 1) {
+        if (currentPage < configMenu.getPageCount() - 1) {
             currentPage++;
         }
         super.pageForward();
@@ -45,7 +48,7 @@ public class ConfigScreen extends BookViewScreen {
     }
 
     public void updateScreen() {
-        setBookAccess(ConfigMenu.getUpdatedBookAccess(currentPage));
+        setBookAccess(configMenu.getUpdatedBookAccess(currentPage));
     }
 
     private static int currentPage = 0;

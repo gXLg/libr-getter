@@ -1,5 +1,6 @@
 package dev.gxlg.librgetter.mixin.entry;
 
+import dev.gxlg.librgetter.mixin.MixinImpl;
 import dev.gxlg.librgetter.mixin.impl.MultiPlayerGameModeMixinImpl;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
@@ -8,33 +9,20 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @SuppressWarnings({ "UnresolvedMixinReference", "MixinAnnotationTarget" })
 @Mixin(targets = { "net.minecraft.client.multiplayer.MultiPlayerGameMode", "net.minecraft.class_636" }, remap = false)
 public abstract class MultiPlayerGameModeMixinEntry {
 
-    @Inject(at = @At("HEAD"), method = "tick()V", remap = false, require = 0)
-    private void tick1(CallbackInfo info) {
-        MultiPlayerGameModeMixinImpl.tick();
-    }
-
-    @Inject(at = @At("HEAD"), method = "method_2927()V", remap = false, require = 0)
-    private void tick2(CallbackInfo info) {
-        MultiPlayerGameModeMixinImpl.tick();
-    }
-
-    // ---- //
-
     @Inject(at = @At("HEAD"), method = "startDestroyBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Z", cancellable = true, remap = false, require = 0)
     private void startDestroyBlock1(@Coerce Object blockPos, @Coerce Object direction, CallbackInfoReturnable<Boolean> info) {
-        MultiPlayerGameModeMixinImpl.startDestroyBlock(R.wrapperInst(BlockPos.class, blockPos)).ifPresent(info::setReturnValue);
+        MixinImpl.mixinReturn(MultiPlayerGameModeMixinImpl.class, info, i -> i.startDestroyBlock(R.wrapperInst(BlockPos.class, blockPos)));
     }
 
     @Inject(at = @At("HEAD"), method = "method_2910(Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z", cancellable = true, remap = false, require = 0)
     private void startDestroyBlock2(@Coerce Object blockPos, @Coerce Object direction, CallbackInfoReturnable<Boolean> info) {
-        MultiPlayerGameModeMixinImpl.startDestroyBlock(R.wrapperInst(BlockPos.class, blockPos)).ifPresent(info::setReturnValue);
+        MixinImpl.mixinReturn(MultiPlayerGameModeMixinImpl.class, info, i -> i.startDestroyBlock(R.wrapperInst(BlockPos.class, blockPos)));
     }
 
     // ---- //
@@ -45,7 +33,7 @@ public abstract class MultiPlayerGameModeMixinEntry {
         cancellable = true, remap = false, require = 0
     )
     private void useItemOn1(@Coerce Object player, @Coerce Object hand, @Coerce Object hitResult, CallbackInfoReturnable<Object> info) {
-        MultiPlayerGameModeMixinImpl.useItemOn(R.wrapperInst(BlockHitResult.class, hitResult)).ifPresent(r -> info.setReturnValue(r.unwrap()));
+        MixinImpl.mixinReturnWrapped(MultiPlayerGameModeMixinImpl.class, info, i -> i.useItemOn(R.wrapperInst(BlockHitResult.class, hitResult)));
     }
 
     @Inject(
@@ -53,7 +41,7 @@ public abstract class MultiPlayerGameModeMixinEntry {
         require = 0
     )
     private void useItemOn2(@Coerce Object player, @Coerce Object hand, @Coerce Object hitResult, CallbackInfoReturnable<Object> info) {
-        MultiPlayerGameModeMixinImpl.useItemOn(R.wrapperInst(BlockHitResult.class, hitResult)).ifPresent(r -> info.setReturnValue(r.unwrap()));
+        MixinImpl.mixinReturnWrapped(MultiPlayerGameModeMixinImpl.class, info, i -> i.useItemOn(R.wrapperInst(BlockHitResult.class, hitResult)));
     }
 
     @Inject(
@@ -62,7 +50,7 @@ public abstract class MultiPlayerGameModeMixinEntry {
         cancellable = true, remap = false, require = 0
     )
     private void useItemOn3(@Coerce Object player, @Coerce Object world, @Coerce Object hand, @Coerce Object hitResult, CallbackInfoReturnable<Object> info) {
-        MultiPlayerGameModeMixinImpl.useItemOn(R.wrapperInst(BlockHitResult.class, hitResult)).ifPresent(r -> info.setReturnValue(r.unwrap()));
+        MixinImpl.mixinReturnWrapped(MultiPlayerGameModeMixinImpl.class, info, i -> i.useItemOn(R.wrapperInst(BlockHitResult.class, hitResult)));
     }
 
     @Inject(
@@ -70,6 +58,6 @@ public abstract class MultiPlayerGameModeMixinEntry {
         remap = false, require = 0
     )
     private void useItemOn4(@Coerce Object player, @Coerce Object world, @Coerce Object hand, @Coerce Object hitResult, CallbackInfoReturnable<Object> info) {
-        MultiPlayerGameModeMixinImpl.useItemOn(R.wrapperInst(BlockHitResult.class, hitResult)).ifPresent(r -> info.setReturnValue(r.unwrap()));
+        MixinImpl.mixinReturnWrapped(MultiPlayerGameModeMixinImpl.class, info, i -> i.useItemOn(R.wrapperInst(BlockHitResult.class, hitResult)));
     }
 }

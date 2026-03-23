@@ -1,6 +1,5 @@
 package dev.gxlg.librgetter.utils.chaining.players;
 
-import dev.gxlg.librgetter.LibrGetter;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
@@ -27,9 +26,6 @@ public class Players_1_17_0 extends Players.Base {
 
     @Override
     public void playFoundNotification(LocalPlayer player) {
-        if (!LibrGetter.config.notify) {
-            return;
-        }
         getWorld(player).playLocalSound(player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_LEVELUP(), SoundSource.NEUTRAL(), 10F, 0.7F, false);
     }
 

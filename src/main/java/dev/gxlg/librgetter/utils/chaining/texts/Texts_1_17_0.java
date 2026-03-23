@@ -1,7 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.texts;
 
 import dev.gxlg.librgetter.utils.types.messages.Message;
-import dev.gxlg.librgetter.utils.types.messages.translatable.TranslatableMessage;
 import dev.gxlg.versiont.api.types.Wrapper;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
@@ -26,13 +25,13 @@ public class Texts_1_17_0 extends Texts.Base {
     }
 
     @Override
-    public void sendTranslatable(TranslatableMessage translatableMessage) {
-        sendTranslatable(translatableMessage, false);
+    public void sendMessage(Message message) {
+        sendMessage(message, false);
     }
 
     @Override
-    public void sendTranslatable(TranslatableMessage translatableMessage, boolean actionbar) {
-        sendMessage(translatableMessage.getComponent(), actionbar);
+    public void sendMessage(Message message, boolean actionbar) {
+        sendMessage(message.getComponent(), actionbar);
     }
 
     @Override

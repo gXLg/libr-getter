@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
-import dev.gxlg.librgetter.command.CommandsManager;
+import dev.gxlg.librgetter.commands.CommandsManager;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.arguments.ArgumentType;
@@ -13,40 +13,9 @@ import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 import java.util.List;
 
 public class Commands {
-    private static Base implementation = null;
+    private static final Base implementation;
 
-    public static List<Enchantment> getEnchantmentsFromCommandContext(CommandContext context) throws LibrGetterException {
-        return getImpl().getEnchantmentsFromCommandContext(context);
-    }
-
-    public static String getCustomEnchantmentFromCommandContext(CommandContext context) {
-        return getImpl().getCustomEnchantmentFromCommandContext(context);
-    }
-
-    public static void registerCommands(CommandsManager.Command callback) {
-        getImpl().registerCommands(callback);
-    }
-
-    public static ArgumentType getEnchantmentArgumentType(CommandBuildContext context) {
-        return getImpl().getEnchantmentArgumentType(context);
-    }
-
-    public static LiteralArgumentBuilder literal(String command) {
-        return getImpl().literal(command);
-    }
-
-    public static ArgumentBuilder argument(String command, ArgumentType argumentType) {
-        return getImpl().argument(command, argumentType);
-    }
-
-    public static ArgumentBuilder argument(String command, com.mojang.brigadier.arguments.ArgumentType<?> argumentType) {
-        return getImpl().argument(command, argumentType);
-    }
-
-    private static Base getImpl() {
-        if (implementation != null) {
-            return implementation;
-        }
+    static {
         if (V.lower("1.19")) {
             implementation = new Commands_1_17_0();
         } else if (V.lower("1.19.3")) {
@@ -58,7 +27,34 @@ public class Commands {
         } else {
             implementation = new Commands_26_1_0();
         }
-        return implementation;
+    }
+
+    public static List<Enchantment> getEnchantmentsFromCommandContext(CommandContext context) throws LibrGetterException {
+        return implementation.getEnchantmentsFromCommandContext(context);
+    }
+
+    public static String getCustomEnchantmentFromCommandContext(CommandContext context) {
+        return implementation.getCustomEnchantmentFromCommandContext(context);
+    }
+
+    public static void registerCommands(CommandsManager.Command callback) {
+        implementation.registerCommands(callback);
+    }
+
+    public static ArgumentType getEnchantmentArgumentType(CommandBuildContext context) {
+        return implementation.getEnchantmentArgumentType(context);
+    }
+
+    public static LiteralArgumentBuilder literal(String command) {
+        return implementation.literal(command);
+    }
+
+    public static ArgumentBuilder argument(String command, ArgumentType argumentType) {
+        return implementation.argument(command, argumentType);
+    }
+
+    public static ArgumentBuilder argument(String command, com.mojang.brigadier.arguments.ArgumentType<?> argumentType) {
+        return implementation.argument(command, argumentType);
     }
 
     public abstract static class Base {

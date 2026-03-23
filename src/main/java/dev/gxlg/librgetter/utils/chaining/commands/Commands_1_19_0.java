@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
-import dev.gxlg.librgetter.command.CommandsManager;
+import dev.gxlg.librgetter.commands.CommandsManager;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.arguments.ArgumentType;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.ArgumentBuilder;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.LiteralArgumentBuilder;

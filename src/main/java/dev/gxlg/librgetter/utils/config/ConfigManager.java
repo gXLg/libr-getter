@@ -27,7 +27,7 @@ public class ConfigManager {
 
     private final List<Configurable<?>> configurable = new ArrayList<>();
 
-    private final Map<String, Configurable<?>> configurableMap = new HashMap<>();
+    private final Map<Config, Configurable<?>> configurableMap = new HashMap<>();
 
     private final Map<Category, List<Configurable<?>>> categoryMap = new HashMap<>();
 
@@ -37,28 +37,35 @@ public class ConfigManager {
         this.data = data;
         this.configPath = configPath;
 
-        for (Field f : ConfigData.class.getFields()) {
-            Configurable<?> conf;
-            if (f.getType() == boolean.class) {
-                conf = new Configurable<>(f.getName(), Boolean.class, this);
-            } else if (f.getType() == int.class) {
-                conf = new Configurable<>(f.getName(), Integer.class, this);
-            } else if (OptionsConfig.class.isAssignableFrom(f.getType())) {
-                conf = new Configurable<>(f.getName(), OptionsConfig.class, this);
+        for (Config config : Config.values()) {
+            Field field;
+            try {
+                field = ConfigData.class.getDeclaredField(config.getId());
+            } catch (NoSuchFieldException e) {
+                continue;
+            }
+
+            Configurable<?> configurable;
+            if (field.getType() == boolean.class) {
+                configurable = new Configurable<>(config, Boolean.class, this);
+            } else if (field.getType() == int.class) {
+                configurable = new Configurable<>(config, Integer.class, this);
+            } else if (OptionsConfig.class.isAssignableFrom(field.getType())) {
+                configurable = new Configurable<>(config, OptionsConfig.class, this);
             } else {
                 continue;
             }
-            configurable.add(conf);
-            configurableMap.put(f.getName(), conf);
+            this.configurable.add(configurable);
+            configurableMap.put(config, configurable);
 
-            ConfigCategory configCategory = f.getAnnotation(ConfigCategory.class);
+            ConfigCategory configCategory = field.getAnnotation(ConfigCategory.class);
             if (configCategory == null) {
-                throw new UncategorizedConfigException(f.getName());
+                throw new UncategorizedConfigException(field.getName());
             }
             Category category = configCategory.value();
-            categoryMap.computeIfAbsent(category, k -> new ArrayList<>()).add(conf);
+            categoryMap.computeIfAbsent(category, k -> new ArrayList<>()).add(configurable);
         }
-        configurable.sort(Comparator.comparing(Configurable::name));
+        configurable.sort(Comparator.comparing(c -> c.config().getId()));
     }
 
     public ConfigData getData() {
@@ -94,8 +101,33 @@ public class ConfigManager {
         return categoryMap.getOrDefault(category, List.of());
     }
 
-    public Configurable<?> getConfigurableForName(String field) {
-        return configurableMap.getOrDefault(field, null);
+    public Configurable<?> getConfigurable(Config config) {
+        return configurableMap.getOrDefault(config, null);
+    }
+
+    public boolean getBoolean(Config config) {
+        Configurable<?> configurable = getConfigurable(config);
+        if (configurable == null || configurable.type() != Boolean.class) {
+            throw new IllegalArgumentException("Config " + config.getId() + " is not a boolean, instead: " + (configurable == null ? "null" : configurable.type().getSimpleName()));
+        }
+        return (boolean) configurable.get();
+    }
+
+    public int getInteger(Config config) {
+        Configurable<?> configurable = getConfigurable(config);
+        if (configurable == null || configurable.type() != Integer.class) {
+            throw new IllegalArgumentException("Config " + config.getId() + " is not an integer");
+        }
+        return (int) configurable.get();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Enum<T> & OptionsConfig<?>> T getOptions(Config config) {
+        Configurable<?> configurable = getConfigurable(config);
+        if (configurable == null || configurable.type() != OptionsConfig.class) {
+            throw new IllegalArgumentException("Config " + config.getId() + " is not an options config");
+        }
+        return (T) configurable.get();
     }
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();

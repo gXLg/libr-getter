@@ -1,5 +1,7 @@
 package dev.gxlg.librgetter.worker.tasks;
 
+import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
@@ -19,7 +21,7 @@ public class LockTradesTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
         MinecraftData minecraftData = taskContext.minecraftData();
 
         // wait for the screen to open

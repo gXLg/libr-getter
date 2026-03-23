@@ -4,26 +4,22 @@ import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
 
 public class Villagers {
-    private static Base implementation = null;
+    private static final Base implementation;
 
-    public static boolean isVillagerLibrarian(Villager villager) {
-        return getImpl().isVillagerLibrarian(villager);
-    }
-
-    public static boolean isVillagerUnemployed(Villager villager) {
-        return getImpl().isVillagerUnemployed(villager);
-    }
-
-    private static Base getImpl() {
-        if (implementation != null) {
-            return implementation;
-        }
+    static {
         if (V.lower("1.21.5")) {
             implementation = new Villagers_1_17_0();
         } else {
             implementation = new Villagers_1_21_5();
         }
-        return implementation;
+    }
+
+    public static boolean isVillagerLibrarian(Villager villager) {
+        return implementation.isVillagerLibrarian(villager);
+    }
+
+    public static boolean isVillagerUnemployed(Villager villager) {
+        return implementation.isVillagerUnemployed(villager);
     }
 
     public abstract static class Base {

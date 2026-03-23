@@ -1,6 +1,8 @@
 package dev.gxlg.librgetter.worker.tasks;
 
-import dev.gxlg.librgetter.LibrGetter;
+import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.utils.config.Config;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.enums.RotationMode;
 import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
@@ -34,8 +36,8 @@ public class RotationTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
-        if (LibrGetter.config.manual || LibrGetter.config.rotationMode == RotationMode.NONE) {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+        if (configManager.getBoolean(Config.MANUAL) || configManager.getOptions(Config.ROTATION_MODE) == RotationMode.NONE) {
             controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> nextTask));
             return;
         }
@@ -43,7 +45,7 @@ public class RotationTask extends Task {
         MinecraftData minecraftData = taskContext.minecraftData();
         LocalPlayer player = minecraftData.localPlayer;
 
-        if (LibrGetter.config.rotationMode == RotationMode.INSTANT) {
+        if (configManager.getOptions(Config.ROTATION_MODE) == RotationMode.INSTANT) {
             player.lookAt(EntityAnchorArgument$Anchor.EYES(), absoluteTarget);
             controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> nextTask));
             return;

@@ -2,24 +2,23 @@ package dev.gxlg.librgetter.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.chaining.texts.Texts;
+import dev.gxlg.librgetter.notifier.Notifier;
+import dev.gxlg.librgetter.utils.config.Config;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.NewVersionReleasedMessage;
-import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$JoinI;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Updater {
-    private static final AtomicReference<NewVersion> newVersion = new AtomicReference<>();
-
-    public static void checkUpdates() {
-        if (!LibrGetter.config.checkUpdate) {
+    public static void checkUpdates(Notifier notifier, ConfigManager configManager, String modVersion) {
+        if (!configManager.getBoolean(Config.CHECK_UPDATE)) {
+            return;
+        }
+        if (modVersion == null) {
             return;
         }
 
@@ -30,28 +29,18 @@ public class Updater {
                 JsonObject data = new Gson().fromJson(reader, JsonObject.class);
                 reader.close();
 
-                String version = LibrGetter.getVersion();
-                if (version == null) {
-                    return;
-                }
                 String newest = data.get("tag_name").getAsString();
 
-                if (!newest.equals(version)) {
-                    newVersion.set(new NewVersion(newest + " - " + data.get("name").getAsString(), data.get("body").getAsString().replace("\r", "")));
+                if (newest.equals(modVersion)) {
+                    return;
                 }
+
+                String versionName = newest + " - " + data.get("name").getAsString();
+                String changelog = data.get("body").getAsString().replace("\r", "");
+                notifier.addNotification(new NewVersionReleasedMessage(versionName, changelog));
+
             } catch (IOException ignored) {
             }
         });
-
-        // notifying about update
-        ClientPlayConnectionEvents$JoinI join = (h, s, c) -> {
-            NewVersion version = Updater.newVersion.getAndSet(null);
-            if (version != null) {
-                Texts.sendTranslatable(new NewVersionReleasedMessage(version));
-            }
-        };
-        ClientPlayConnectionEvents.JOIN.register(join.unwrap(ClientPlayConnectionEvents.Join.class));
     }
-
-    public record NewVersion(String version, String changelog) { }
 }

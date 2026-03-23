@@ -19,7 +19,8 @@ public class ConfigPageContent extends PageContent {
 
     private final List<Configurable<?>> configurables;
 
-    public ConfigPageContent(ConfigManager.Category category, List<Configurable<?>> configurables) {
+    public ConfigPageContent(String modVersion, ConfigManager.Category category, List<Configurable<?>> configurables) {
+        super(modVersion);
         this.category = category;
         this.configurables = configurables;
     }
@@ -37,8 +38,8 @@ public class ConfigPageContent extends PageContent {
     }
 
     private MutableComponent buildEntry(Configurable<?> configurable) {
-        String config = configurable.name();
-        String showName = config.startsWith("_") ? "+ " + config.substring(1) : config;
+        String configName = configurable.config().getId();
+        String showName = (configurable.isCompatibility() ? "+ " : "") + configName;
         MutableComponent name = new TranslatableConfigDescription(configurable).getComponent();
 
         ChatFormatting green = configurable.hasEffect() ? ChatFormatting.GREEN() : ChatFormatting.GRAY();
@@ -52,28 +53,29 @@ public class ConfigPageContent extends PageContent {
         if (configurable.type() == Boolean.class) {
             boolean value = (boolean) configurable.get();
 
-            resetCommand = Texts.runnable("/librget config " + config + " " + configurable.getDefault().toString());
-            leftText = Texts.literal("[" + value + "]").withStyle(Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + config + " " + (!value))).withColor(value ? green : red));
+            resetCommand = Texts.runnable("/librget config " + configName + " " + configurable.getDefault().toString());
+            leftText = Texts.literal("[" + value + "]").withStyle(Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + configName + " " + (!value))).withColor(value ? green : red));
             middleText = Texts.literal(" ");
             rightText = Texts.literal("");
 
         } else if (configurable.type() == Integer.class) {
             int value = (int) configurable.get();
-            Style minusStyle = configurable.inRange(value - 1) ? Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + config + " " + (value - 1))).withColor(red) :
+            Style minusStyle = configurable.inRange(value - 1) ? Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + configName + " " + (value - 1))).withColor(red) :
                                Style.EMPTY().withColor(ChatFormatting.GRAY());
-            Style plusStyle = configurable.inRange(value + 1) ? Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + config + " " + (value + 1))).withColor(green) :
+            Style plusStyle = configurable.inRange(value + 1) ? Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + configName + " " + (value + 1))).withColor(green) :
                               Style.EMPTY().withColor(ChatFormatting.GRAY());
 
-            resetCommand = Texts.runnable("/librget config " + config + " " + configurable.getDefault().toString());
+            resetCommand = Texts.runnable("/librget config " + configName + " " + configurable.getDefault().toString());
             leftText = Texts.literal("[-]").withStyle(minusStyle);
             middleText = Texts.literal(" " + value + " ").withStyle(Style.EMPTY().withColor(black));
             rightText = Texts.literal("[+]").withStyle(plusStyle);
 
         } else if (configurable.type() == OptionsConfig.class) {
             OptionsConfig<?> value = (OptionsConfig<?>) configurable.get();
-            Style optionValueStyle = Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + config + " " + value.next().getName())).withColor(value.getName().equals("NONE") ? red : green);
+            Style optionValueStyle = Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + configName + " " + value.next().getName()))
+                                          .withColor(value.getName().equals("NONE") ? red : green);
 
-            resetCommand = Texts.runnable("/librget config " + config + " " + ((OptionsConfig<?>) configurable.getDefault()).getName());
+            resetCommand = Texts.runnable("/librget config " + configName + " " + ((OptionsConfig<?>) configurable.getDefault()).getName());
             leftText = Texts.literal("[" + value.getName() + "]").withStyle(optionValueStyle);
             middleText = Texts.literal("");
             rightText = Texts.literal("");
