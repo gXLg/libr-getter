@@ -15,6 +15,7 @@ public class CoreLoader extends ServiceLoader<CoreLoader> {
 
     public static final Export<CoreLoader, String> exportModVersion = new Export<>(c -> c.modVersion);
 
+    @SuppressWarnings("unused")
     public static final Export<CoreLoader, Logger> exportLogger = new Export<>(c -> c.logger);
 
     public static final Export<CoreLoader, Path> exportConfigPath = new Export<>(c -> c.configPath);
