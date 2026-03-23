@@ -1,5 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
+import dev.gxlg.librgetter.commands.CommandsManager;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.arguments.ArgumentType;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.ArgumentBuilder;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -12,25 +13,23 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 
 public class Commands_1_19_0 extends Commands_1_17_0 {
     @Override
-    public void registerCommands() {
-        ClientCommandRegistrationCallbackI callback = (dispatcher, context) -> {
-            ArgumentType enchantmentArgumentType = getEnchantmentArgumentType(context);
-            registerLibrget(dispatcher, enchantmentArgumentType);
-        };
-        ClientCommandRegistrationCallback.EVENT.register(callback.unwrap(ClientCommandRegistrationCallback.class));
+    public void registerCommands(CommandsManager.Command callback) {
+        ClientCommandRegistrationCallbackI fabricCallback = callback::register;
+        ClientCommandRegistrationCallback.EVENT.register(fabricCallback.unwrap(ClientCommandRegistrationCallback.class));
     }
 
-    protected ArgumentType getEnchantmentArgumentType(CommandBuildContext context) {
+    @Override
+    public ArgumentType getEnchantmentArgumentType(CommandBuildContext context) {
         return ResourceOrTagArgument.resourceOrTag(context, BuiltInRegistries.ENCHANTMENT().key());
     }
 
     @Override
-    protected LiteralArgumentBuilder literal(String command) {
+    public LiteralArgumentBuilder literal(String command) {
         return ClientCommandManager.literal(command);
     }
 
     @Override
-    protected ArgumentBuilder argument(String command, ArgumentType argumentType) {
+    public ArgumentBuilder argument(String command, ArgumentType argumentType) {
         return ClientCommandManager.argument(command, argumentType);
     }
 }

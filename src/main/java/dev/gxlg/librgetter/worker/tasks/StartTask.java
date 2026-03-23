@@ -1,13 +1,15 @@
 package dev.gxlg.librgetter.worker.tasks;
 
-import dev.gxlg.librgetter.LibrGetter;
+import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.EmptyGoalsListException;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.NoLecternSetException;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.NoLibrarianSetException;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.UnsafeSetupException;
+import dev.gxlg.librgetter.utils.config.Config;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.EmptyGoalsListException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.NoLecternSetException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.NoLibrarianSetException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.UnsafeSetupException;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStartedMessage;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
@@ -27,19 +29,19 @@ public class StartTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
         if (taskContext.selectedLecternPos() == null) {
             throw new NoLecternSetException();
         }
         if (taskContext.selectedVillager() == null) {
             throw new NoLibrarianSetException();
         }
-        if (LibrGetter.config.goals.isEmpty()) {
+        if (configManager.getData().getGoals().isEmpty()) {
             throw new EmptyGoalsListException();
         }
 
         MinecraftData minecraftData = new MinecraftData();
-        if (LibrGetter.config.safeChecker) {
+        if (configManager.getBoolean(Config.SAFE_CHECKER)) {
             // If the villager is sitting, assume it cannot move
             if (!taskContext.selectedVillager().isPassenger()) {
                 List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), minecraftData.clientLevel, 2);
@@ -50,7 +52,7 @@ public class StartTask extends Task {
         }
 
         controller.scheduleContextUpdate(ctx -> {
-            if (!LibrGetter.config.autoTool) {
+            if (!configManager.getBoolean(Config.AUTO_TOOL)) {
                 ctx.setDefaultItem(minecraftData.localPlayer.getMainHandItem());
             }
             if (resetCounter) {
@@ -61,7 +63,7 @@ public class StartTask extends Task {
 
         Task rotationTask = new RotationTask(minecraftData.localPlayer, EntityAnchorArgument$Anchor.EYES().apply(taskContext.selectedVillager()), new WaitVillagerAcceptProfessionTask());
         controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> {
-            Texts.sendTranslatable(new ProcessStartedMessage());
+            Texts.sendMessage(new ProcessStartedMessage());
             return rotationTask;
         }));
     }

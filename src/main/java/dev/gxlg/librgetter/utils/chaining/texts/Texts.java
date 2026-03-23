@@ -1,66 +1,17 @@
 package dev.gxlg.librgetter.utils.chaining.texts;
 
-import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import dev.gxlg.librgetter.utils.types.messages.translatable.TranslatableMessage;
+import dev.gxlg.librgetter.utils.types.messages.Message;
 import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.ClickEvent;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.HoverEvent;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
-
-import java.util.List;
-import java.util.Map;
+import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 
 public class Texts {
-    private static Base implementation = null;
+    private static final Base implementation;
 
-    public static void sendTranslatable(TranslatableMessage translatableMessage) {
-        getImpl().sendTranslatable(translatableMessage);
-    }
-
-    public static void sendFound(EnchantmentTrade enchant, int counter) {
-        getImpl().sendFound(enchant, counter);
-    }
-
-    public static void sendTradeLog(List<EnchantmentTrade> offeredEnchantments) {
-        getImpl().sendTradeLog(offeredEnchantments);
-    }
-
-    public static void sendNewVersion(String message, String hover) {
-        getImpl().sendNewVersion(message, hover);
-    }
-
-    public static void sendListOfGoals() {
-        getImpl().sendListOfGoals();
-    }
-
-    public static MutableComponent bookMainPage(Map<ConfigManager.Category, Integer> categories) {
-        return getImpl().bookMainPage(categories);
-    }
-
-    public static MutableComponent bookTitle(ConfigManager.Category category) {
-        return getImpl().bookTitle(category);
-    }
-
-    public static MutableComponent bookEntry(MutableComponent text, Configurable<?> configurable) {
-        return getImpl().bookEntry(text, configurable);
-    }
-
-    public static MutableComponent literal(String text) {
-        return getImpl().literal(text);
-    }
-
-    public static MutableComponent translatable(String message, Object... args) {
-        return getImpl().translatable(message, args);
-    }
-
-    public static MutableComponent enchantmentTradeToComponent(EnchantmentTrade trade) {
-        return getImpl().enchantmentTradeToComponent(trade);
-    }
-
-    private static Base getImpl() {
-        if (implementation != null) {
-            return implementation;
-        }
+    static {
         if (V.lower("1.19")) {
             implementation = new Texts_1_17_0();
         } else if (V.lower("1.19.4")) {
@@ -70,30 +21,69 @@ public class Texts {
         } else {
             implementation = new Texts_1_21_5();
         }
-        return implementation;
+    }
+
+    public static void sendMessage(Message message) {
+        implementation.sendMessage(message);
+    }
+
+    public static void sendMessage(Message message, boolean actionbar) {
+        implementation.sendMessage(message, actionbar);
+    }
+
+    public static MutableComponent literal(String text) {
+        return implementation.literal(text);
+    }
+
+    public static MutableComponent translatable(String message, Object... args) {
+        return implementation.translatable(message, args);
+    }
+
+    public static ClickEvent runnable(String command) {
+        return implementation.runnable(command);
+    }
+
+    public static HoverEvent hoverable(Component text) {
+        return implementation.hoverable(text);
+    }
+
+    public static String translateIdentifier(IdentifierType type, Identifier id) {
+        return implementation.translateIdentifier(type, id);
+    }
+
+    public static ClickEvent paging(int page) {
+        return implementation.paging(page);
+    }
+
+    public enum IdentifierType {
+        ENCHANTMENT("enchantment");
+
+        private final String id;
+
+        IdentifierType(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
     }
 
     public abstract static class Base {
-        public abstract void sendTranslatable(TranslatableMessage translatableMessage);
+        public abstract void sendMessage(Message message);
 
-        public abstract void sendFound(EnchantmentTrade enchant, int counter);
-
-        public abstract void sendTradeLog(List<EnchantmentTrade> offeredEnchantments);
-
-        public abstract void sendNewVersion(String message, String hover);
-
-        public abstract void sendListOfGoals();
-
-        public abstract MutableComponent bookMainPage(Map<ConfigManager.Category, Integer> categories);
-
-        public abstract MutableComponent bookTitle(ConfigManager.Category category);
-
-        public abstract MutableComponent bookEntry(MutableComponent text, Configurable<?> configurable);
+        public abstract void sendMessage(Message message, boolean actionbar);
 
         public abstract MutableComponent literal(String text);
 
         public abstract MutableComponent translatable(String message, Object... args);
 
-        public abstract MutableComponent enchantmentTradeToComponent(EnchantmentTrade trade);
+        public abstract String translateIdentifier(IdentifierType type, Identifier id);
+
+        public abstract ClickEvent runnable(String command);
+
+        public abstract ClickEvent paging(int page);
+
+        public abstract HoverEvent hoverable(Component text);
     }
 }

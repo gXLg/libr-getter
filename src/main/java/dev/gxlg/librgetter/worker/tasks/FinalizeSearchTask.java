@@ -1,9 +1,10 @@
 package dev.gxlg.librgetter.worker.tasks;
 
-import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.chaining.support.Support;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.CanNotLockException;
+import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.utils.config.Config;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.CanNotLockException;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -23,19 +24,19 @@ public class FinalizeSearchTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
-        if (LibrGetter.config.manual) {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+        if (configManager.getBoolean(Config.MANUAL)) {
             controller.scheduleTaskSwitch(TaskSwitch.sameTick(ManualModeWaitTask::new));
             return;
         }
 
-        if (!LibrGetter.config.lock) {
+        if (!configManager.getBoolean(Config.LOCK)) {
             controller.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
             return;
         }
 
         MinecraftData minecraftData = taskContext.minecraftData();
-        if (!Support.isUsingTradeCycling()) {
+        if (!compatibilityManager.isUsingTradeCycling()) {
             // TradeCycling process keeps the screen open, else we have to open it again
             minecraftData.gameMode.interact(minecraftData.localPlayer, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
         }

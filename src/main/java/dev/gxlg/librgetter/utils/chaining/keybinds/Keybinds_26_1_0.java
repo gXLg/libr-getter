@@ -5,7 +5,7 @@ import dev.gxlg.versiont.gen.net.minecraft.client.KeyMapping;
 
 public class Keybinds_26_1_0 extends Keybinds_1_21_9 {
     @Override
-    protected void register(KeyMapping keyMapping) {
+    public void register(KeyMapping keyMapping) {
         KeyMappingHelper.registerKeyMapping(keyMapping);
     }
 }

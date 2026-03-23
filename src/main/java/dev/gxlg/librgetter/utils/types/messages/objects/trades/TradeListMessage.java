@@ -9,10 +9,10 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.MutableComponent;
 import java.util.List;
 
 public class TradeListMessage extends Message {
-    private final List<EnchantmentTrade> tradeList;
+    private final List<TradeMessage> tradeMessages;
 
     public TradeListMessage(List<EnchantmentTrade> tradeList) {
-        this.tradeList = tradeList;
+        this.tradeMessages = tradeList.stream().map(TradeMessage::new).toList();
     }
 
     @Override
@@ -23,9 +23,9 @@ public class TradeListMessage extends Message {
     @Override
     protected MutableComponent buildComponent() {
         MutableComponent text = Texts.literal("[");
-        for (int i = 0; i < tradeList.size(); i++) {
-            text = text.append(new TradeMessage(tradeList.get(i)).getComponent());
-            if (i < tradeList.size() - 1) {
+        for (int i = 0; i < tradeMessages.size(); i++) {
+            text = text.append(tradeMessages.get(i).getComponent());
+            if (i < tradeMessages.size() - 1) {
                 text = text.append(Texts.literal(", "));
             }
         }

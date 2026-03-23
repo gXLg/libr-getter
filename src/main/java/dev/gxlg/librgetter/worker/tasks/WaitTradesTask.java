@@ -1,8 +1,10 @@
 package dev.gxlg.librgetter.worker.tasks;
 
+import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.TradeOfferData;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.tasks.LibrarianCanNotUpdateTradesException;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.tasks.LibrarianCanNotUpdateTradesException;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
@@ -10,7 +12,7 @@ import dev.gxlg.librgetter.worker.types.task.Task;
 
 public class WaitTradesTask extends Task {
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
         TradeOfferData offerData = taskContext.tradeOfferData();
         if (offerData == null) {
             return;

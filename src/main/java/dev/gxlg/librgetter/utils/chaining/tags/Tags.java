@@ -7,34 +7,30 @@ import dev.gxlg.versiont.gen.net.minecraft.nbt.Tag;
 import java.util.List;
 
 public class Tags {
-    private static Base implementation = null;
+    private static final Base implementation;
 
-    public static String getString(CompoundTag element, String name) {
-        return getImpl().getString(element, name);
-    }
-
-    public static CompoundTag getCompound(CompoundTag element, String name) {
-        return getImpl().getCompound(element, name);
-    }
-
-    public static List<Tag> getList(CompoundTag element, String name, int type) {
-        return getImpl().getList(element, name, type);
-    }
-
-    public static short getShort(CompoundTag element, String name) {
-        return getImpl().getShort(element, name);
-    }
-
-    private static Base getImpl() {
-        if (implementation != null) {
-            return implementation;
-        }
+    static {
         if (V.lower("1.21.5")) {
             implementation = new Tags_1_17_0();
         } else {
             implementation = new Tags_1_21_5();
         }
-        return implementation;
+    }
+
+    public static String getString(CompoundTag element, String name) {
+        return implementation.getString(element, name);
+    }
+
+    public static CompoundTag getCompound(CompoundTag element, String name) {
+        return implementation.getCompound(element, name);
+    }
+
+    public static List<Tag> getList(CompoundTag element, String name, int type) {
+        return implementation.getList(element, name, type);
+    }
+
+    public static short getShort(CompoundTag element, String name) {
+        return implementation.getShort(element, name);
     }
 
     public abstract static class Base {

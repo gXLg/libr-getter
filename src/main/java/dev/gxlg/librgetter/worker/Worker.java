@@ -1,7 +1,9 @@
 package dev.gxlg.librgetter.worker;
 
+import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.SchedulingHandler;
 import dev.gxlg.librgetter.worker.scheduling.base.TaskContextUpdateScheduler;
 import dev.gxlg.librgetter.worker.scheduling.base.TaskSwitchScheduler;
@@ -17,8 +19,10 @@ import dev.gxlg.librgetter.worker.types.context.TaskContext;
 import dev.gxlg.librgetter.worker.types.context.TaskContextBuilder;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
+import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTickI;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$DisconnectI;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$JoinI;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
 public class Worker {
@@ -34,8 +38,14 @@ public class Worker {
 
     private final StateController stateController;
 
+    private final ConfigManager configManager;
 
-    public Worker() {
+    private final CompatibilityManager compatibilityManager;
+
+    public Worker(ConfigManager configManager, CompatibilityManager compatibilityManager) {
+        this.configManager = configManager;
+        this.compatibilityManager = compatibilityManager;
+
         TaskState taskState = new TaskState();
         TaskContextState taskContextState = new TaskContextState();
         TaskContextUpdateScheduler taskContextUpdateScheduler = new TaskContextUpdateScheduler();
@@ -50,9 +60,10 @@ public class Worker {
 
         ClientPlayConnectionEvents.JOIN.register(((ClientPlayConnectionEvents$JoinI) (h, s, c) -> reset()).unwrap(ClientPlayConnectionEvents.Join.class));
         ClientPlayConnectionEvents.DISCONNECT.register(((ClientPlayConnectionEvents$DisconnectI) (h, c) -> reset()).unwrap(ClientPlayConnectionEvents.Disconnect.class));
+        ClientTickEvents.END_CLIENT_TICK.register(((ClientTickEvents$EndTickI) c -> work()).unwrap(ClientTickEvents.EndTick.class));
     }
 
-    public void work() {
+    private void work() {
         do {
             Task currentTask = schedulingHandler.takeScheduledTask();
             TaskContext currentContext = schedulingHandler.buildTaskContext();
@@ -61,9 +72,9 @@ public class Worker {
             stateController.setTaskContext(currentContext);
 
             try {
-                currentTask.work(currentContext, taskSchedulerController);
+                currentTask.work(currentContext, taskSchedulerController, configManager, compatibilityManager);
             } catch (LibrGetterException exception) {
-                Texts.sendTranslatable(exception.getTranslatableErrorMessage());
+                Texts.sendMessage(exception.getTranslatableErrorMessage());
                 systemSchedulerController.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
             }
 
@@ -84,7 +95,7 @@ public class Worker {
         return systemSchedulerController;
     }
 
-    public void reset() {
+    private void reset() {
         systemSchedulerController.scheduleContextUpdate(TaskContextBuilder::reset);
         systemSchedulerController.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
     }

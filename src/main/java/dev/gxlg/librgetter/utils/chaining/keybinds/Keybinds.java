@@ -1,19 +1,13 @@
 package dev.gxlg.librgetter.utils.chaining.keybinds;
 
+import dev.gxlg.librgetter.keybinds.Keybind;
 import dev.gxlg.versiont.api.V;
-import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
+import dev.gxlg.versiont.gen.net.minecraft.client.KeyMapping;
 
 public class Keybinds {
-    private static Base implementation = null;
+    private static final Base implementation;
 
-    public static void registerKeybinds() {
-        getImpl().registerKeybinds();
-    }
-
-    private static Base getImpl() {
-        if (implementation != null) {
-            return implementation;
-        }
+    static {
         if (V.lower("1.21.9")) {
             implementation = new Keybinds_1_17_0();
         } else if (V.lower("26.1")) {
@@ -21,12 +15,19 @@ public class Keybinds {
         } else {
             implementation = new Keybinds_26_1_0();
         }
-        return implementation;
+    }
+
+    public static KeyMapping createKeyMapping(Keybind keybindData, String modId) {
+        return implementation.createKeyMapping(keybindData, modId);
+    }
+
+    public static void register(KeyMapping keyMapping) {
+        implementation.register(keyMapping);
     }
 
     public abstract static class Base {
-        public abstract void registerKeybinds();
+        public abstract void register(KeyMapping keyMapping);
 
-        protected record KeybindData(String id, InputConstants$Type type, int key) { }
+        public abstract KeyMapping createKeyMapping(Keybind keybindData, String modId);
     }
 }

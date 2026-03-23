@@ -1,14 +1,18 @@
 package dev.gxlg.librgetter.worker.tasks;
 
-import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.command.CommandHelper;
+import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.utils.chaining.parser.Parser;
 import dev.gxlg.librgetter.utils.chaining.players.Players;
-import dev.gxlg.librgetter.utils.chaining.support.Support;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.config.Config;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
+import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.enums.MatchMode;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.EnchantmentRemovedMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.OfferMessage;
+import dev.gxlg.librgetter.utils.types.messages.translatable.success.EnchantmentFoundMessage;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -30,29 +34,32 @@ public class ParseAndMatchTradesTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
         List<EnchantmentTrade> offeredEnchantments = new ArrayList<>();
         for (int i = 0; i < offers.size(); i++) {
-            if (i >= 2 && LibrGetter.config.matchMode == MatchMode.VANILLA) {
+            if (i >= 2 && configManager.getOptions(Config.MATCH_MODE) == MatchMode.VANILLA) {
                 break;
             }
             MerchantOffer offer = (MerchantOffer) offers.get(i);
             if (!isEnchantmentTrade(offer)) {
                 continue;
             }
-            EnchantmentTrade trade = Parser.parseTrade(offer);
+            EnchantmentTrade trade = Parser.parseTrade(offer, configManager);
             if (trade != null) {
                 offeredEnchantments.add(trade);
             }
-            if (LibrGetter.config.matchMode == MatchMode.VANILLA) {
+            if (configManager.getOptions(Config.MATCH_MODE) == MatchMode.VANILLA) {
                 break;
             }
         }
-        Texts.sendTradeLog(offeredEnchantments);
-        Optional<List<EnchantmentTrade>> matching = LibrGetter.config.matchMode.match(offeredEnchantments);
+        LogMode logMode = configManager.getOptions(Config.LOG_MODE);
+        if (logMode != LogMode.NONE) {
+            Texts.sendMessage(new OfferMessage(offeredEnchantments), logMode == LogMode.ACTIONBAR);
+        }
+        Optional<List<EnchantmentTrade>> matching = configManager.<MatchMode>getOptions(Config.MATCH_MODE).match(offeredEnchantments, configManager);
         if (matching.isEmpty()) {
             TaskSwitch taskSwitch;
-            if (Support.isUsingTradeCycling()) {
+            if (compatibilityManager.isUsingTradeCycling()) {
                 taskSwitch = TaskSwitch.nextTick(TradeCyclingClickTask::new);
             } else {
                 taskSwitch = TaskSwitch.sameTick(SelectAxeTask::new);
@@ -62,13 +69,20 @@ public class ParseAndMatchTradesTask extends Task {
         }
 
         MinecraftData minecraftData = taskContext.minecraftData();
-        Players.playFoundNotification(minecraftData.localPlayer);
-        matching.get().forEach(e -> Texts.sendFound(e, taskContext.attemptsCounter()));
+        if (configManager.getBoolean(Config.NOTIFY)) {
+            Players.playFoundNotification(minecraftData.localPlayer);
+        }
+        matching.get().forEach(e -> {
+            EnchantmentFoundMessage message = new EnchantmentFoundMessage(e, taskContext.attemptsCounter(), !configManager.getBoolean(Config.REMOVE_GOAL));
+            Texts.sendMessage(message);
+        });
 
-        if (LibrGetter.config.removeGoal) {
+        if (configManager.getBoolean(Config.REMOVE_GOAL)) {
             for (EnchantmentTrade trade : matching.get()) {
-                CommandHelper.removeGoal(trade);
+                configManager.getData().removeMatchingGoal(trade);
+                Texts.sendMessage(new EnchantmentRemovedMessage(trade));
             }
+            configManager.save();
         }
 
         controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> new FinalizeSearchTask(offers)));

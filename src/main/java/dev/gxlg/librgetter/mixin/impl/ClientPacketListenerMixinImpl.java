@@ -1,8 +1,9 @@
 package dev.gxlg.librgetter.mixin.impl;
 
-import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.chaining.support.Support;
+import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.utils.types.TradeOfferData;
+import dev.gxlg.librgetter.worker.scheduling.controllers.SystemSchedulerController;
+import dev.gxlg.librgetter.worker.state.StateView;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientPacketListener;
 import dev.gxlg.versiont.gen.net.minecraft.network.protocol.game.ClientboundMerchantOffersPacket;
@@ -13,20 +14,31 @@ import dev.gxlg.versiont.gen.net.minecraft.world.inventory.MenuType;
 import java.util.Optional;
 
 public class ClientPacketListenerMixinImpl {
-    public static void handleMerchantOffers(ClientboundMerchantOffersPacket packet) {
-        if (!LibrGetter.worker.getStateView().getPermissionManager().allowsSettingTradeOffers()) {
-            return;
-        }
+    private final StateView stateView;
 
-        TradeOfferData tradeOfferData = packet.getVillagerXp() > 0 ? TradeOfferData.noRefresh() : TradeOfferData.offers(packet.getOffers());
-        LibrGetter.worker.getSystemSchedulerController().scheduleContextUpdate(ctx -> ctx.setTradeOfferData(tradeOfferData));
+    private final SystemSchedulerController systemSchedulerController;
+
+    private final CompatibilityManager compatibilityManager;
+
+    public ClientPacketListenerMixinImpl(StateView stateView, SystemSchedulerController systemSchedulerController, CompatibilityManager compatibilityManager) {
+        this.stateView = stateView;
+        this.systemSchedulerController = systemSchedulerController;
+        this.compatibilityManager = compatibilityManager;
     }
 
-    public static Optional<Object> handleOpenScreen(ClientboundOpenScreenPacket packet) {
+    public void handleMerchantOffers(ClientboundMerchantOffersPacket packet) {
+        if (!stateView.getPermissionManager().allowsSettingTradeOffers()) {
+            return;
+        }
+        TradeOfferData tradeOfferData = packet.getVillagerXp() > 0 ? TradeOfferData.noRefresh() : TradeOfferData.offers(packet.getOffers());
+        systemSchedulerController.scheduleContextUpdate(ctx -> ctx.setTradeOfferData(tradeOfferData));
+    }
+
+    public Optional<Object> handleOpenScreen(ClientboundOpenScreenPacket packet) {
         if (!packet.getType().equals(MenuType.MERCHANT())) {
             return Optional.empty();
         }
-        if (!LibrGetter.worker.getStateView().isWorking() || Support.isUsingTradeCycling()) {
+        if (!stateView.isWorking() || compatibilityManager.isUsingTradeCycling()) {
             return Optional.empty();
         }
         Minecraft client = Minecraft.getInstance();

@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.plugins;
 
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.versiont.gen.net.minecraft.nbt.CompoundTag;
 
 public class Plugins {

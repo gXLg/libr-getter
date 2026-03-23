@@ -7,22 +7,18 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 import java.util.List;
 
 public class Gui {
-    private static Base implementation = null;
+    private static final Base implementation;
 
-    public static BookViewScreen$BookAccess createBookAccess(List<Component> list) {
-        return getImpl().createBookAccess(list);
-    }
-
-    private static Base getImpl() {
-        if (implementation != null) {
-            return implementation;
-        }
+    static {
         if (V.lower("1.21.5")) {
             implementation = new Gui_1_17_0();
         } else {
             implementation = new Gui_1_21_5();
         }
-        return implementation;
+    }
+
+    public static BookViewScreen$BookAccess createBookAccess(List<Component> list) {
+        return implementation.createBookAccess(list);
     }
 
     public abstract static class Base {
