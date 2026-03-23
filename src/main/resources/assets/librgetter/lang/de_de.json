@@ -59,6 +59,8 @@
   "librgetter.feedback.stop": "Erfolgreich den Prozess gestoppt",
   "librgetter.feedback.version": "Neue Version von LibrGetter wurde veröffentlicht:\n%s",
   "librgetter.keys.open": "Das Konfigurationsmenü öffnen",
+  "librgetter.keys.select": "Das Lesepult oder den Bibliothekar auswählen",
+  "librgetter.keys.toggle": "Prozess starten oder stoppen",
   "librgetter.partial.list": "Suchliste:",
   "librgetter.partial.menu": "Konfigurationsmenü",
   "librgetter.partial.remove": "(entfernen)",

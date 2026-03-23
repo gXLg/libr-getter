@@ -59,6 +59,8 @@
   "librgetter.feedback.stop": "Proceso detenido con éxito",
   "librgetter.feedback.version": "Se ha lanzado una nueva versión de LibrGetter:\n%s",
   "librgetter.keys.open": "Abrir el menú de configuración",
+  "librgetter.keys.select": "Selecciona el atril o el bibliotecario",
+  "librgetter.keys.toggle": "Iniciar o detener el proceso",
   "librgetter.partial.list": "Lista de objetivos:",
   "librgetter.partial.menu": "Menú de configuración",
   "librgetter.partial.remove": "(eliminar)",
