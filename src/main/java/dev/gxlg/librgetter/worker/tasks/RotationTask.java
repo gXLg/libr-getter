@@ -4,7 +4,7 @@ import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.utils.config.Config;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.enums.RotationMode;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;

@@ -14,14 +14,14 @@ public class ServiceLoaderManager {
 
     public void registerServiceLoader(ServiceLoader<?> serviceLoader) {
         if (initialized) {
-            throw new IllegalStateException("Cannot register services after initialization");
+            throw new IllegalStateException("Cannot register service-loaders after initialization");
         }
         registeredServiceLoaders.add(serviceLoader);
     }
 
     public void init() {
         if (initialized) {
-            throw new IllegalStateException("ServiceManager is already initialized");
+            throw new IllegalStateException("Service-loader manager is already initialized");
         }
         for (ServiceLoader<?> service : registeredServiceLoaders) {
             initServiceLoader(service);

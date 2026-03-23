@@ -1,5 +1,6 @@
 package dev.gxlg.librgetter.services.loaders;
 
+import dev.gxlg.librgetter.notifier.Notifier;
 import dev.gxlg.librgetter.services.Export;
 import dev.gxlg.librgetter.services.ServiceLoader;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
@@ -12,14 +13,17 @@ public class ConfigLoader extends ServiceLoader<ConfigLoader> {
 
     private final Supplier<Path> dependencyConfigPath;
 
+    private final Supplier<Notifier> dependencyNotifier;
+
     private ConfigManager configManager = null;
 
-    public ConfigLoader(CoreLoader coreLoader) {
+    public ConfigLoader(CoreLoader coreLoader, NotifierLoader notifierLoader) {
         dependencyConfigPath = initDependency(coreLoader, CoreLoader.exportConfigPath);
+        dependencyNotifier = initDependency(notifierLoader, NotifierLoader.exportNotifier);
     }
 
     @Override
     public void init() {
-        configManager = ConfigManager.init(dependencyConfigPath.get());
+        configManager = ConfigManager.init(dependencyConfigPath.get(), dependencyNotifier.get());
     }
 }

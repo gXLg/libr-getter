@@ -4,7 +4,6 @@ import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import dev.gxlg.librgetter.utils.types.exceptions.runtime.InvalidBookIndexException;
 import dev.gxlg.librgetter.utils.types.messages.objects.configScreen.ConfigPageContent;
 import dev.gxlg.librgetter.utils.types.messages.objects.configScreen.FirstPageContent;
 import dev.gxlg.librgetter.utils.types.messages.objects.configScreen.PageContent;
@@ -71,7 +70,7 @@ public class ConfigMenu {
 
     private void updatePageCache(int pageIndex) {
         if (pageIndex < 0 || pageIndex >= pageCount) {
-            throw new InvalidBookIndexException(pageIndex);
+            return;
         }
         cachedPageTexts[pageIndex] = pages.get(pageIndex).getComponent();
     }

@@ -3,7 +3,7 @@ package dev.gxlg.librgetter.worker;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.SchedulingHandler;
 import dev.gxlg.librgetter.worker.scheduling.base.TaskContextUpdateScheduler;
 import dev.gxlg.librgetter.worker.scheduling.base.TaskSwitchScheduler;

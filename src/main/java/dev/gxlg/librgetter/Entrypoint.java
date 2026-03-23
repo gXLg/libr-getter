@@ -32,7 +32,7 @@ public class Entrypoint implements ClientModInitializer {
         NotifierLoader notifierLoader = new NotifierLoader();
         loaderManager.registerServiceLoader(notifierLoader);
 
-        ConfigLoader configLoader = new ConfigLoader(coreLoader);
+        ConfigLoader configLoader = new ConfigLoader(coreLoader, notifierLoader);
         loaderManager.registerServiceLoader(configLoader);
 
         CompatibilityLoader compatibilityLoader = new CompatibilityLoader(configLoader);

@@ -9,7 +9,7 @@ import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
 import dev.gxlg.librgetter.utils.types.config.enums.MatchMode;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.EnchantmentRemovedMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.OfferMessage;
 import dev.gxlg.librgetter.utils.types.messages.translatable.success.EnchantmentFoundMessage;

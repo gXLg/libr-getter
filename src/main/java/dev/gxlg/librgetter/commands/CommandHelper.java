@@ -2,7 +2,7 @@ package dev.gxlg.librgetter.commands;
 
 import com.mojang.brigadier.Command;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
 

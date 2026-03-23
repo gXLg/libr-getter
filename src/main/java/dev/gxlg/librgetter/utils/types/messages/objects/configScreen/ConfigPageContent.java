@@ -4,7 +4,6 @@ import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import dev.gxlg.librgetter.utils.types.exceptions.runtime.UnexpectedConfigurableTypeException;
 import dev.gxlg.librgetter.utils.types.messages.translatable.config.TranslatableCategory;
 import dev.gxlg.librgetter.utils.types.messages.translatable.config.TranslatableConfigDescription;
 import dev.gxlg.versiont.gen.net.minecraft.ChatFormatting;
@@ -70,7 +69,8 @@ public class ConfigPageContent extends PageContent {
             middleText = Texts.literal(" " + value + " ").withStyle(Style.EMPTY().withColor(black));
             rightText = Texts.literal("[+]").withStyle(plusStyle);
 
-        } else if (configurable.type() == OptionsConfig.class) {
+        } else {
+            // if (configurable.type() == OptionsConfig.class)
             OptionsConfig<?> value = (OptionsConfig<?>) configurable.get();
             Style optionValueStyle = Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + configName + " " + value.next().getName()))
                                           .withColor(value.getName().equals("NONE") ? red : green);
@@ -80,8 +80,6 @@ public class ConfigPageContent extends PageContent {
             middleText = Texts.literal("");
             rightText = Texts.literal("");
 
-        } else {
-            throw new UnexpectedConfigurableTypeException(configurable.type());
         }
 
         if (!configurable.isDefault()) {

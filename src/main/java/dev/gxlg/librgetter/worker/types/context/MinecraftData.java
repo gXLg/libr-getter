@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.worker.types.context;
 
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientPacketListener;

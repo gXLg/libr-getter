@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
 import dev.gxlg.librgetter.commands.CommandsManager;
-import dev.gxlg.librgetter.utils.types.exceptions.librgetter.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.arguments.ArgumentType;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.ArgumentBuilder;
