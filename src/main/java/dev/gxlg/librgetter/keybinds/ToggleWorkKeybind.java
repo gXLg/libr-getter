@@ -13,7 +13,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
 
-public class ToggleWorkKeybind extends KeybindManager.KeybindData {
+public class ToggleWorkKeybind extends Keybind {
     private final SharedController sharedController;
 
     private BlockPos lastLecternPos;

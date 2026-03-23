@@ -7,7 +7,7 @@ import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 
-public class ConfigMenuKeybind extends KeybindManager.KeybindData {
+public class ConfigMenuKeybind extends Keybind {
     private final ConfigMenu configMenu;
 
     public ConfigMenuKeybind(String modVersion, ConfigManager configManager) {

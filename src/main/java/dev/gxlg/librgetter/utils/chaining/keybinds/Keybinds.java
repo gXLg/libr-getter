@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.keybinds;
 
-import dev.gxlg.librgetter.keybinds.KeybindManager;
+import dev.gxlg.librgetter.keybinds.Keybind;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.KeyMapping;
 
@@ -17,7 +17,7 @@ public class Keybinds {
         }
     }
 
-    public static KeyMapping createKeyMapping(KeybindManager.KeybindData keybindData, String modId) {
+    public static KeyMapping createKeyMapping(Keybind keybindData, String modId) {
         return implementation.createKeyMapping(keybindData, modId);
     }
 
@@ -28,6 +28,6 @@ public class Keybinds {
     public abstract static class Base {
         public abstract void register(KeyMapping keyMapping);
 
-        public abstract KeyMapping createKeyMapping(KeybindManager.KeybindData keybindData, String modId);
+        public abstract KeyMapping createKeyMapping(Keybind keybindData, String modId);
     }
 }
