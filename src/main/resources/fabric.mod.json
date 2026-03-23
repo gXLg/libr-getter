@@ -26,7 +26,7 @@
   "depends": {
     "fabric-api": ">=0.31.0",
     "minecraft": ">=1.17",
-    "versiont": "0.0.7"
+    "versiont": "1.0.0"
   },
   "conflicts": {
     "offershud": "<1.9.0"

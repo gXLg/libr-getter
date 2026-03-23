@@ -59,6 +59,8 @@
   "librgetter.feedback.stop": "Successfully stopped the process",
   "librgetter.feedback.version": "New version of LibrGetter has been released:\n%s",
   "librgetter.keys.open": "Open the config menu",
+  "librgetter.keys.select": "Select the lectern or the librarian",
+  "librgetter.keys.toggle": "Start or stop the process",
   "librgetter.partial.list": "Goals list:",
   "librgetter.partial.menu": "Config menu",
   "librgetter.partial.remove": "(remove)",

@@ -1,7 +1,10 @@
 package dev.gxlg.librgetter.keybinds;
 
+import dev.gxlg.librgetter.controller.SharedController;
 import dev.gxlg.librgetter.utils.chaining.keybinds.Keybinds;
+import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTickI;
 import dev.gxlg.versiont.gen.net.minecraft.client.KeyMapping;
@@ -15,11 +18,10 @@ public class KeybindManager {
 
     private final String modId;
 
-    public KeybindManager(ConfigManager configManager, String modVersion, String modId) {
-        this.keybinds = List.of(new ConfigMenuKeybind(modVersion, configManager));
+    public KeybindManager(String modId, ConfigManager configManager, String modVersion, SharedController sharedController) {
+        this.keybinds = List.of(new ConfigMenuKeybind(modVersion, configManager), new ToggleWorkKeybind(sharedController), new SelectKeybind(sharedController));
         this.modId = modId;
     }
-
 
     public void register() {
         keybinds.forEach(keybind -> {
@@ -27,7 +29,11 @@ public class KeybindManager {
             Keybinds.register(mapping);
             ClientTickEvents$EndTickI endTick = client -> {
                 while (mapping.consumeClick()) {
-                    keybind.execute(client);
+                    try {
+                        keybind.execute(client);
+                    } catch (LibrGetterException e) {
+                        Texts.sendMessage(e.getTranslatableErrorMessage());
+                    }
                 }
             };
             ClientTickEvents.END_CLIENT_TICK.register(endTick.unwrap(ClientTickEvents.EndTick.class));
@@ -59,6 +65,6 @@ public class KeybindManager {
             return key;
         }
 
-        public abstract void execute(Minecraft client);
+        public abstract void execute(Minecraft client) throws LibrGetterException;
     }
 }

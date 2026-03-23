@@ -59,6 +59,8 @@
   "librgetter.feedback.stop": "プロセスを正常に停止しました",
   "librgetter.feedback.version": "LibrGetterの新しいバージョンがリリースされました:\n%s",
   "librgetter.keys.open": "設定メニューを開く",
+  "librgetter.keys.select": "書見台または司書を選択",
+  "librgetter.keys.toggle": "プロセスを開始または停止",
   "librgetter.partial.list": "ゴールリスト:",
   "librgetter.partial.menu": "設定メニュー",
   "librgetter.partial.remove": "(削除)",

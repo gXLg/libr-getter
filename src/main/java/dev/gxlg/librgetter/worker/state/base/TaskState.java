@@ -5,7 +5,7 @@ import dev.gxlg.librgetter.worker.types.task.PermissionManager;
 import dev.gxlg.librgetter.worker.types.task.Task;
 
 public class TaskState {
-    private Task currentTask;
+    private Task currentTask = new StandbyTask();
 
     public boolean isWorking() {
         return !(currentTask instanceof StandbyTask);

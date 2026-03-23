@@ -59,6 +59,8 @@
   "librgetter.feedback.stop": "Đã dừng thành công",
   "librgetter.feedback.version": "Phiên bản mới của LibrGetter đã được phát hành:\n%s",
   "librgetter.keys.open": "Mở menu cấu hình",
+  "librgetter.keys.select": "Chọn bục giảng hoặc thủ thư",
+  "librgetter.keys.toggle": "Bắt đầu hoặc dừng quá trình",
   "librgetter.partial.list": "Danh sách mục tiêu:",
   "librgetter.partial.menu": "Menu cấu hình",
   "librgetter.partial.remove": "(xóa)",
