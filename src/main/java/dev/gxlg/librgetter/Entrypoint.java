@@ -48,7 +48,7 @@ public class Entrypoint implements ClientModInitializer {
         CommandsLoader commandsLoader = new CommandsLoader(configLoader, sharedControllerLoader);
         loaderManager.registerServiceLoader(commandsLoader);
 
-        KeybindsLoader keybindsLoader = new KeybindsLoader(coreLoader, configLoader);
+        KeybindsLoader keybindsLoader = new KeybindsLoader(coreLoader, configLoader, sharedControllerLoader);
         loaderManager.registerServiceLoader(keybindsLoader);
 
         MixinImplLoader mixinImplLoader = new MixinImplLoader(workerLoader, compatibilityLoader);

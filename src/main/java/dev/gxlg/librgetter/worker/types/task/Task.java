@@ -7,6 +7,16 @@ import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
 
 public abstract class Task {
+    public static final float MAX_INTERACTION_DISTANCE = 3.4F;
+
+    public static final float ROTATION_GOAL_DEVIATION_RANGE = 4.0F;
+
+    public static final float ROTATION_ANGLE_LERPING_DEVIATION_RANGE = 0.2F;
+
+    public static final float ROTATION_FACTOR = 0.35F;
+
+    public static final float ROTATION_ACCEPTABLE_ANGLE_DELTA = 0.8F;
+
     public abstract void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException;
 
     protected boolean allowsBreakingLecterns() {
@@ -24,15 +34,4 @@ public abstract class Task {
     public PermissionManager getPermissionManager() {
         return new PermissionManager(allowsBreakingLecterns(), allowsPlacingLectern(), allowsSettingTradeOffers());
     }
-
-
-    protected static final float ROTATION_GOAL_DEVIATION_RANGE = 4.0F;
-
-    protected static final float ROTATION_ANGLE_LERPING_DEVIATION_RANGE = 0.2F;
-
-    protected static final float ROTATION_FACTOR = 0.35F;
-
-    protected static final float ROTATION_ACCEPTABLE_ANGLE_DELTA = 0.8F;
-
-    protected static final float MAX_INTERACTION_DISTANCE = 3.4F;
 }

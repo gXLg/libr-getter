@@ -184,4 +184,7 @@ public class SharedController {
         }
     }
 
+    public StateView getStateView() {
+        return stateView;
+    }
 }
