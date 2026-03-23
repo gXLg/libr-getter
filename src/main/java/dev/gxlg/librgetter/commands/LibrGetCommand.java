@@ -80,13 +80,13 @@ public class LibrGetCommand implements CommandsManager.Command {
         Texts.sendMessage(new GoalsListClearedMessage());
     }
 
-    private <T> void config(CommandContext context, Configurable<T> config) {
-        T value = config.get();
+    private <T> void config(CommandContext context, Configurable<T> configurable) {
+        T value = configurable.get();
         try {
-            Class<T> type = config.type();
+            Class<T> type = configurable.type();
             value = context.getArgument("value", R.clz(type)).unwrap(type);
-            config.set(value);
-            config.managerInstance().save();
+            configurable.set(value);
+            configManager.save();
         } catch (IllegalArgumentException ignored) {
         }
 
@@ -94,7 +94,7 @@ public class LibrGetCommand implements CommandsManager.Command {
         if (screen instanceof ConfigScreen configScreen) {
             configScreen.updateScreen();
         } else {
-            Texts.sendMessage(new ConfigValueMessage(config.config(), value));
+            Texts.sendMessage(new ConfigValueMessage(configurable.config(), value));
         }
     }
 
