@@ -1,29 +1,25 @@
 package dev.gxlg.librgetter.services.loaders;
 
 import dev.gxlg.librgetter.commands.CommandsManager;
+import dev.gxlg.librgetter.controller.SharedController;
 import dev.gxlg.librgetter.services.ServiceLoader;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.worker.scheduling.controllers.UserSchedulerController;
-import dev.gxlg.librgetter.worker.state.StateView;
 
 import java.util.function.Supplier;
 
 public class CommandsLoader extends ServiceLoader<CommandsLoader> {
     private final Supplier<ConfigManager> dependencyConfigManager;
 
-    private final Supplier<UserSchedulerController> dependencyUserSchedulerController;
+    private final Supplier<SharedController> dependencySharedController;
 
-    private final Supplier<StateView> dependencyStateView;
-
-    public CommandsLoader(ConfigLoader configLoader, WorkerLoader workerLoader) {
+    public CommandsLoader(ConfigLoader configLoader, SharedControllerLoader sharedControllerLoader) {
         dependencyConfigManager = initDependency(configLoader, ConfigLoader.exportConfigManager);
-        dependencyUserSchedulerController = initDependency(workerLoader, WorkerLoader.exportUserSchedulerController);
-        dependencyStateView = initDependency(workerLoader, WorkerLoader.exportStateView);
+        dependencySharedController = initDependency(sharedControllerLoader, SharedControllerLoader.exportSharedController);
     }
 
     @Override
     public void init() {
-        CommandsManager commandsManager = new CommandsManager(dependencyConfigManager.get(), dependencyUserSchedulerController.get(), dependencyStateView.get());
+        CommandsManager commandsManager = new CommandsManager(dependencyConfigManager.get(), dependencySharedController.get());
         commandsManager.register();
     }
 }

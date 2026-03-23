@@ -79,7 +79,7 @@ public class ParseAndMatchTradesTask extends Task {
 
         if (configManager.getBoolean(Config.REMOVE_GOAL)) {
             for (EnchantmentTrade trade : matching.get()) {
-                configManager.getData().removeGoal(trade);
+                configManager.getData().removeMatchingGoal(trade);
                 Texts.sendMessage(new EnchantmentRemovedMessage(trade));
             }
             configManager.save();

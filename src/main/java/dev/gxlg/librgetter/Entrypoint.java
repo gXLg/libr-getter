@@ -9,6 +9,7 @@ import dev.gxlg.librgetter.services.loaders.CoreLoader;
 import dev.gxlg.librgetter.services.loaders.KeybindsLoader;
 import dev.gxlg.librgetter.services.loaders.MixinImplLoader;
 import dev.gxlg.librgetter.services.loaders.NotifierLoader;
+import dev.gxlg.librgetter.services.loaders.SharedControllerLoader;
 import dev.gxlg.librgetter.services.loaders.UpdaterLoader;
 import dev.gxlg.librgetter.services.loaders.WorkerLoader;
 import dev.gxlg.versiont.api.R;
@@ -41,7 +42,10 @@ public class Entrypoint implements ClientModInitializer {
         WorkerLoader workerLoader = new WorkerLoader(configLoader, compatibilityLoader);
         loaderManager.registerServiceLoader(workerLoader);
 
-        CommandsLoader commandsLoader = new CommandsLoader(configLoader, workerLoader);
+        SharedControllerLoader sharedControllerLoader = new SharedControllerLoader(workerLoader);
+        loaderManager.registerServiceLoader(sharedControllerLoader);
+
+        CommandsLoader commandsLoader = new CommandsLoader(configLoader, sharedControllerLoader);
         loaderManager.registerServiceLoader(commandsLoader);
 
         KeybindsLoader keybindsLoader = new KeybindsLoader(coreLoader, configLoader);

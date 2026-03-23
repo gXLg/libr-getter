@@ -89,6 +89,15 @@ public class ConfigData {
         return goals.remove(goal);
     }
 
+    public boolean removeMatchingGoal(EnchantmentTrade trade) {
+        for (EnchantmentTrade goal : goals) {
+            if (trade.same(goal)) {
+                return goals.remove(goal);
+            }
+        }
+        return false;
+    }
+
     public void clearGoals() {
         goals.clear();
     }
