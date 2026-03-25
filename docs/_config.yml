@@ -1,0 +1,16 @@
+plugins:
+  - jekyll-remote-theme
+
+remote_theme: tuur29/pages-themes-cayman
+
+title: "LibrGetter Documentation"
+description: "Documentation for LibrGetter, a highly configurable fabric mod"
+
+show_downloads: false
+darkmode: true
+color:
+  gradient_left: "#ffaa00"
+  gradient_right: "#e32759"
+  header: "#ffffff"
+buttons:
+  github_hide: true
