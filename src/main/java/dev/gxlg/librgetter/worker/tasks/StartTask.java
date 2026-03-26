@@ -30,7 +30,7 @@ public class StartTask extends Task {
 
     @Override
     public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
-        if (taskContext.selectedLecternPos() == null) {
+        if (taskContext.selectedLecternPos() == null && !compatibilityManager.isUsingTradeCycling()) {
             throw new NoLecternSetException();
         }
         if (taskContext.selectedVillager() == null) {

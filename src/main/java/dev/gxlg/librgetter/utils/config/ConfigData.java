@@ -1,6 +1,7 @@
 package dev.gxlg.librgetter.utils.config;
 
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
+import dev.gxlg.librgetter.utils.types.config.CanNotChangeWhileRunning;
 import dev.gxlg.librgetter.utils.types.config.CompatibilityWith;
 import dev.gxlg.librgetter.utils.types.config.ConfigCategory;
 import dev.gxlg.librgetter.utils.types.config.IntRange;
@@ -74,6 +75,7 @@ public class ConfigData {
     private int matchAtLeast = 1;
 
     @CompatibilityWith("trade_cycling")
+    @CanNotChangeWhileRunning
     @ConfigCategory(ConfigManager.Category.COMPATIBILITY)
     private boolean tradeCycling = false;
 

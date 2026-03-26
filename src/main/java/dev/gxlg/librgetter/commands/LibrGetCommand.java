@@ -13,6 +13,7 @@ import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
 import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.commands.AlreadyRunningException;
+import dev.gxlg.librgetter.utils.types.exceptions.commands.CanNotChangeConfigException;
 import dev.gxlg.librgetter.utils.types.exceptions.commands.NotInGoalsException;
 import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.exceptions.parser.CouldNotParseCustomException;
@@ -80,11 +81,14 @@ public class LibrGetCommand implements CommandsManager.Command {
         Texts.sendMessage(new GoalsListClearedMessage());
     }
 
-    private <T> void config(CommandContext context, Configurable<T> configurable) {
+    private <T> void config(CommandContext context, Configurable<T> configurable) throws CanNotChangeConfigException {
         T value = configurable.get();
         try {
             Class<T> type = configurable.type();
             value = context.getArgument("value", R.clz(type)).unwrap(type);
+            if (sharedController.getStateView().isWorking() && !configurable.canChangeWhileRunning()) {
+                throw new CanNotChangeConfigException();
+            }
             configurable.set(value);
             configManager.save();
         } catch (IllegalArgumentException ignored) {
