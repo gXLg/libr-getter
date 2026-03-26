@@ -5,7 +5,6 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import dev.gxlg.librgetter.utils.chaining.compatibility.Compatibility;
 import dev.gxlg.librgetter.utils.config.Config;
-import dev.gxlg.librgetter.utils.config.ConfigData;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.config.CanNotChangeWhileRunning;
 import dev.gxlg.librgetter.utils.types.config.CompatibilityWith;
@@ -25,17 +24,11 @@ public final class Configurable<T> {
 
     private final Field field;
 
-    public Configurable(Config config, Class<T> type, ConfigManager managerInstance) {
+    public Configurable(Config config, Class<T> type, Field field, ConfigManager managerInstance) {
         this.config = config;
         this.type = type;
         this.managerInstance = managerInstance;
-        try {
-            Field configurableField = ConfigData.class.getDeclaredField(config.getId());
-            configurableField.setAccessible(true);
-            this.field = configurableField;
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
+        this.field = field;
     }
 
     public T get() {
