@@ -53,6 +53,7 @@ public class ConfigManager {
                 notifier.addNotification(new NoConfigFieldMessage(config));
                 continue;
             }
+            field.setAccessible(true);
 
             Configurable<?> configurable;
             if (field.getType() == boolean.class) {
