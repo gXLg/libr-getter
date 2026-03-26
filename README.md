@@ -1,5 +1,5 @@
 <!--suppress HtmlDeprecatedAttribute-->
-<img width="100%" src="/images/cover.png" alt="logo"/><br>
+<img width="100%" src="/docs/images/cover.png" alt="logo"/><br>
 
 # Over-Engineered Librarian Trade Finder for Fabric
 
@@ -105,7 +105,7 @@ LibrGetter supports localization and currently implements the following language
 * Spanish 🇪🇸
 
 You may request further languages or suggest improvements in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues) or
-the [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt).
+the [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt)
 
 
 

@@ -1,7 +1,11 @@
 <!--suppress HtmlDeprecatedAttribute-->
-<img width="100%" src="/images/cover.png" alt="logo"/><br>
+<img width="100%" src="/libr-getter/images/cover.png" alt="logo"/><br>
 
 Welcome to the documentation for LibrGetter!
+
+> <sup><b>⚠️ Warning</b></sup><br>
+> This documentation is still **work in progress**.
+> Stuff may change without notice, and some of the features may not be documented yet.
 
 Get a grasp of all the features of the mod, how to use it and how to customize it to your needs:
 
@@ -47,6 +51,10 @@ client-side and server-side lag and TPS drops, and has many features to adjust t
 to your conditions.
 
 ---
+
+> <sup><b>⚠️ Warning</b></sup><br>
+> This part of documentation is a residual from the original README file and presents a brief
+> overview of LibrGetter features, which have not yet made it into the final documentation.
 
 ## Build
 

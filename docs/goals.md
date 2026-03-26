@@ -1,6 +1,8 @@
+[<kbd>Back to Starting Page</kbd>](/libr-getter)
+
 # Goals
 
-> [!NOTE]
+> <sup><b>ℹ️ Note</b></sup><br>
 > GUI for goals management is planned for the future, but is not implemented yet
 
 Goals in LibrGetter represent the enchanting books that you want to obtain from
@@ -22,7 +24,7 @@ Custom IDs have to be typed in quotes, e.g. `"modid:enchantment_name"` while
 IDs registered on the client can be typed without quotes and will be auto-completed,
 e.g. `minecraft:efficiency`.
 
-> [!TIP]
+> <sup><b>💡 Tip</b></sup><br>
 > In the following documentation, enchantments registered on the client will be referred
 > to as "Minecraft enchantments", while enchantments that are not registered on the client
 > will be referred to as "custom enchantments".
@@ -227,3 +229,10 @@ You can list all your goals using the command:
 Each goal will be displayed in the chat with its enchantment ID, level, price limit and
 a "remove" button, which you can click to quickly remove the goal without having to
 type the command for it.
+
+# Automatic Goal Removal
+
+In addition to manual management of goals through commands, there is a config option
+to automatically remove goals from the goals list when they are obtained from the
+librarian villagers. More information about this option can be found in the config documentation:
+[<kbd>Config | Remove Goal</kbd>](/libr-getter/config#remove-goal)
