@@ -23,6 +23,10 @@ public class WaitVillagerAcceptProfessionTask extends Task {
             controller.scheduleTaskSwitch(TaskSwitch.sameTick(RequestTradesTask::new));
             return;
         }
+
+        // the timeout can only happen on a second and later cycles (because we check the profession in StartTask),
+        // and since TradeCycling integration would not revisit this task after the first cycle,
+        // we can just switch to SelectAxeTask after a timeout without checking for TradeCycling again
         if (configManager.getInteger(Config.TIMEOUT) != 0) {
             timeout++;
             // break and place the lectern again after a timeout

@@ -19,10 +19,12 @@ public class ConfigData {
     private final List<EnchantmentTrade> goals = new ArrayList<>();
 
     @OnlyEffective(when = Config.MANUAL, equals = "false")
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean autoTool = true;
 
     @OnlyEffective(when = Config.MANUAL, equals = "false")
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean offhand = false;
 
@@ -30,10 +32,12 @@ public class ConfigData {
     private boolean manual = false;
 
     @OnlyEffective(when = Config.MANUAL, equals = "false")
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private RotationMode rotationMode = RotationMode.INSTANT;
 
     @ConfigCategory(ConfigManager.Category.PROCESS)
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     private boolean waitLose = false;
 
     @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
@@ -41,6 +45,7 @@ public class ConfigData {
     private boolean safeChecker = true;
 
     @IntRange(min = 0, max = 20)
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private int timeout = 0;
 

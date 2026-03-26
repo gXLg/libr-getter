@@ -3,9 +3,11 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
 import dev.gxlg.librgetter.utils.config.Config;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.types.exceptions.commands.VillagerNotLibrarianException;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.EmptyGoalsListException;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.NoLecternSetException;
 import dev.gxlg.librgetter.utils.types.exceptions.tasks.NoLibrarianSetException;
@@ -36,6 +38,10 @@ public class StartTask extends Task {
         if (taskContext.selectedVillager() == null) {
             throw new NoLibrarianSetException();
         }
+        if (!Villagers.isVillagerLibrarian(taskContext.selectedVillager())) {
+            throw new VillagerNotLibrarianException();
+        }
+
         if (configManager.getData().getGoals().isEmpty()) {
             throw new EmptyGoalsListException();
         }

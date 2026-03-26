@@ -81,7 +81,7 @@ public class LibrGetCommand implements CommandsManager.Command {
         Texts.sendMessage(new GoalsListClearedMessage());
     }
 
-    private <T> void config(CommandContext context, Configurable<T> configurable) throws CanNotChangeConfigException {
+    private <T> void config(CommandContext context, Configurable<T> configurable) throws LibrGetterException {
         T value = configurable.get();
         try {
             Class<T> type = configurable.type();
