@@ -41,7 +41,7 @@ public class StartTask extends Task {
         }
 
         MinecraftData minecraftData = new MinecraftData();
-        if (configManager.getBoolean(Config.SAFE_CHECKER)) {
+        if (configManager.getBoolean(Config.SAFE_CHECKER) && !compatibilityManager.isUsingTradeCycling()) {
             // If the villager is sitting, assume it cannot move
             if (!taskContext.selectedVillager().isPassenger()) {
                 List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), minecraftData.clientLevel, 2);

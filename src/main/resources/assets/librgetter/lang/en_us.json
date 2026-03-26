@@ -23,7 +23,7 @@
   "librgetter.config.waitLose": "Wait for the villager to lose its profession; may slow down the process, but guarantees the profession update during lags",
   "librgetter.config.warning": "Send warnings for custom enchantment formats",
   "librgetter.error.argument": "This argument type is not supported!",
-  "librgetter.error.config.change": "This config can not be changed while the process is running!",
+  "librgetter.error.config.change": "This config cannot be changed while the process is running!",
   "librgetter.error.config.init": "Could not create new config, adjustments will not be saved!",
   "librgetter.error.config.nofield": "Could not find config declaration '%s', report this to the developer!",
   "librgetter.error.config.read": "Could not read existing config, falling back to defaults!",
@@ -48,7 +48,7 @@
   "librgetter.error.running": "LibrGetter is already running!",
   "librgetter.error.unknown": "Unknown type of data for the plugin '%s'",
   "librgetter.error.unsafe": "The villager could interfere with the placing process, please obstruct the lectern",
-  "librgetter.error.update": "The librarian trades can not be updated!",
+  "librgetter.error.update": "The librarian trades cannot be updated!",
   "librgetter.error.wrong": "Wrong enchantment provided!",
   "librgetter.feedback.cleared": "Cleared the goals list",
   "librgetter.feedback.config": "'%s' config: %s",
@@ -71,5 +71,5 @@
   "librgetter.success.price": "'%s' max price was changed to %s",
   "librgetter.warning.custom": "Adding custom enchantment '%s'",
   "librgetter.warning.level": "Level for '%s' over the max. Max level: %s",
-  "librgetter.warning.notrade": "'%s' can not be traded by librarians"
+  "librgetter.warning.notrade": "'%s' cannot be traded by librarians"
 }

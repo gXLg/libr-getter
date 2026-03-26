@@ -102,6 +102,9 @@ public final class Configurable<T> {
             } else {
                 current = configurable.get().toString();
             }
+            if (!configurable.hasEffect()) {
+                continue;
+            }
             if (!Arrays.asList(onlyEffectiveCondition.equals()).contains(current)) {
                 return false;
             }

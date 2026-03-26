@@ -36,6 +36,7 @@ public class ConfigData {
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean waitLose = false;
 
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean safeChecker = true;
 
