@@ -23,6 +23,7 @@
   "librgetter.config.waitLose": "Đợi thủ thư từ bỏ nghề nghiệp; có thể chạy chậm hơn, nhưng sẽ không bị lỗi trong khi lag",
   "librgetter.config.warning": "Gửi cảnh báo cho định dạng của phù phép đặc biệt",
   "librgetter.error.argument": "Loại giá trị này không được hỗ trợ!",
+  "librgetter.error.config.change": "Không thể thay đổi cấu hình này khi quá trình đang chạy!",
   "librgetter.error.config.init": "Không thể tạo cấu hình mới, các điều chỉnh sẽ không được lưu!",
   "librgetter.error.config.nofield": "Không thể tìm thấy khai báo cấu hình '%s', vui lòng báo cáo điều này cho nhà phát triển!",
   "librgetter.error.config.read": "Không thể đọc cấu hình hiện có, sử dụng giá trị mặc định!",

@@ -53,14 +53,15 @@ public class ConfigManager {
                 notifier.addNotification(new NoConfigFieldMessage(config));
                 continue;
             }
+            field.setAccessible(true);
 
             Configurable<?> configurable;
             if (field.getType() == boolean.class) {
-                configurable = new Configurable<>(config, Boolean.class, this);
+                configurable = new Configurable<>(config, Boolean.class, field, this);
             } else if (field.getType() == int.class) {
-                configurable = new Configurable<>(config, Integer.class, this);
+                configurable = new Configurable<>(config, Integer.class, field, this);
             } else if (OptionsConfig.class.isAssignableFrom(field.getType())) {
-                configurable = new Configurable<>(config, OptionsConfig.class, this);
+                configurable = new Configurable<>(config, OptionsConfig.class, field, this);
             } else {
                 continue;
             }

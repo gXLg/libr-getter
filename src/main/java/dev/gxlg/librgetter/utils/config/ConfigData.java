@@ -1,6 +1,7 @@
 package dev.gxlg.librgetter.utils.config;
 
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
+import dev.gxlg.librgetter.utils.types.config.CanNotChangeWhileRunning;
 import dev.gxlg.librgetter.utils.types.config.CompatibilityWith;
 import dev.gxlg.librgetter.utils.types.config.ConfigCategory;
 import dev.gxlg.librgetter.utils.types.config.IntRange;
@@ -18,10 +19,12 @@ public class ConfigData {
     private final List<EnchantmentTrade> goals = new ArrayList<>();
 
     @OnlyEffective(when = Config.MANUAL, equals = "false")
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean autoTool = true;
 
     @OnlyEffective(when = Config.MANUAL, equals = "false")
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean offhand = false;
 
@@ -29,16 +32,20 @@ public class ConfigData {
     private boolean manual = false;
 
     @OnlyEffective(when = Config.MANUAL, equals = "false")
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private RotationMode rotationMode = RotationMode.INSTANT;
 
     @ConfigCategory(ConfigManager.Category.PROCESS)
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     private boolean waitLose = false;
 
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean safeChecker = true;
 
     @IntRange(min = 0, max = 20)
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private int timeout = 0;
 
@@ -74,6 +81,7 @@ public class ConfigData {
     private int matchAtLeast = 1;
 
     @CompatibilityWith("trade_cycling")
+    @CanNotChangeWhileRunning
     @ConfigCategory(ConfigManager.Category.COMPATIBILITY)
     private boolean tradeCycling = false;
 
