@@ -28,6 +28,7 @@ public class ConfigData {
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean offhand = false;
 
+    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean manual = false;
 
@@ -36,8 +37,8 @@ public class ConfigData {
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private RotationMode rotationMode = RotationMode.INSTANT;
 
-    @ConfigCategory(ConfigManager.Category.PROCESS)
     @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
+    @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean waitLose = false;
 
     @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
