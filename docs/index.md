@@ -1,11 +1,4 @@
-<!--suppress HtmlDeprecatedAttribute-->
-<img width="100%" src="/libr-getter/images/cover.png" alt="logo"/><br>
-
 Welcome to the documentation for LibrGetter!
-
-> <sup><b>⚠️ Warning</b></sup><br>
-> This documentation is still **work in progress**.
-> Stuff may change without notice, and some of the features may not be documented yet.
 
 Get a grasp of all the features of the mod, how to use it and how to customize it to your needs:
 
@@ -14,6 +7,12 @@ Get a grasp of all the features of the mod, how to use it and how to customize i
 * Configuration and customization of the process: [<kbd>Configuration</kbd>](/libr-getter/config)
 * Compatibility with other mods and plugins: [<kbd>Compatibility</kbd>](/libr-getter/compatibility)
 * Developer guide: [<kbd>For Developers</kbd>](/libr-getter/for-developers)
+
+> <sup><b>⚠️ Warning</b></sup><br>
+> This documentation is still **work in progress**.
+> Stuff may change without notice, and some of the features may not be documented yet.
+
+<img width="100%" src="/libr-getter/images/cover.png" alt="logo"/><br>
 
 # What is LibrGetter?
 
@@ -50,11 +49,15 @@ making it very efficient, fast, stable and fully customizable. LibrGetter is sta
 client-side and server-side lag and TPS drops, and has many features to adjust the process
 to your conditions.
 
+# Contact
+
+Still not sure about something? Feel free to contact me on [<kbd>Discord</kbd>](https://discord.gg/aYBrWe5Jtt).
+
 ---
 
 > <sup><b>⚠️ Warning</b></sup><br>
-> This part of documentation is a residual from the original README file and presents a brief
-> overview of LibrGetter features, which have not yet made it into the final documentation.
+> The next part of documentation is a residual from the original README file and presents a
+> brief overview of LibrGetter features, which have not yet made it into the final documentation.
 
 ## Build
 
