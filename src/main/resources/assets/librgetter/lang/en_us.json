@@ -23,6 +23,7 @@
   "librgetter.config.waitLose": "Wait for the villager to lose its profession; may slow down the process, but guarantees the profession update during lags",
   "librgetter.config.warning": "Send warnings for custom enchantment formats",
   "librgetter.error.argument": "This argument type is not supported!",
+  "librgetter.error.config.change": "This config can not be changed while the process is running!",
   "librgetter.error.config.init": "Could not create new config, adjustments will not be saved!",
   "librgetter.error.config.nofield": "Could not find config declaration '%s', report this to the developer!",
   "librgetter.error.config.read": "Could not read existing config, falling back to defaults!",

@@ -23,6 +23,7 @@
   "librgetter.config.waitLose": "Warten, bis der Dorfbewohner sein Beruf verliert; kann den Prozess verlangsamen, garantiert aber die Aktualisierung des Berufs bei Lag",
   "librgetter.config.warning": "Sendet Warnungen über Benutzerdefinierte Verzauberungen",
   "librgetter.error.argument": "Diese Art von Argumenten ist nicht unterstützt!",
+  "librgetter.error.config.change": "Diese Konfiguration kann nicht geändert werden, während der Prozess läuft!",
   "librgetter.error.config.init": "Konnte keine neue Konfiguration erstellen, Anpassungen werden nicht gespeichert!",
   "librgetter.error.config.read": "Konnte bestehende Konfiguration nicht lesen, Standardwerte werden verwendet!",
   "librgetter.error.config.save": "Konnte Konfiguration nicht speichern!",
