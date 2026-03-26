@@ -13,7 +13,9 @@ list mainly happen through client-side game command.
 Goals list is stored in the same file as the config, more info about that file can be found in
 the [<kbd>Config</kbd>](/libr-getter/config) documentation.
 
-<img width="200px" src="/libr-getter/images/goals.jpeg" alt="Listing goals with a command">
+<div align="center">
+    <img width="70%" src="/libr-getter/images/goals.jpeg" alt="Listing goals with a command">
+</div>
 
 # Custom Enchantment IDs
 
