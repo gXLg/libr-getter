@@ -10,6 +10,11 @@ librarian villagers. Each goal consists of an enchantment ID (e.g. `minecraft:ef
 a level (e.g. `5`), and the price limit in emeralds (e.g. `32`). Interactions with goals
 list mainly happen through client-side game command.
 
+Goals list is stored in the same file as the config, more info about that file can be found in
+the [<kbd>Config</kbd>](/libr-getter/config) documentation.
+
+<img width="200px" src="/libr-getter/images/goals.jpeg" alt="Listing goals with a command">
+
 # Custom Enchantment IDs
 
 LibrGetter uses enchantment IDs registered on the client for auto-completion by default.

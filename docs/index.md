@@ -12,7 +12,7 @@ Get a grasp of all the features of the mod, how to use it and how to customize i
 > This documentation is still **work in progress**.
 > Stuff may change without notice, and some of the features may not be documented yet.
 
-<img width="100%" src="/libr-getter/images/cover.png" alt="logo"/><br>
+<img width="100%" src="/libr-getter/images/cover.png" alt="LibrGetter cover"/><br>
 
 # What is LibrGetter?
 
@@ -65,26 +65,6 @@ You can also build the project yourself.
 For this just clone the repository and run `./gradlew build`.
 Note, that you'll need `Node.js` installed on your system.
 The compiled mod jar can be found under `build/libs/`.
-
-## Start
-
-### Automatic
-
-`/librget auto` automatically selects the closest lectern in a 4 blocks radius and the librarian closest to the lectern,
-and starts the process. If you stand close to two or more villagers and lecterns, LibrGetter might select the wrong targets.
-
-### Manual
-
-1. Face a librarian and type `/librget` (client-side command)
-2. Face his lectern and type `/librget` once again
-3. You can then start by running `/librget start`
-
-## Stop
-
-Stopping a process is as simple as writing `/librget stop`.
-To continue the process after stopping, the recommended way is to use `/librget continue`,
-which works the same way as `/librget start`, but will not reset the counter.
-Restarting with `/librget auto` will not keep the counter as well.
 
 ## Config
 
