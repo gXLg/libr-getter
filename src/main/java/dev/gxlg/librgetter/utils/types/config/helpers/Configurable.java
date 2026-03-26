@@ -7,6 +7,7 @@ import dev.gxlg.librgetter.utils.chaining.compatibility.Compatibility;
 import dev.gxlg.librgetter.utils.config.Config;
 import dev.gxlg.librgetter.utils.config.ConfigData;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.utils.types.config.CanNotChangeWhileRunning;
 import dev.gxlg.librgetter.utils.types.config.CompatibilityWith;
 import dev.gxlg.librgetter.utils.types.config.IntRange;
 import dev.gxlg.librgetter.utils.types.config.OnlyEffective;
@@ -15,28 +16,44 @@ import dev.gxlg.librgetter.utils.types.config.OptionsConfig;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-public record Configurable<T>(Config config, Class<T> type, ConfigManager managerInstance) {
-    public T get() {
+public final class Configurable<T> {
+    private final Config config;
+
+    private final Class<T> type;
+
+    private final ConfigManager managerInstance;
+
+    private final Field field;
+
+    public Configurable(Config config, Class<T> type, ConfigManager managerInstance) {
+        this.config = config;
+        this.type = type;
+        this.managerInstance = managerInstance;
         try {
             Field configurableField = ConfigData.class.getDeclaredField(config.getId());
             configurableField.setAccessible(true);
-            T configurableType = type.cast(configurableField.get(managerInstance.getData()));
+            this.field = configurableField;
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public T get() {
+        try {
+            T configurableType = type.cast(field.get(managerInstance.getData()));
             if (configurableType != null) {
                 return configurableType;
             }
             return getDefault();
-
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void set(T value) {
         try {
-            Field configurableField = ConfigData.class.getDeclaredField(config.getId());
-            configurableField.setAccessible(true);
-            configurableField.set(managerInstance.getData(), value);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+            field.set(managerInstance.getData(), value);
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -46,18 +63,11 @@ public record Configurable<T>(Config config, Class<T> type, ConfigManager manage
     }
 
     public ArgumentType<?> commandArgument() {
-        Field configurableField;
-        try {
-            configurableField = ConfigData.class.getDeclaredField(config.getId());
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-
         if (type == Boolean.class) {
             return BoolArgumentType.bool();
 
         } else if (type == Integer.class) {
-            IntRange rangeAnnotation = configurableField.getDeclaredAnnotation(IntRange.class);
+            IntRange rangeAnnotation = field.getDeclaredAnnotation(IntRange.class);
             if (rangeAnnotation == null) {
                 return IntegerArgumentType.integer();
             }
@@ -75,13 +85,7 @@ public record Configurable<T>(Config config, Class<T> type, ConfigManager manage
         if (type != Integer.class) {
             throw new RuntimeException("The field of type '" + type.getName() + "' does not support the inRange(int) method");
         }
-        Field configurableField;
-        try {
-            configurableField = ConfigData.class.getDeclaredField(config.getId());
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        IntRange rangeAnnotation = configurableField.getDeclaredAnnotation(IntRange.class);
+        IntRange rangeAnnotation = field.getDeclaredAnnotation(IntRange.class);
         if (rangeAnnotation == null) {
             return true;
         } else {
@@ -90,14 +94,7 @@ public record Configurable<T>(Config config, Class<T> type, ConfigManager manage
     }
 
     public boolean hasEffect() {
-        Field configurableField;
-        try {
-            configurableField = ConfigData.class.getDeclaredField(config.getId());
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-
-        for (OnlyEffective onlyEffectiveCondition : configurableField.getAnnotationsByType(OnlyEffective.class)) {
+        for (OnlyEffective onlyEffectiveCondition : field.getAnnotationsByType(OnlyEffective.class)) {
             Configurable<?> configurable = managerInstance.getConfigurable(onlyEffectiveCondition.when());
             String current;
             if (configurable.type() == OptionsConfig.class) {
@@ -110,7 +107,7 @@ public record Configurable<T>(Config config, Class<T> type, ConfigManager manage
             }
         }
 
-        CompatibilityWith modCompatibilityCondition = configurableField.getDeclaredAnnotation(CompatibilityWith.class);
+        CompatibilityWith modCompatibilityCondition = field.getDeclaredAnnotation(CompatibilityWith.class);
         //noinspection RedundantIfStatement
         if (modCompatibilityCondition != null && !Compatibility.isModPresent(modCompatibilityCondition.value())) {
             return false;
@@ -126,13 +123,20 @@ public record Configurable<T>(Config config, Class<T> type, ConfigManager manage
     }
 
     public boolean isCompatibility() {
-        Field configurableField;
-        try {
-            configurableField = ConfigData.class.getDeclaredField(config.getId());
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        CompatibilityWith modCompatibilityCondition = configurableField.getDeclaredAnnotation(CompatibilityWith.class);
+        CompatibilityWith modCompatibilityCondition = field.getDeclaredAnnotation(CompatibilityWith.class);
         return modCompatibilityCondition != null;
+    }
+
+    public boolean canChangeWhileRunning() {
+        CanNotChangeWhileRunning cantChangeWhileRunning = field.getDeclaredAnnotation(CanNotChangeWhileRunning.class);
+        return cantChangeWhileRunning == null;
+    }
+
+    public Config config() {
+        return config;
+    }
+
+    public Class<T> type() {
+        return type;
     }
 }
