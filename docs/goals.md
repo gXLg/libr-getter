@@ -1,6 +1,6 @@
-[<kbd>Back to Starting Page</kbd>](/libr-getter)
-
 # Goals
+
+<sup>[<kbd>← Back to Starting Page</kbd>](/libr-getter)</sup>
 
 > <sup><b>ℹ️ Note</b></sup><br>
 > GUI for goals management is planned for the future, but is not implemented yet
@@ -17,7 +17,9 @@ the [<kbd>Config</kbd>](/libr-getter/config) documentation.
     <img width="70%" src="/libr-getter/images/goals.jpeg" alt="Listing goals with a command">
 </div>
 
-# Custom Enchantment IDs
+# Custom Enchantments
+
+## Custom Enchantment IDs
 
 LibrGetter uses enchantment IDs registered on the client for auto-completion by default.
 This means, that LibrGetter will recognize enchantments from most mods, as long as they are
@@ -36,7 +38,7 @@ e.g. `minecraft:efficiency`.
 > to as "Minecraft enchantments", while enchantments that are not registered on the client
 > will be referred to as "custom enchantments".
 
-# Custom Levels
+## Custom Levels
 
 Similar to custom enchantment IDs, you can also enter custom levels for your goals.
 This is useful for enchantments that have levels higher than what is registered on the client.
@@ -185,7 +187,7 @@ price = 32
 and you run the command
 
 ```
-/ibrget add minecraft:efficiency 5 54
+/librget add minecraft:efficiency 5 54
 ```
 
 the goal will be updated to

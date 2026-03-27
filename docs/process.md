@@ -1,6 +1,6 @@
-[<kbd>Back to Starting Page</kbd>](/libr-getter)
-
 # Process
+
+<sup>[<kbd>← Back to Starting Page</kbd>](/libr-getter)</sup>
 
 This page describes the general process of how LibrGetter works and how to control it.
 
