@@ -91,7 +91,7 @@ Make sure, you also have the following dependencies installed:
 
 # Documentation
 
-More detailed documentation can be found in the [<kbd>docs</kbd>](https://gXLg.github.io/libr-getter)
+A more detailed explanation can be found in the [<kbd>documentation</kbd>](https://gXLg.github.io/libr-getter).
 
 # Localization
 
@@ -106,8 +106,6 @@ LibrGetter supports localization and currently implements the following language
 
 You may request further languages or suggest improvements in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues) or
 the [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt)
-
-
 
 # About Me
 
