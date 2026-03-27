@@ -29,3 +29,11 @@ the code style settings.
 If your IDE does not support IntelliJ style files, you can also auto-format the code using a headless IntelliJ
 installation. This section will be added in the future, but for now, you could look into how to do that by
 following the CI/CD action for [<kbd>IntelliJ formatting</kbd>](https://github.com/gXLg/intellij-idea-format).
+
+# Internal Architecture
+
+## Task Flow
+
+<div align="center">
+    <img width="70%" src="/libr-getter/images/taskflow.png" alt="Flow of LibrGetter tasks"/>
+</div>

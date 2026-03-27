@@ -11,7 +11,9 @@ LibrGetter works in cycles. Each cycle follows these steps:
 3. If a trade matches a goal, finalize the searching process
 4. If no trade matches a goal, refresh the trades and repeat the process
 
-<img width="200px" src="/libr-getter/images/process.jpeg" alt="Showcase of the LibrGetter process">
+<div align="center">
+    <img width="70%" src="/libr-getter/images/process.jpeg" alt="Showcase of the LibrGetter process">
+</div>
 
 # Starting
 

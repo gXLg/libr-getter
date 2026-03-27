@@ -8,10 +8,6 @@ Get a grasp of all the features of the mod, how to use it and how to customize i
 * Compatibility with other mods and plugins: [<kbd>Compatibility</kbd>](/libr-getter/compatibility)
 * Developer guide: [<kbd>For Developers</kbd>](/libr-getter/for-developers)
 
-> <sup><b>⚠️ Warning</b></sup><br>
-> This documentation is still **work in progress**.
-> Stuff may change without notice, and some of the features may not be documented yet.
-
 <img width="100%" src="/libr-getter/images/cover.png" alt="LibrGetter cover"/><br>
 
 # What is LibrGetter?
