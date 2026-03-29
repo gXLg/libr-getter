@@ -44,9 +44,10 @@ public class Parser_1_17_0 extends Parser.Base {
         int price;
         ItemStack firstBuyItem = offer.getCostA();
         ItemStack secondBuyItem = offer.getCostB();
-        if (firstBuyItem.is(Items.EMERALD())) {
+
+        if (firstBuyItem.getItem().equals(Items.EMERALD())) {
             price = firstBuyItem.getCount();
-        } else if (secondBuyItem.is(Items.EMERALD())) {
+        } else if (secondBuyItem.getItem().equals(Items.EMERALD())) {
             price = secondBuyItem.getCount();
         } else {
             throw new InternalErrorException("buyItem");

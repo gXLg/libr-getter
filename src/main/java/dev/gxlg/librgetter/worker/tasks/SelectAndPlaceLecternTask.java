@@ -48,7 +48,7 @@ public class SelectAndPlaceLecternTask extends Task {
         int slot;
         boolean mainhand = true;
 
-        if (inventory.getItem(Inventory.SLOT_OFFHAND()).is(Items.LECTERN())) {
+        if (inventory.getItem(Inventory.SLOT_OFFHAND()).getItem().equals(Items.LECTERN())) {
             slot = Inventory.SLOT_OFFHAND();
         } else {
             slot = inventory.findSlotMatchingItem(Items.LECTERN().getDefaultInstance());

@@ -67,7 +67,7 @@ public class SharedController {
                         }
 
                         BlockPos pos = player.blockPosition().offset(deltaX, deltaY, deltaZ);
-                        if (world.getBlockState(pos).is(Blocks.LECTERN())) {
+                        if (world.getBlockState(pos).getBlock().equals(Blocks.LECTERN())) {
                             foundLecternPos = pos;
                             break;
                         }
@@ -161,7 +161,7 @@ public class SharedController {
 
         if (hitType.equals(HitResult$Type.BLOCK())) {
             BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
-            if (!world.getBlockState(blockPos).is(Blocks.LECTERN())) {
+            if (!world.getBlockState(blockPos).getBlock().equals(Blocks.LECTERN())) {
                 throw new BlockNotLecternException();
             }
             controller.scheduleContextUpdate(ctx -> {
