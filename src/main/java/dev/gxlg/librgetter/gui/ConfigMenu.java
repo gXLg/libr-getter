@@ -56,15 +56,10 @@ public class ConfigMenu {
         Arrays.fill(cachedPageTexts, Texts.literal(""));
     }
 
-    public BookViewScreen$BookAccess createNewBookAccess() {
+    public BookViewScreen$BookAccess createBookAccess() {
         for (int pageIndex = 0; pageIndex < pageCount; pageIndex++) {
             updatePageCache(pageIndex);
         }
-        return Gui.createBookAccess(Arrays.asList(cachedPageTexts));
-    }
-
-    public BookViewScreen$BookAccess getUpdatedBookAccess(int updatePageIndex) {
-        updatePageCache(updatePageIndex);
         return Gui.createBookAccess(Arrays.asList(cachedPageTexts));
     }
 

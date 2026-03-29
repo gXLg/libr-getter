@@ -9,7 +9,7 @@ public class ConfigScreen extends BookViewScreen {
     private final ConfigMenu configMenu;
 
     public ConfigScreen(ConfigMenu configMenu) {
-        super(configMenu.createNewBookAccess());
+        super(configMenu.createBookAccess());
         this.configMenu = configMenu;
     }
 
@@ -48,7 +48,7 @@ public class ConfigScreen extends BookViewScreen {
     }
 
     public void updateScreen() {
-        setBookAccess(configMenu.getUpdatedBookAccess(currentPage));
+        setBookAccess(configMenu.createBookAccess());
     }
 
     private static int currentPage = 0;
