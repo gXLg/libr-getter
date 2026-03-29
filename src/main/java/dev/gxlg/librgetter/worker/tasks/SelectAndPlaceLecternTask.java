@@ -17,7 +17,7 @@ import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.EntityAnchorArgument$Anchor;
 import dev.gxlg.versiont.gen.net.minecraft.core.Direction;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
-import dev.gxlg.versiont.gen.net.minecraft.world.inventory.ClickType;
+import dev.gxlg.versiont.gen.net.minecraft.world.inventory.ContainerInput;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.Items;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
 import dev.gxlg.versiont.gen.net.minecraft.world.phys.BlockHitResult;
@@ -32,7 +32,7 @@ public class SelectAndPlaceLecternTask extends Task {
             throw new VillagerTooFarException();
         }
 
-        if (minecraftData.clientLevel.getBlockState(taskContext.selectedLecternPos()).is(Blocks.LECTERN())) {
+        if (minecraftData.clientLevel.getBlockState(taskContext.selectedLecternPos()).getBlock().equals(Blocks.LECTERN())) {
             // the lectern is placed down now
             Task rotationTask = new RotationTask(player, EntityAnchorArgument$Anchor.EYES().apply(taskContext.selectedVillager()), new WaitVillagerAcceptProfessionTask());
             controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> rotationTask));
@@ -63,7 +63,7 @@ public class SelectAndPlaceLecternTask extends Task {
                 if (Inventory.isHotbarSlot(slot)) {
                     slot += 36;
                 }
-                gameMode.handleInventoryMouseClick(player.getInventoryMenuField().getContainerIdField(), slot, Inventory.SLOT_OFFHAND(), ClickType.SWAP(), player);
+                gameMode.handleContainerInput(player.getInventoryMenuField().getContainerIdField(), slot, Inventory.SLOT_OFFHAND(), ContainerInput.SWAP(), player);
                 mainhand = false;
             } else {
                 InventoryHelper.selectItem(player, slot, gameMode, minecraftData.clientNetwork);
