@@ -1,5 +1,5 @@
 <!--suppress HtmlDeprecatedAttribute-->
-<img width="100%" src="/docs/images/cover.png" alt="logo"/><br>
+<img width="100%" src="https://raw.githubusercontent.com/gXLg/libr-getter/master/docs/images/cover.png" alt="LibrGetter by gXLg - cover art"/><br>
 
 # Over-Engineered Librarian Trade Finder for Fabric
 
