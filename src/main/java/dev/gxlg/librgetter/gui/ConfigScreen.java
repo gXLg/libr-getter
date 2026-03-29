@@ -1,55 +1,55 @@
 package dev.gxlg.librgetter.gui;
 
-import dev.gxlg.librgetter.mixin.BookScreenAccessor;
-import dev.gxlg.librgetter.utils.reflection.ConfigMenu;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.BookScreen;
+import dev.gxlg.versiont.api.R;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen;
 
-public class ConfigScreen extends BookScreen {
-    private static int currentPage = 0;
+public class ConfigScreen extends BookViewScreen {
+    public static final R.RClass clazz = R.extendWrapper(BookViewScreen.class, ConfigScreen.class);
 
-    private static final Contents CONTENT = ConfigMenu.getContent();
+    private final ConfigMenu configMenu;
 
-    public ConfigScreen() {
-        super(CONTENT);
+    public ConfigScreen(ConfigMenu configMenu) {
+        super(configMenu.createBookAccess());
+        this.configMenu = configMenu;
     }
 
     @Override
     protected void init() {
         super.init();
-        jumpToPage(currentPage);
+        forcePage(currentPage);
     }
 
     @Override
-    protected boolean jumpToPage(int page) {
+    protected boolean forcePage(int page) {
         currentPage = page;
-        return super.jumpToPage(page);
+        return super.forcePage(page);
     }
 
     @Override
-    protected void goToPreviousPage() {
-        if (currentPage > 0) currentPage--;
-        updateScreen();
-        super.goToPreviousPage();
+    protected void pageBack() {
+        if (currentPage > 0) {
+            currentPage--;
+        }
+        super.pageBack();
     }
 
     @Override
-    protected void goToNextPage() {
-        if (currentPage < ConfigMenu.pageCount - 1) currentPage++;
-        updateScreen();
-        super.goToNextPage();
+    protected void pageForward() {
+        if (currentPage < configMenu.getPageCount() - 1) {
+            currentPage++;
+        }
+        super.pageForward();
+    }
+
+    @Override
+    protected void closeScreen() {
+        // used only with RUN_COMMAND in 1.21.5 and before
+        // by not executing super, we avoid the book actually closing
     }
 
     public void updateScreen() {
-        ConfigMenu.updatePage(currentPage);
-        ((BookScreenAccessor) this).setCachedPageIndex(-1);
+        setBookAccess(configMenu.createBookAccess());
     }
 
-    public static boolean configChange() {
-        if (MinecraftClient.getInstance().currentScreen instanceof ConfigScreen cs) {
-            cs.updateScreen();
-            return true;
-        }
-        return false;
-    }
+    private static int currentPage = 0;
 }

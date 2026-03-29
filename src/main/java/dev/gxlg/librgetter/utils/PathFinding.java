@@ -1,67 +1,67 @@
 package dev.gxlg.librgetter.utils;
 
-import dev.gxlg.librgetter.mixin.AbstractBlockAccessor;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
+import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
+import dev.gxlg.versiont.gen.net.minecraft.core.Direction;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Block;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 public class PathFinding {
-    private record Tail(int gCost, int hCost, BlockPos pos, PathFinding.Tail parent) implements Comparable<Tail> {
-        public int getFCost() {
-            return gCost + hCost;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(gCost, hCost, pos);
-        }
-
-        @Override
-        public int compareTo(@NotNull Tail tail) {
-            return Integer.compare(getFCost(), tail.getFCost());
-        }
-
-        public static Tail construct(Tail parent, BlockPos pos, BlockPos to) {
-            return new Tail(parent.gCost() + 1, manhattan(pos, to), pos, parent);
-        }
-    }
+    private static final Direction[] directions = new Direction[]{
+        Direction.UP(), Direction.DOWN(), Direction.NORTH(), Direction.SOUTH(), Direction.EAST(), Direction.WEST()
+    };
 
     private static int manhattan(BlockPos from, BlockPos to) {
         return Math.abs(from.getX() - to.getX()) + Math.abs(from.getY() - to.getY()) + Math.abs(from.getZ() - to.getZ());
     }
 
-    private static boolean notEnoughHeight(BlockPos pos, ClientWorld world, int minHeight) {
-        for (int i = 0; i < minHeight; i++) {
-            if (((AbstractBlockAccessor) world.getBlockState(pos.up(i)).getBlock()).getCollidable()) {
+    private static boolean notEnoughHeight(BlockPos pos, ClientLevel world, int minHeight) {
+        for (int distance = 0; distance < minHeight; distance++) {
+            if (world.getBlockState(pos.above(distance)).getBlock().getHasCollisionAccessibleField()) {
                 return true;
             }
         }
         return false;
     }
 
-    private static boolean isAirMove(BlockPos pos, ClientWorld world, Direction dir) {
+    private static boolean isAirMove(BlockPos pos, ClientLevel world, Direction dir) {
         // Can always move down
-        if (dir == Direction.DOWN) return false;
+        if (dir.equals(Direction.DOWN())) {
+            return false;
+        }
         // Beneath is air and beneath goal is also air
-        return !((AbstractBlockAccessor) world.getBlockState(pos.down()).getBlock()).getCollidable() && !((AbstractBlockAccessor) world.getBlockState(pos.offset(dir).down()).getBlock()).getCollidable();
+        Block blockBelow = world.getBlockState(pos.below()).getBlock();
+        Block blockBelowGoal = world.getBlockState(pos.relative(dir).below()).getBlock();
+
+        return !blockBelow.getHasCollisionAccessibleField() && !blockBelowGoal.getHasCollisionAccessibleField();
     }
 
-    public static List<BlockPos> findPath(BlockPos from, BlockPos to, ClientWorld world, int minHeight) {
+    public static List<BlockPos> findPath(BlockPos from, BlockPos to, ClientLevel world, int minHeight) {
         BlockState original = world.getBlockState(to);
-        world.setBlockState(to, Blocks.AIR.getDefaultState());
+        world.setBlockAndUpdate(to, Blocks.AIR().defaultBlockState());
         List<BlockPos> path = findPathInternal(from, to, world, minHeight);
-        world.setBlockState(to, original);
+        world.setBlockAndUpdate(to, original);
         return path;
     }
 
-    private static List<BlockPos> findPathInternal(BlockPos from, BlockPos to, ClientWorld world, int minHeight) {
-        if (notEnoughHeight(from, world, minHeight)) return null;
-        if (notEnoughHeight(to, world, minHeight)) return null;
+    private static List<BlockPos> findPathInternal(BlockPos from, BlockPos to, ClientLevel world, int minHeight) {
+        if (notEnoughHeight(from, world, minHeight)) {
+            return null;
+        }
+        if (notEnoughHeight(to, world, minHeight)) {
+            return null;
+        }
 
         PriorityQueue<Tail> open = new PriorityQueue<>();
         Set<BlockPos> close = new HashSet<>();
@@ -80,10 +80,11 @@ public class PathFinding {
 
             close.add(current.pos);
 
-            for (Direction dir : new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN}) {
-                BlockPos nextpos = current.pos.offset(dir);
-                if (notEnoughHeight(nextpos, world, minHeight) || isAirMove(nextpos, world, dir) || close.contains(nextpos) || current.gCost > 20)
+            for (Direction dir : directions) {
+                BlockPos nextpos = current.pos.relative(dir);
+                if (notEnoughHeight(nextpos, world, minHeight) || isAirMove(nextpos, world, dir) || close.contains(nextpos) || current.gCost > 20) {
                     continue;
+                }
                 Optional<Tail> same = open.stream().filter(t -> t.pos.equals(nextpos)).findFirst();
                 same.ifPresent(open::remove);
                 Tail next = Tail.construct(current, nextpos, to);
@@ -91,5 +92,25 @@ public class PathFinding {
             }
         }
         return null;
+    }
+
+    private record Tail(int gCost, int hCost, BlockPos pos, Tail parent) implements Comparable<Tail> {
+        public int getFCost() {
+            return gCost + hCost;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(gCost, hCost, pos);
+        }
+
+        @Override
+        public int compareTo(@NotNull Tail tail) {
+            return Integer.compare(getFCost(), tail.getFCost());
+        }
+
+        public static Tail construct(Tail parent, BlockPos pos, BlockPos to) {
+            return new Tail(parent.gCost() + 1, manhattan(pos, to), pos, parent);
+        }
     }
 }

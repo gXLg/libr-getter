@@ -1,13 +1,10 @@
 {
-  "required": true,
-  "package": "dev.gxlg.librgetter.mixin",
+  "required": false,
+  "package": "dev.gxlg.librgetter.mixin.entry",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "AbstractBlockAccessor",
-    "BookScreenAccessor",
-    "BookScreenMixin",
-    "Manager",
-    "Trader"
+    "ClientPacketListenerMixinEntry",
+    "MultiPlayerGameModeMixinEntry"
   ],
   "injectors": {
     "defaultRequire": 1

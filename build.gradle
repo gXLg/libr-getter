@@ -1,5 +1,6 @@
 plugins {
-    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+    id "net.fabricmc.fabric-loom" version "${loom_version}"
+    id "dev.gxlg.versiont-toolchain" version "1.0.2"
 }
 
 version = project.mod_version
@@ -9,26 +10,25 @@ base {
     archivesName = project.archives_base_name
 }
 
-repositories { }
+repositories {}
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
 processResources {
-    inputs.property "version", project.version
+    var versionProv = providers.gradleProperty("mod_version")
 
+    inputs.property "version", versionProv.get()
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": versionProv.get()
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    //noinspection GroovyAssignabilityCheck, GroovyAccessibility
-    it.options.release = 16
+    options.release = 16
 }
 
 java {
@@ -37,9 +37,12 @@ java {
 }
 
 jar {
+    inputs.property "archivesName", project.base.archivesName
     from("LICENSE") {
-        rename { "${it}_${inputs.properties.archivesName}"}
+        rename { "${it}_${inputs.properties.archivesName}" }
     }
 }
 
-apply from: './MultiVersion/multi-version.gradle'
+versiont {
+    mapping = file("src/main/resources/versiont.mapping")
+}

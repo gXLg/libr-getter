@@ -2,12 +2,10 @@ package dev.gxlg.librgetter.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import dev.gxlg.librgetter.LibrGetter;
-import dev.gxlg.librgetter.utils.reflection.Texts;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.client.network.ClientPlayerEntity;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import dev.gxlg.librgetter.notifier.Notifier;
+import dev.gxlg.librgetter.utils.config.Config;
+import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.NewVersionReleasedMessage;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,9 +14,14 @@ import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
 public class Updater {
-    private static Pair<String, String> newVersion;
+    public static void checkUpdates(Notifier notifier, ConfigManager configManager, String modVersion) {
+        if (!configManager.getBoolean(Config.CHECK_UPDATE)) {
+            return;
+        }
+        if (modVersion == null) {
+            return;
+        }
 
-    public static void checkUpdates() {
         CompletableFuture.runAsync(() -> {
             try {
                 URL url = URI.create("https://api.github.com/repos/gXLg/libr-getter/releases/latest").toURL();
@@ -26,23 +29,17 @@ public class Updater {
                 JsonObject data = new Gson().fromJson(reader, JsonObject.class);
                 reader.close();
 
-                String version = LibrGetter.getVersion();
-                if (version == null) return;
                 String newest = data.get("tag_name").getAsString();
 
-                if (!newest.equals(version)) {
-                    newVersion = new ImmutablePair<>(newest + " - " + data.get("name").getAsString(), data.get("body").getAsString().replace("\r", ""));
+                if (newest.equals(modVersion)) {
+                    return;
                 }
-            } catch (IOException ignored) {
-            }
-        });
 
-        // notifying about update
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            ClientPlayerEntity player = client.player;
-            if (newVersion != null) {
-                Texts.newVersion(player, newVersion.getLeft(), newVersion.getRight());
-                newVersion = null;
+                String versionName = newest + " - " + data.get("name").getAsString();
+                String changelog = data.get("body").getAsString().replace("\r", "");
+                notifier.addNotification(new NewVersionReleasedMessage(versionName, changelog));
+
+            } catch (IOException ignored) {
             }
         });
     }

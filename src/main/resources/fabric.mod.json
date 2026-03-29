@@ -17,16 +17,18 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "dev.gxlg.librgetter.LibrGetter"
+      "dev.gxlg.librgetter.Entrypoint"
     ]
   },
   "mixins": [
     "librgetter.mixins.json"
   ],
   "depends": {
-    "fabric": ">=0.31.0",
-    "fabric-key-binding-api-v1": "*",
-    "minecraft": ">=1.17 <=1.21.11"
+    "minecraft": ">=1.17",
+    "versiont": "1.0.2"
+  },
+  "conflicts": {
+    "offershud": "<1.9.0"
   },
   "custom": {
     "modmenu": {

@@ -19,13 +19,15 @@ jobs:
         uses: actions/setup-java@v4.0.0
         with:
           distribution: "temurin"
-          java-version: 21
+          java-version: 25
 
       - name: Mark Executable
         run: chmod +x ./gradlew
 
       - name: Build
-        run: ./gradlew clean build
+        uses: burrunan/gradle-cache-action@v3
+        with:
+          arguments: build
 
       - name: Update description
         uses: funnyboy-roks/modrinth-auto-desc@v1.5
