@@ -1,9 +1,9 @@
 package dev.gxlg.librgetter.worker.types.context;
 
+import dev.gxlg.librgetter.utils.ClientNetwork;
 import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
-import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientPacketListener;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +22,7 @@ public class MinecraftData {
     public final MultiPlayerGameMode gameMode;
 
     @NotNull
-    public final ClientPacketListener clientNetwork;
+    public final ClientNetwork clientNetwork;
 
     public MinecraftData() throws InternalErrorException {
         client = Minecraft.getInstance();
@@ -45,10 +45,6 @@ public class MinecraftData {
         }
         this.gameMode = gameMode;
 
-        ClientPacketListener clientNetwork = client.getConnection();
-        if (clientNetwork == null) {
-            throw new InternalErrorException("clientNetwork");
-        }
-        this.clientNetwork = clientNetwork;
+        this.clientNetwork = new ClientNetwork(client);
     }
 }
