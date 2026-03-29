@@ -6,9 +6,6 @@ import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.ArgumentBuilder;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallbackI;
-import dev.gxlg.versiont.gen.net.minecraft.commands.CommandBuildContext;
-import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.ResourceOrTagArgument;
-import dev.gxlg.versiont.gen.net.minecraft.core.registries.BuiltInRegistries;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 
 public class Commands_1_19_0 extends Commands_1_17_0 {
@@ -16,11 +13,6 @@ public class Commands_1_19_0 extends Commands_1_17_0 {
     public void registerCommands(CommandsManager.Command callback) {
         ClientCommandRegistrationCallbackI fabricCallback = callback::register;
         ClientCommandRegistrationCallback.EVENT.register(fabricCallback.unwrap(ClientCommandRegistrationCallback.class));
-    }
-
-    @Override
-    public ArgumentType getEnchantmentArgumentType(CommandBuildContext context) {
-        return ResourceOrTagArgument.resourceOrTag(context, BuiltInRegistries.ENCHANTMENT().key());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.config.Config;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
@@ -10,7 +11,6 @@ import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
-import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
@@ -36,11 +36,6 @@ public class FinalizeSearchTask extends Task {
         }
 
         MinecraftData minecraftData = taskContext.minecraftData();
-        if (!compatibilityManager.isUsingTradeCycling()) {
-            // TradeCycling process keeps the screen open, else we have to open it again
-            minecraftData.gameMode.interact(minecraftData.localPlayer, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
-        }
-
         Inventory inventory = minecraftData.localPlayer.getInventory();
         int buy;
         if (canBuy(inventory, (MerchantOffer) offers.get(0))) {
@@ -51,7 +46,13 @@ public class FinalizeSearchTask extends Task {
             throw new CanNotLockException();
         }
 
-        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new LockTradesTask(buy)));
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> {
+            if (!compatibilityManager.isUsingTradeCycling()) {
+                // TradeCycling process keeps the screen open, else we have to open it again
+                Players.interactEntity(minecraftData.gameMode, minecraftData.localPlayer, taskContext.selectedVillager(), true);
+            }
+            return new LockTradesTask(buy);
+        }));
     }
 
     private static boolean canBuy(Inventory inventory, MerchantOffer offer) {

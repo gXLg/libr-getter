@@ -11,7 +11,7 @@ import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import dev.gxlg.versiont.gen.net.minecraft.network.protocol.game.ServerboundSelectTradePacket;
-import dev.gxlg.versiont.gen.net.minecraft.world.inventory.ClickType;
+import dev.gxlg.versiont.gen.net.minecraft.world.inventory.ContainerInput;
 
 public class LockTradesTask extends Task {
     private final int offerIndex;
@@ -38,8 +38,13 @@ public class LockTradesTask extends Task {
             return;
         }
         // confirm the trade
-        minecraftData.gameMode.handleInventoryMouseClick(player.getContainerMenuField().getContainerIdField(), 2, 0, ClickType.PICKUP(), player);
+        minecraftData.gameMode.handleContainerInput(player.getContainerMenuField().getContainerIdField(), 2, 0, ContainerInput.PICKUP(), player);
 
         controller.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
+    }
+
+    @Override
+    protected boolean allowsOpeningScreen() {
+        return true;
     }
 }

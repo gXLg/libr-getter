@@ -1,11 +1,12 @@
 package dev.gxlg.librgetter.mixin.impl;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.utils.ClientNetwork;
 import dev.gxlg.librgetter.utils.types.TradeOfferData;
+import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.worker.scheduling.controllers.SystemSchedulerController;
 import dev.gxlg.librgetter.worker.state.StateView;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
-import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientPacketListener;
 import dev.gxlg.versiont.gen.net.minecraft.network.protocol.game.ClientboundMerchantOffersPacket;
 import dev.gxlg.versiont.gen.net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import dev.gxlg.versiont.gen.net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
@@ -41,11 +42,17 @@ public class ClientPacketListenerMixinImpl {
         if (!stateView.isWorking() || compatibilityManager.isUsingTradeCycling()) {
             return Optional.empty();
         }
-        Minecraft client = Minecraft.getInstance();
-        ClientPacketListener clientNetwork = client.getConnection();
-        if (clientNetwork != null) {
-            clientNetwork.send(new ServerboundContainerClosePacket(packet.getContainerId()));
+        if (stateView.getPermissionManager().allowsOpeningScreen()) {
+            return Optional.empty();
         }
+
+        Minecraft client = Minecraft.getInstance();
+        try {
+            ClientNetwork clientNetwork = new ClientNetwork(client);
+            clientNetwork.send(new ServerboundContainerClosePacket(packet.getContainerId()));
+        } catch (InternalErrorException ignored) {
+        }
+
         return Optional.of(new Object());
     }
 }

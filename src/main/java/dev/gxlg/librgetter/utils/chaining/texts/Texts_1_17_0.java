@@ -21,7 +21,7 @@ public class Texts_1_17_0 extends Texts.Base {
         if (player == null) {
             return;
         }
-        player.displayClientMessage(text, actionbar);
+        sendMessage(player, text, actionbar);
     }
 
     @Override
@@ -84,5 +84,9 @@ public class Texts_1_17_0 extends Texts.Base {
     @Override
     public HoverEvent hoverable(Component text) {
         return new HoverEvent(HoverEvent$Action.SHOW_TEXT(), text);
+    }
+
+    protected void sendMessage(LocalPlayer player, Component text, boolean actionbar) {
+        player.displayClientMessage(text, actionbar);
     }
 }

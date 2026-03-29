@@ -9,7 +9,7 @@ import dev.gxlg.librgetter.worker.types.context.TaskContext;
 public abstract class Task {
     public static final float MAX_INTERACTION_DISTANCE = 3.4F;
 
-    public static final float ROTATION_GOAL_DEVIATION_RANGE = 4.0F;
+    public static final float ROTATION_GOAL_DEVIATION_RANGE = 0.4F;
 
     public static final float ROTATION_ANGLE_LERPING_DEVIATION_RANGE = 0.2F;
 
@@ -31,7 +31,11 @@ public abstract class Task {
         return PermissionManager.DEFAULT.allowsSettingTradeOffers();
     }
 
+    protected boolean allowsOpeningScreen() {
+        return PermissionManager.DEFAULT.allowsOpeningScreen();
+    }
+
     public PermissionManager getPermissionManager() {
-        return new PermissionManager(allowsBreakingLecterns(), allowsPlacingLectern(), allowsSettingTradeOffers());
+        return new PermissionManager(allowsBreakingLecterns(), allowsPlacingLectern(), allowsSettingTradeOffers(), allowsOpeningScreen());
     }
 }

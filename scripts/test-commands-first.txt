@@ -1,0 +1,29 @@
+/gamerule doDaylightCycle false
+/gamerule advance_time false
+/gamerule doMobSpawning false
+/gamerule doWeatherCycle false
+/gamerule advance_weather false
+/time set day
+/fill ~-1 ~-1 ~-1 ~2 ~2 ~2 dirt hollow
+/setblock ~ ~-1 ~ glowstone
+/setblock ~1 ~ ~ brick_slab[type=bottom]
+/setblock ~ ~1 ~1 brick_slab[type=top]
+/summon villager ~1 ~ ~1 {Age:0}
+/setblock ~ ~ ~1 lectern
+/give gXLg paper 64
+/give gXLg emerald 64
+/give gXLg netherite_axe{Enchantments:[{id:"efficiency",lvl:5}],Unbreakable:1}
+/give gXLg netherite_axe[enchantments={"efficiency":5},unbreakable={}]
+/give gXLg lectern 32
+/librget config offhand true
+/librget config lock true
+/librget config waitLose true
+/librget add aqua_affinity
+/librget add bane_of_arthropods
+/librget add binding_curse
+/librget add blast_protection
+/librget add channeling
+/librget add depth_strider
+/librget add efficiency
+/gamemode survival
+/librget auto

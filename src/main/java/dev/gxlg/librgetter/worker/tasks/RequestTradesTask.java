@@ -1,6 +1,7 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.config.Config;
 import dev.gxlg.librgetter.utils.config.ConfigManager;
 import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
@@ -10,7 +11,6 @@ import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
-import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
 
 public class RequestTradesTask extends Task {
     @Override
@@ -25,7 +25,7 @@ public class RequestTradesTask extends Task {
             throw new VillagerTooFarException();
         }
 
-        minecraftData.gameMode.interact(minecraftData.localPlayer, taskContext.selectedVillager(), InteractionHand.MAIN_HAND());
+        Players.interactEntity(minecraftData.gameMode, minecraftData.localPlayer, taskContext.selectedVillager(), true);
 
         controller.scheduleTaskSwitch(TaskSwitch.sameTick(WaitTradesTask::new));
     }

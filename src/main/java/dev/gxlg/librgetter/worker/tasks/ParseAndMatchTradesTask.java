@@ -89,6 +89,6 @@ public class ParseAndMatchTradesTask extends Task {
     }
 
     private boolean isEnchantmentTrade(MerchantOffer offer) {
-        return offer.getResult().is(Items.ENCHANTED_BOOK()) || offer.getResult().is(Items.BOOK());
+        return offer.getResult().getItem().equals(Items.ENCHANTED_BOOK()) || offer.getResult().getItem().equals(Items.BOOK());
     }
 }

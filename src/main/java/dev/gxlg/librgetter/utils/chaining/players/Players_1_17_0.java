@@ -6,6 +6,7 @@ import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import dev.gxlg.versiont.gen.net.minecraft.sounds.SoundEvents;
 import dev.gxlg.versiont.gen.net.minecraft.sounds.SoundSource;
 import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.Entity;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
 import dev.gxlg.versiont.gen.net.minecraft.world.phys.BlockHitResult;
 
@@ -22,6 +23,16 @@ public class Players_1_17_0 extends Players.Base {
 
     protected void interactBlock(MultiPlayerGameMode game, LocalPlayer player, InteractionHand hand, BlockHitResult lowBlock) {
         game.useItemOn(player, getWorld(player), hand, lowBlock);
+    }
+
+    @Override
+    public void interactEntity(MultiPlayerGameMode game, LocalPlayer player, Entity entity, boolean useMainHand) {
+        InteractionHand hand = useMainHand ? InteractionHand.MAIN_HAND() : InteractionHand.OFF_HAND();
+        interactEntity(game, player, entity, hand);
+    }
+
+    protected void interactEntity(MultiPlayerGameMode game, LocalPlayer player, Entity entity, InteractionHand hand) {
+        game.interact(player, entity, hand);
     }
 
     @Override

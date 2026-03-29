@@ -18,8 +18,10 @@ public class Texts {
             implementation = new Texts_1_19_0();
         } else if (V.lower("1.21.5")) {
             implementation = new Texts_1_19_4();
-        } else {
+        } else if (V.lower("26.1")) {
             implementation = new Texts_1_21_5();
+        } else {
+            implementation = new Texts_26_1_0();
         }
     }
 

@@ -25,7 +25,7 @@ public class MultiPlayerGameModeMixinImpl {
         if (player == null || world == null) {
             return Optional.empty();
         }
-        if (!world.getBlockState(blockPos).is(Blocks.LECTERN())) {
+        if (!world.getBlockState(blockPos).getBlock().equals(Blocks.LECTERN())) {
             return Optional.empty();
         }
         if (!stateView.getPermissionManager().allowsBreakingLecterns()) {

@@ -1,0 +1,10 @@
+/kill @e[type=villager]
+/summon villager ~1 ~ ~1 {Age:0}
+/setblock ~ ~ ~1 lectern
+/clear
+/give gXLg paper 64
+/give gXLg emerald 64
+/give gXLg netherite_axe{Enchantments:[{id:"efficiency",lvl:5}],Unbreakable:1}
+/give gXLg netherite_axe[enchantments={"efficiency":5},unbreakable={}]
+/give gXLg lectern 32
+/librget auto
