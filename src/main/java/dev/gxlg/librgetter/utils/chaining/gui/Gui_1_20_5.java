@@ -5,7 +5,7 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 import java.util.List;
 
-public class Gui_1_21_5 extends Gui_1_17_0 {
+public class Gui_1_20_5 extends Gui_1_17_0 {
     @Override
     public BookViewScreen$BookAccess createBookAccess(List<Component> list) {
         return new BookViewScreen$BookAccess(list);
