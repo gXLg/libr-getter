@@ -22,6 +22,11 @@ adapter java.util.Set -> dev.gxlg.librgetter.utils.adapters.SetAdapter
 
 import java.util.concurrent.CompletableFuture
 
+import !java.util.ArrayList
+
+class ArrayList
+    [Object] get(int i)
+    int size()
 
 # ------------------------------------------------------------------------------------------------------------- #
 # Core
@@ -44,6 +49,7 @@ class Minecraft
     @Nullable HitResult field_1765/hitResult
     @Nullable MultiPlayerGameMode field_1761/gameMode
     @Nullable ClientPacketListener method_1562/getConnection()
+    @Nullable ClientPacketListener_1_20_2 method_1562/getConnection()
     void method_1507/setScreen(Screen screen)
 
 class HitResult
@@ -59,6 +65,7 @@ class BlockHitResult extends HitResult
     Direction method_17780/getDirection()
 
 class EntityHitResult extends HitResult
+    <init>(Entity entity)
     Entity method_17782/getEntity()
 
 class InteractionResult
@@ -68,8 +75,10 @@ class MultiPlayerGameMode
     InteractionResult method_2896/useItemOn(LocalPlayer player, InteractionHand hand, BlockHitResult hit)
     InteractionResult method_2896/useItemOn(LocalPlayer player, ClientLevel clientWorld, InteractionHand hand, BlockHitResult hit)
     InteractionResult method_2905/interact(Player player, Entity target, InteractionHand hand)
-    void method_2906/handleInventoryMouseClick(int containerId, int slot, int otherSlot, ClickType clickType, Player player)
+    void method_2906/handleInventoryMouseClick/handleContainerInput(int containerId, int slot, int otherSlot, ContainerInput containerInput, Player player)
     boolean method_2902/continueDestroyBlock(BlockPos pos, Direction side)
+    # 26.1
+    InteractionResult interact(Player player, Entity target, EntityHitResult hitResult, InteractionHand hand)
 
 class InteractionHand
     static final InteractionHand field_5808/MAIN_HAND
@@ -116,7 +125,7 @@ class EnchantmentTags
     static TagKey field_51545/TRADEABLE
 
 class DataComponentHolder
-    [Object] method_58694/get(DataComponentType type)
+    [Object] method_57824/method_58694/get(DataComponentType type)
 
 class CustomData
     CompoundTag method_57461/copyTag()
@@ -127,8 +136,8 @@ class DataComponents
     static final DataComponentType field_49643/STORED_ENCHANTMENTS
 
 class VillagerData
-    Holder final comp_3521/profession()
-    VillagerProfession final method_16924/getProfession()
+    final Holder comp_3521/profession()
+    final VillagerProfession method_16924/getProfession()
 
 class VillagerProfession
     static final VillagerProfession field_17060/LIBRARIAN
@@ -187,9 +196,7 @@ class Identifier
     String method_12832/getPath()
     String toString()
 
-class MerchantOffers
-    [Object] get(int i)
-    int size()
+class MerchantOffers extends ArrayList
 
 # ------------------------------------------------------------------------------------------------------------- #
 # Geometry
@@ -258,7 +265,6 @@ class Block extends BlockBehaviour
     BlockState method_9564/defaultBlockState()
 
 class BlockBehaviour$BlockStateBase
-    boolean method_27852/is(Block block)
     Block method_26204/getBlock()
     boolean method_26215/isAir()
 
@@ -275,6 +281,7 @@ import net.minecraft.class_1297/net.minecraft.world.entity.Entity
 import net.minecraft.class_1309/net.minecraft.world.entity.LivingEntity
 import net.minecraft.class_1646/net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.class_1657/net.minecraft.world.entity.player.Player
+import net.minecraft.class_742/net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
 import net.minecraft.class_2183$class_2184/net.minecraft.commands.arguments.EntityAnchorArgument$Anchor
 
@@ -305,9 +312,14 @@ class Player extends LivingEntity
     InventoryMenu field_7498/inventoryMenu
     AbstractContainerMenu field_7512/containerMenu
 
-class LocalPlayer extends Player
-    void method_7353/displayClientMessage(Component message, boolean actionBar)
+class AbstractClientPlayer extends Player
     ClientLevel field_17892/clientLevel
+
+class LocalPlayer extends AbstractClientPlayer
+    void method_7353/displayClientMessage(Component message, boolean actionBar)
+    # 26.1
+    void sendSystemMessage(Component message)
+    void sendOverlayMessage(Component message)
 
 class EntityAnchorArgument$Anchor
     static EntityAnchorArgument$Anchor field_9851/EYES
@@ -337,7 +349,6 @@ class Items
 class ItemStack extends DataComponentHolder
     CompoundTag method_7969/getTag()
     ItemEnchantments method_58657/getEnchantments()
-    boolean method_31574/is(Item item)
     Item method_7909/getItem()
     int method_7947/getCount()
     boolean method_7960/isEmpty()
@@ -383,7 +394,7 @@ class EnchantmentHelper
 import net.minecraft.class_2477/net.minecraft.locale.Language
 import net.minecraft.class_2561/net.minecraft.network.chat.Component
 import net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent
-import net.minecraft.class_2588/net.minecraft.network.chat.contents.TranslatableContents
+import net.minecraft.class_2588/net.minecraft.network.chat.TranslatableComponent/net.minecraft.network.chat.contents.TranslatableContents
 import net.minecraft.class_2558/net.minecraft.network.chat.ClickEvent
 import net.minecraft.class_2558$class_2559/net.minecraft.network.chat.ClickEvent$Action
 import net.minecraft.class_2558$class_10609/net.minecraft.network.chat.ClickEvent$RunCommand
@@ -400,7 +411,7 @@ class Language
     String method_4679/getOrDefault(String translationKey)
     String method_48307/getOrDefault(String translationKey)
 
-class Component
+class Component extends FormattedText
     MutableComponent method_27662/plainCopy()
     static MutableComponent method_43469/translatable(String key, Object[] args)
     static Component method_30163/nullToEmpty(String text)
@@ -459,7 +470,7 @@ class ClickEvent
         <init>(int page)
 
 class HoverEvent
-    <init>(HoverEvent$Action action, Object contents)
+    <init>(HoverEvent$Action action, [Object] contents)
 
     class HoverEvent$Action
         static final HoverEvent$Action field_24342/SHOW_TEXT
@@ -479,7 +490,7 @@ import net.minecraft.class_1263/net.minecraft.world.Container
 import net.minecraft.class_1661/net.minecraft.world.entity.player.Inventory
 import net.minecraft.class_3917/net.minecraft.world.inventory.MenuType
 import net.minecraft.class_1735/net.minecraft.world.inventory.Slot
-import net.minecraft.class_1713/net.minecraft.world.inventory.ClickType
+import net.minecraft.class_1713/net.minecraft.world.inventory.ClickType/net.minecraft.world.inventory.ContainerInput
 import net.minecraft.class_492/net.minecraft.client.gui.screens.inventory.MerchantScreen
 
 class BookViewScreen extends Screen
@@ -496,7 +507,7 @@ class BookViewScreen extends Screen
 
     interface BookViewScreen$BookAccess
         int method_17560/getPageCount()
-        Component method_17563/getPage(int index)
+        FormattedText method_17563/getPage(int index)
 
 class MerchantScreen extends Screen
 
@@ -525,9 +536,9 @@ class MenuType
 class Slot
     Container field_7871/container
 
-class ClickType
-    static final ClickType field_7790/PICKUP
-    static final ClickType field_7791/SWAP
+class ContainerInput
+    static final ContainerInput field_7790/PICKUP
+    static final ContainerInput field_7791/SWAP
 
 # ------------------------------------------------------------------------------------------------------------- #
 # Commands
@@ -560,8 +571,8 @@ class ResourceOrTagArgument extends ArgumentType
         Either<[Object], [Object]> method_45647/unwrap()
         Optional<[Object]> method_45648/cast(ResourceKey registryKey)
 
-class ItemEnchantmentArgument
-    static ArgumentType method_9336/enchantment()
+class ItemEnchantmentArgument extends ArgumentType
+    static ItemEnchantmentArgument method_9336/enchantment()
 
 class net.fabricmc.fabric.api.client.command.v1.ClientCommandManager
     static CommandDispatcher DISPATCHER
@@ -574,7 +585,7 @@ class net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 
 class net.fabricmc.fabric.api.client.command.v2.ClientCommands
     static LiteralArgumentBuilder literal(String name)
-    static ArgumentBuilder argument(String name, ArgumentType argumentType)
+    static RequiredArgumentBuilder argument(String name, ArgumentType argumentType)
 
 class CommandDispatcher
     LiteralCommandNode register(LiteralArgumentBuilder command)
@@ -635,7 +646,7 @@ class SoundSource
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import net.minecraft.class_634/net.minecraft.client.multiplayer.ClientPacketListener
+import net.minecraft.class_634/net.minecraft.client.multiplayer.ClientPacketListener alt: _1_20_2
 import net.minecraft.class_8710/net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.class_3943/net.minecraft.network.protocol.game.ClientboundMerchantOffersPacket
 import net.minecraft.class_3944/net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
@@ -663,10 +674,13 @@ class ServerboundSetCarriedItemPacket extends Packet
 class ServerboundSelectTradePacket extends Packet
     <init>(int index)
 
-class ClientPacketListener extends ClientCommonPacketListenerImpl
+class ClientPacketListener
+    void method_2883/send(Packet packet)
+
+class ClientPacketListener_1_20_2 extends ClientCommonPacketListenerImpl
 
 class ClientCommonPacketListenerImpl
-    void method_2883/send(Packet packet)
+    void method_52787/send(Packet packet)
 
 class ClientPlayNetworking
     static void send(CustomPacketPayload customPayload)
