@@ -20,4 +20,9 @@ public class StandbyTask extends Task {
     protected boolean allowsPlacingLectern() {
         return true;
     }
+
+    @Override
+    protected boolean allowsOpeningScreen() {
+        return true;
+    }
 }

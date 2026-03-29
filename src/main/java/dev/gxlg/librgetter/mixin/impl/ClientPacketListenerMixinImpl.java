@@ -41,6 +41,10 @@ public class ClientPacketListenerMixinImpl {
         if (!stateView.isWorking() || compatibilityManager.isUsingTradeCycling()) {
             return Optional.empty();
         }
+        if (stateView.getPermissionManager().allowsOpeningScreen()) {
+            return Optional.empty();
+        }
+
         Minecraft client = Minecraft.getInstance();
         ClientPacketListener clientNetwork = client.getConnection();
         if (clientNetwork != null) {
