@@ -4,8 +4,11 @@ import com.mojang.datafixers.util.Either;
 import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.exceptions.commands.ArgumentNotSupportedException;
 import dev.gxlg.librgetter.utils.types.exceptions.commands.WrongEnchantmentException;
+import dev.gxlg.versiont.gen.com.mojang.brigadier.arguments.ArgumentType;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.versiont.gen.java.lang.Object;
+import dev.gxlg.versiont.gen.net.minecraft.commands.CommandBuildContext;
+import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.ResourceOrTagArgument;
 import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.ResourceOrTagArgument$Result;
 import dev.gxlg.versiont.gen.net.minecraft.core.Holder;
 import dev.gxlg.versiont.gen.net.minecraft.core.Holder$Reference;
@@ -41,6 +44,11 @@ public class Commands_1_19_3 extends Commands_1_19_0 {
         } else {
             return List.of(((Enchantment) ((Holder$Reference) optEnchantment.get()).value()));
         }
+    }
+
+    @Override
+    public ArgumentType getEnchantmentArgumentType(CommandBuildContext context) {
+        return ResourceOrTagArgument.resourceOrTag(context, BuiltInRegistries.ENCHANTMENT().key());
     }
 
     protected @NotNull Optional<Object> fromArgument(ResourceOrTagArgument$Result argument) {
