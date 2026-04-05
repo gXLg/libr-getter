@@ -103,6 +103,7 @@ LibrGetter supports localization and currently implements the following language
 * Vietnamese 🇻🇳 (thanks [@ToanAnh312](https://github.com/ToanAnh312))
 * Japanese 🇯🇵 (thanks [@H1ggsK](https://github.com/H1ggsK))
 * Spanish 🇪🇸
+* Turkish 🇹🇷 (thanks [@EmirOven](https://github.com/EmirOven))
 
 You may request further languages or suggest improvements in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues) or
 the [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt)
