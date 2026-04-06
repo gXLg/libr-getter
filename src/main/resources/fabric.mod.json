@@ -35,7 +35,9 @@
       "links": {
         "modmenu.discord": "https://discord.gg/aYBrWe5Jtt",
         "modmenu.donate": "https://www.paypal.com/donate/?hosted_button_id=DVC2UQP2AXR68",
-        "modmenu.youtube": "https://www.youtube.com/@gXLg"
+        "modmenu.youtube": "https://www.youtube.com/@gXLg",
+        "modmenu.modrinth": "https://modrinth.com/mod/libr-getter",
+        "modmenu.wiki": "https://gxlg.github.io/libr-getter/"
       }
     }
   }
