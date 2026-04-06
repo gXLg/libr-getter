@@ -23,7 +23,7 @@ A highly configurable fabric mod to automatically cycle a librarian villager for
                 <td>
                     <div align="center">
                         <br>
-                        All Minecraft versions from <code>1.17</code> up to <code>26.1</code> - with a single JAR file
+                        All Minecraft versions from <code>1.17</code> up to <code>26.1.1</code> - with a single JAR file
                         <br>
                         <br>
                         <a href="https://github.com/gXLg/versiont-lib"><img alt="Version't badge" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fgxlg.github.io%2Fbadges%2Fversiont%2Flibrgetter.json" align="center"></a>
@@ -103,6 +103,7 @@ LibrGetter supports localization and currently implements the following language
 * Vietnamese 🇻🇳 (thanks [@ToanAnh312](https://github.com/ToanAnh312))
 * Japanese 🇯🇵 (thanks [@H1ggsK](https://github.com/H1ggsK))
 * Spanish 🇪🇸
+* Turkish 🇹🇷 (thanks [@EmirOven](https://github.com/EmirOven))
 
 You may request further languages or suggest improvements in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues) or
 the [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt)
