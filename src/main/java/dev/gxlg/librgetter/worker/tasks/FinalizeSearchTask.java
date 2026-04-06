@@ -14,12 +14,13 @@ import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
-import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffers;
+
+import java.util.List;
 
 public class FinalizeSearchTask extends Task {
-    private final MerchantOffers offers;
+    private final List<MerchantOffer> offers;
 
-    public FinalizeSearchTask(MerchantOffers offers) {
+    public FinalizeSearchTask(List<MerchantOffer> offers) {
         this.offers = offers;
     }
 
@@ -38,9 +39,9 @@ public class FinalizeSearchTask extends Task {
         MinecraftData minecraftData = taskContext.minecraftData();
         Inventory inventory = minecraftData.localPlayer.getInventory();
         int buy;
-        if (canBuy(inventory, (MerchantOffer) offers.get(0))) {
+        if (canBuy(inventory, offers.get(0))) {
             buy = 0;
-        } else if (canBuy(inventory, (MerchantOffer) offers.get(1))) {
+        } else if (canBuy(inventory, offers.get(1))) {
             buy = 1;
         } else {
             throw new CanNotLockException();

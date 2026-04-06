@@ -20,16 +20,15 @@ import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.Items;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
-import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffers;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class ParseAndMatchTradesTask extends Task {
-    private final MerchantOffers offers;
+    private final List<MerchantOffer> offers;
 
-    public ParseAndMatchTradesTask(MerchantOffers trades) {
+    public ParseAndMatchTradesTask(List<MerchantOffer> trades) {
         this.offers = trades;
     }
 
@@ -40,7 +39,7 @@ public class ParseAndMatchTradesTask extends Task {
             if (i >= 2 && configManager.getOptions(Config.MATCH_MODE) == MatchMode.VANILLA) {
                 break;
             }
-            MerchantOffer offer = (MerchantOffer) offers.get(i);
+            MerchantOffer offer = offers.get(i);
             if (!isEnchantmentTrade(offer)) {
                 continue;
             }

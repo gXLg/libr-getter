@@ -22,12 +22,6 @@ adapter java.util.Set -> dev.gxlg.librgetter.utils.adapters.SetAdapter
 
 import java.util.concurrent.CompletableFuture
 
-import !java.util.ArrayList
-
-class ArrayList
-    [Object] get(int i)
-    int size()
-
 # ------------------------------------------------------------------------------------------------------------- #
 # Core
 
@@ -195,8 +189,6 @@ class Identifier
     String method_12836/getNamespace()
     String method_12832/getPath()
     String toString()
-
-class MerchantOffers extends ArrayList
 
 # ------------------------------------------------------------------------------------------------------------- #
 # Geometry
@@ -659,7 +651,7 @@ import net.minecraft.class_8673/net.minecraft.client.multiplayer.ClientCommonPac
 
 class ClientboundMerchantOffersPacket extends Packet
     int method_19459/getVillagerXp()
-    MerchantOffers method_17590/getOffers()
+    List<MerchantOffer> method_17590/getOffers()
 
 class ClientboundOpenScreenPacket extends Packet
     MenuType method_17593/getType()
