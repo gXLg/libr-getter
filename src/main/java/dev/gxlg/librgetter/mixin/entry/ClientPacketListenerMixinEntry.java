@@ -27,12 +27,12 @@ public class ClientPacketListenerMixinEntry {
     // --- //
 
     @Inject(at = @At("HEAD"), method = "handleOpenScreen(Lnet/minecraft/network/protocol/game/ClientboundOpenScreenPacket;)V", cancellable = true, order = 900, remap = false, require = 0)
-    public void handleOpenScreen1(@Coerce Object packet, CallbackInfo callback) {
-        MixinImpl.mixinVoid(ClientPacketListenerMixinImpl.class, callback, i -> i.handleOpenScreen(R.wrapperInst(ClientboundOpenScreenPacket.class, packet)));
+    public void handleOpenScreen1(@Coerce Object packet, CallbackInfo info) {
+        MixinImpl.mixinVoid(ClientPacketListenerMixinImpl.class, info, i -> i.handleOpenScreen(R.wrapperInst(ClientboundOpenScreenPacket.class, packet)));
     }
 
     @Inject(at = @At("HEAD"), method = "method_17587(Lnet/minecraft/class_3944;)V", cancellable = true, order = 900, remap = false, require = 0)
-    public void handleOpenScreen2(@Coerce Object packet, CallbackInfo callback) {
-        MixinImpl.mixinVoid(ClientPacketListenerMixinImpl.class, callback, i -> i.handleOpenScreen(R.wrapperInst(ClientboundOpenScreenPacket.class, packet)));
+    public void handleOpenScreen2(@Coerce Object packet, CallbackInfo info) {
+        MixinImpl.mixinVoid(ClientPacketListenerMixinImpl.class, info, i -> i.handleOpenScreen(R.wrapperInst(ClientboundOpenScreenPacket.class, packet)));
     }
 }
