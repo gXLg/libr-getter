@@ -28,7 +28,7 @@ public class ClientPacketListenerMixinImpl {
     }
 
     public void handleMerchantOffers(ClientboundMerchantOffersPacket packet) {
-        if (!stateView.getPermissionManager().allowsSettingTradeOffers()) {
+        if (!stateView.createPermissionView().allowsSettingTradeOffers()) {
             return;
         }
         TradeOfferData tradeOfferData = packet.getVillagerXp() > 0 ? TradeOfferData.noRefresh() : TradeOfferData.offers(packet.getOffers());
@@ -42,7 +42,7 @@ public class ClientPacketListenerMixinImpl {
         if (!stateView.isWorking() || compatibilityManager.isUsingTradeCycling()) {
             return Optional.empty();
         }
-        if (stateView.getPermissionManager().allowsOpeningScreen()) {
+        if (stateView.createPermissionView().allowsOpeningScreen()) {
             return Optional.empty();
         }
 

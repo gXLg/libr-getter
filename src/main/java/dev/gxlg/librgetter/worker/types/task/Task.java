@@ -20,22 +20,26 @@ public abstract class Task {
     public abstract void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException;
 
     protected boolean allowsBreakingLecterns() {
-        return PermissionManager.DEFAULT.allowsBreakingLecterns();
+        return PermissionView.DEFAULT.allowsBreakingLecterns();
     }
 
     protected boolean allowsPlacingLectern() {
-        return PermissionManager.DEFAULT.allowsPlacingLectern();
+        return PermissionView.DEFAULT.allowsPlacingLectern();
     }
 
     protected boolean allowsSettingTradeOffers() {
-        return PermissionManager.DEFAULT.allowsSettingTradeOffers();
+        return PermissionView.DEFAULT.allowsSettingTradeOffers();
     }
 
     protected boolean allowsOpeningScreen() {
-        return PermissionManager.DEFAULT.allowsOpeningScreen();
+        return PermissionView.DEFAULT.allowsOpeningScreen();
     }
 
-    public PermissionManager getPermissionManager() {
-        return new PermissionManager(allowsBreakingLecterns(), allowsPlacingLectern(), allowsSettingTradeOffers(), allowsOpeningScreen());
+    protected boolean forcesSecondaryUse() {
+        return PermissionView.DEFAULT.forcesSecondaryUse();
+    }
+
+    public PermissionView createPermissionView() {
+        return new PermissionView(allowsBreakingLecterns(), allowsPlacingLectern(), allowsSettingTradeOffers(), allowsOpeningScreen(), forcesSecondaryUse());
     }
 }
