@@ -11,11 +11,11 @@ public class CommandHelper {
         return ctx -> {
             try {
                 runnable.run(R.wrapperInst(CommandContext.class, ctx));
+                return 0;
             } catch (LibrGetterException e) {
                 Texts.sendMessage(e.getTranslatableErrorMessage());
                 return 1;
             }
-            return 0;
         };
     }
 

@@ -28,7 +28,7 @@ public class MultiPlayerGameModeMixinImpl {
         if (!world.getBlockState(blockPos).getBlock().equals(Blocks.LECTERN())) {
             return Optional.empty();
         }
-        if (!stateView.getPermissionManager().allowsBreakingLecterns()) {
+        if (!stateView.createPermissionView().allowsBreakingLecterns()) {
             return Optional.of(false);
         }
         return Optional.empty();
@@ -44,7 +44,7 @@ public class MultiPlayerGameModeMixinImpl {
         if (!pos.equals(stateView.getTaskContext().selectedLecternPos())) {
             return Optional.empty();
         }
-        if (!stateView.getPermissionManager().allowsPlacingLectern()) {
+        if (!stateView.createPermissionView().allowsPlacingLectern()) {
             return Optional.of(InteractionResult.FAIL());
         }
         return Optional.empty();
