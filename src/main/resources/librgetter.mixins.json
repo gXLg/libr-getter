@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_16",
   "client": [
     "ClientPacketListenerMixinEntry",
-    "MultiPlayerGameModeMixinEntry"
+    "MultiPlayerGameModeMixinEntry",
+    "PlayerMixinEntry"
   ],
   "injectors": {
     "defaultRequire": 1
