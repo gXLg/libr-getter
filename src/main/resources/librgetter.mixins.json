@@ -2,9 +2,18 @@
   "required": false,
   "package": "dev.gxlg.librgetter.mixin.entry",
   "compatibilityLevel": "JAVA_16",
+  "plugin": "dev.gxlg.versiont.mixins.VersiontMixinPlugin",
   "client": [
-    "ClientPacketListenerMixinEntry",
-    "MultiPlayerGameModeMixinEntry"
+    "obf.ClientPacketListenerMixinEntry",
+    "obf.MultiPlayerGameModeMixinEntry_1_17_0",
+    "obf.MultiPlayerGameModeMixinEntry_1_19_0",
+    "obf.MultiPlayerGameModeMixinEntry_Common",
+    "obf.PlayerMixinEntry",
+    "deobf.ClientPacketListenerMixinEntry",
+    "deobf.MultiPlayerGameModeMixinEntry_1_17_0",
+    "deobf.MultiPlayerGameModeMixinEntry_1_19_0",
+    "deobf.MultiPlayerGameModeMixinEntry_Common",
+    "deobf.PlayerMixinEntry"
   ],
   "injectors": {
     "defaultRequire": 1

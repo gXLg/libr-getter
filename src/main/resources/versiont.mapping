@@ -104,6 +104,7 @@ import net.minecraft.class_2378/net.minecraft.core.Registry
 import net.minecraft.class_7923/net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.class_5455/net.minecraft.core.RegistryAccess
 import net.minecraft.class_6885$class_6888/net.minecraft.core.HolderSet$Named
+import net.minecraft.class_6885$class_6887/net.minecraft.core.HolderSet$ListBacked
 
 class Holder
     boolean method_40225/is(ResourceKey resourceKey)
@@ -155,7 +156,9 @@ class BuiltInRegistries
 class RegistryAccess
     Registry method_30530/registryOrThrow/lookupOrThrow(ResourceKey key)
 
-class HolderSet$Named
+class HolderSet$Named extends HolderSet$ListBacked
+
+class HolderSet$ListBacked
     Stream<Holder> method_40239/stream()
 
 class Tag

@@ -82,4 +82,9 @@ public class SelectAndPlaceLecternTask extends Task {
     protected boolean allowsPlacingLectern() {
         return true;
     }
+
+    @Override
+    protected boolean forcesSecondaryUse() {
+        return true;
+    }
 }

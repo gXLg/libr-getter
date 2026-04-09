@@ -3,7 +3,7 @@ package dev.gxlg.librgetter.worker.state;
 import dev.gxlg.librgetter.worker.state.base.TaskContextState;
 import dev.gxlg.librgetter.worker.state.base.TaskState;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
-import dev.gxlg.librgetter.worker.types.task.PermissionManager;
+import dev.gxlg.librgetter.worker.types.task.PermissionView;
 
 public class StateView {
     private final TaskState taskState;
@@ -19,8 +19,8 @@ public class StateView {
         return taskState.isWorking();
     }
 
-    public PermissionManager getPermissionManager() {
-        return taskState.getPermissionManager();
+    public PermissionView createPermissionView() {
+        return taskState.createPermissionView();
     }
 
     public TaskContext getTaskContext() {

@@ -1,6 +1,6 @@
 plugins {
     id "net.fabricmc.fabric-loom" version "${loom_version}"
-    id "dev.gxlg.versiont-toolchain" version "1.1.0"
+    id "dev.gxlg.versiont-toolchain" version "1.2.0"
 }
 
 version = project.mod_version

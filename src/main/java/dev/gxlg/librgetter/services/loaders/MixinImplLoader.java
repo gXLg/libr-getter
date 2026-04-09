@@ -4,6 +4,7 @@ import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.mixin.MixinImpl;
 import dev.gxlg.librgetter.mixin.impl.ClientPacketListenerMixinImpl;
 import dev.gxlg.librgetter.mixin.impl.MultiPlayerGameModeMixinImpl;
+import dev.gxlg.librgetter.mixin.impl.PlayerMixinImpl;
 import dev.gxlg.librgetter.services.ServiceLoader;
 import dev.gxlg.librgetter.worker.scheduling.controllers.SystemSchedulerController;
 import dev.gxlg.librgetter.worker.state.StateView;
@@ -31,5 +32,6 @@ public class MixinImplLoader extends ServiceLoader<MixinImplLoader> {
 
         MixinImpl.init(ClientPacketListenerMixinImpl.class, new ClientPacketListenerMixinImpl(stateView, systemSchedulerController, compatibilityManager));
         MixinImpl.init(MultiPlayerGameModeMixinImpl.class, new MultiPlayerGameModeMixinImpl(stateView));
+        MixinImpl.init(PlayerMixinImpl.class, new PlayerMixinImpl(stateView));
     }
 }
