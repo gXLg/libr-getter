@@ -62,7 +62,6 @@ A highly configurable fabric mod to automatically cycle a librarian villager for
     </table>
 </div>
 
-
 # Features
 
 * Fully automatic and highly efficient
@@ -77,6 +76,7 @@ Download LibrGetter from the [<kbd>Modrinth page</kbd>](https://modrinth.com/mod
 and place the downloaded JAR file in your Minecraft `mods` folder.
 
 Make sure, you also have the following dependencies installed:
+
 * [<kbd>Fabric API</kbd>](https://modrinth.com/mod/fabric-api) - required for communication between the mod and the game
 * [<kbd>Version't Library</kbd>](https://modrinth.com/mod/versiont) - required for supporting multiple Minecraft versions with a single JAR file
 
@@ -104,6 +104,7 @@ LibrGetter supports localization and currently implements the following language
 * Japanese 🇯🇵 (thanks [@H1ggsK](https://github.com/H1ggsK))
 * Spanish 🇪🇸
 * Turkish 🇹🇷 (thanks [@EmirOven](https://github.com/EmirOven))
+* Polish 🇵🇱 (thanks [@Pulpasek](https://github.com/Pulpasek))
 
 You may request further languages or suggest improvements in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues) or
 the [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt)

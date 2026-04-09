@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 const path = "./src/main/resources/assets/librgetter/lang/%.json";
-const langs = ["de_de", "en_us", "ru_ru", "ja_jp", "vi_vn", "es_es", "tr_tr"];
+const langs = ["de_de", "en_us", "ru_ru", "ja_jp", "vi_vn", "es_es", "tr_tr", "pl_pl"];
 
 for (const lang of langs) {
   const fpath = path.replace("%", lang);
