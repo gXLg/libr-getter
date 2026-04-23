@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.goals;
+package dev.gxlg.librgetter.savefiles.goals;
 
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 

@@ -1,9 +1,9 @@
-package dev.gxlg.librgetter.config.types.enums;
+package dev.gxlg.librgetter.savefiles.config.types.enums;
 
-import dev.gxlg.librgetter.config.Config;
-import dev.gxlg.librgetter.config.ConfigManager;
-import dev.gxlg.librgetter.config.types.OptionsConfig;
-import dev.gxlg.librgetter.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.config.Config;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.savefiles.config.types.OptionsConfig;
+import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 
 import java.util.ArrayList;

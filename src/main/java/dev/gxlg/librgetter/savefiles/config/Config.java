@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.config;
+package dev.gxlg.librgetter.savefiles.config;
 
 public enum Config {
     AUTO_TOOL("autoTool"),

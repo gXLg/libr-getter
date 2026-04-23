@@ -1,6 +1,6 @@
-package dev.gxlg.librgetter.config.types;
+package dev.gxlg.librgetter.savefiles.config.types;
 
-import dev.gxlg.librgetter.config.Config;
+import dev.gxlg.librgetter.savefiles.config.Config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;

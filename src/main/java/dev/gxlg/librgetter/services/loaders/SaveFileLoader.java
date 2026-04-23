@@ -1,9 +1,9 @@
 package dev.gxlg.librgetter.services.loaders;
 
-import dev.gxlg.librgetter.config.ConfigManager;
-import dev.gxlg.librgetter.goals.GoalListManager;
 import dev.gxlg.librgetter.notifier.Notifier;
 import dev.gxlg.librgetter.savefiles.SaveFileManager;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.services.ServiceLoader;
 import dev.gxlg.librgetter.services.types.Export;
 

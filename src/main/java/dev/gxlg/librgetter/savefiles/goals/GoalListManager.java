@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.goals;
+package dev.gxlg.librgetter.savefiles.goals;
 
 import dev.gxlg.librgetter.savefiles.JsonSaveFile;
 import dev.gxlg.librgetter.savefiles.SaveFileManager;

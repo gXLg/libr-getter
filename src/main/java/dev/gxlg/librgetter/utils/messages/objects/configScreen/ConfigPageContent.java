@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.utils.messages.objects.configScreen;
 
-import dev.gxlg.librgetter.config.ConfigManager;
-import dev.gxlg.librgetter.config.types.OptionsConfig;
-import dev.gxlg.librgetter.config.types.helpers.Configurable;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.savefiles.config.types.OptionsConfig;
+import dev.gxlg.librgetter.savefiles.config.types.helpers.Configurable;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.messages.translatable.config.TranslatableCategory;
 import dev.gxlg.librgetter.utils.messages.translatable.config.TranslatableConfigDescription;

@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.services.loaders;
 
-import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.controller.SharedController;
 import dev.gxlg.librgetter.keybinds.KeybindManager;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.services.ServiceLoader;
 
 import java.util.function.Supplier;

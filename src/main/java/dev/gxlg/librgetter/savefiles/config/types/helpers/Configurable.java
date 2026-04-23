@@ -1,15 +1,15 @@
-package dev.gxlg.librgetter.config.types.helpers;
+package dev.gxlg.librgetter.savefiles.config.types.helpers;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import dev.gxlg.librgetter.config.Config;
-import dev.gxlg.librgetter.config.ConfigManager;
-import dev.gxlg.librgetter.config.types.CanNotChangeWhileRunning;
-import dev.gxlg.librgetter.config.types.CompatibilityWith;
-import dev.gxlg.librgetter.config.types.IntRange;
-import dev.gxlg.librgetter.config.types.OnlyEffective;
-import dev.gxlg.librgetter.config.types.OptionsConfig;
+import dev.gxlg.librgetter.savefiles.config.Config;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.savefiles.config.types.CanNotChangeWhileRunning;
+import dev.gxlg.librgetter.savefiles.config.types.CompatibilityWith;
+import dev.gxlg.librgetter.savefiles.config.types.IntRange;
+import dev.gxlg.librgetter.savefiles.config.types.OnlyEffective;
+import dev.gxlg.librgetter.savefiles.config.types.OptionsConfig;
 import dev.gxlg.librgetter.utils.chaining.compatibility.Compatibility;
 
 import java.lang.reflect.Field;

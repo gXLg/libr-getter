@@ -1,11 +1,11 @@
-package dev.gxlg.librgetter.config;
+package dev.gxlg.librgetter.savefiles.config;
 
-import dev.gxlg.librgetter.config.types.ConfigCategory;
-import dev.gxlg.librgetter.config.types.OptionsConfig;
-import dev.gxlg.librgetter.config.types.helpers.Configurable;
 import dev.gxlg.librgetter.notifier.Notifier;
 import dev.gxlg.librgetter.savefiles.JsonSaveFile;
 import dev.gxlg.librgetter.savefiles.SaveFileManager;
+import dev.gxlg.librgetter.savefiles.config.types.ConfigCategory;
+import dev.gxlg.librgetter.savefiles.config.types.OptionsConfig;
+import dev.gxlg.librgetter.savefiles.config.types.helpers.Configurable;
 import dev.gxlg.librgetter.utils.messages.translatable.error.NoConfigFieldMessage;
 import dev.gxlg.librgetter.utils.messages.translatable.error.UncategorizedConfigMessage;
 

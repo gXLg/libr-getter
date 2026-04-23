@@ -2,9 +2,9 @@ package dev.gxlg.librgetter.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import dev.gxlg.librgetter.config.Config;
-import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.notifier.Notifier;
+import dev.gxlg.librgetter.savefiles.config.Config;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.utils.messages.translatable.feedback.NewVersionReleasedMessage;
 
 import java.io.IOException;

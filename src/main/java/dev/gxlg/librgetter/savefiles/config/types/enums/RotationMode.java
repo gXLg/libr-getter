@@ -1,6 +1,6 @@
-package dev.gxlg.librgetter.config.types.enums;
+package dev.gxlg.librgetter.savefiles.config.types.enums;
 
-import dev.gxlg.librgetter.config.types.OptionsConfig;
+import dev.gxlg.librgetter.savefiles.config.types.OptionsConfig;
 
 public enum RotationMode implements OptionsConfig<RotationMode> {
     NONE,

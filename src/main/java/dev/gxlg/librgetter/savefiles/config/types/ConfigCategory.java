@@ -1,4 +1,6 @@
-package dev.gxlg.librgetter.config.types;
+package dev.gxlg.librgetter.savefiles.config.types;
+
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CompatibilityWith {
-    String value();
+public @interface ConfigCategory {
+    ConfigManager.Category value();
 }

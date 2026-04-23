@@ -2,12 +2,12 @@ package dev.gxlg.librgetter.commands;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import dev.gxlg.librgetter.config.Config;
-import dev.gxlg.librgetter.config.ConfigManager;
-import dev.gxlg.librgetter.config.types.helpers.Configurable;
 import dev.gxlg.librgetter.controller.SharedController;
-import dev.gxlg.librgetter.goals.GoalListManager;
 import dev.gxlg.librgetter.gui.config.ConfigScreen;
+import dev.gxlg.librgetter.savefiles.config.Config;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.savefiles.config.types.helpers.Configurable;
+import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.commands.Commands;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;

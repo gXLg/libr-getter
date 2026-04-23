@@ -1,7 +1,7 @@
-package dev.gxlg.librgetter.config.types;
+package dev.gxlg.librgetter.savefiles.config.types;
 
 import com.mojang.brigadier.arguments.ArgumentType;
-import dev.gxlg.librgetter.config.types.helpers.EnumArgumentType;
+import dev.gxlg.librgetter.savefiles.config.types.helpers.EnumArgumentType;
 
 public interface OptionsConfig<T extends Enum<T> & OptionsConfig<T>> {
     T[] getValues();

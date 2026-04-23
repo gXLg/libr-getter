@@ -1,13 +1,13 @@
-package dev.gxlg.librgetter.config;
+package dev.gxlg.librgetter.savefiles.config;
 
-import dev.gxlg.librgetter.config.types.CanNotChangeWhileRunning;
-import dev.gxlg.librgetter.config.types.CompatibilityWith;
-import dev.gxlg.librgetter.config.types.ConfigCategory;
-import dev.gxlg.librgetter.config.types.IntRange;
-import dev.gxlg.librgetter.config.types.OnlyEffective;
-import dev.gxlg.librgetter.config.types.enums.LogMode;
-import dev.gxlg.librgetter.config.types.enums.MatchMode;
-import dev.gxlg.librgetter.config.types.enums.RotationMode;
+import dev.gxlg.librgetter.savefiles.config.types.CanNotChangeWhileRunning;
+import dev.gxlg.librgetter.savefiles.config.types.CompatibilityWith;
+import dev.gxlg.librgetter.savefiles.config.types.ConfigCategory;
+import dev.gxlg.librgetter.savefiles.config.types.IntRange;
+import dev.gxlg.librgetter.savefiles.config.types.OnlyEffective;
+import dev.gxlg.librgetter.savefiles.config.types.enums.LogMode;
+import dev.gxlg.librgetter.savefiles.config.types.enums.MatchMode;
+import dev.gxlg.librgetter.savefiles.config.types.enums.RotationMode;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({ "unused", "FieldMayBeFinal", "UnusedReturnValue" })

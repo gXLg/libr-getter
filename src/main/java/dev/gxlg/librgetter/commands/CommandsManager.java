@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.commands;
 
-import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.controller.SharedController;
-import dev.gxlg.librgetter.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.commands.Commands;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.CommandDispatcher;
 import dev.gxlg.versiont.gen.net.minecraft.commands.CommandBuildContext;

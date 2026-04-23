@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.config.types.helpers;
+package dev.gxlg.librgetter.savefiles.config.types.helpers;
 
 import com.mojang.brigadier.Message;
 import com.mojang.brigadier.StringReader;
@@ -8,7 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import dev.gxlg.librgetter.config.types.OptionsConfig;
+import dev.gxlg.librgetter.savefiles.config.types.OptionsConfig;
 import dev.gxlg.versiont.gen.net.minecraft.commands.SharedSuggestionProvider;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
