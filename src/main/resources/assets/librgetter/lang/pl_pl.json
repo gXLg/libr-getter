@@ -59,6 +59,7 @@
   "librgetter.feedback.start": "Proces LibrGetter rozpoczęty",
   "librgetter.feedback.stop": "Pomyślnie zatrzymano proces",
   "librgetter.feedback.version": "Nowa wersja LibrGetter dostępna:\n%s",
+  "librgetter.keys.goals": "Otwórz menu listy celów",
   "librgetter.keys.open": "Otwórz menu konfiguracji",
   "librgetter.keys.select": "Wybierz pulpit lub bibliotekarza",
   "librgetter.keys.toggle": "Rozpocznij lub zatrzymaj proces",

@@ -59,6 +59,7 @@
   "librgetter.feedback.start": "LibrGetter process started",
   "librgetter.feedback.stop": "Successfully stopped the process",
   "librgetter.feedback.version": "New version of LibrGetter has been released:\n%s",
+  "librgetter.keys.goals": "Open the goals list menu",
   "librgetter.keys.open": "Open the config menu",
   "librgetter.keys.select": "Select the lectern or the librarian",
   "librgetter.keys.toggle": "Start or stop the process",

@@ -59,6 +59,7 @@
   "librgetter.feedback.start": "LibrGetter işlemi başlatıldı",
   "librgetter.feedback.stop": "İşlem başarıyla durduruldu",
   "librgetter.feedback.version": "LibrGetter'ın yeni sürümü yayınlandı:\n%s",
+  "librgetter.keys.goals": "Hedef listesi menüsünü aç",
   "librgetter.keys.open": "Ayarlar menüsünü aç",
   "librgetter.keys.select": "Kütüphaneciyi veya kürsüyü seçin",
   "librgetter.keys.toggle": "İşlemi durdur veya başlat",

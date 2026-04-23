@@ -59,6 +59,7 @@
   "librgetter.feedback.start": "LibrGetter bắt đầu hoạt động",
   "librgetter.feedback.stop": "Đã dừng thành công",
   "librgetter.feedback.version": "Phiên bản mới của LibrGetter đã được phát hành:\n%s",
+  "librgetter.keys.goals": "Mở menu danh sách mục tiêu",
   "librgetter.keys.open": "Mở menu cấu hình",
   "librgetter.keys.select": "Chọn bục giảng hoặc thủ thư",
   "librgetter.keys.toggle": "Bắt đầu hoặc dừng quá trình",

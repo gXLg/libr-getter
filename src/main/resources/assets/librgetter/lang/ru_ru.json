@@ -59,6 +59,7 @@
   "librgetter.feedback.start": "LibrGetter запускает процесс",
   "librgetter.feedback.stop": "Процесс успешно остановлен",
   "librgetter.feedback.version": "Новая версия LibrGetter была выпущена:\n%s",
+  "librgetter.keys.goals": "Открыть меню списка целей",
   "librgetter.keys.open": "Открыть меню конфигураций",
   "librgetter.keys.select": "Выбрать кафедру или библиотекаря",
   "librgetter.keys.toggle": "Начать или остановить процесс",

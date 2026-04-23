@@ -59,6 +59,7 @@
   "librgetter.feedback.start": "Proceso de LibrGetter iniciado",
   "librgetter.feedback.stop": "Proceso detenido con éxito",
   "librgetter.feedback.version": "Se ha lanzado una nueva versión de LibrGetter:\n%s",
+  "librgetter.keys.goals": "Abrir el menú de lista de objetivos",
   "librgetter.keys.open": "Abrir el menú de configuración",
   "librgetter.keys.select": "Selecciona el atril o el bibliotecario",
   "librgetter.keys.toggle": "Iniciar o detener el proceso",

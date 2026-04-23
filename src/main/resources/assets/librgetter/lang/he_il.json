@@ -59,6 +59,7 @@
   "librgetter.feedback.start": "תהליך LibrGetter התחיל",
   "librgetter.feedback.stop": "התהליך הופסק בהצלחה",
   "librgetter.feedback.version": "גרסה חדשה של LiberGetter זמינה:\n%s",
+  "librgetter.keys.goals": "פתח תפריט רשימת המטרות",
   "librgetter.keys.open": "פתח תפריט ההגדרות",
   "librgetter.keys.select": "בחר בעמדת הקריאה או בספרן",
   "librgetter.keys.toggle": "התחל או עצור בתהליך",
