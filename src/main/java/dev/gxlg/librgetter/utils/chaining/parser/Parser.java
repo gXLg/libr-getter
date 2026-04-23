@@ -1,6 +1,7 @@
 package dev.gxlg.librgetter.utils.chaining.parser;
 
 import dev.gxlg.librgetter.config.ConfigManager;
+import dev.gxlg.librgetter.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.versiont.api.V;
@@ -17,11 +18,11 @@ public class Parser {
         }
     }
 
-    public static EnchantmentTrade parseTrade(MerchantOffer offer, ConfigManager configManager) throws LibrGetterException {
-        return implementation.parseTrade(offer, configManager);
+    public static EnchantmentTrade parseTrade(MerchantOffer offer, ConfigManager configManager, GoalListManager goalListManager) throws LibrGetterException {
+        return implementation.parseTrade(offer, configManager, goalListManager);
     }
 
     public abstract static class Base {
-        public abstract EnchantmentTrade parseTrade(MerchantOffer offer, ConfigManager configManager) throws LibrGetterException;
+        public abstract EnchantmentTrade parseTrade(MerchantOffer offer, ConfigManager configManager, GoalListManager goalListManager) throws LibrGetterException;
     }
 }

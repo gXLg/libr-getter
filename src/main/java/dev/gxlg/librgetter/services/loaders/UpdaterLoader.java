@@ -14,10 +14,10 @@ public class UpdaterLoader extends ServiceLoader<UpdaterLoader> {
 
     private final Supplier<ConfigManager> dependencyConfigManager;
 
-    public UpdaterLoader(CoreLoader coreLoader, NotifierLoader notifierLoader, ConfigLoader configLoader) {
+    public UpdaterLoader(CoreLoader coreLoader, NotifierLoader notifierLoader, SaveFileLoader saveFileLoader) {
         dependencyModVersion = initDependency(coreLoader, CoreLoader.exportModVersion);
         dependencyNotifier = initDependency(notifierLoader, NotifierLoader.exportNotifier);
-        dependencyConfigManager = initDependency(configLoader, ConfigLoader.exportConfigManager);
+        dependencyConfigManager = initDependency(saveFileLoader, SaveFileLoader.exportConfigManager);
     }
 
     @Override

@@ -3,6 +3,7 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.config.Config;
 import dev.gxlg.librgetter.config.ConfigManager;
+import dev.gxlg.librgetter.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.exceptions.tasks.VillagerTooFarException;
@@ -14,7 +15,7 @@ import dev.gxlg.librgetter.worker.types.task.Task;
 
 public class RequestTradesTask extends Task {
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
         if (configManager.getBoolean(Config.MANUAL)) {
             controller.scheduleTaskSwitch(TaskSwitch.sameTick(WaitTradesTask::new));
             return;

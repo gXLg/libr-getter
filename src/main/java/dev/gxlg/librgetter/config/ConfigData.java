@@ -8,16 +8,10 @@ import dev.gxlg.librgetter.config.types.OnlyEffective;
 import dev.gxlg.librgetter.config.types.enums.LogMode;
 import dev.gxlg.librgetter.config.types.enums.MatchMode;
 import dev.gxlg.librgetter.config.types.enums.RotationMode;
-import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SuppressWarnings({ "unused", "FieldMayBeFinal", "UnusedReturnValue" })
 public class ConfigData {
-    private final List<EnchantmentTrade> goals = new ArrayList<>();
-
     @OnlyEffective(when = Config.MANUAL, equals = "false")
     @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
@@ -85,29 +79,4 @@ public class ConfigData {
     @CanNotChangeWhileRunning
     @ConfigCategory(ConfigManager.Category.COMPATIBILITY)
     private boolean tradeCycling = false;
-
-    public List<EnchantmentTrade> getGoals() {
-        return List.copyOf(goals);
-    }
-
-    public boolean addGoal(EnchantmentTrade goal) {
-        return goals.add(goal);
-    }
-
-    public boolean removeGoal(EnchantmentTrade goal) {
-        return goals.remove(goal);
-    }
-
-    public boolean removeMatchingGoal(EnchantmentTrade trade) {
-        for (EnchantmentTrade goal : goals) {
-            if (trade.same(goal)) {
-                return goals.remove(goal);
-            }
-        }
-        return false;
-    }
-
-    public void clearGoals() {
-        goals.clear();
-    }
 }

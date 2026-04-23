@@ -5,6 +5,7 @@ import dev.gxlg.librgetter.config.Config;
 import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.config.types.enums.LogMode;
 import dev.gxlg.librgetter.config.types.enums.MatchMode;
+import dev.gxlg.librgetter.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.parser.Parser;
 import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
@@ -33,7 +34,7 @@ public class ParseAndMatchTradesTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
         List<EnchantmentTrade> offeredEnchantments = new ArrayList<>();
         for (int i = 0; i < offers.size(); i++) {
             if (i >= 2 && configManager.getOptions(Config.MATCH_MODE) == MatchMode.VANILLA) {
@@ -43,7 +44,7 @@ public class ParseAndMatchTradesTask extends Task {
             if (!isEnchantmentTrade(offer)) {
                 continue;
             }
-            EnchantmentTrade trade = Parser.parseTrade(offer, configManager);
+            EnchantmentTrade trade = Parser.parseTrade(offer, configManager, goalListManager);
             if (trade != null) {
                 offeredEnchantments.add(trade);
             }
@@ -55,7 +56,7 @@ public class ParseAndMatchTradesTask extends Task {
         if (logMode != LogMode.NONE) {
             Texts.sendMessage(new OfferMessage(offeredEnchantments), logMode == LogMode.ACTIONBAR);
         }
-        Optional<List<EnchantmentTrade>> matching = configManager.<MatchMode>getOptions(Config.MATCH_MODE).match(offeredEnchantments, configManager);
+        Optional<List<EnchantmentTrade>> matching = configManager.<MatchMode>getOptions(Config.MATCH_MODE).match(offeredEnchantments, configManager, goalListManager);
         if (matching.isEmpty()) {
             TaskSwitch taskSwitch;
             if (compatibilityManager.isUsingTradeCycling()) {
@@ -78,10 +79,10 @@ public class ParseAndMatchTradesTask extends Task {
 
         if (configManager.getBoolean(Config.REMOVE_GOAL)) {
             for (EnchantmentTrade trade : matching.get()) {
-                configManager.getData().removeMatchingGoal(trade);
+                goalListManager.removeMatchingGoal(trade);
                 Texts.sendMessage(new EnchantmentRemovedMessage(trade));
             }
-            configManager.save();
+            goalListManager.save();
         }
 
         controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> new FinalizeSearchTask(offers)));

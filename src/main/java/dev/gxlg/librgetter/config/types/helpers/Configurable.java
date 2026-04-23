@@ -22,18 +22,24 @@ public final class Configurable<T> {
 
     private final ConfigManager managerInstance;
 
+    private final Object data;
+
     private final Field field;
 
-    public Configurable(Config config, Class<T> type, Field field, ConfigManager managerInstance) {
+    private final T defaultValue;
+
+    public Configurable(Config config, Class<T> type, Field field, ConfigManager managerInstance, Object data, T defaultValue) {
         this.config = config;
         this.type = type;
         this.managerInstance = managerInstance;
+        this.data = data;
         this.field = field;
+        this.defaultValue = defaultValue;
     }
 
     public T get() {
         try {
-            T configurableType = type.cast(field.get(managerInstance.getData()));
+            T configurableType = type.cast(field.get(data));
             if (configurableType != null) {
                 return configurableType;
             }
@@ -45,14 +51,14 @@ public final class Configurable<T> {
 
     public void set(T value) {
         try {
-            field.set(managerInstance.getData(), value);
+            field.set(data, value);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
     public T getDefault() {
-        return type.cast(ConfigManager.DEFAULT.getConfigurable(config).get());
+        return defaultValue;
     }
 
     public ArgumentType<?> commandArgument() {

@@ -2,6 +2,7 @@ package dev.gxlg.librgetter.worker.types.task;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.config.ConfigManager;
+import dev.gxlg.librgetter.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -17,7 +18,7 @@ public abstract class Task {
 
     public static final float ROTATION_ACCEPTABLE_ANGLE_DELTA = 0.8F;
 
-    public abstract void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException;
+    public abstract void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) throws LibrGetterException;
 
     protected boolean allowsBreakingLecterns() {
         return PermissionView.DEFAULT.allowsBreakingLecterns();

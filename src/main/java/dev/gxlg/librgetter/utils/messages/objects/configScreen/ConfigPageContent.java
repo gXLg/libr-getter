@@ -49,10 +49,11 @@ public class ConfigPageContent extends PageContent {
 
         ClickEvent resetCommand;
         MutableComponent leftText, middleText, rightText;
+        String defaultResetCommand = "/librget config " + configName + " " + configurable.getDefault().toString();
         if (configurable.type() == Boolean.class) {
             boolean value = (boolean) configurable.get();
 
-            resetCommand = Texts.runnable("/librget config " + configName + " " + configurable.getDefault().toString());
+            resetCommand = Texts.runnable(defaultResetCommand);
             leftText = Texts.literal("[" + value + "]").withStyle(Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + configName + " " + (!value))).withColor(value ? green : red));
             middleText = Texts.literal(" ");
             rightText = Texts.literal("");
@@ -64,7 +65,7 @@ public class ConfigPageContent extends PageContent {
             Style plusStyle = configurable.inRange(value + 1) ? Style.EMPTY().withClickEvent(Texts.runnable("/librget config " + configName + " " + (value + 1))).withColor(green) :
                               Style.EMPTY().withColor(ChatFormatting.GRAY());
 
-            resetCommand = Texts.runnable("/librget config " + configName + " " + configurable.getDefault().toString());
+            resetCommand = Texts.runnable(defaultResetCommand);
             leftText = Texts.literal("[-]").withStyle(minusStyle);
             middleText = Texts.literal(" " + value + " ").withStyle(Style.EMPTY().withColor(black));
             rightText = Texts.literal("[+]").withStyle(plusStyle);

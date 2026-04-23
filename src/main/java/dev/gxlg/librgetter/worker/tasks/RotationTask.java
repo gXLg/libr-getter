@@ -4,7 +4,7 @@ import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.config.Config;
 import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.config.types.enums.RotationMode;
-import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.goals.GoalListManager;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -36,7 +36,7 @@ public class RotationTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) {
         if (configManager.getBoolean(Config.MANUAL) || configManager.getOptions(Config.ROTATION_MODE) == RotationMode.NONE) {
             controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> nextTask));
             return;

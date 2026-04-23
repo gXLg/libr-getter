@@ -7,7 +7,6 @@ import net.fabricmc.loader.api.ModContainer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.nio.file.Path;
 import java.util.Optional;
 
 public class CoreLoader extends ServiceLoader<CoreLoader> {
@@ -18,27 +17,20 @@ public class CoreLoader extends ServiceLoader<CoreLoader> {
     @SuppressWarnings("unused")
     public static final Export<CoreLoader, Logger> exportLogger = new Export<>(c -> c.logger);
 
-    public static final Export<CoreLoader, Path> exportConfigPath = new Export<>(c -> c.configPath);
-
     private String modId;
 
     private String modVersion;
 
     private Logger logger;
 
-    private Path configPath;
-
     @Override
     public void init() {
         modId = "librgetter";
 
         Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(modId);
-        this.modVersion = container.map(modContainer -> "v" + modContainer.getMetadata().getVersion().getFriendlyString()).orElse(null);
+        modVersion = container.map(modContainer -> "v" + modContainer.getMetadata().getVersion().getFriendlyString()).orElse(null);
 
         logger = LogManager.getLogger(modId);
-
-        configPath = FabricLoader.getInstance().getConfigDir().resolve("librgetter.json");
-
         logger.info("Hello World from LibrGetter!");
     }
 }

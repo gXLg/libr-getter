@@ -3,6 +3,7 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.config.Config;
 import dev.gxlg.librgetter.config.ConfigManager;
+import dev.gxlg.librgetter.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.InventoryHelper;
 import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
@@ -25,7 +26,7 @@ import dev.gxlg.versiont.gen.net.minecraft.world.phys.Vec3;
 
 public class SelectAndPlaceLecternTask extends Task {
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
         MinecraftData minecraftData = taskContext.minecraftData();
         LocalPlayer player = minecraftData.localPlayer;
         if (!taskContext.selectedLecternPos().closerThan(player.blockPosition(), MAX_INTERACTION_DISTANCE)) {

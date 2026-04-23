@@ -16,10 +16,10 @@ public class KeybindsLoader extends ServiceLoader<KeybindsLoader> {
 
     private final Supplier<SharedController> dependencySharedController;
 
-    public KeybindsLoader(CoreLoader coreLoader, ConfigLoader configLoader, SharedControllerLoader sharedControllerLoader) {
+    public KeybindsLoader(CoreLoader coreLoader, SaveFileLoader saveFileLoader, SharedControllerLoader sharedControllerLoader) {
         dependencyModId = initDependency(coreLoader, CoreLoader.exportModId);
         dependencyModVersion = initDependency(coreLoader, CoreLoader.exportModVersion);
-        dependencyConfigManager = initDependency(configLoader, ConfigLoader.exportConfigManager);
+        dependencyConfigManager = initDependency(saveFileLoader, SaveFileLoader.exportConfigManager);
         dependencySharedController = initDependency(sharedControllerLoader, SharedControllerLoader.exportSharedController);
     }
 

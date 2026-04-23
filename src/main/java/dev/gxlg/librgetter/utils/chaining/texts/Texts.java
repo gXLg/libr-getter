@@ -62,7 +62,7 @@ public class Texts {
 
         private final String id;
 
-        IdentifierType(String id) {
+        IdentifierType(@SuppressWarnings("SameParameterValue") String id) {
             this.id = id;
         }
 

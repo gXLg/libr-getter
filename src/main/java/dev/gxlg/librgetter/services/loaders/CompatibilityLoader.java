@@ -14,8 +14,8 @@ public class CompatibilityLoader extends ServiceLoader<CompatibilityLoader> {
 
     private CompatibilityManager compatibilityManager;
 
-    public CompatibilityLoader(ConfigLoader configLoader) {
-        dependencyConfigManager = initDependency(configLoader, ConfigLoader.exportConfigManager);
+    public CompatibilityLoader(SaveFileLoader saveFileLoader) {
+        dependencyConfigManager = initDependency(saveFileLoader, SaveFileLoader.exportConfigManager);
     }
 
     @Override

@@ -6,7 +6,8 @@ import dev.gxlg.librgetter.config.Config;
 import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.config.types.helpers.Configurable;
 import dev.gxlg.librgetter.controller.SharedController;
-import dev.gxlg.librgetter.gui.ConfigScreen;
+import dev.gxlg.librgetter.goals.GoalListManager;
+import dev.gxlg.librgetter.gui.config.ConfigScreen;
 import dev.gxlg.librgetter.utils.chaining.commands.Commands;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
@@ -48,10 +49,13 @@ import java.util.List;
 public class LibrGetCommand implements CommandsManager.Command {
     private final ConfigManager configManager;
 
+    private final GoalListManager goalListManager;
+
     private final SharedController sharedController;
 
-    public LibrGetCommand(ConfigManager configManager, SharedController sharedController) {
+    public LibrGetCommand(ConfigManager configManager, GoalListManager goalListManager, SharedController sharedController) {
         this.configManager = configManager;
+        this.goalListManager = goalListManager;
         this.sharedController = sharedController;
     }
 
@@ -72,12 +76,12 @@ public class LibrGetCommand implements CommandsManager.Command {
     }
 
     private void list() {
-        Texts.sendMessage(new ListGoalsMessage(configManager.getData().getGoals()));
+        Texts.sendMessage(new ListGoalsMessage(goalListManager.getGoals()));
     }
 
     private void clearGoals() {
-        configManager.getData().clearGoals();
-        configManager.save();
+        goalListManager.clearGoals();
+        goalListManager.save();
         Texts.sendMessage(new GoalsListClearedMessage());
     }
 
@@ -228,7 +232,7 @@ public class LibrGetCommand implements CommandsManager.Command {
 
     private void addGoal(EnchantmentTrade newTrade, boolean custom) {
         EnchantmentTrade alreadyPresentTrade = null;
-        for (EnchantmentTrade trade : configManager.getData().getGoals()) {
+        for (EnchantmentTrade trade : goalListManager.getGoals()) {
             if (trade.same(newTrade)) {
                 alreadyPresentTrade = trade;
                 break;
@@ -237,18 +241,18 @@ public class LibrGetCommand implements CommandsManager.Command {
 
         if (alreadyPresentTrade != null) {
             Texts.sendMessage(new PriceChangedMessage(alreadyPresentTrade, newTrade.price()));
-            configManager.getData().removeGoal(alreadyPresentTrade);
+            goalListManager.removeGoal(alreadyPresentTrade);
         } else {
             TranslatableSuccessMessage message = custom ? new CustomTradeAddedMessage(newTrade, newTrade.price()) : new TradeAddedMessage(newTrade, newTrade.price());
             Texts.sendMessage(message);
         }
-        configManager.getData().addGoal(newTrade);
-        configManager.save();
+        goalListManager.addGoal(newTrade);
+        goalListManager.save();
     }
 
     private void removeGoalAllLevels(EnchantmentTrade tradeToRemove) throws NotInGoalsException {
         List<EnchantmentTrade> alreadyPresentTrades = new ArrayList<>();
-        for (EnchantmentTrade trade : configManager.getData().getGoals()) {
+        for (EnchantmentTrade trade : goalListManager.getGoals()) {
             if (trade.id().equals(tradeToRemove.id())) {
                 alreadyPresentTrades.add(trade);
             }
@@ -257,15 +261,15 @@ public class LibrGetCommand implements CommandsManager.Command {
             throw new NotInGoalsException(tradeToRemove);
         }
         for (EnchantmentTrade trade : alreadyPresentTrades) {
-            configManager.getData().removeGoal(trade);
+            goalListManager.removeGoal(trade);
             Texts.sendMessage(new EnchantmentRemovedMessage(trade));
         }
-        configManager.save();
+        goalListManager.save();
     }
 
     private void removeGoal(EnchantmentTrade tradeToRemove) throws NotInGoalsException {
         EnchantmentTrade alreadyPresentTrade = null;
-        for (EnchantmentTrade trade : configManager.getData().getGoals()) {
+        for (EnchantmentTrade trade : goalListManager.getGoals()) {
             if (trade.same(tradeToRemove)) {
                 alreadyPresentTrade = trade;
                 break;
@@ -274,8 +278,8 @@ public class LibrGetCommand implements CommandsManager.Command {
         if (alreadyPresentTrade == null) {
             throw new NotInGoalsException(tradeToRemove);
         }
-        configManager.getData().removeGoal(alreadyPresentTrade);
-        configManager.save();
+        goalListManager.removeGoal(alreadyPresentTrade);
+        goalListManager.save();
         Texts.sendMessage(new EnchantmentRemovedMessage(tradeToRemove));
     }
 

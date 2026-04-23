@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.gui;
+package dev.gxlg.librgetter.gui.config;
 
 import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.config.types.helpers.Configurable;

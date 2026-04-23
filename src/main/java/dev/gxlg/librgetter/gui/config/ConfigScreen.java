@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.gui;
+package dev.gxlg.librgetter.gui.config;
 
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen;

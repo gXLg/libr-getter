@@ -1,24 +1,15 @@
 package dev.gxlg.librgetter.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import dev.gxlg.librgetter.config.types.ConfigCategory;
 import dev.gxlg.librgetter.config.types.OptionsConfig;
 import dev.gxlg.librgetter.config.types.helpers.Configurable;
 import dev.gxlg.librgetter.notifier.Notifier;
-import dev.gxlg.librgetter.utils.messages.translatable.error.CouldNotInitConfigMessage;
-import dev.gxlg.librgetter.utils.messages.translatable.error.CouldNotReadConfigMessage;
-import dev.gxlg.librgetter.utils.messages.translatable.error.CouldNotSaveConfigMessage;
+import dev.gxlg.librgetter.savefiles.JsonSaveFile;
+import dev.gxlg.librgetter.savefiles.SaveFileManager;
 import dev.gxlg.librgetter.utils.messages.translatable.error.NoConfigFieldMessage;
 import dev.gxlg.librgetter.utils.messages.translatable.error.UncategorizedConfigMessage;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -26,9 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ConfigManager {
-    public static final ConfigManager DEFAULT = new DefaultConfig();
-
-    private final ConfigData data;
+    public static final String FILENAME = "config.json";
 
     private final List<Configurable<?>> configurables = new ArrayList<>();
 
@@ -36,14 +25,12 @@ public class ConfigManager {
 
     private final Map<Category, List<Configurable<?>>> categoryMap = new HashMap<>();
 
-    private final Path configPath;
+    private final JsonSaveFile<ConfigData> saveFile;
 
-    private final Notifier notifier;
-
-    private ConfigManager(ConfigData data, Path configPath, Notifier notifier) {
-        this.data = data;
-        this.configPath = configPath;
-        this.notifier = notifier;
+    private ConfigManager(JsonSaveFile<ConfigData> saveFile, Notifier notifier) {
+        this.saveFile = saveFile;
+        ConfigData data = saveFile.getData();
+        ConfigData defaultData = new ConfigData();
 
         for (Config config : Config.values()) {
             Field field;
@@ -56,13 +43,17 @@ public class ConfigManager {
             field.setAccessible(true);
 
             Configurable<?> configurable;
-            if (field.getType() == boolean.class) {
-                configurable = new Configurable<>(config, Boolean.class, field, this);
-            } else if (field.getType() == int.class) {
-                configurable = new Configurable<>(config, Integer.class, field, this);
-            } else if (OptionsConfig.class.isAssignableFrom(field.getType())) {
-                configurable = new Configurable<>(config, OptionsConfig.class, field, this);
-            } else {
+            try {
+                if (field.getType() == boolean.class) {
+                    configurable = new Configurable<>(config, Boolean.class, field, this, data, field.getBoolean(defaultData));
+                } else if (field.getType() == int.class) {
+                    configurable = new Configurable<>(config, Integer.class, field, this, data, field.getInt(defaultData));
+                } else if (OptionsConfig.class.isAssignableFrom(field.getType())) {
+                    configurable = new Configurable<>(config, OptionsConfig.class, field, this, data, (OptionsConfig<?>) field.get(defaultData));
+                } else {
+                    continue;
+                }
+            } catch (IllegalAccessException e) {
                 continue;
             }
 
@@ -79,32 +70,6 @@ public class ConfigManager {
             categoryMap.computeIfAbsent(category, k -> new ArrayList<>()).add(configurable);
         }
         configurables.sort(Comparator.comparing(c -> c.config().getId()));
-    }
-
-    public ConfigData getData() {
-        return data;
-    }
-
-    public void save() {
-        Path dir = configPath.getParent();
-        try {
-            if (Files.notExists(dir)) {
-                Files.createDirectory(dir);
-            } else if (!Files.isDirectory(dir)) {
-                notifier.addNotification(new CouldNotSaveConfigMessage());
-                return;
-            }
-
-            Path tempPath = configPath.resolveSibling(configPath.getFileName() + ".tmp");
-            if (!Files.exists(tempPath)) {
-                Files.createFile(tempPath);
-            }
-
-            Files.write(tempPath, GSON.toJson(this.data).getBytes(), StandardOpenOption.WRITE);
-            Files.move(tempPath, configPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            notifier.addNotification(new CouldNotSaveConfigMessage());
-        }
     }
 
     public List<Configurable<?>> getConfigurables() {
@@ -135,29 +100,13 @@ public class ConfigManager {
         return (T) configurable.get();
     }
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public void save() {
+        saveFile.save();
+    }
 
-    public static ConfigManager init(Path configPath, Notifier notifier) {
-        ConfigData data;
-        if (Files.notExists(configPath)) {
-            try {
-                Files.createFile(configPath);
-            } catch (IOException e) {
-                notifier.addNotification(new CouldNotInitConfigMessage());
-                return new DummyConfig();
-            }
-            data = new ConfigData();
-        } else {
-            try (FileReader reader = new FileReader(configPath.toFile())) {
-                data = GSON.fromJson(reader, ConfigData.class);
-            } catch (IOException e) {
-                notifier.addNotification(new CouldNotReadConfigMessage());
-                data = new ConfigData();
-            }
-        }
-        ConfigManager config = new ConfigManager(data, configPath, notifier);
-        config.save();
-        return config;
+    public static ConfigManager init(SaveFileManager saveManager, Notifier notifier) {
+        JsonSaveFile<ConfigData> saveFile = saveManager.createSaveFile(FILENAME, ConfigData.class, ConfigData::new);
+        return new ConfigManager(saveFile, notifier);
     }
 
     public enum Category {
@@ -175,28 +124,6 @@ public class ConfigManager {
 
         public String getId() {
             return id;
-        }
-    }
-
-    private static class DefaultConfig extends ConfigManager {
-        private DefaultConfig() {
-            super(new ConfigData(), null, null);
-        }
-
-        @Override
-        public void save() {
-            // no saving for default config holder
-        }
-    }
-
-    public static class DummyConfig extends ConfigManager {
-        private DummyConfig() {
-            super(new ConfigData(), null, null);
-        }
-
-        @Override
-        public void save() {
-            // no saving for dummy config holder
         }
     }
 }

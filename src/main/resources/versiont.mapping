@@ -487,6 +487,10 @@ import net.minecraft.class_1735/net.minecraft.world.inventory.Slot
 import net.minecraft.class_1713/net.minecraft.world.inventory.ClickType/net.minecraft.world.inventory.ContainerInput
 import net.minecraft.class_492/net.minecraft.client.gui.screens.inventory.MerchantScreen
 
+class Screen
+    <init>(Component title)
+    boolean method_73150/isInGameUi()
+
 class BookViewScreen extends Screen
     <init>(BookViewScreen$BookAccess bookAccess)
     protected boolean method_17789/forcePage(int page)

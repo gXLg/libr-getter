@@ -3,7 +3,7 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.config.Config;
 import dev.gxlg.librgetter.config.ConfigManager;
-import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.goals.GoalListManager;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -15,7 +15,7 @@ import dev.gxlg.versiont.gen.net.minecraft.world.level.block.state.BlockState;
 
 public class BreakLecternTask extends Task {
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) {
         MinecraftData minecraftData = taskContext.minecraftData();
 
         BlockState targetBlock = minecraftData.clientLevel.getBlockState(taskContext.selectedLecternPos());

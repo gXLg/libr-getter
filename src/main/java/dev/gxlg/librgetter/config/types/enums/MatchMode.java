@@ -3,6 +3,7 @@ package dev.gxlg.librgetter.config.types.enums;
 import dev.gxlg.librgetter.config.Config;
 import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.config.types.OptionsConfig;
+import dev.gxlg.librgetter.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 
 import java.util.ArrayList;
@@ -15,12 +16,12 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
 
     VANILLA {
         @Override
-        public Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments, ConfigManager configManager) {
+        public Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments, ConfigManager configManager, GoalListManager goalListManager) {
             if (offeredEnchantments.isEmpty()) {
                 return Optional.empty();
             }
             EnchantmentTrade firstOffer = offeredEnchantments.get(0);
-            for (EnchantmentTrade goal : configManager.getData().getGoals()) {
+            for (EnchantmentTrade goal : goalListManager.getGoals()) {
                 if (goal.meets(firstOffer)) {
                     return Optional.of(List.of(firstOffer));
                 }
@@ -31,7 +32,7 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
 
     PERFECT {
         @Override
-        public Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments, ConfigManager configManager) {
+        public Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments, ConfigManager configManager, GoalListManager goalListManager) {
             if (offeredEnchantments.isEmpty()) {
                 return Optional.empty();
             }
@@ -39,7 +40,7 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
             List<EnchantmentTrade> matchedOffers = new ArrayList<>();
             for (EnchantmentTrade offer : offeredEnchantments) {
                 boolean offerMatches = false;
-                for (EnchantmentTrade goal : configManager.getData().getGoals()) {
+                for (EnchantmentTrade goal : goalListManager.getGoals()) {
                     if (goal.meets(offer)) {
                         offerMatches = true;
                         matchedOffers.add(offer);
@@ -56,18 +57,18 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
 
     ATLEAST {
         @Override
-        public Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments, ConfigManager configManager) {
+        public Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments, ConfigManager configManager, GoalListManager goalListManager) {
             List<EnchantmentTrade> matchedOffers = new ArrayList<>();
             Set<EnchantmentTrade> foundGoals = new HashSet<>();
             for (EnchantmentTrade offer : offeredEnchantments) {
-                for (EnchantmentTrade goal : configManager.getData().getGoals()) {
+                for (EnchantmentTrade goal : goalListManager.getGoals()) {
                     if (goal.meets(offer)) {
                         matchedOffers.add(offer);
                         foundGoals.add(goal);
                     }
                 }
             }
-            int matchSize = Math.min(configManager.getInteger(Config.MATCH_AT_LEAST), configManager.getData().getGoals().size());
+            int matchSize = Math.min(configManager.getInteger(Config.MATCH_AT_LEAST), goalListManager.getGoals().size());
             if (foundGoals.size() < matchSize) {
                 return Optional.empty();
             }
@@ -75,7 +76,7 @@ public enum MatchMode implements OptionsConfig<MatchMode> {
         }
     };
 
-    public abstract Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments, ConfigManager configManager);
+    public abstract Optional<List<EnchantmentTrade>> match(List<EnchantmentTrade> offeredEnchantments, ConfigManager configManager, GoalListManager goalListManager);
 
     @Override
     public MatchMode[] getValues() {
