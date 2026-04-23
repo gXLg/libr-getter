@@ -105,6 +105,7 @@ LibrGetter supports localization and currently implements the following language
 * Spanish 🇪🇸
 * Turkish 🇹🇷 (thanks [@EmirOven](https://github.com/EmirOven))
 * Polish 🇵🇱 (thanks [@Pulpasek](https://github.com/Pulpasek))
+* Hebrew 🇮🇱 (thanks [@TheRealHSQ32](https://github.com/TheRealHSQ32))
 
 You may request further languages or suggest improvements in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues) or
 the [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt)
