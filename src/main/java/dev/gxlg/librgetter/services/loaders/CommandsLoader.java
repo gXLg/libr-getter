@@ -1,9 +1,9 @@
 package dev.gxlg.librgetter.services.loaders;
 
 import dev.gxlg.librgetter.commands.CommandsManager;
+import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.controller.SharedController;
 import dev.gxlg.librgetter.services.ServiceLoader;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
 
 import java.util.function.Supplier;
 

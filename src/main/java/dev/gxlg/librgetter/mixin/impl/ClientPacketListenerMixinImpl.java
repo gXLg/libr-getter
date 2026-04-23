@@ -2,8 +2,8 @@ package dev.gxlg.librgetter.mixin.impl;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.utils.ClientNetwork;
+import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.TradeOfferData;
-import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.worker.scheduling.controllers.SystemSchedulerController;
 import dev.gxlg.librgetter.worker.state.StateView;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;

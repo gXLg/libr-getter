@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.services.loaders;
 
-import dev.gxlg.librgetter.services.Export;
 import dev.gxlg.librgetter.services.ServiceLoader;
+import dev.gxlg.librgetter.services.types.Export;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import org.apache.logging.log4j.LogManager;

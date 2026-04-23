@@ -1,12 +1,12 @@
 package dev.gxlg.librgetter.utils.chaining.parser;
 
+import dev.gxlg.librgetter.config.Config;
+import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.utils.chaining.tags.Tags;
-import dev.gxlg.librgetter.utils.config.Config;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.plugins.Plugins;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
 import dev.gxlg.versiont.gen.net.minecraft.nbt.CompoundTag;
 import dev.gxlg.versiont.gen.net.minecraft.nbt.Tag;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;

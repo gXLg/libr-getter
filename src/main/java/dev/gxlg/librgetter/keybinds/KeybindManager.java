@@ -1,10 +1,10 @@
 package dev.gxlg.librgetter.keybinds;
 
+import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.controller.SharedController;
 import dev.gxlg.librgetter.utils.chaining.keybinds.Keybinds;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTickI;
 import dev.gxlg.versiont.gen.net.minecraft.client.KeyMapping;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;

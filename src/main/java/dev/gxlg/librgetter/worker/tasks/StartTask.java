@@ -1,18 +1,18 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.config.Config;
+import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
-import dev.gxlg.librgetter.utils.config.Config;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.commands.VillagerNotLibrarianException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.EmptyGoalsListException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.NoLecternSetException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.NoLibrarianSetException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.UnsafeSetupException;
-import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStartedMessage;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.commands.VillagerNotLibrarianException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.EmptyGoalsListException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.NoLecternSetException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.NoLibrarianSetException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.UnsafeSetupException;
+import dev.gxlg.librgetter.utils.messages.translatable.feedback.ProcessStartedMessage;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;

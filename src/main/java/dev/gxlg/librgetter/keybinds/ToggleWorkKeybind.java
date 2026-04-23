@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.keybinds;
 
 import dev.gxlg.librgetter.controller.SharedController;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;

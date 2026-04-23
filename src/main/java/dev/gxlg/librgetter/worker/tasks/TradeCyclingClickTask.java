@@ -1,10 +1,10 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.utils.chaining.compatibility.Compatibility;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStoppedMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.feedback.ProcessStoppedMessage;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;

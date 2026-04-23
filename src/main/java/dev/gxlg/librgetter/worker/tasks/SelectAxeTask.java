@@ -1,11 +1,11 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.config.Config;
+import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.utils.InventoryHelper;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
-import dev.gxlg.librgetter.utils.config.Config;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;

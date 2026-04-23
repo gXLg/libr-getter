@@ -1,18 +1,18 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.config.Config;
+import dev.gxlg.librgetter.config.ConfigManager;
+import dev.gxlg.librgetter.config.types.enums.LogMode;
+import dev.gxlg.librgetter.config.types.enums.MatchMode;
 import dev.gxlg.librgetter.utils.chaining.parser.Parser;
 import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.config.Config;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.messages.translatable.feedback.EnchantmentRemovedMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.feedback.OfferMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.success.EnchantmentFoundMessage;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.config.enums.LogMode;
-import dev.gxlg.librgetter.utils.types.config.enums.MatchMode;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.EnchantmentRemovedMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.OfferMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.success.EnchantmentFoundMessage;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;

@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.utils.chaining.parser;
 
-import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.config.ConfigManager;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
 

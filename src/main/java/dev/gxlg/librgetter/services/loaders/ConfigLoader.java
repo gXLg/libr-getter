@@ -1,9 +1,9 @@
 package dev.gxlg.librgetter.services.loaders;
 
+import dev.gxlg.librgetter.config.ConfigManager;
 import dev.gxlg.librgetter.notifier.Notifier;
-import dev.gxlg.librgetter.services.Export;
 import dev.gxlg.librgetter.services.ServiceLoader;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.services.types.Export;
 
 import java.nio.file.Path;
 import java.util.function.Supplier;

@@ -1,12 +1,12 @@
 package dev.gxlg.librgetter.gui;
 
+import dev.gxlg.librgetter.config.ConfigManager;
+import dev.gxlg.librgetter.config.types.helpers.Configurable;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import dev.gxlg.librgetter.utils.types.messages.objects.configScreen.ConfigPageContent;
-import dev.gxlg.librgetter.utils.types.messages.objects.configScreen.FirstPageContent;
-import dev.gxlg.librgetter.utils.types.messages.objects.configScreen.PageContent;
+import dev.gxlg.librgetter.utils.messages.objects.configScreen.ConfigPageContent;
+import dev.gxlg.librgetter.utils.messages.objects.configScreen.FirstPageContent;
+import dev.gxlg.librgetter.utils.messages.objects.configScreen.PageContent;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
