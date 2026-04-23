@@ -17,7 +17,7 @@ public class KeybindManager {
     private final String modId;
 
     public KeybindManager(String modId, ConfigManager configManager, String modVersion, SharedController sharedController) {
-        this.keybinds = List.of(new ConfigMenuKeybind(modVersion, configManager), new ToggleWorkKeybind(sharedController), new SelectKeybind(sharedController));
+        this.keybinds = List.of(new ConfigMenuKeybind(modVersion, configManager), new ToggleWorkKeybind(sharedController), new SelectKeybind(sharedController), new GoalScreenKeybind());
         this.modId = modId;
     }
 
@@ -37,5 +37,4 @@ public class KeybindManager {
             ClientTickEvents.END_CLIENT_TICK.register(endTick.unwrap(ClientTickEvents.EndTick.class));
         });
     }
-
 }
