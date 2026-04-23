@@ -13,7 +13,7 @@ public class ListGoalsMessage extends TranslatableFeedbackMessage {
     private final List<EnchantmentTrade> goals;
 
     public ListGoalsMessage(List<EnchantmentTrade> goals) {
-        super("librgetter.feedback.list");
+        super("librgetter.partial.list");
         this.goals = List.copyOf(goals);
     }
 
