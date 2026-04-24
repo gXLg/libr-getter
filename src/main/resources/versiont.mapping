@@ -292,6 +292,7 @@ class Entity
     void method_36457/setXRot(float pitch)
     Level method_73183/level()
     Level method_37908/level/getLevel()
+    boolean method_5805/isAlive()
 
 class LivingEntity extends Entity
     ItemStack method_6047/getMainHandItem()
@@ -490,6 +491,7 @@ import net.minecraft.class_492/net.minecraft.client.gui.screens.inventory.Mercha
 class Screen
     <init>(Component title)
     boolean method_73150/isInGameUi()
+    protected void method_25426/init()
 
 class BookViewScreen extends Screen
     <init>(BookViewScreen$BookAccess bookAccess)

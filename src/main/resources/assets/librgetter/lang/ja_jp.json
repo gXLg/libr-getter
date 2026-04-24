@@ -35,6 +35,7 @@
   "librgetter.error.no_lectern": "書見台が設定されていません！",
   "librgetter.error.no_librarian": "司書が設定されていません！",
   "librgetter.error.not": "'%s' はゴールリストにありません！",
+  "librgetter.error.not_exist": "選択した村人はクライアント上にもう存在しません！",
   "librgetter.error.not_lectern": "ブロックは書見台ではありません！",
   "librgetter.error.not_librarian": "村人は司書ではありません！",
   "librgetter.error.not_running": "LibrGetterは稼働していません！",

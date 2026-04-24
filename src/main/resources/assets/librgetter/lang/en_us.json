@@ -35,6 +35,7 @@
   "librgetter.error.no_lectern": "The lectern has not been set!",
   "librgetter.error.no_librarian": "The librarian has not been set!",
   "librgetter.error.not": "'%s' is not in the goals list!",
+  "librgetter.error.not_exist": "The selected villager no longer exists on the client!",
   "librgetter.error.not_lectern": "Block is not a lectern!",
   "librgetter.error.not_librarian": "Villager is not a librarian!",
   "librgetter.error.not_running": "LibrGetter isn't running!",

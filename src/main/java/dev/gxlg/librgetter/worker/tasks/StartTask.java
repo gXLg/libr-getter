@@ -13,6 +13,7 @@ import dev.gxlg.librgetter.utils.exceptions.tasks.EmptyGoalsListException;
 import dev.gxlg.librgetter.utils.exceptions.tasks.NoLecternSetException;
 import dev.gxlg.librgetter.utils.exceptions.tasks.NoLibrarianSetException;
 import dev.gxlg.librgetter.utils.exceptions.tasks.UnsafeSetupException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.VillagerNotExistException;
 import dev.gxlg.librgetter.utils.messages.translatable.feedback.ProcessStartedMessage;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
@@ -41,6 +42,9 @@ public class StartTask extends Task {
         }
         if (!Villagers.isVillagerLibrarian(taskContext.selectedVillager())) {
             throw new VillagerNotLibrarianException();
+        }
+        if (!taskContext.selectedVillager().isAlive()) {
+            throw new VillagerNotExistException();
         }
 
         if (goalListManager.getGoals().isEmpty()) {

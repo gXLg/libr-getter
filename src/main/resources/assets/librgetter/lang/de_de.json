@@ -35,6 +35,7 @@
   "librgetter.error.no_lectern": "Lesepult wurde nicht ausgewählt!",
   "librgetter.error.no_librarian": "Bibliothekar wurde nicht ausgewählt!",
   "librgetter.error.not": "'%s' ist nicht in der Suchliste!",
+  "librgetter.error.not_exist": "Der ausgewählte Dorfbewohner existiert auf dem Client nicht mehr!",
   "librgetter.error.not_lectern": "Block ist kein Lesepult!",
   "librgetter.error.not_librarian": "Dorfbewohner ist kein Bibliothekar!",
   "librgetter.error.not_running": "LibrGetter läuft nicht!",

@@ -51,9 +51,16 @@ public class ToggleWorkKeybind extends Keybind {
             throw new InternalErrorException("player");
         }
 
-        if ((newLecternPos == null || newLibrarian == null) || (
-            !newLecternPos.closerThan(player.blockPosition(), Task.MAX_INTERACTION_DISTANCE) || newLibrarian.distanceTo(player) > Task.MAX_INTERACTION_DISTANCE
-        )) {
+        boolean newStart = false;
+        if (newLecternPos == null) {
+            newStart = true;
+        } else if (newLibrarian == null || !newLibrarian.isAlive()) {
+            newStart = true;
+        } else if (!newLecternPos.closerThan(player.blockPosition(), Task.MAX_INTERACTION_DISTANCE) || newLibrarian.distanceTo(player) > Task.MAX_INTERACTION_DISTANCE) {
+            newStart = true;
+        }
+
+        if (newStart) {
             sharedController.autostart();
             return;
         }

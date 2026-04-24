@@ -35,6 +35,7 @@
   "librgetter.error.no_lectern": "¡No se ha establecido un atril!",
   "librgetter.error.no_librarian": "¡No se ha establecido un bibliotecario!",
   "librgetter.error.not": "'%s' no está en la lista de objetivos",
+  "librgetter.error.not_exist": "¡El aldeano seleccionado ya no existe en el cliente!",
   "librgetter.error.not_lectern": "¡El bloque no es un atril!",
   "librgetter.error.not_librarian": "¡El aldeano no es un bibliotecario!",
   "librgetter.error.not_running": "¡LibrGetter no está en ejecución!",

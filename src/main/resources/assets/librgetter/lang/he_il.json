@@ -35,6 +35,7 @@
   "librgetter.error.no_lectern": "עמדת הקריאה לא נבחרה!",
   "librgetter.error.no_librarian": "הספרן לא נבחר!",
   "librgetter.error.not": "'%s' לא נמצא ברשימת המטרות!",
+  "librgetter.error.not_exist": "הוויליג'ר הנבחר כבר לא קיים בצד הלקוח!",
   "librgetter.error.not_lectern": "הבלוק אינו עמדת קריאה!",
   "librgetter.error.not_librarian": "וויליג'ר אינו ספרן!",
   "librgetter.error.not_running": "LibrGetter לא פועל!",
