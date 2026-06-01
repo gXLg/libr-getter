@@ -1,7 +1,6 @@
 package dev.gxlg.librgetter;
 
 import dev.gxlg.librgetter.gui.config.ConfigScreen;
-import dev.gxlg.librgetter.gui.goals.GoalScreen;
 import dev.gxlg.librgetter.services.ServiceLoaderManager;
 import dev.gxlg.librgetter.services.loaders.CommandsLoader;
 import dev.gxlg.librgetter.services.loaders.CompatibilityLoader;
@@ -21,7 +20,7 @@ public class Entrypoint implements ClientModInitializer {
     public void onInitializeClient() {
         // preload
 
-        R.preload(ConfigScreen.clazz, GoalScreen.clazz);
+        R.preload(ConfigScreen.clazz);
 
         // init services
 
