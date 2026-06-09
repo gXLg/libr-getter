@@ -8,6 +8,8 @@ import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.EnchantmentHelper;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantments;
 
+import java.util.List;
+
 public class Enchantments_1_17_0 extends dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments.Base {
     @Override
     public Identifier enchantmentId(Enchantment enchantment) {
@@ -22,5 +24,14 @@ public class Enchantments_1_17_0 extends dev.gxlg.librgetter.utils.chaining.ench
     @Override
     public boolean canBeTraded(Enchantment enchantment) throws InternalErrorException {
         return enchantment.isTradeable();
+    }
+
+    @Override
+    public List<Enchantment> getAllEnchantments() {
+        return enchantmentsFromRegistry(Registry.ENCHANTMENT());
+    }
+
+    protected List<Enchantment> enchantmentsFromRegistry(Registry enchantmentsRegistry) {
+        return enchantmentsRegistry.stream().map(e -> (Enchantment) e).toList();
     }
 }

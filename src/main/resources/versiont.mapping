@@ -107,6 +107,8 @@ import net.minecraft.class_7923/net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.class_5455/net.minecraft.core.RegistryAccess
 import net.minecraft.class_6885$class_6888/net.minecraft.core.HolderSet$Named
 import net.minecraft.class_6885$class_6887/net.minecraft.core.HolderSet$ListBacked
+import net.minecraft.class_7225/net.minecraft.core.HolderLookup
+import net.minecraft.class_7225$class_7226/net.minecraft.core.HolderLookup$RegistryLookup
 
 class Holder
     boolean method_40225/is(ResourceKey resourceKey)
@@ -150,6 +152,7 @@ class Registry
     Identifier method_10221/getKey([Object] resource)
     Holder method_47983/wrapAsHolder([Object] value)
     Stream<Holder$Reference> method_42017/listElements()
+    Stream<[Object]> method_10220/stream()
 
     static final Registry field_11160/ENCHANTMENT
 
@@ -631,6 +634,8 @@ class AbstractSelectionList extends AbstractScrollArea
 
     boolean method_25330/removeEntry(AbstractSelectionList$Entry entry)
     void method_25330/removeEntry(AbstractSelectionList$Entry entry)
+
+    void method_60322/clampScrollAmount()
 
     class AbstractSelectionList$Entry
         int field_62111/x

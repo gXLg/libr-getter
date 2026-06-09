@@ -2,6 +2,7 @@ package dev.gxlg.librgetter.utils.chaining.gui;
 
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.GuiGraphicsExtractor;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractSelectionList;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.ObjectSelectionList;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.ObjectSelectionList$Entry;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess;
@@ -43,5 +44,10 @@ public class Gui_1_17_0 extends Gui.Base {
     @Override
     public void removeListEntry(ObjectSelectionList list, ObjectSelectionList$Entry entry) {
         list.removeEntry(entry);
+    }
+
+    @Override
+    public void refreshScrollAmount(AbstractSelectionList list) {
+        // this method is not needed, as the scrolling is clamped per default in versions [1.17, 1.21)
     }
 }

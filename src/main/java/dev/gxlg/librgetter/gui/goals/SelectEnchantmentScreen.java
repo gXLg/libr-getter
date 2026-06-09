@@ -18,10 +18,6 @@ import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.ObjectSelection
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.ObjectSelectionList$EntryI;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
-import dev.gxlg.versiont.gen.net.minecraft.core.Holder$Reference;
-import dev.gxlg.versiont.gen.net.minecraft.core.Registry;
-import dev.gxlg.versiont.gen.net.minecraft.core.RegistryAccess;
-import dev.gxlg.versiont.gen.net.minecraft.core.registries.Registries;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
@@ -101,10 +97,8 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
                 return;
             }
 
-            RegistryAccess access = level.registryAccess();
-            Registry registry = access.lookupOrThrow(Registries.ENCHANTMENT());
-            for (Holder$Reference key : registry.listElements().toList()) {
-                EnchantmentEntry entry = new EnchantmentEntry((Enchantment) key.value());
+            for (Enchantment enchantment : Enchantments.getAllEnchantments()) {
+                EnchantmentEntry entry = new EnchantmentEntry(enchantment);
                 addEntry(entry);
                 entries.add(entry);
             }
@@ -118,7 +112,7 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
             List<AbstractSelectionList$Entry> filtered = entries.stream().filter(e -> filter.isEmpty() || e.translatedName.contains(filter) || e.idString.contains(filter))
                                                                 .map(e -> (AbstractSelectionList$Entry) e).toList();
             replaceEntries(filtered);
-            refreshScrollAmount();
+            Gui.refreshScrollAmount(this);
         }
 
         public class EnchantmentEntry extends ObjectSelectionList$Entry implements ObjectSelectionList$EntryI {

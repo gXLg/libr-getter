@@ -83,7 +83,7 @@ public class GoalListScreen extends AbstractDynamicWidgetScreen {
             GoalListScreen.this.goalListManager.removeGoal(selectedEntry.trade);
             entries.remove(selectedEntry);
             Gui.removeListEntry(this, selectedEntry);
-            refreshScrollAmount();
+            Gui.refreshScrollAmount(this);
         }
 
         @Override
