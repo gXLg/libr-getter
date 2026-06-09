@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.keybinds;
 
-import dev.gxlg.librgetter.gui.goals.GoalListScreen;
+import dev.gxlg.librgetter.gui.goals.list.GoalListScreen;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;

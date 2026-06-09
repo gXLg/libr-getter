@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.gui.widgets;
+package dev.gxlg.librgetter.gui.widgets.unified.string;
 
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.versiont.api.R;
@@ -7,7 +7,7 @@ import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractWidget;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.narration.NarrationElementOutput;
 
-public class LegacyStringWidget extends AbstractWidget {
+public class LegacyStringWidget extends AbstractWidget implements UnifiedStringWidget {
     public static final R.RClass clazz = R.extendWrapper(AbstractWidget.class, LegacyStringWidget.class);
 
     private final String text;

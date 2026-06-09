@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.gui.widgets;
 
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractWidget;
+import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 
 import java.util.function.Consumer;
 
-public record DynamicWidget(AbstractWidget widget, DynamicDimensionGetter dimensions, Consumer<AbstractWidget> updater) { }
+public record DynamicWidget(UnifiedWidget widget, DynamicDimensionGetter dimensions, Consumer<UnifiedWidget> updater) { }

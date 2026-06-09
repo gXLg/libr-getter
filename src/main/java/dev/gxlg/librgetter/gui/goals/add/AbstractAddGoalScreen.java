@@ -1,13 +1,15 @@
-package dev.gxlg.librgetter.gui.goals;
+package dev.gxlg.librgetter.gui.goals.add;
 
 import dev.gxlg.librgetter.gui.GuiConstants;
+import dev.gxlg.librgetter.gui.goals.AbstractDynamicWidgetScreen;
 import dev.gxlg.librgetter.gui.widgets.WidgetDimensions;
+import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
+import dev.gxlg.librgetter.gui.widgets.unified.editbox.VEditBox;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractWidget;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.EditBox;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
@@ -45,13 +47,13 @@ public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen 
 
         addDynamicWidget(this::createEnchantmentWidget, (w, h) -> getDimensions(w, h, labelWidth, 1, 0));
 
-        levelInput = (EditBox) addDynamicWidget((x, y, w, h) -> new EditBox(font, x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 1));
+        levelInput = (EditBox) addDynamicWidget((x, y, w, h) -> new VEditBox(font, x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 1));
         int maxLevel = getMaxLevel();
         if (maxLevel != Integer.MIN_VALUE) {
             levelInput.setHint(Texts.literal(String.valueOf(maxLevel)));
         }
 
-        priceInput = (EditBox) addDynamicWidget((x, y, w, h) -> new EditBox(font, x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 2));
+        priceInput = (EditBox) addDynamicWidget((x, y, w, h) -> new VEditBox(font, x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 2));
         priceInput.setHint(Texts.literal(String.valueOf(Items.EMERALD().getDefaultMaxStackSize())));
 
         addDynamicWidget(
@@ -73,7 +75,7 @@ public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen 
         );
     }
 
-    protected abstract AbstractWidget createEnchantmentWidget(int x, int y, int width, int height);
+    protected abstract UnifiedWidget createEnchantmentWidget(int x, int y, int width, int height);
 
     protected int getMaxLevel() {
         return Integer.MIN_VALUE;

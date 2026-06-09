@@ -2,13 +2,14 @@ package dev.gxlg.librgetter.gui;
 
 import dev.gxlg.librgetter.gui.widgets.DynamicDimensionGetter;
 import dev.gxlg.librgetter.gui.widgets.WidgetDimensions;
+import dev.gxlg.librgetter.gui.widgets.unified.button.UnifiedButton;
+import dev.gxlg.librgetter.gui.widgets.unified.button.VButton;
+import dev.gxlg.librgetter.gui.widgets.unified.string.UnifiedStringWidget;
+import dev.gxlg.librgetter.gui.widgets.unified.string.VStringWidget;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractWidget;
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.Button;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.Button$OnPressI;
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.StringWidget;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 public class GuiConstants {
@@ -32,14 +33,17 @@ public class GuiConstants {
         GuiConstants.BUTTON_HEIGHT
     );
 
-    public static Button createButton(Component text, int x, int y, int width, int height, Button$OnPressI onPress) {
-        // TODO: in older versions - button constructor
-        return Button.builder(text, onPress.asButton$OnPress()).pos(x, y).size(width, height).build();
+    public static UnifiedButton createButton(Component text, int x, int y, int width, int height, Button$OnPressI onPress) {
+        if (V.lower("1.21.11")) {
+            return new VButton(x, y, width, height, text, onPress.asButton$OnPress());
+        } else {
+            return new VButton.Plain(x, y, width, height, text, onPress.asButton$OnPress());
+        }
     }
 
-    public static AbstractWidget createStringWidget(String string, int x, int y, int width, int height, Font font) {
+    public static UnifiedStringWidget createStringWidget(String string, int x, int y, int width, int height, Font font) {
         // TODO: in older versions - use LegacyStringWidget
-        StringWidget stringWidget = new StringWidget(Texts.literal(string), font);
+        VStringWidget stringWidget = new VStringWidget(Texts.literal(string), font);
         stringWidget.setWidthField(width);
         stringWidget.setHeightField(height);
         stringWidget.setXField(x);

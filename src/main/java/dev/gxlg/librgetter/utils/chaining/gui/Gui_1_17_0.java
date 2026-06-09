@@ -1,9 +1,9 @@
 package dev.gxlg.librgetter.utils.chaining.gui;
 
+import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedList;
+import dev.gxlg.versiont.gen.com.mojang.blaze3d.vertex.PoseStack;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.GuiGraphicsExtractor;
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractSelectionList;
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.ObjectSelectionList;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.ObjectSelectionList$Entry;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessI;
@@ -32,22 +32,22 @@ public class Gui_1_17_0 extends Gui.Base {
     }
 
     @Override
-    public void extractText(GuiGraphicsExtractor guiGraphics, Font font, String str, int x, int y, int color) {
-        guiGraphics.drawString(font, str, x, y, color);
+    public void extractText(PoseStack poseStack, GuiGraphicsExtractor guiGraphics, Font font, String str, int x, int y, int color) {
+        font.draw(poseStack, str, x, y, color);
     }
 
     @Override
-    public void extractText(GuiGraphicsExtractor guiGraphics, Font font, Component str, int x, int y, int color) {
-        guiGraphics.drawString(font, str, x, y, color);
+    public void extractText(PoseStack poseStack, GuiGraphicsExtractor guiGraphics, Font font, Component str, int x, int y, int color) {
+        font.draw(poseStack, str, x, y, color);
     }
 
     @Override
-    public void removeListEntry(ObjectSelectionList list, ObjectSelectionList$Entry entry) {
+    public void removeListEntry(UnifiedList list, ObjectSelectionList$Entry entry) {
         list.removeEntry(entry);
     }
 
     @Override
-    public void refreshScrollAmount(AbstractSelectionList list) {
+    public void refreshScrollAmount(UnifiedList list) {
         // this method is not needed, as the scrolling is clamped per default in versions [1.17, 1.21)
     }
 }

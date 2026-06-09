@@ -1,10 +1,10 @@
-package dev.gxlg.librgetter.gui.goals;
+package dev.gxlg.librgetter.gui.goals.add;
 
 import dev.gxlg.librgetter.gui.GuiConstants;
+import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.versiont.api.R;
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractWidget;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 
@@ -17,7 +17,7 @@ public class AddGoalScreen extends AbstractAddGoalScreen {
 
     private final String translatedName;
 
-    protected AddGoalScreen(Screen lastScreen, Screen previousScreen, Enchantment enchantment, String idString, String translatedName, GoalListManager goalListManager) {
+    public AddGoalScreen(Screen lastScreen, Screen previousScreen, Enchantment enchantment, String idString, String translatedName, GoalListManager goalListManager) {
         super(Texts.literal("Add Goal Screen"), lastScreen, previousScreen, goalListManager);
         this.enchantment = enchantment;
         this.idString = idString;
@@ -25,7 +25,7 @@ public class AddGoalScreen extends AbstractAddGoalScreen {
     }
 
     @Override
-    protected AbstractWidget createEnchantmentWidget(int x, int y, int width, int height) {
+    protected UnifiedWidget createEnchantmentWidget(int x, int y, int width, int height) {
         return GuiConstants.createStringWidget(translatedName, x, y, width, height, getFontField());
     }
 

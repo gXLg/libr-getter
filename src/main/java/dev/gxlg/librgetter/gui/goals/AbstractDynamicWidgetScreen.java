@@ -4,8 +4,9 @@ import dev.gxlg.librgetter.gui.widgets.DynamicDimensionGetter;
 import dev.gxlg.librgetter.gui.widgets.DynamicWidget;
 import dev.gxlg.librgetter.gui.widgets.DynamicWidgetCreator;
 import dev.gxlg.librgetter.gui.widgets.WidgetDimensions;
+import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.versiont.api.R;
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractWidget;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.events.GuiEventListener;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
@@ -24,17 +25,17 @@ public abstract class AbstractDynamicWidgetScreen extends Screen {
         super(title);
     }
 
-    protected final AbstractWidget addDynamicWidget(DynamicWidgetCreator creator, DynamicDimensionGetter updater) {
+    protected final UnifiedWidget addDynamicWidget(DynamicWidgetCreator creator, DynamicDimensionGetter updater) {
         return addDynamicWidget(creator, updater, widget -> { });
     }
 
-    protected final AbstractWidget addDynamicWidget(DynamicWidgetCreator creator, DynamicDimensionGetter dimensions, Consumer<AbstractWidget> updater) {
+    protected final UnifiedWidget addDynamicWidget(DynamicWidgetCreator creator, DynamicDimensionGetter dimensions, Consumer<UnifiedWidget> updater) {
         WidgetDimensions wd = dimensions.getDimensions(getWidthField(), getHeightField());
-        AbstractWidget widget = creator.create(wd.x(), wd.y(), wd.width(), wd.height());
+        UnifiedWidget widget = creator.create(wd.x(), wd.y(), wd.width(), wd.height());
         updater.accept(widget);
 
         widgets.add(new DynamicWidget(widget, dimensions, updater));
-        addRenderableWidget(widget);
+        addRenderableWidget((GuiEventListener) widget);
 
         return widget;
     }
@@ -61,7 +62,7 @@ public abstract class AbstractDynamicWidgetScreen extends Screen {
 
     private void updateWidgets() {
         widgets.forEach(dw -> {
-            AbstractWidget widget = dw.widget();
+            UnifiedWidget widget = dw.widget();
             WidgetDimensions wd = dw.dimensions().getDimensions(getWidthField(), getHeightField());
             widget.setXField(wd.x());
             widget.setYField(wd.y());

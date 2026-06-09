@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.gui.widgets;
 
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractWidget;
+import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 
 public interface DynamicWidgetCreator {
-    AbstractWidget create(int x, int y, int width, int height);
+    UnifiedWidget create(int x, int y, int width, int height);
 }
