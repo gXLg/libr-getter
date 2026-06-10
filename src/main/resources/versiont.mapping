@@ -507,9 +507,9 @@ import net.minecraft.class_7842/net.minecraft.client.gui.components.StringWidget
 import net.minecraft.class_4185$class_4241/net.minecraft.client.gui.components.Button$OnPress
 import net.minecraft.class_4185$class_7840/net.minecraft.client.gui.components.Button$Builder
 import net.minecraft.class_332/net.minecraft.client.gui.GuiGraphics/net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.class_4280/net.minecraft.client.gui.components.ObjectSelectionList alt: _1_20_2
+import net.minecraft.class_4280/net.minecraft.client.gui.components.ObjectSelectionList alt: _1_20_3
 import net.minecraft.class_4280$class_4281/net.minecraft.client.gui.components.ObjectSelectionList$Entry
-import net.minecraft.class_350/net.minecraft.client.gui.components.AbstractSelectionList alt: _1_20_2
+import net.minecraft.class_350/net.minecraft.client.gui.components.AbstractSelectionList alt: _1_20_3
 import net.minecraft.class_350$class_351/net.minecraft.client.gui.components.AbstractSelectionList$Entry
 import net.minecraft.class_7528/net.minecraft.client.gui.components.AbstractScrollArea
 import net.minecraft.class_11909/net.minecraft.client.input.MouseButtonEvent
@@ -609,6 +609,8 @@ class EditBox extends AbstractWidget
     void method_1863/setResponder(Consumer<String> responder)
 
 class Button extends AbstractWidget
+    <init>(int x, int y, int width, int height, Component message, Button$OnPress onPress)
+
     <init>(int x, int y, int width, int height, Component message, Button$OnPress onPress, Button$CreateNarration createNarration)
 
     class Button$Plain extends Button
@@ -635,7 +637,7 @@ class GuiGraphicsExtractor
 class AbstractScrollArea extends AbstractWidget
     void method_65506/refreshScrollAmount()
 
-class AbstractSelectionList extends AbstractScrollArea
+class AbstractSelectionList_1_20_3 extends AbstractScrollArea
     int method_25322/getRowWidth()
     AbstractSelectionList$Entry method_25334/getSelected()
     void method_25313/setSelected(AbstractSelectionList$Entry entry)
@@ -649,28 +651,10 @@ class AbstractSelectionList extends AbstractScrollArea
 
     void method_60322/clampScrollAmount()
 
-    class AbstractSelectionList$Entry extends GuiEventListener
-        int field_62111/x
-        int field_62112/y
-        int field_62113/width
-        int field_62114/height
-
-    interface AbstractSelectionList$Entry
-        void method_25343/render/extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean isMouseOver, float partialTick)
-        void method_25343/render(GuiGraphicsExtractor graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick)
-        void method_25343/render(PoseStack poseStack, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick)
-
-
-class ObjectSelectionList extends AbstractSelectionList
+class ObjectSelectionList_1_20_3 extends AbstractSelectionList_1_20_3
     <init>(Minecraft minecraft, int width, int height, int y, int itemHeight)
 
-    class ObjectSelectionList$Entry extends AbstractSelectionList$Entry
-        <init>()
-
-    interface ObjectSelectionList$Entry extends AbstractSelectionList$Entry
-        Component method_37006/getNarration()
-
-class AbstractSelectionList_1_20_2 extends GuiEventListener
+class AbstractSelectionList extends GuiEventListener
     int field_22742/width
     int field_22743/height
     int field_19088/x0
@@ -689,9 +673,25 @@ class AbstractSelectionList_1_20_2 extends GuiEventListener
     boolean method_25330/removeEntry(AbstractSelectionList$Entry entry)
     void method_25330/removeEntry(AbstractSelectionList$Entry entry)
 
+    class AbstractSelectionList$Entry extends GuiEventListener
+        int field_62111/x
+        int field_62112/y
+        int field_62113/width
+        int field_62114/height
 
-class ObjectSelectionList_1_20_2 extends AbstractSelectionList_1_20_2
+    interface AbstractSelectionList$Entry
+        void method_25343/render/extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean isMouseOver, float partialTick)
+        void method_25343/render(GuiGraphicsExtractor graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick)
+        void method_25343/render(PoseStack poseStack, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick)
+
+class ObjectSelectionList extends AbstractSelectionList
     <init>(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight)
+
+    class ObjectSelectionList$Entry extends AbstractSelectionList$Entry
+        <init>()
+
+    interface ObjectSelectionList$Entry extends AbstractSelectionList$Entry
+        Component method_37006/getNarration()
 
 import net.minecraft.class_11908/net.minecraft.client.input.KeyEvent
 

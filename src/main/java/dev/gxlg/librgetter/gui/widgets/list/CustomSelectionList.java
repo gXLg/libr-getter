@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.gui.widgets.list;
 
-import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
+import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedWidgetList;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
@@ -10,13 +10,13 @@ import dev.gxlg.versiont.gen.net.minecraft.client.input.MouseButtonEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CustomSelectionList extends ObjectSelectionList implements UnifiedWidget {
+public abstract class CustomSelectionList extends ObjectSelectionList implements UnifiedWidgetList {
     public static final R.RClass clazz = R.extendWrapper(ObjectSelectionList.class, CustomSelectionList.class);
 
     protected final List<CustomSelectionListEntry> entries = new ArrayList<>();
 
-    public CustomSelectionList(Minecraft minecraft, int width, int height, int y, int itemHeight) {
-        super(minecraft, width, height, y, itemHeight);
+    public CustomSelectionList(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight) {
+        super(minecraft, width, height, y0, y1, itemHeight);
     }
 
     @Override
@@ -40,11 +40,11 @@ public abstract class CustomSelectionList extends ObjectSelectionList implements
             return false;
         }
         int rowHalf = this.getRowWidth() / 2;
-        int center = this.getXField() + this.getWidthField() / 2;
+        int center = this.getX0Field() + this.getWidthField() / 2;
         if (mouseX < center - rowHalf || mouseX > center + rowHalf) {
             return false;
         }
-        int top = getYField();
+        int top = getY0Field();
         int bottom = top + getHeightField();
         if (mouseY < top || mouseY > bottom) {
             return false;
@@ -66,5 +66,4 @@ public abstract class CustomSelectionList extends ObjectSelectionList implements
         }
         return super.getRowWidth() + 50;
     }
-
 }

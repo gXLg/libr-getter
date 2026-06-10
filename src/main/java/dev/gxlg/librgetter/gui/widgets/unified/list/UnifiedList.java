@@ -7,4 +7,6 @@ public interface UnifiedList {
     boolean removeEntry(AbstractSelectionList$Entry entry);
 
     void removeEntry2(AbstractSelectionList$Entry entry);
+
+    AbstractSelectionList$Entry getSelected();
 }

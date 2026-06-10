@@ -31,6 +31,7 @@ public class GoalListScreen extends AbstractDynamicWidgetScreen {
             (w, h) -> WidgetDimensions.from(0, GuiConstants.PADDING, w, h - GuiConstants.PADDING * 3 - GuiConstants.BUTTON_HEIGHT),
             l -> ((UnifiedGoalSelectionList) l).updateList()
         );
+
         addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(Texts.literal("Add new goal"), x, y, w, h, b -> onAddPressed()), GuiConstants.LEFT_BUTTON_DIMENSIONS);
         addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(Texts.literal("Done"), x, y, w, h, b -> onClose()), GuiConstants.RIGHT_BUTTON_DIMENSIONS);
     }
@@ -47,9 +48,9 @@ public class GoalListScreen extends AbstractDynamicWidgetScreen {
 
     private UnifiedWidget createList(int y, int width, int height) {
         if (V.lower("1.20.3")) {
-            return new GoalSelectionList_1_20_2(this, y, width, height);
-        } else {
             return new GoalSelectionList(this, y, width, height);
+        } else {
+            return new GoalSelectionList_1_20_3(this, y, width, height);
         }
     }
 

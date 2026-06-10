@@ -12,8 +12,12 @@ import java.util.function.Supplier;
 public class VButton extends Button implements UnifiedButton {
     public static final R.RClass clazz = R.extendWrapper(Button.class, VButton.class);
 
+    public VButton(int x, int y, int width, int height, Component message, Button$OnPress onPress, Button$CreateNarrationI createNarration) {
+        super(x, y, width, height, message, onPress, createNarration.asButton$CreateNarration());
+    }
+
     public VButton(int x, int y, int width, int height, Component message, Button$OnPress onPress) {
-        super(x, y, width, height, message, onPress, ((Button$CreateNarrationI) Supplier::get).asButton$CreateNarration());
+        super(x, y, width, height, message, onPress);
     }
 
     public static class Plain extends Button$Plain implements UnifiedButton {
