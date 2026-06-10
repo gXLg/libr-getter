@@ -62,7 +62,7 @@ A highly configurable fabric mod to automatically cycle a librarian villager for
     </table>
 </div>
 
-> :WARNING:
+> [!WARNING]
 > If you have used the mod before version `v2.3.0`, upon updating, your configuration will be reset to the default values.
 > Please make sure to back up your configuration file before updating, if necessary.
 
