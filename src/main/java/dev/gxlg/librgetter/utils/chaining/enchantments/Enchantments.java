@@ -1,10 +1,12 @@
 package dev.gxlg.librgetter.utils.chaining.enchantments;
 
-import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
+
+import java.util.List;
 
 public class Enchantments {
     private static final Base implementation;
@@ -31,11 +33,17 @@ public class Enchantments {
         return implementation.canBeTraded(enchantment);
     }
 
+    public static List<Enchantment> getAllEnchantments() {
+        return implementation.getAllEnchantments();
+    }
+
     public abstract static class Base {
         public abstract Identifier enchantmentId(Enchantment enchantment);
 
         public abstract int getEfficiencyLevel(ItemStack stack);
 
         public abstract boolean canBeTraded(Enchantment enchantment) throws InternalErrorException;
+
+        public abstract List<Enchantment> getAllEnchantments();
     }
 }

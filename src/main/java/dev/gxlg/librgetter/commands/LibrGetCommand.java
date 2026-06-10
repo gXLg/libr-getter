@@ -3,32 +3,33 @@ package dev.gxlg.librgetter.commands;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import dev.gxlg.librgetter.controller.SharedController;
-import dev.gxlg.librgetter.gui.ConfigScreen;
+import dev.gxlg.librgetter.gui.config.ConfigScreen;
+import dev.gxlg.librgetter.savefiles.config.Config;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.savefiles.config.types.helpers.Configurable;
+import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.commands.Commands;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.config.Config;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.commands.AlreadyRunningException;
+import dev.gxlg.librgetter.utils.exceptions.commands.CanNotChangeConfigException;
+import dev.gxlg.librgetter.utils.exceptions.commands.NotInGoalsException;
+import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.exceptions.parser.CouldNotParseCustomException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.ProcessNotRunningException;
+import dev.gxlg.librgetter.utils.messages.translatable.feedback.ConfigValueMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.feedback.EnchantmentRemovedMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.feedback.GoalsListClearedMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.feedback.ListGoalsMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.success.CustomTradeAddedMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.success.PriceChangedMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.success.TradeAddedMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.success.TranslatableSuccessMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.warning.AddingCustomEnchantmentMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.warning.CanNotBeTradedMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.warning.LevelOverMaxMessage;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.config.helpers.Configurable;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.commands.AlreadyRunningException;
-import dev.gxlg.librgetter.utils.types.exceptions.commands.CanNotChangeConfigException;
-import dev.gxlg.librgetter.utils.types.exceptions.commands.NotInGoalsException;
-import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
-import dev.gxlg.librgetter.utils.types.exceptions.parser.CouldNotParseCustomException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.ProcessNotRunningException;
-import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ConfigValueMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.EnchantmentRemovedMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.GoalsListClearedMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ListGoalsMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.success.CustomTradeAddedMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.success.PriceChangedMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.success.TradeAddedMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.success.TranslatableSuccessMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.warning.AddingCustomEnchantmentMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.warning.CanNotBeTradedMessage;
-import dev.gxlg.librgetter.utils.types.messages.translatable.warning.LevelOverMaxMessage;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.CommandDispatcher;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.arguments.ArgumentType;
@@ -48,10 +49,13 @@ import java.util.List;
 public class LibrGetCommand implements CommandsManager.Command {
     private final ConfigManager configManager;
 
+    private final GoalListManager goalListManager;
+
     private final SharedController sharedController;
 
-    public LibrGetCommand(ConfigManager configManager, SharedController sharedController) {
+    public LibrGetCommand(ConfigManager configManager, GoalListManager goalListManager, SharedController sharedController) {
         this.configManager = configManager;
+        this.goalListManager = goalListManager;
         this.sharedController = sharedController;
     }
 
@@ -72,12 +76,12 @@ public class LibrGetCommand implements CommandsManager.Command {
     }
 
     private void list() {
-        Texts.sendMessage(new ListGoalsMessage(configManager.getData().getGoals()));
+        Texts.sendMessage(new ListGoalsMessage(goalListManager.getGoals()));
     }
 
     private void clearGoals() {
-        configManager.getData().clearGoals();
-        configManager.save();
+        goalListManager.clearGoals();
+        goalListManager.save();
         Texts.sendMessage(new GoalsListClearedMessage());
     }
 
@@ -228,7 +232,7 @@ public class LibrGetCommand implements CommandsManager.Command {
 
     private void addGoal(EnchantmentTrade newTrade, boolean custom) {
         EnchantmentTrade alreadyPresentTrade = null;
-        for (EnchantmentTrade trade : configManager.getData().getGoals()) {
+        for (EnchantmentTrade trade : goalListManager.getGoals()) {
             if (trade.same(newTrade)) {
                 alreadyPresentTrade = trade;
                 break;
@@ -237,18 +241,18 @@ public class LibrGetCommand implements CommandsManager.Command {
 
         if (alreadyPresentTrade != null) {
             Texts.sendMessage(new PriceChangedMessage(alreadyPresentTrade, newTrade.price()));
-            configManager.getData().removeGoal(alreadyPresentTrade);
+            goalListManager.removeGoal(alreadyPresentTrade);
         } else {
             TranslatableSuccessMessage message = custom ? new CustomTradeAddedMessage(newTrade, newTrade.price()) : new TradeAddedMessage(newTrade, newTrade.price());
             Texts.sendMessage(message);
         }
-        configManager.getData().addGoal(newTrade);
-        configManager.save();
+        goalListManager.addGoal(newTrade);
+        goalListManager.save();
     }
 
     private void removeGoalAllLevels(EnchantmentTrade tradeToRemove) throws NotInGoalsException {
         List<EnchantmentTrade> alreadyPresentTrades = new ArrayList<>();
-        for (EnchantmentTrade trade : configManager.getData().getGoals()) {
+        for (EnchantmentTrade trade : goalListManager.getGoals()) {
             if (trade.id().equals(tradeToRemove.id())) {
                 alreadyPresentTrades.add(trade);
             }
@@ -257,15 +261,15 @@ public class LibrGetCommand implements CommandsManager.Command {
             throw new NotInGoalsException(tradeToRemove);
         }
         for (EnchantmentTrade trade : alreadyPresentTrades) {
-            configManager.getData().removeGoal(trade);
+            goalListManager.removeGoal(trade);
             Texts.sendMessage(new EnchantmentRemovedMessage(trade));
         }
-        configManager.save();
+        goalListManager.save();
     }
 
     private void removeGoal(EnchantmentTrade tradeToRemove) throws NotInGoalsException {
         EnchantmentTrade alreadyPresentTrade = null;
-        for (EnchantmentTrade trade : configManager.getData().getGoals()) {
+        for (EnchantmentTrade trade : goalListManager.getGoals()) {
             if (trade.same(tradeToRemove)) {
                 alreadyPresentTrade = trade;
                 break;
@@ -274,8 +278,8 @@ public class LibrGetCommand implements CommandsManager.Command {
         if (alreadyPresentTrade == null) {
             throw new NotInGoalsException(tradeToRemove);
         }
-        configManager.getData().removeGoal(alreadyPresentTrade);
-        configManager.save();
+        goalListManager.removeGoal(alreadyPresentTrade);
+        goalListManager.save();
         Texts.sendMessage(new EnchantmentRemovedMessage(tradeToRemove));
     }
 

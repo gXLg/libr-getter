@@ -1,12 +1,13 @@
 package dev.gxlg.librgetter.utils.chaining.parser;
 
+import dev.gxlg.librgetter.savefiles.config.Config;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.tags.Tags;
-import dev.gxlg.librgetter.utils.config.Config;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.plugins.Plugins;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
 import dev.gxlg.versiont.gen.net.minecraft.nbt.CompoundTag;
 import dev.gxlg.versiont.gen.net.minecraft.nbt.Tag;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.ItemStack;
@@ -21,7 +22,7 @@ import java.util.Set;
 
 public class Parser_1_17_0 extends Parser.Base {
     @Override
-    public EnchantmentTrade parseTrade(MerchantOffer offer, ConfigManager configManager) throws LibrGetterException {
+    public EnchantmentTrade parseTrade(MerchantOffer offer, ConfigManager configManager, GoalListManager goalListManager) throws LibrGetterException {
         ItemStack stack = offer.getResult();
 
         CompoundTag tag = getCustomData(stack);
@@ -34,7 +35,7 @@ public class Parser_1_17_0 extends Parser.Base {
 
         if (finalEnchantment == null) {
             // Nothing was found, so try fallback or return empty
-            finalEnchantment = fallbackParse(tag, configManager);
+            finalEnchantment = fallbackParse(tag, configManager, goalListManager);
         }
 
         if (finalEnchantment == null) {
@@ -87,14 +88,14 @@ public class Parser_1_17_0 extends Parser.Base {
         return new EnchantmentTrade.EnchantmentOnly(Tags.getString(element, "id"), Tags.getShort(element, "lvl"));
     }
 
-    private EnchantmentTrade.EnchantmentOnly fallbackParse(CompoundTag tag, ConfigManager configManager) {
+    private EnchantmentTrade.EnchantmentOnly fallbackParse(CompoundTag tag, ConfigManager configManager, GoalListManager goalListManager) {
         if (!configManager.getBoolean(Config.FALLBACK)) {
             return null;
         }
 
         String string = tag.toString();
         Map<String, Set<Integer>> searching = new HashMap<>();
-        for (EnchantmentTrade search : configManager.getData().getGoals()) {
+        for (EnchantmentTrade search : goalListManager.getGoals()) {
             if (!searching.containsKey(search.id())) {
                 searching.put(search.id(), new HashSet<>());
             }

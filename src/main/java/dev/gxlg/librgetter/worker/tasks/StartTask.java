@@ -1,18 +1,20 @@
 package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.savefiles.config.Config;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
-import dev.gxlg.librgetter.utils.config.Config;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.commands.VillagerNotLibrarianException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.EmptyGoalsListException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.NoLecternSetException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.NoLibrarianSetException;
-import dev.gxlg.librgetter.utils.types.exceptions.tasks.UnsafeSetupException;
-import dev.gxlg.librgetter.utils.types.messages.translatable.feedback.ProcessStartedMessage;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.commands.VillagerNotLibrarianException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.EmptyGoalsListException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.NoLecternSetException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.NoLibrarianSetException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.UnsafeSetupException;
+import dev.gxlg.librgetter.utils.exceptions.tasks.VillagerNotExistException;
+import dev.gxlg.librgetter.utils.messages.translatable.feedback.ProcessStartedMessage;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -31,7 +33,7 @@ public class StartTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
         if (taskContext.selectedLecternPos() == null && !compatibilityManager.isUsingTradeCycling()) {
             throw new NoLecternSetException();
         }
@@ -41,8 +43,11 @@ public class StartTask extends Task {
         if (!Villagers.isVillagerLibrarian(taskContext.selectedVillager())) {
             throw new VillagerNotLibrarianException();
         }
+        if (!taskContext.selectedVillager().isAlive()) {
+            throw new VillagerNotExistException();
+        }
 
-        if (configManager.getData().getGoals().isEmpty()) {
+        if (goalListManager.getGoals().isEmpty()) {
             throw new EmptyGoalsListException();
         }
 

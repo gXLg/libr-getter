@@ -1,9 +1,9 @@
 package dev.gxlg.librgetter.utils.chaining.commands;
 
 import com.mojang.datafixers.util.Either;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.commands.ArgumentNotSupportedException;
-import dev.gxlg.librgetter.utils.types.exceptions.commands.WrongEnchantmentException;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.commands.ArgumentNotSupportedException;
+import dev.gxlg.librgetter.utils.exceptions.commands.WrongEnchantmentException;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.arguments.ArgumentType;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.context.CommandContext;
 import dev.gxlg.versiont.gen.java.lang.Object;

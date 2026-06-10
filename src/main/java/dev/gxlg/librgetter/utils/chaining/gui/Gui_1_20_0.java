@@ -1,0 +1,18 @@
+package dev.gxlg.librgetter.utils.chaining.gui;
+
+import dev.gxlg.versiont.gen.com.mojang.blaze3d.vertex.PoseStack;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.GuiGraphicsExtractor;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
+
+public class Gui_1_20_0 extends Gui_1_17_0 {
+    @Override
+    public void extractText(PoseStack poseStack, GuiGraphicsExtractor guiGraphics, Font font, String str, int x, int y, int color) {
+        guiGraphics.drawString(font, str, x, y, color);
+    }
+
+    @Override
+    public void extractText(PoseStack poseStack, GuiGraphicsExtractor guiGraphics, Font font, Component str, int x, int y, int color) {
+        guiGraphics.drawString(font, str, x, y, color);
+    }
+}

@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.enchantments;
 
-import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
 import dev.gxlg.versiont.gen.net.minecraft.core.Registry;
@@ -13,6 +13,8 @@ import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantments;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.ItemEnchantments;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+
+import java.util.List;
 
 public class Enchantments_1_21_0 extends Enchantments_1_19_3 {
     @Override
@@ -39,5 +41,15 @@ public class Enchantments_1_21_0 extends Enchantments_1_19_3 {
         }
         Registry registry = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT());
         return registry.wrapAsHolder(enchantment).is(EnchantmentTags.TRADEABLE());
+    }
+
+    @Override
+    public List<Enchantment> getAllEnchantments() {
+        ClientLevel level = Minecraft.getInstance().getLevelField();
+        if (level == null) {
+            return List.of();
+        }
+        Registry registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT());
+        return enchantmentsFromRegistry(registry);
     }
 }

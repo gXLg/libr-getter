@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.texts;
 
-import dev.gxlg.librgetter.utils.types.messages.Message;
+import dev.gxlg.librgetter.utils.messages.Message;
 import dev.gxlg.versiont.api.types.Wrapper;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;

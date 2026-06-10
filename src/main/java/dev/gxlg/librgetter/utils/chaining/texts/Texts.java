@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.texts;
 
-import dev.gxlg.librgetter.utils.types.messages.Message;
+import dev.gxlg.librgetter.utils.messages.Message;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.ClickEvent;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
@@ -62,7 +62,7 @@ public class Texts {
 
         private final String id;
 
-        IdentifierType(String id) {
+        IdentifierType(@SuppressWarnings("SameParameterValue") String id) {
             this.id = id;
         }
 
