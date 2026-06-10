@@ -7,6 +7,11 @@ import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.messages.translatable.partial.TranslatablePartialMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableAddButton;
+import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableEnchantmentLabel;
+import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableLevelLabel;
+import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatablePriceLabel;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
@@ -17,6 +22,14 @@ import dev.gxlg.versiont.gen.net.minecraft.world.item.Items;
 
 public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen {
     public static final R.RClass clazz = R.extendWrapper(AbstractDynamicWidgetScreen.class, AbstractAddGoalScreen.class);
+
+    public static final TranslatablePartialMessage ENCHANTMENT_LABEL = new TranslatableEnchantmentLabel();
+
+    public static final TranslatablePartialMessage LEVEL_LABEL = new TranslatableLevelLabel();
+
+    public static final TranslatablePartialMessage PRICE_LABEL = new TranslatablePriceLabel();
+
+    public static final TranslatablePartialMessage ADD_BUTTON = new TranslatableAddButton();
 
     private final Screen lastScreen;
 
@@ -38,11 +51,17 @@ public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen 
     @Override
     protected void initWidgets() {
         Font font = getFontField();
-        int labelWidth = Math.max(Math.max(font.width("Enchantment:"), font.width("Level:")), font.width("Price:")) * 2;
 
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createStringWidget("Enchantment:", x, y, w, h, font), (w, h) -> getDimensions(w, h, labelWidth, 0, 0));
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createStringWidget("Level:", x, y, w, h, font), (w, h) -> getDimensions(w, h, labelWidth, 0, 1));
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createStringWidget("Price:", x, y, w, h, font), (w, h) -> getDimensions(w, h, labelWidth, 0, 2));
+        Component enchantmentLabel = ENCHANTMENT_LABEL.getComponent();
+        Component levelLabel = LEVEL_LABEL.getComponent();
+        Component priceLabel = PRICE_LABEL.getComponent();
+        Component addButton = ADD_BUTTON.getComponent();
+
+        int labelWidth = Math.max(Math.max(font.width(enchantmentLabel), font.width(levelLabel)), font.width(priceLabel)) * 2;
+
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createStringWidget(enchantmentLabel, x, y, w, h, font), (w, h) -> getDimensions(w, h, labelWidth, 0, 0));
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createStringWidget(levelLabel, x, y, w, h, font), (w, h) -> getDimensions(w, h, labelWidth, 0, 1));
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createStringWidget(priceLabel, x, y, w, h, font), (w, h) -> getDimensions(w, h, labelWidth, 0, 2));
 
         addDynamicWidget(this::createEnchantmentWidget, (w, h) -> getDimensions(w, h, labelWidth, 1, 0));
 
@@ -56,7 +75,7 @@ public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen 
         priceInput.setHint(Texts.literal(String.valueOf(Items.EMERALD().getDefaultMaxStackSize())));
 
         addDynamicWidget(
-            (x, y, w, h) -> GuiConstants.createButton(Texts.literal("Add Goal"), x, y, w, h, b -> onAddGoal()), (w, h) -> {
+            (x, y, w, h) -> GuiConstants.createButton(addButton, x, y, w, h, b -> onAddGoal()), (w, h) -> {
                 int y = h / 2 + GuiConstants.PADDING / 2 + GuiConstants.BUTTON_HEIGHT + GuiConstants.PADDING;
                 return WidgetDimensions.from(w / 2 - labelWidth, y, labelWidth * 2, GuiConstants.BUTTON_HEIGHT);
             }

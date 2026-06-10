@@ -13,7 +13,7 @@ public class AddCustomGoalScreen extends AbstractAddGoalScreen {
     private UnifiedEditBox enchantmentInput = null;
 
     public AddCustomGoalScreen(Screen lastScreen, Screen previousScreen, GoalListManager goalListManager) {
-        super(Texts.literal("Add Custom Goal Screen"), lastScreen, previousScreen, goalListManager);
+        super(Texts.literal(""), lastScreen, previousScreen, goalListManager);
     }
 
     @Override

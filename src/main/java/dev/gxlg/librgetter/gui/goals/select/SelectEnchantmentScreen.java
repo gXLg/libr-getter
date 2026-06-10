@@ -9,12 +9,23 @@ import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
+import dev.gxlg.librgetter.utils.messages.translatable.partial.TranslatablePartialMessage;
+import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableAddCustomButton;
+import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableSearchLabel;
+import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableSelectButton;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
     public static final R.RClass clazz = R.extendWrapper(AbstractDynamicWidgetScreen.class, SelectEnchantmentScreen.class);
+
+    public static final TranslatablePartialMessage SELECT_BUTTON = new TranslatableSelectButton();
+
+    public static final TranslatablePartialMessage ADD_CUSTOM_BUTTON = new TranslatableAddCustomButton();
+
+    public static final TranslatablePartialMessage SEARCH_LABEL = new TranslatableSearchLabel();
 
     private final GoalListManager goalListManager;
 
@@ -23,13 +34,17 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
     private UnifiedEnchantmentSelectionList selectionList = null;
 
     public SelectEnchantmentScreen(Screen lastScreen, GoalListManager goalListManager) {
-        super(Texts.literal("Select Enchantment Screen"));
+        super(Texts.literal(""));
         this.goalListManager = goalListManager;
         this.lastScreen = lastScreen;
     }
 
     @Override
     protected void initWidgets() {
+        Component selectButton = SELECT_BUTTON.getComponent();
+        Component addCustomButton = ADD_CUSTOM_BUTTON.getComponent();
+        Component searchLabel = SEARCH_LABEL.getComponent();
+
         selectionList = (UnifiedEnchantmentSelectionList) addDynamicWidget(
             (x, y, w, h) -> createList(y, w, h),
             (w, h) -> WidgetDimensions.from(0, GuiConstants.PADDING * 2 + GuiConstants.BUTTON_HEIGHT, w, h - GuiConstants.PADDING * 4 - GuiConstants.BUTTON_HEIGHT * 2)
@@ -40,10 +55,10 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
             (w, h) -> WidgetDimensions.from(w / 2 - GuiConstants.BUTTON_WIDTH, GuiConstants.PADDING, GuiConstants.BUTTON_WIDTH * 2, GuiConstants.BUTTON_HEIGHT)
         );
         searchBox.setResponder(this::onSearchUpdated);
-        searchBox.setHint(Texts.literal("Search enchantments...."));
+        searchBox.setHint(searchLabel);
 
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(Texts.literal("Select"), x, y, w, h, (button) -> onSelect()), GuiConstants.LEFT_BUTTON_DIMENSIONS);
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(Texts.literal("Add custom..."), x, y, w, h, (button) -> onAddCustomPressed()), GuiConstants.RIGHT_BUTTON_DIMENSIONS);
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(selectButton, x, y, w, h, (button) -> onSelect()), GuiConstants.LEFT_BUTTON_DIMENSIONS);
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(addCustomButton, x, y, w, h, (button) -> onAddCustomPressed()), GuiConstants.RIGHT_BUTTON_DIMENSIONS);
     }
 
     private void onSearchUpdated(String filter) {
@@ -56,7 +71,7 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
         if (selectionList == null) {
             return;
         }
-        EnchantmentSelectionList_1_20_3.EnchantmentEntry selected = (EnchantmentSelectionList_1_20_3.EnchantmentEntry) selectionList.getSelected();
+        EnchantmentListEntry selected = (EnchantmentListEntry) selectionList.getSelected();
         if (selected == null) {
             return;
         }

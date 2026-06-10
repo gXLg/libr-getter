@@ -18,7 +18,7 @@ public class AddGoalScreen extends AbstractAddGoalScreen {
     private final String translatedName;
 
     public AddGoalScreen(Screen lastScreen, Screen previousScreen, Enchantment enchantment, String idString, String translatedName, GoalListManager goalListManager) {
-        super(Texts.literal("Add Goal Screen"), lastScreen, previousScreen, goalListManager);
+        super(Texts.literal(""), lastScreen, previousScreen, goalListManager);
         this.enchantment = enchantment;
         this.idString = idString;
         this.translatedName = translatedName;
@@ -26,7 +26,7 @@ public class AddGoalScreen extends AbstractAddGoalScreen {
 
     @Override
     protected UnifiedWidget createEnchantmentWidget(int x, int y, int width, int height) {
-        return GuiConstants.createStringWidget(translatedName, x, y, width, height, getFontField());
+        return GuiConstants.createStringWidget(Texts.literal(translatedName), x, y, width, height, getFontField());
     }
 
     @Override

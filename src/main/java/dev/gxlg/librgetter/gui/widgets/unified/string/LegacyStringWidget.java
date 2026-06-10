@@ -6,15 +6,16 @@ import dev.gxlg.versiont.gen.com.mojang.blaze3d.vertex.PoseStack;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractWidget;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.narration.NarrationElementOutput;
+import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 public class LegacyStringWidget extends AbstractWidget implements UnifiedStringWidget {
     public static final R.RClass clazz = R.extendWrapper(AbstractWidget.class, LegacyStringWidget.class);
 
-    private final String text;
+    private final Component text;
 
     private final Font font;
 
-    public LegacyStringWidget(int x, int y, String text, Font font) {
+    public LegacyStringWidget(int x, int y, Component text, Font font) {
         super(x, y, font.width(text), font.getLineHeightField(), Texts.literal(""));
         this.text = text;
         this.font = font;

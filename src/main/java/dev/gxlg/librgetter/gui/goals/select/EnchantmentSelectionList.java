@@ -22,14 +22,14 @@ public class EnchantmentSelectionList extends CustomSelectionList implements Uni
 
     private void init() {
         for (Enchantment enchantment : Enchantments.getAllEnchantments()) {
-            EnchantmentSelectionList_1_20_3.EnchantmentEntry entry = new EnchantmentSelectionList_1_20_3.EnchantmentEntry(selectEnchantmentScreen.getFontField(), enchantment);
+            EnchantmentListEntry entry = new EnchantmentListEntry(selectEnchantmentScreen.getFontField(), enchantment);
             addEntry(entry);
             entries.add(entry);
         }
     }
 
     public void filterEntries(final String filter) {
-        List<AbstractSelectionList$Entry> filtered = entries.stream().map(e -> (EnchantmentSelectionList_1_20_3.EnchantmentEntry) e)
+        List<AbstractSelectionList$Entry> filtered = entries.stream().map(e -> (EnchantmentListEntry) e)
                                                             .filter(e -> filter.isEmpty() || e.getTranslatedName().contains(filter) || e.getIdString().contains(filter))
                                                             .map(e -> (AbstractSelectionList$Entry) e).toList();
         replaceEntries(filtered);

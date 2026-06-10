@@ -19,6 +19,7 @@ public class GoalSelectionList extends CustomSelectionList implements UnifiedGoa
         this.goalListScreen = goalListScreen;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void removeSelectedGoal() {
         GoalListEntry selectedEntry = (GoalListEntry) getSelected();
         if (selectedEntry == null) {

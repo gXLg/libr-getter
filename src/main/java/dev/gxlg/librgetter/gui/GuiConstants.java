@@ -7,7 +7,6 @@ import dev.gxlg.librgetter.gui.widgets.unified.button.VButton;
 import dev.gxlg.librgetter.gui.widgets.unified.string.LegacyStringWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.string.UnifiedStringWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.string.VStringWidget;
-import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.Button$OnPressI;
@@ -46,15 +45,15 @@ public class GuiConstants {
         }
     }
 
-    public static UnifiedStringWidget createStringWidget(String string, int x, int y, int width, int height, Font font) {
+    public static UnifiedStringWidget createStringWidget(Component text, int x, int y, int width, int height, Font font) {
         if (V.lower("1.19.4")) {
-            LegacyStringWidget stringWidget = new LegacyStringWidget(x, y, string, font);
+            LegacyStringWidget stringWidget = new LegacyStringWidget(x, y, text, font);
             stringWidget.setWidthField(width);
             stringWidget.setHeightField(height);
             return stringWidget;
 
         } else {
-            VStringWidget stringWidget = new VStringWidget(Texts.literal(string), font);
+            VStringWidget stringWidget = new VStringWidget(text, font);
             stringWidget.setWidthField(width);
             stringWidget.setHeightField(height);
             stringWidget.setXField(x);

@@ -19,6 +19,7 @@ public class GoalSelectionList_1_20_3 extends CustomSelectionList_1_20_3 impleme
         this.goalListScreen = goalListScreen;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void removeSelectedGoal() {
         GoalListEntry selectedEntry = (GoalListEntry) getSelected();
         if (selectedEntry == null) {
