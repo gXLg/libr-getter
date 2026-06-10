@@ -6,7 +6,7 @@ The config is the core of LibrGetter's flexibility. It allows you to customize v
 of mod's behavior, such as modifying the process, adjusting the messages displayed in the
 chat and much more.
 
-The config is stored in a file named `librgetter.json` located in the `config` folder of your Minecraft
+The config is stored in a file named `config.json` located in the `config/librgetter` folder of your Minecraft
 directory. You can edit this file manually with any text editor, but make sure to follow the correct JSON
 format and to edit the file while Minecraft is closed to avoid any issues.
 
