@@ -23,7 +23,7 @@ A highly configurable fabric mod to automatically cycle a librarian villager for
                 <td>
                     <div align="center">
                         <br>
-                        All Minecraft versions from <code>1.17</code> up to <code>26.1.1</code> - with a single JAR file
+                        All Minecraft versions from <code>1.17</code> up to <code>26.1.2</code> - with a single JAR file
                         <br>
                         <br>
                         <a href="https://github.com/gXLg/versiont-lib"><img alt="Version't badge" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fgxlg.github.io%2Fbadges%2Fversiont%2Flibrgetter.json" align="center"></a>
@@ -69,6 +69,7 @@ A highly configurable fabric mod to automatically cycle a librarian villager for
 * Very customizable process with many configuration options
 * Stable against multiple lag types
 * Supports enchantments tags up from `1.19.3`
+* Configurable through client-side commands and in-game GUIs
 
 # Installation
 
@@ -82,7 +83,8 @@ Make sure, you also have the following dependencies installed:
 
 # Quick Guide
 
-1. Add enchantments to the goals list using `/librget add <enchantment> [level] [price]`
+1. Add enchantments to the goals list using `/librget add <enchantment> [level] [price]` or
+   by opening the goals list GUI using <kbd>,</kbd> (comma)
 2. Change configs to your liking using the config GUI, open it by pressing <kbd>K</kbd>
 3. Stand close to the librarian and his lectern and press <kbd>J</kbd> to start the process
 4. Stop the process by pressing <kbd>J</kbd> again
