@@ -100,8 +100,8 @@ import net.minecraft.class_9331/net.minecraft.core.component.DataComponentType
 import net.minecraft.class_2487/net.minecraft.nbt.CompoundTag
 import net.minecraft.class_9279/net.minecraft.world.item.component.CustomData
 import net.minecraft.class_9334/net.minecraft.core.component.DataComponents
-import net.minecraft.class_3850/net.minecraft.world.entity.npc.villager.VillagerData
-import net.minecraft.class_3852/net.minecraft.world.entity.npc.villager.VillagerProfession
+import net.minecraft.class_3850/net.minecraft.world.entity.npc.VillagerData/net.minecraft.world.entity.npc.villager.VillagerData
+import net.minecraft.class_3852/net.minecraft.world.entity.npc.VillagerProfession/net.minecraft.world.entity.npc.villager.VillagerProfession
 import net.minecraft.class_2520/net.minecraft.nbt.Tag
 import net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier
 import net.minecraft.class_7924/net.minecraft.core.registries.Registries
@@ -282,7 +282,7 @@ class Blocks
 
 import net.minecraft.class_1297/net.minecraft.world.entity.Entity
 import net.minecraft.class_1309/net.minecraft.world.entity.LivingEntity
-import net.minecraft.class_1646/net.minecraft.world.entity.npc.villager.Villager
+import net.minecraft.class_1646/net.minecraft.world.entity.npc.Villager/net.minecraft.world.entity.npc.villager.Villager
 import net.minecraft.class_1657/net.minecraft.world.entity.player.Player
 import net.minecraft.class_742/net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
