@@ -1,6 +1,26 @@
 package dev.gxlg.librgetter;
 
 import dev.gxlg.librgetter.gui.config.ConfigScreen;
+import dev.gxlg.librgetter.gui.goals.AbstractDynamicWidgetScreen;
+import dev.gxlg.librgetter.gui.goals.add.AbstractAddGoalScreen;
+import dev.gxlg.librgetter.gui.goals.add.AddCustomGoalScreen;
+import dev.gxlg.librgetter.gui.goals.add.AddGoalScreen;
+import dev.gxlg.librgetter.gui.goals.list.GoalListEntry;
+import dev.gxlg.librgetter.gui.goals.list.GoalListScreen;
+import dev.gxlg.librgetter.gui.goals.list.GoalSelectionList;
+import dev.gxlg.librgetter.gui.goals.list.GoalSelectionList_1_20_3;
+import dev.gxlg.librgetter.gui.goals.select.EnchantmentListEntry;
+import dev.gxlg.librgetter.gui.goals.select.EnchantmentSelectionList;
+import dev.gxlg.librgetter.gui.goals.select.EnchantmentSelectionList_1_20_3;
+import dev.gxlg.librgetter.gui.goals.select.SelectEnchantmentScreen;
+import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionList;
+import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionListEntry;
+import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionList_1_20_3;
+import dev.gxlg.librgetter.gui.widgets.unified.button.VButton;
+import dev.gxlg.librgetter.gui.widgets.unified.editbox.LegacyEditBox;
+import dev.gxlg.librgetter.gui.widgets.unified.editbox.VEditBox;
+import dev.gxlg.librgetter.gui.widgets.unified.string.LegacyStringWidget;
+import dev.gxlg.librgetter.gui.widgets.unified.string.VStringWidget;
 import dev.gxlg.librgetter.services.ServiceLoaderManager;
 import dev.gxlg.librgetter.services.loaders.CommandsLoader;
 import dev.gxlg.librgetter.services.loaders.CompatibilityLoader;
@@ -20,7 +40,30 @@ public class Entrypoint implements ClientModInitializer {
     public void onInitializeClient() {
         // preload
 
-        R.preload(ConfigScreen.clazz);
+        R.preload(
+            ConfigScreen.clazz,
+            AbstractAddGoalScreen.clazz,
+            AddCustomGoalScreen.clazz,
+            AddGoalScreen.clazz,
+            GoalListEntry.clazz,
+            GoalListScreen.clazz,
+            GoalSelectionList.clazz,
+            GoalSelectionList_1_20_3.clazz,
+            EnchantmentListEntry.clazz,
+            EnchantmentSelectionList.clazz,
+            EnchantmentSelectionList_1_20_3.clazz,
+            SelectEnchantmentScreen.clazz,
+            AbstractDynamicWidgetScreen.clazz,
+            CustomSelectionList.clazz,
+            CustomSelectionList_1_20_3.clazz,
+            CustomSelectionListEntry.clazz,
+            VButton.clazz,
+            VButton.Plain.clazz,
+            LegacyEditBox.clazz,
+            VEditBox.clazz,
+            LegacyStringWidget.clazz,
+            VStringWidget.clazz
+        );
 
         // init services
 
