@@ -2,7 +2,7 @@ Welcome to the documentation for LibrGetter!
 
 Get a grasp of all the features of the mod, how to use it and how to customize it to your needs:
 
-* Adjusting the list of goals: [<kbd>Goals</kbd>](/libr-getter/goals)
+* Adjusting the list of goals: [<kbd>Goals</kbd>](/libr-getter/goals) and [<kbd>Goals (GUI)</kbd>](/libr-getter/goals-gui)
 * Starting, stopping and continuing the process: [<kbd>Process</kbd>](/libr-getter/process)
 * Configuration and customization of the process: [<kbd>Configuration</kbd>](/libr-getter/config)
 * Compatibility with other mods and plugins: [<kbd>Compatibility</kbd>](/libr-getter/compatibility)

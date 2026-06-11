@@ -1,9 +1,9 @@
 package dev.gxlg.librgetter.services.loaders;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
-import dev.gxlg.librgetter.services.Export;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.services.ServiceLoader;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
+import dev.gxlg.librgetter.services.types.Export;
 
 import java.util.function.Supplier;
 
@@ -14,8 +14,8 @@ public class CompatibilityLoader extends ServiceLoader<CompatibilityLoader> {
 
     private CompatibilityManager compatibilityManager;
 
-    public CompatibilityLoader(ConfigLoader configLoader) {
-        dependencyConfigManager = initDependency(configLoader, ConfigLoader.exportConfigManager);
+    public CompatibilityLoader(SaveFileLoader saveFileLoader) {
+        dependencyConfigManager = initDependency(saveFileLoader, SaveFileLoader.exportConfigManager);
     }
 
     @Override

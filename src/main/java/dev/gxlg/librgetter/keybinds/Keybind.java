@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.keybinds;
 
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 

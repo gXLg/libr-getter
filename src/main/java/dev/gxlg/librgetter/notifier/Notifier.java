@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.notifier;
 
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.types.messages.Message;
+import dev.gxlg.librgetter.utils.messages.Message;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$JoinI;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;

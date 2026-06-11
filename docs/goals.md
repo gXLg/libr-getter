@@ -3,15 +3,23 @@
 <sup>[<kbd>← Back to Starting Page</kbd>](/libr-getter)</sup>
 
 > <sup><b>ℹ️ Note</b></sup><br>
-> GUI for goals management is planned for the future, but is not implemented yet
+> A new GUI for goals management has been implemented in `v3.2.0`!
+>
+> While all list modifications can now be done through the GUI, it is still recommended
+> to read this page to understand how goals work and what are the differences between Minecraft
+> enchantments and custom enchantments.
+> 
+> The goals list is shared between both the command interface and the GUI.
+
 
 Goals in LibrGetter represent the enchanting books that you want to obtain from
 librarian villagers. Each goal consists of an enchantment ID (e.g. `minecraft:efficiency`),
 a level (e.g. `5`), and the price limit in emeralds (e.g. `32`). Interactions with goals
-list mainly happen through client-side game command.
+list described on this page happen through a client-side game-command.
 
-Goals list is stored in the same file as the config, more info about that file can be found in
-the [<kbd>Config</kbd>](/libr-getter/config) documentation.
+The goals list is stored in a file named `goals.json` located in the `config/librgetter` folder of your Minecraft
+directory. You can edit this file manually with any text editor, but make sure to follow the correct JSON
+format and to edit the file while Minecraft is closed to avoid any issues.
 
 <div align="center">
     <img width="70%" src="/libr-getter/images/goals.jpeg" alt="Listing goals with a command">

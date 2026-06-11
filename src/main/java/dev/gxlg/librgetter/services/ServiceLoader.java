@@ -1,5 +1,8 @@
 package dev.gxlg.librgetter.services;
 
+import dev.gxlg.librgetter.services.types.Dependency;
+import dev.gxlg.librgetter.services.types.Export;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;

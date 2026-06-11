@@ -23,7 +23,7 @@ A highly configurable fabric mod to automatically cycle a librarian villager for
                 <td>
                     <div align="center">
                         <br>
-                        All Minecraft versions from <code>1.17</code> up to <code>26.1.1</code> - with a single JAR file
+                        All Minecraft versions from <code>1.17</code> up to <code>26.1.2</code> - with a single JAR file
                         <br>
                         <br>
                         <a href="https://github.com/gXLg/versiont-lib"><img alt="Version't badge" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fgxlg.github.io%2Fbadges%2Fversiont%2Flibrgetter.json" align="center"></a>
@@ -62,6 +62,10 @@ A highly configurable fabric mod to automatically cycle a librarian villager for
     </table>
 </div>
 
+> [!WARNING]
+> If you have used the mod before version `v3.2.0`, upon updating, your configuration will be reset to the default values.
+> Please make sure to back up your configuration file before updating, if necessary.
+
 # Features
 
 * Fully automatic and highly efficient
@@ -69,6 +73,7 @@ A highly configurable fabric mod to automatically cycle a librarian villager for
 * Very customizable process with many configuration options
 * Stable against multiple lag types
 * Supports enchantments tags up from `1.19.3`
+* Configurable through client-side commands and in-game GUIs
 
 # Installation
 
@@ -82,7 +87,8 @@ Make sure, you also have the following dependencies installed:
 
 # Quick Guide
 
-1. Add enchantments to the goals list using `/librget add <enchantment> [level] [price]`
+1. Add enchantments to the goals list using `/librget add <enchantment> [level] [price]` or
+   by opening the goals list GUI using <kbd>,</kbd> (comma)
 2. Change configs to your liking using the config GUI, open it by pressing <kbd>K</kbd>
 3. Stand close to the librarian and his lectern and press <kbd>J</kbd> to start the process
 4. Stop the process by pressing <kbd>J</kbd> again
@@ -105,6 +111,7 @@ LibrGetter supports localization and currently implements the following language
 * Spanish 🇪🇸
 * Turkish 🇹🇷 (thanks [@EmirOven](https://github.com/EmirOven))
 * Polish 🇵🇱 (thanks [@Pulpasek](https://github.com/Pulpasek))
+* Hebrew 🇮🇱 (thanks [@TheRealHSQ32](https://github.com/TheRealHSQ32))
 
 You may request further languages or suggest improvements in the [<kbd>issues</kbd>](https://github.com/gXLg/libr-getter/issues) or
 the [<kbd>Discord Community</kbd>](https://discord.gg/aYBrWe5Jtt)

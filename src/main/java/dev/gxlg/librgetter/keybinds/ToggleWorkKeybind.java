@@ -1,8 +1,8 @@
 package dev.gxlg.librgetter.keybinds;
 
 import dev.gxlg.librgetter.controller.SharedController;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
-import dev.gxlg.librgetter.utils.types.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
@@ -51,9 +51,16 @@ public class ToggleWorkKeybind extends Keybind {
             throw new InternalErrorException("player");
         }
 
-        if ((newLecternPos == null || newLibrarian == null) || (
-            !newLecternPos.closerThan(player.blockPosition(), Task.MAX_INTERACTION_DISTANCE) || newLibrarian.distanceTo(player) > Task.MAX_INTERACTION_DISTANCE
-        )) {
+        boolean newStart = false;
+        if (newLecternPos == null) {
+            newStart = true;
+        } else if (newLibrarian == null || !newLibrarian.isAlive()) {
+            newStart = true;
+        } else if (!newLecternPos.closerThan(player.blockPosition(), Task.MAX_INTERACTION_DISTANCE) || newLibrarian.distanceTo(player) > Task.MAX_INTERACTION_DISTANCE) {
+            newStart = true;
+        }
+
+        if (newStart) {
             sharedController.autostart();
             return;
         }

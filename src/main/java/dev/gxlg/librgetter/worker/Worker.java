@@ -1,9 +1,10 @@
 package dev.gxlg.librgetter.worker;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
-import dev.gxlg.librgetter.utils.config.ConfigManager;
-import dev.gxlg.librgetter.utils.types.exceptions.LibrGetterException;
+import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.SchedulingHandler;
 import dev.gxlg.librgetter.worker.scheduling.base.TaskContextUpdateScheduler;
 import dev.gxlg.librgetter.worker.scheduling.base.TaskSwitchScheduler;
@@ -40,10 +41,13 @@ public class Worker {
 
     private final ConfigManager configManager;
 
+    private final GoalListManager goalListManager;
+
     private final CompatibilityManager compatibilityManager;
 
-    public Worker(ConfigManager configManager, CompatibilityManager compatibilityManager) {
+    public Worker(ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) {
         this.configManager = configManager;
+        this.goalListManager = goalListManager;
         this.compatibilityManager = compatibilityManager;
 
         TaskState taskState = new TaskState();
@@ -72,7 +76,7 @@ public class Worker {
             stateController.setTaskContext(currentContext);
 
             try {
-                currentTask.work(currentContext, taskSchedulerController, configManager, compatibilityManager);
+                currentTask.work(currentContext, taskSchedulerController, configManager, goalListManager, compatibilityManager);
             } catch (LibrGetterException exception) {
                 Texts.sendMessage(exception.getTranslatableErrorMessage());
                 systemSchedulerController.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
