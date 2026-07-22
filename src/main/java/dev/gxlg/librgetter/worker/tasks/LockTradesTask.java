@@ -3,6 +3,7 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -25,7 +26,7 @@ public class LockTradesTask extends Task {
         MinecraftData minecraftData = taskContext.minecraftData();
 
         // wait for the screen to open
-        if (!(minecraftData.client.getScreenField() instanceof MerchantScreen)) {
+        if (!(Gui.getScreen(minecraftData.client) instanceof MerchantScreen)) {
             return;
         }
 

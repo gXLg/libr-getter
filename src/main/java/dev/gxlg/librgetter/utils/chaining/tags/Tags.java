@@ -10,10 +10,10 @@ public class Tags {
     private static final Base implementation;
 
     static {
-        if (V.lower("1.21.5")) {
-            implementation = new Tags_1_17_0();
-        } else {
+        if (!V.lower("1.21.5")) {
             implementation = new Tags_1_21_5();
+        } else {
+            implementation = new Tags_1_17_0();
         }
     }
 

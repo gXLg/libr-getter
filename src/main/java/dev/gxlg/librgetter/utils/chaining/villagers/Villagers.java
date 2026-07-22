@@ -7,10 +7,10 @@ public class Villagers {
     private static final Base implementation;
 
     static {
-        if (V.lower("1.21.5")) {
-            implementation = new Villagers_1_17_0();
-        } else {
+        if (!V.lower("1.21.5")) {
             implementation = new Villagers_1_21_5();
+        } else {
+            implementation = new Villagers_1_17_0();
         }
     }
 

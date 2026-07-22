@@ -10,6 +10,7 @@ import dev.gxlg.librgetter.savefiles.config.types.helpers.Configurable;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.commands.Commands;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
+import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.exceptions.commands.AlreadyRunningException;
@@ -98,7 +99,7 @@ public class LibrGetCommand implements CommandsManager.Command {
         } catch (IllegalArgumentException ignored) {
         }
 
-        Screen screen = Minecraft.getInstance().getScreenField();
+        Screen screen = Gui.getScreen(Minecraft.getInstance());
         if (screen instanceof ConfigScreen configScreen) {
             configScreen.updateScreen();
         } else {

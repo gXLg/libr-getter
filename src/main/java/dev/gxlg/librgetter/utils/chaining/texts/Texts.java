@@ -12,16 +12,16 @@ public class Texts {
     private static final Base implementation;
 
     static {
-        if (V.lower("1.19")) {
-            implementation = new Texts_1_17_0();
-        } else if (V.lower("1.19.4")) {
-            implementation = new Texts_1_19_0();
-        } else if (V.lower("1.21.5")) {
-            implementation = new Texts_1_19_4();
-        } else if (V.lower("26.1")) {
-            implementation = new Texts_1_21_5();
-        } else {
+        if (!V.lower("26.1")) {
             implementation = new Texts_26_1_0();
+        } else if (!V.lower("1.21.5")) {
+            implementation = new Texts_1_21_5();
+        } else if (!V.lower("1.19.4")) {
+            implementation = new Texts_1_19_4();
+        } else if (!V.lower("1.19")) {
+            implementation = new Texts_1_19_0();
+        } else {
+            implementation = new Texts_1_17_0();
         }
     }
 

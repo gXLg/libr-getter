@@ -8,6 +8,7 @@ import dev.gxlg.librgetter.gui.widgets.WidgetDimensions;
 import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.TranslatablePartialMessage;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableAddCustomButton;
@@ -75,16 +76,16 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
         if (selected == null) {
             return;
         }
-        getMinecraftField().setScreen(new AddGoalScreen(this, lastScreen, selected.getEnchantment(), selected.getIdString(), selected.getTranslatedName(), goalListManager));
+        Gui.setScreen(getMinecraftField(), new AddGoalScreen(this, lastScreen, selected.getEnchantment(), selected.getIdString(), selected.getTranslatedName(), goalListManager));
     }
 
     private void onAddCustomPressed() {
-        getMinecraftField().setScreen(new AddCustomGoalScreen(this, lastScreen, goalListManager));
+        Gui.setScreen(getMinecraftField(), new AddCustomGoalScreen(this, lastScreen, goalListManager));
     }
 
     @Override
     public void onClose() {
-        getMinecraftField().setScreen(lastScreen);
+        Gui.setScreen(getMinecraftField(), lastScreen);
     }
 
     private UnifiedWidget createList(int y, int width, int height) {

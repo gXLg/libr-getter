@@ -16,16 +16,16 @@ public class Commands {
     private static final Base implementation;
 
     static {
-        if (V.lower("1.19")) {
-            implementation = new Commands_1_17_0();
-        } else if (V.lower("1.19.3")) {
-            implementation = new Commands_1_19_0();
-        } else if (V.lower("1.21")) {
-            implementation = new Commands_1_19_3();
-        } else if (V.lower("26.1")) {
-            implementation = new Commands_1_21_0();
-        } else {
+        if (!V.lower("26.1")) {
             implementation = new Commands_26_1_0();
+        } else if (!V.lower("1.21")) {
+            implementation = new Commands_1_21_0();
+        } else if (!V.lower("1.19.3")) {
+            implementation = new Commands_1_19_3();
+        } else if (!V.lower("1.19")) {
+            implementation = new Commands_1_19_0();
+        } else {
+            implementation = new Commands_1_17_0();
         }
     }
 

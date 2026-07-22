@@ -11,10 +11,10 @@ public class Parser {
     private static final Base implementation;
 
     static {
-        if (V.lower("1.20.5")) {
-            implementation = new Parser_1_17_0();
-        } else {
+        if (!V.lower("1.20.5")) {
             implementation = new Parser_1_20_5();
+        } else {
+            implementation = new Parser_1_17_0();
         }
     }
 
