@@ -167,7 +167,7 @@ public class LibrGetCommand implements CommandsManager.Command {
                 }
 
                 if (configManager.getBoolean(Config.WARNING) && trade.lvl() > maxLevel) {
-                    new LevelOverMaxMessage(trade, enchantment.getMaxLevel());
+                    Texts.sendMessage(new LevelOverMaxMessage(trade, enchantment.getMaxLevel()));
                 }
 
                 addGoal(trade, false);
