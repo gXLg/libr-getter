@@ -2,9 +2,11 @@ package dev.gxlg.librgetter.utils.chaining.gui;
 
 import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedList;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.vertex.PoseStack;
+import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.GuiGraphicsExtractor;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.ObjectSelectionList$Entry;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccessI;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
@@ -49,5 +51,15 @@ public class Gui_1_17_0 extends Gui.Base {
     @Override
     public void refreshScrollAmount(UnifiedList list) {
         // this method is not needed, as the scrolling is clamped per default in versions [1.17, 1.21)
+    }
+
+    @Override
+    public Screen getScreen(Minecraft minecraft) {
+        return minecraft.getScreenField();
+    }
+
+    @Override
+    public void setScreen(Minecraft minecraft, Screen screen) {
+        minecraft.setScreen(screen);
     }
 }

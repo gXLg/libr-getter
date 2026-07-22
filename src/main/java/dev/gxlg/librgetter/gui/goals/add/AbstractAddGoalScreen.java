@@ -6,6 +6,7 @@ import dev.gxlg.librgetter.gui.widgets.WidgetDimensions;
 import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.TranslatablePartialMessage;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableAddButton;
@@ -101,7 +102,7 @@ public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen 
 
     @Override
     public void onClose() {
-        getMinecraftField().setScreen(lastScreen);
+        Gui.setScreen(getMinecraftField(), lastScreen);
     }
 
     protected abstract String getEnchantmentString();
@@ -152,6 +153,6 @@ public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen 
         EnchantmentTrade addedGoal = new EnchantmentTrade(enchantmentStr, level, price);
         goalListManager.removeMatchingGoal(addedGoal);
         goalListManager.addGoal(addedGoal);
-        getMinecraftField().setScreen(previousScreen);
+        Gui.setScreen(getMinecraftField(), previousScreen);
     }
 }

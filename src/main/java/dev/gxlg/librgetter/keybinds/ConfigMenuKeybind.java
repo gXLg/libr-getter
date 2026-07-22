@@ -3,6 +3,7 @@ package dev.gxlg.librgetter.keybinds;
 import dev.gxlg.librgetter.gui.config.ConfigMenu;
 import dev.gxlg.librgetter.gui.config.ConfigScreen;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
+import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
@@ -17,6 +18,6 @@ public class ConfigMenuKeybind extends Keybind {
 
     @Override
     public void execute(Minecraft client) {
-        client.setScreen(new ConfigScreen(configMenu));
+        Gui.setScreen(client, new ConfigScreen(configMenu));
     }
 }

@@ -42,14 +42,17 @@ import net.minecraft.class_3532/net.minecraft.util.Mth
 
 class Minecraft
     static Minecraft method_1551/getInstance()
-    @Nullable Screen field_1755/screen
     @Nullable LocalPlayer field_1724/player
     @Nullable ClientLevel field_1687/level
     @Nullable HitResult field_1765/hitResult
     @Nullable MultiPlayerGameMode field_1761/gameMode
     @Nullable ClientPacketListener method_1562/getConnection()
     @Nullable ClientPacketListener_1_20_2 method_1562/getConnection()
+    # <=26.1.2
+    @Nullable Screen field_1755/screen
     void method_1507/setScreen(Screen screen)
+    # 26.2
+    Gui gui
 
 class HitResult
     HitResult$Type method_17783/getType()
@@ -515,6 +518,11 @@ import net.minecraft.class_7528/net.minecraft.client.gui.components.AbstractScro
 import net.minecraft.class_11909/net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.class_4185$class_7841/net.minecraft.client.gui.components.Button$CreateNarration
 import net.minecraft.class_4185$class_12231/net.minecraft.client.gui.components.Button$Plain
+import !net.minecraft.client.gui.Gui
+
+class Gui
+    @Nullable Screen screen
+    void setScreen(Screen screen)
 
 class Screen
     <init>(Component title)

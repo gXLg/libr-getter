@@ -6,6 +6,7 @@ import dev.gxlg.librgetter.gui.goals.select.SelectEnchantmentScreen;
 import dev.gxlg.librgetter.gui.widgets.WidgetDimensions;
 import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.TranslatablePartialMessage;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableAddGoalButton;
@@ -50,11 +51,11 @@ public class GoalListScreen extends AbstractDynamicWidgetScreen {
     @Override
     public void onClose() {
         goalListManager.save();
-        getMinecraftField().setScreen(lastScreen);
+        Gui.setScreen(getMinecraftField(), lastScreen);
     }
 
     private void onAddPressed() {
-        getMinecraftField().setScreen(new SelectEnchantmentScreen(this, goalListManager));
+        Gui.setScreen(getMinecraftField(), new SelectEnchantmentScreen(this, goalListManager));
     }
 
     private UnifiedWidget createList(int y, int width, int height) {
