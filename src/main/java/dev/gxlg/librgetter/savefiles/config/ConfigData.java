@@ -66,6 +66,9 @@ public class ConfigData {
     @ConfigCategory(ConfigManager.Category.MATCHING)
     private boolean fallback = false;
 
+    @ConfigCategory(ConfigManager.Category.MATCHING)
+    private boolean originalPrice = false;
+
     @NotNull
     @ConfigCategory(ConfigManager.Category.MATCHING)
     private MatchMode matchMode = MatchMode.VANILLA;
