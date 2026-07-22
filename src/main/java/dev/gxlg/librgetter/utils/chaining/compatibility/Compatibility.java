@@ -6,10 +6,10 @@ public class Compatibility {
     private static final Base implementation;
 
     static {
-        if (V.lower("1.21.2")) {
-            implementation = new Compatibility_1_17_0();
-        } else {
+        if (!V.lower("1.20.2")) {
             implementation = new Compatibility_1_20_2();
+        } else {
+            implementation = new Compatibility_1_17_0();
         }
     }
 

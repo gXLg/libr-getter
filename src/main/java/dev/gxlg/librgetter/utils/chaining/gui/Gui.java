@@ -15,20 +15,20 @@ public class Gui {
     private static final Base implementation;
 
     static {
-        if (V.lower("1.20")) {
-            implementation = new Gui_1_17_0();
-        } else if (V.lower("1.20.5")) {
-            implementation = new Gui_1_20_0();
-        } else if (V.lower("1.21")) {
-            implementation = new Gui_1_20_5();
-        } else if (V.lower("1.21.4")) {
-            implementation = new Gui_1_21_0();
-        } else if (V.lower("1.21.6")) {
-            implementation = new Gui_1_21_4();
-        } else if (V.lower("1.21.9")) {
-            implementation = new Gui_1_21_6();
-        } else {
+        if (!V.lower("1.21.9")) {
             implementation = new Gui_1_21_9();
+        } else if (!V.lower("1.21.6")) {
+            implementation = new Gui_1_21_6();
+        } else if (!V.lower("1.21.4")) {
+            implementation = new Gui_1_21_4();
+        } else if (!V.lower("1.21")) {
+            implementation = new Gui_1_21_0();
+        } else if (!V.lower("1.20.5")) {
+            implementation = new Gui_1_20_5();
+        } else if (!V.lower("1.20")) {
+            implementation = new Gui_1_20_0();
+        } else {
+            implementation = new Gui_1_17_0();
         }
     }
 
