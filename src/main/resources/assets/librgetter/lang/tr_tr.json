@@ -15,6 +15,7 @@
   "librgetter.config.matchMode": "Takasları değiştirmenin ne zaman durdurulacağını belirler:\nVANILLA - normal takas eşleşmeleri\nPERFECT - sunulan BÜTÜN takaslar hedef listesiyle eşleşmeli\nATLEAST - en az N tane takas, hedef listesiyle eşleşmeli",
   "librgetter.config.notify": "Bittiği zaman bir ses oynat",
   "librgetter.config.offhand": "Daha etkili yerleştirme için kürsüyü sol ele al",
+  "librgetter.config.originalPrice": "İndirime göre ayarlanmış fiyat yerine işlemin orijinal fiyatını kullan",
   "librgetter.config.removeGoal": "Büyü bulunduktan sonra otomatik olarak hedef listesinden çıkar",
   "librgetter.config.rotationMode": "Kürsüyü yerleştirmeden ve köylüyle konuşmadan önce kafayı çevir:\nNONE - çevirme\nINSTANT - kafayı anında çevir\nSMOOTH - daha doğal kafa çevirme; işlemi yavaşlatır",
   "librgetter.config.safeChecker": "Köylünün blok yerleştirme işlemine engel olup olmadığını kontrol et",

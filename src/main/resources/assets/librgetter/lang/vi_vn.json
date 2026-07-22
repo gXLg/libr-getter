@@ -15,6 +15,7 @@
   "librgetter.config.matchMode": "Khi nào dừng vòng lặp:\nVANILLA - khớp giao dịch thông thường\nPERFECT - mọi giao dịch được cung cấp khớp với danh sách mục tiêu\nATLEAST - phải có ít nhất N giao dịch khớp với danh sách mục tiêu",
   "librgetter.config.notify": "Phát âm thanh khi hoàn thành",
   "librgetter.config.offhand": "Đặt bục để sách vào tay phụ để đặt bục giảng nhanh hơn",
+  "librgetter.config.originalPrice": "Sử dụng giá gốc của giao dịch thay vì giá giảm đã điều chỉnh",
   "librgetter.config.removeGoal": "Tự động xóa loại phù phép trong danh sách mục tiêu khi tìm thấy",
   "librgetter.config.rotationMode": "Xoay đầu trước khi đặt bục sách và nói chuyện với thủ thư:\nNONE - không xoay\nINSTANT - xoay ngay lập tức\nSMOOTH - xoay tự nhiên hơn; làm chậm quá trình",
   "librgetter.config.safeChecker": "Kiểm tra dân làng có thể can thiệp vào việc đặt bục để sách hay không",

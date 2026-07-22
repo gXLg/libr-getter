@@ -15,6 +15,7 @@
   "librgetter.config.matchMode": "Kiedy zakończyć cyklowanie:\nVANILLA - standardowe dopasowanie ofert\nPERFECT - wszystkie oferty muszą być dopasowane do listy celów\nATLEAST - minimum N ofert musi być dopasowane do listy celów",
   "librgetter.config.notify": "Odtwarza dźwięk po zakończeniu",
   "librgetter.config.offhand": "Umieść pulpit w drugiej ręcę dla wydajniejszego stawiania",
+  "librgetter.config.originalPrice": "Użyj oryginalnej ceny transakcji zamiast skorygowanej ceny z rabatem",
   "librgetter.config.removeGoal": "Automatycznie usuń zaklęcie z listy celów po jego znalezieniu",
   "librgetter.config.rotationMode": "Obróć głowę przed postawieniem pulpitu i rozmową z bibliotekarzem:\nNONE - nie obracaj\nINSTANT - natychmiastowy obrót\nSMOOTH - bardziej naturalny obrót; spowalnia proces",
   "librgetter.config.safeChecker": "Sprawdź, czy wieśniak może zakłócić proces stawiania",
