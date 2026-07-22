@@ -510,6 +510,35 @@ with information about the plugin, so that it can be supported in future updates
 > * Support for custom enchantments: [<kbd>Goals | Custom Enchantments</kbd>](/libr-getter/goals#custom-enchantments)
 > * Compatibility with mods and plugins: [<kbd>Compatibility</kbd>](/libr-getter/compatibility)
 
+### Original Price
+
+Match the original/adjusted price.
+
+<table>
+    <tbody>
+        <tr>
+            <td><b>Config</b></td>
+            <td><code>originalPrice</code></td>
+        </tr>
+        <tr>
+            <td><b>Values</b></td>
+            <td>true, false</td>
+        </tr>
+        <tr>
+            <td><b>Default</b></td>
+            <td>false</td>
+        </tr>
+    </tbody>
+</table>
+
+By default, LibrGetter will match the adjusted price of the enchantment, which is the price after
+all discounts have been applied, such as hero of the village or other effects.
+
+When this option is enabled, LibrGetter will match the original price of the enchantment, which is the price before any
+discounts or adjustments are applied. This can be useful if you want to ensure that other players can
+also buy the enchantment at the same price, regardless of any discounts they may have (with the exception of
+negative discounts).
+
 ### Matching Algorithm
 
 #### Match Mode
