@@ -15,6 +15,7 @@
   "librgetter.config.matchMode": "מתי להפסיק להחליף דברים:\nVANILLA - התאמת טריידים רגילה\nPERFECT - כל הפריטים המוצעים חייבים להתאים לרשימת המטרות\nATLEAST - לפחות X טריידים חייבים להתאים לרשימת המטרות",
   "librgetter.config.notify": "משמיע צליל לאחר סיום",
   "librgetter.config.offhand": "שים את העמדת קריאה שלך ביד השנייה שלך בשביל להניח את זה ביעילות ",
+  "librgetter.config.originalPrice": "השתמש במחיר המקורי של העסקה במקום במחיר המוזל שהותאם",
   "librgetter.config.removeGoal": "אוטומטית הסר כישוף מרשימת המטרות לאחר מציאת המטרה",
   "librgetter.config.rotationMode": "סובבו את הראש לפני הנחת עמדת הקריאה ושיחה עם הספרן:\nNONE - לא לסובב\nINSTANT - סיבוב ראש מיידי\nSMOOTH - סיבוב ראש יותר טבעי; מאט את התהליך",
   "librgetter.config.safeChecker": "בדוק אם הוויליג'ר יכול להפריע בתהליך הנחת העמדת קריאה",

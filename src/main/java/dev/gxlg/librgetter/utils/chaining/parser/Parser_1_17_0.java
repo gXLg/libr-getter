@@ -28,22 +28,19 @@ public class Parser_1_17_0 extends Parser.Base {
         CompoundTag tag = getCustomData(stack);
         EnchantmentTrade.EnchantmentOnly finalEnchantment = Plugins.parse(tag);
 
-
         if (finalEnchantment == null) {
             finalEnchantment = parseStored(stack);
         }
-
         if (finalEnchantment == null) {
             // Nothing was found, so try fallback or return empty
             finalEnchantment = fallbackParse(tag, configManager, goalListManager);
         }
-
         if (finalEnchantment == null) {
             return null;
         }
 
         int price;
-        ItemStack firstBuyItem = offer.getCostA();
+        ItemStack firstBuyItem = configManager.getBoolean(Config.ORIGINAL_PRICE) ? offer.getBaseCostA() : offer.getCostA();
         ItemStack secondBuyItem = offer.getCostB();
 
         if (firstBuyItem.getItem().equals(Items.EMERALD())) {

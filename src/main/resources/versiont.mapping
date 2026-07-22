@@ -368,6 +368,7 @@ class ItemStack extends DataComponentHolder
 
 class MerchantOffer
     ItemStack method_8250/getResult()
+    ItemStack method_8246/getBaseCostA()
     ItemStack method_19272/getCostA()
     ItemStack method_8247/getCostB()
 

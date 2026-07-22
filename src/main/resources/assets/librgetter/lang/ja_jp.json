@@ -15,6 +15,7 @@
   "librgetter.config.matchMode": "サイクルを止める条件:\nVANILLA - 通常取引が一致\nPERFECT - 提示されたすべての取引がゴールリストと一致\nATLEAST - 少なくとも N 個の取引がゴールリストと一致する必要がある",
   "librgetter.config.notify": "完了時に一度音を鳴らす",
   "librgetter.config.offhand": "効率よく設置するために書見台をオフハンドに入れる",
+  "librgetter.config.originalPrice": "割引で調整された価格ではなく、取引の元の価格を使用する",
   "librgetter.config.removeGoal": "見つかったエンチャントをゴールリストから自動で削除する",
   "librgetter.config.rotationMode": "書見台を置いて司書と話す前に頭を回転させるかどうか:\nNONE - 回転しない\nINSTANT - 即時回転\nSMOOTH - より自然な回転；処理が遅くなる",
   "librgetter.config.safeChecker": "村人が設置プロセスに干渉するかどうかをチェックする",
