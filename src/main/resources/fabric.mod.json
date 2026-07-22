@@ -24,7 +24,7 @@
     "librgetter.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.17 <=26.1.2",
+    "minecraft": ">=1.17 <=26.2",
     "versiont": "~1.2.4"
   },
   "conflicts": {
