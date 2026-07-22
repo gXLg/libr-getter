@@ -23,10 +23,10 @@ A highly configurable fabric mod to automatically cycle a librarian villager for
                 <td>
                     <div align="center">
                         <br>
-                        All Minecraft versions from <code>1.17</code> up to <code>26.1.2</code> - with a single JAR file
+                        Supports all Minecraft versions from <code>1.17</code> up to <code>26.2</code>
                         <br>
                         <br>
-                        <a href="https://github.com/gXLg/versiont-lib"><img alt="Version't badge" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fgxlg.github.io%2Fbadges%2Fversiont%2Flibrgetter.json" align="center"></a>
+                        <a href="https://github.com/gXLg/versiont-lib"><img alt="Version't badge" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fgxlg.github.io%2Flibr-getter%2Fstatic%2Fversiont-badge.json" align="center"></a>
                         <br>&nbsp;
                     </div>
                 </td>
@@ -62,9 +62,9 @@ A highly configurable fabric mod to automatically cycle a librarian villager for
     </table>
 </div>
 
-> [!WARNING]
-> If you have used the mod before version `v3.2.0`, upon updating, your configuration will be reset to the default values.
-> Please make sure to back up your configuration file before updating, if necessary.
+> <sup><b>⚠️ Warning</b></sup><br>
+> If you have used the mod before version `v3.2.0` (Jun 11, 2026), upon updating, your configuration and goals list
+> will be reset to the default values. Please make sure to back up your configuration file before updating, if necessary.
 
 # Features
 

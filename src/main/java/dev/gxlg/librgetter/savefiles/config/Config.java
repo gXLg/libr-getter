@@ -15,6 +15,7 @@ public enum Config {
     WARNING("warning"),
     CHECK_UPDATE("checkUpdate"),
     FALLBACK("fallback"),
+    ORIGINAL_PRICE("originalPrice"),
     MATCH_MODE("matchMode"),
     MATCH_AT_LEAST("matchAtLeast"),
     TRADE_CYCLING("tradeCycling");

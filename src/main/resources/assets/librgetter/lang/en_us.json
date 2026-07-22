@@ -15,6 +15,7 @@
   "librgetter.config.matchMode": "When to stop cycling:\nVANILLA - regular trade matches\nPERFECT - all offered trades must match the goals list\nATLEAST - at least N trades must match the goals list",
   "librgetter.config.notify": "Plays a sound once finished",
   "librgetter.config.offhand": "Put the lectern in the offhand for efficient placement",
+  "librgetter.config.originalPrice": "Use the original price of the trade instead of the adjusted discount price",
   "librgetter.config.removeGoal": "Automatically remove an enchantment from the goals list once found",
   "librgetter.config.rotationMode": "Rotate the head before placing the lectern and talking to the librarian:\nNONE - don't rotate\nINSTANT - instant head rotation\nSMOOTH - more natural head rotation; slows down the process",
   "librgetter.config.safeChecker": "Check if the villager can interfere with the placing process",

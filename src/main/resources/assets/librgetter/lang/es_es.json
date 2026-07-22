@@ -15,6 +15,7 @@
   "librgetter.config.matchMode": "Cuándo detener el ciclo:\nVANILLA - coincide el comercio normal\nPERFECT - todas las ofertas coinciden con la lista de objetivos\nATLEAST - al menos N ofertas deben coincidir con la lista de objetivos",
   "librgetter.config.notify": "Reproducir un sonido al finalizar",
   "librgetter.config.offhand": "Colocar el atril en la mano secundaria para una colocación eficiente",
+  "librgetter.config.originalPrice": "Usar el precio original del intercambio en lugar del precio ajustado con descuento",
   "librgetter.config.removeGoal": "Eliminar automáticamente un encantamiento de la lista de objetivos cuando se encuentre",
   "librgetter.config.rotationMode": "Girar la cabeza antes de colocar el atril y hablar con el bibliotecario:\nNONE - no girar\nINSTANT - giro instantáneo\nSMOOTH - giro más natural; ralentiza el proceso",
   "librgetter.config.safeChecker": "Comprobar si el aldeano puede interferir con el proceso de colocación",

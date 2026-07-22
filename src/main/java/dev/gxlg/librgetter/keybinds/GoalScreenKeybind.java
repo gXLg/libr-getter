@@ -2,6 +2,7 @@ package dev.gxlg.librgetter.keybinds;
 
 import dev.gxlg.librgetter.gui.goals.list.GoalListScreen;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
@@ -17,8 +18,8 @@ public class GoalScreenKeybind extends Keybind {
 
     @Override
     public void execute(Minecraft client) {
-        Screen lastScreen = client.getScreenField();
+        Screen lastScreen = Gui.getScreen(client);
         GoalListScreen newScreen = new GoalListScreen(lastScreen, goalListManager);
-        client.setScreen(newScreen);
+        Gui.setScreen(client, newScreen);
     }
 }

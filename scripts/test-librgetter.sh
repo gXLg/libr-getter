@@ -11,11 +11,11 @@ echo "Found MC: $mc"
 xdotool windowfocus  --sync "$mc"
 xdotool windowactivate  --sync "$mc"
 
-xdotool type --clearmodifiers -- "Starting test..."
+xdotool type --clearmodifiers --delay 20 -- "Starting test..."
 xdotool key --clearmodifiers Enter
 
 while IFS= read -r line; do
   echo "$line"
-  xdotool type --clearmodifiers -- "t$line"
+  xdotool type --clearmodifiers --delay 20 -- "t$line"
   xdotool key --clearmodifiers Enter
 done < "$file"

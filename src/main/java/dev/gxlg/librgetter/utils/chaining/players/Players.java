@@ -11,16 +11,16 @@ public class Players {
     private static final Base implementation;
 
     static {
-        if (V.lower("1.19.0")) {
-            implementation = new Players_1_17_0();
-        } else if (V.lower("1.21.5")) {
-            implementation = new Players_1_19_0();
-        } else if (V.equal("1.21.9")) {
-            implementation = new Players_1_21_5();
-        } else if (V.lower("26.1")) {
-            implementation = new Players_1_21_9();
-        } else {
+        if (!V.lower("26.1")) {
             implementation = new Players_26_1_0();
+        } else if (!V.lower("1.21.9")) {
+            implementation = new Players_1_21_9();
+        } else if (!V.lower("1.21.5")) {
+            implementation = new Players_1_21_5();
+        } else if (!V.lower("1.19")) {
+            implementation = new Players_1_19_0();
+        } else {
+            implementation = new Players_1_17_0();
         }
     }
 

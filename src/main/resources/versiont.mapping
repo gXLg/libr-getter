@@ -42,14 +42,17 @@ import net.minecraft.class_3532/net.minecraft.util.Mth
 
 class Minecraft
     static Minecraft method_1551/getInstance()
-    @Nullable Screen field_1755/screen
     @Nullable LocalPlayer field_1724/player
     @Nullable ClientLevel field_1687/level
     @Nullable HitResult field_1765/hitResult
     @Nullable MultiPlayerGameMode field_1761/gameMode
     @Nullable ClientPacketListener method_1562/getConnection()
     @Nullable ClientPacketListener_1_20_2 method_1562/getConnection()
+    # <=26.1.2
+    @Nullable Screen field_1755/screen
     void method_1507/setScreen(Screen screen)
+    # 26.2
+    Gui gui
 
 class HitResult
     HitResult$Type method_17783/getType()
@@ -100,10 +103,10 @@ import net.minecraft.class_9331/net.minecraft.core.component.DataComponentType
 import net.minecraft.class_2487/net.minecraft.nbt.CompoundTag
 import net.minecraft.class_9279/net.minecraft.world.item.component.CustomData
 import net.minecraft.class_9334/net.minecraft.core.component.DataComponents
-import net.minecraft.class_3850/net.minecraft.world.entity.npc.VillagerData/net.minecraft.world.entity.npc.villager.VillagerData
-import net.minecraft.class_3852/net.minecraft.world.entity.npc.VillagerProfession/net.minecraft.world.entity.npc.villager.VillagerProfession
+import net.minecraft.class_3850/net.minecraft.world.entity.npc.VillagerData@<=1.21.10/net.minecraft.world.entity.npc.villager.VillagerData@>=1.21.11
+import net.minecraft.class_3852/net.minecraft.world.entity.npc.VillagerProfession@<=1.21.10/net.minecraft.world.entity.npc.villager.VillagerProfession@>=1.21.11
 import net.minecraft.class_2520/net.minecraft.nbt.Tag
-import net.minecraft.class_2960/net.minecraft.resources.ResourceLocation/net.minecraft.resources.Identifier
+import net.minecraft.class_2960/net.minecraft.resources.ResourceLocation@<=1.21.10/net.minecraft.resources.Identifier@>=1.21.11
 import net.minecraft.class_7924/net.minecraft.core.registries.Registries
 import net.minecraft.class_2378/net.minecraft.core.Registry
 import net.minecraft.class_7923/net.minecraft.core.registries.BuiltInRegistries
@@ -282,7 +285,7 @@ class Blocks
 
 import net.minecraft.class_1297/net.minecraft.world.entity.Entity
 import net.minecraft.class_1309/net.minecraft.world.entity.LivingEntity
-import net.minecraft.class_1646/net.minecraft.world.entity.npc.Villager/net.minecraft.world.entity.npc.villager.Villager
+import net.minecraft.class_1646/net.minecraft.world.entity.npc.Villager@<=1.21.10/net.minecraft.world.entity.npc.villager.Villager@>=1.21.11
 import net.minecraft.class_1657/net.minecraft.world.entity.player.Player
 import net.minecraft.class_742/net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
@@ -365,6 +368,7 @@ class ItemStack extends DataComponentHolder
 
 class MerchantOffer
     ItemStack method_8250/getResult()
+    ItemStack method_8246/getBaseCostA()
     ItemStack method_19272/getCostA()
     ItemStack method_8247/getCostB()
 
@@ -398,7 +402,7 @@ class EnchantmentHelper
 import net.minecraft.class_2477/net.minecraft.locale.Language
 import net.minecraft.class_2561/net.minecraft.network.chat.Component
 import net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent
-import net.minecraft.class_2588/net.minecraft.network.chat.TranslatableComponent/net.minecraft.network.chat.contents.TranslatableContents
+import net.minecraft.class_2588/net.minecraft.network.chat.TranslatableComponent@<=1.18.2/net.minecraft.network.chat.contents.TranslatableContents@>=1.19
 import net.minecraft.class_2558/net.minecraft.network.chat.ClickEvent
 import net.minecraft.class_2558$class_2559/net.minecraft.network.chat.ClickEvent$Action
 import net.minecraft.class_2558$class_10609/net.minecraft.network.chat.ClickEvent$RunCommand
@@ -494,7 +498,7 @@ import net.minecraft.class_1263/net.minecraft.world.Container
 import net.minecraft.class_1661/net.minecraft.world.entity.player.Inventory
 import net.minecraft.class_3917/net.minecraft.world.inventory.MenuType
 import net.minecraft.class_1735/net.minecraft.world.inventory.Slot
-import net.minecraft.class_1713/net.minecraft.world.inventory.ClickType/net.minecraft.world.inventory.ContainerInput
+import net.minecraft.class_1713/net.minecraft.world.inventory.ClickType@<=1.21.11/net.minecraft.world.inventory.ContainerInput@>=26.1
 import net.minecraft.class_492/net.minecraft.client.gui.screens.inventory.MerchantScreen
 import net.minecraft.class_339/net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.class_327/net.minecraft.client.gui.Font
@@ -506,7 +510,7 @@ import net.minecraft.class_4185/net.minecraft.client.gui.components.Button
 import net.minecraft.class_7842/net.minecraft.client.gui.components.StringWidget
 import net.minecraft.class_4185$class_4241/net.minecraft.client.gui.components.Button$OnPress
 import net.minecraft.class_4185$class_7840/net.minecraft.client.gui.components.Button$Builder
-import net.minecraft.class_332/net.minecraft.client.gui.GuiGraphics/net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.class_332/net.minecraft.client.gui.GuiGraphics@<=1.21.11/net.minecraft.client.gui.GuiGraphicsExtractor@>=26.1
 import net.minecraft.class_4280/net.minecraft.client.gui.components.ObjectSelectionList alt: _1_20_3
 import net.minecraft.class_4280$class_4281/net.minecraft.client.gui.components.ObjectSelectionList$Entry
 import net.minecraft.class_350/net.minecraft.client.gui.components.AbstractSelectionList alt: _1_20_3
@@ -515,6 +519,11 @@ import net.minecraft.class_7528/net.minecraft.client.gui.components.AbstractScro
 import net.minecraft.class_11909/net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.class_4185$class_7841/net.minecraft.client.gui.components.Button$CreateNarration
 import net.minecraft.class_4185$class_12231/net.minecraft.client.gui.components.Button$Plain
+import !net.minecraft.client.gui.Gui
+
+class Gui
+    @Nullable Screen screen
+    void setScreen(Screen screen)
 
 class Screen
     <init>(Component title)

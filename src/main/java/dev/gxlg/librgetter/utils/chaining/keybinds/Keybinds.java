@@ -8,12 +8,12 @@ public class Keybinds {
     private static final Base implementation;
 
     static {
-        if (V.lower("1.21.9")) {
-            implementation = new Keybinds_1_17_0();
-        } else if (V.lower("26.1")) {
+        if (!V.lower("26.1")) {
+            implementation = new Keybinds_26_1_0();
+        } else if (!V.lower("1.21.9")) {
             implementation = new Keybinds_1_21_9();
         } else {
-            implementation = new Keybinds_26_1_0();
+            implementation = new Keybinds_1_17_0();
         }
     }
 

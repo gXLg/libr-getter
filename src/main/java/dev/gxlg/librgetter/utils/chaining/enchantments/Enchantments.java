@@ -12,12 +12,12 @@ public class Enchantments {
     private static final Base implementation;
 
     static {
-        if (V.lower("1.19.3")) {
-            implementation = new Enchantments_1_17_0();
-        } else if (V.lower("1.21")) {
+        if (!V.lower("1.21")) {
+            implementation = new Enchantments_1_21_0();
+        } else if (!V.lower("1.19.3")) {
             implementation = new Enchantments_1_19_3();
         } else {
-            implementation = new Enchantments_1_21_0();
+            implementation = new Enchantments_1_17_0();
         }
     }
 
