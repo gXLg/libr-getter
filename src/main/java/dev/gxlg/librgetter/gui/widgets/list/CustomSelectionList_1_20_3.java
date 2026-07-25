@@ -20,12 +20,18 @@ public abstract class CustomSelectionList_1_20_3 extends ObjectSelectionList_1_2
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        return clickElement(event.x(), event.y(), event.button());
+        if (clickElement(event.x(), event.y(), event.button())) {
+            return true;
+        }
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return clickElement(mouseX, mouseY, button);
+        if (clickElement(mouseX, mouseY, button)) {
+            return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
