@@ -19,6 +19,8 @@ import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
+import java.util.function.Supplier;
+
 public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
     public static final R.RClass clazz = R.extendWrapper(AbstractDynamicWidgetScreen.class, SelectEnchantmentScreen.class);
 
@@ -52,14 +54,14 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
         );
 
         UnifiedEditBox searchBox = (UnifiedEditBox) addDynamicWidget(
-            (x, y, w, h) -> createEditBox(x, y, w, h, Texts.literal("")),
+            (x, y, w, h) -> GuiConstants.createEditBox(getFontField(), x, y, w, h, Texts.literal("")),
             (w, h) -> WidgetDimensions.from(w / 2 - GuiConstants.BUTTON_WIDTH, GuiConstants.PADDING, GuiConstants.BUTTON_WIDTH * 2, GuiConstants.BUTTON_HEIGHT)
         );
         searchBox.setResponder(this::onSearchUpdated);
         searchBox.setHint(searchLabel);
 
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(selectButton, x, y, w, h, (button) -> onSelect()), GuiConstants.LEFT_BUTTON_DIMENSIONS);
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(addCustomButton, x, y, w, h, (button) -> onAddCustomPressed()), GuiConstants.RIGHT_BUTTON_DIMENSIONS);
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(selectButton, x, y, w, h, (button) -> onSelect(), Supplier::get), GuiConstants.LEFT_BUTTON_DIMENSIONS);
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(addCustomButton, x, y, w, h, (button) -> onAddCustomPressed(), Supplier::get), GuiConstants.RIGHT_BUTTON_DIMENSIONS);
     }
 
     private void onSearchUpdated(String filter) {

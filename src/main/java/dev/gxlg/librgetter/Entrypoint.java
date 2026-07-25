@@ -16,11 +16,8 @@ import dev.gxlg.librgetter.gui.goals.select.SelectEnchantmentScreen;
 import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionList;
 import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionListEntry;
 import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionList_1_20_3;
-import dev.gxlg.librgetter.gui.widgets.unified.button.VButton;
 import dev.gxlg.librgetter.gui.widgets.unified.editbox.LegacyEditBox;
-import dev.gxlg.librgetter.gui.widgets.unified.editbox.VEditBox;
 import dev.gxlg.librgetter.gui.widgets.unified.string.LegacyStringWidget;
-import dev.gxlg.librgetter.gui.widgets.unified.string.VStringWidget;
 import dev.gxlg.librgetter.services.ServiceLoaderManager;
 import dev.gxlg.librgetter.services.loaders.CommandsLoader;
 import dev.gxlg.librgetter.services.loaders.CompatibilityLoader;
@@ -57,12 +54,8 @@ public class Entrypoint implements ClientModInitializer {
             CustomSelectionList.clazz,
             CustomSelectionList_1_20_3.clazz,
             CustomSelectionListEntry.clazz,
-            VButton.clazz,
-            VButton.Plain.clazz,
             LegacyEditBox.clazz,
-            VEditBox.clazz,
-            LegacyStringWidget.clazz,
-            VStringWidget.clazz
+            LegacyStringWidget.clazz
         );
 
         // init services

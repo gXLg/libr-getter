@@ -1,6 +1,5 @@
 package dev.gxlg.librgetter.gui.widgets.list;
 
-import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedWidgetList;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
@@ -10,7 +9,7 @@ import dev.gxlg.versiont.gen.net.minecraft.client.input.MouseButtonEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CustomSelectionList extends ObjectSelectionList implements UnifiedWidgetList {
+public abstract class CustomSelectionList extends ObjectSelectionList implements CustomSelectionListInterface {
     public static final R.RClass clazz = R.extendWrapper(ObjectSelectionList.class, CustomSelectionList.class);
 
     protected final List<CustomSelectionListEntry> entries = new ArrayList<>();
@@ -20,42 +19,28 @@ public abstract class CustomSelectionList extends ObjectSelectionList implements
     }
 
     @Override
+    public List<CustomSelectionListEntry> getCustomEntries() {
+        return entries;
+    }
+
+    @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (clickElement(event.x(), event.y(), event.button())) {
-            return true;
-        }
-        return super.mouseClicked(event, isDoubleClick);
+        return clickElement(event.x(), event.y(), event.button());
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (clickElement(mouseX, mouseY, button)) {
-            return true;
-        }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return clickElement(mouseX, mouseY, button);
     }
 
-    private boolean clickElement(double mouseX, double mouseY, int button) {
-        if (button != 0) {
-            return false;
-        }
-        int rowHalf = this.getRowWidth() / 2;
-        int center = this.getX0Field() + this.getWidthField() / 2;
-        if (mouseX < center - rowHalf || mouseX > center + rowHalf) {
-            return false;
-        }
-        int top = getY0Field();
-        int bottom = top + getHeightField();
-        if (mouseY < top || mouseY > bottom) {
-            return false;
-        }
-        for (CustomSelectionListEntry entry : entries) {
-            if (entry.isMouseOver(mouseX, mouseY)) {
-                setSelected(entry);
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public int getXField() {
+        return getX0Field();
+    }
+
+    @Override
+    public int getYField() {
+        return getY0Field();
     }
 
     @Override

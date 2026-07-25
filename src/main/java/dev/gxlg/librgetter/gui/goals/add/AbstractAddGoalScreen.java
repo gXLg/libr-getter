@@ -21,6 +21,8 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.Items;
 
+import java.util.function.Supplier;
+
 public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen {
     public static final R.RClass clazz = R.extendWrapper(AbstractDynamicWidgetScreen.class, AbstractAddGoalScreen.class);
 
@@ -66,17 +68,17 @@ public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen 
 
         addDynamicWidget(this::createEnchantmentWidget, (w, h) -> getDimensions(w, h, labelWidth, 1, 0));
 
-        levelInput = (UnifiedEditBox) addDynamicWidget((x, y, w, h) -> createEditBox(x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 1));
+        levelInput = (UnifiedEditBox) addDynamicWidget((x, y, w, h) -> GuiConstants.createEditBox(font, x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 1));
         int maxLevel = getMaxLevel();
         if (maxLevel != Integer.MIN_VALUE) {
             levelInput.setHint(Texts.literal(String.valueOf(maxLevel)));
         }
 
-        priceInput = (UnifiedEditBox) addDynamicWidget((x, y, w, h) -> createEditBox(x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 2));
+        priceInput = (UnifiedEditBox) addDynamicWidget((x, y, w, h) -> GuiConstants.createEditBox(font, x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 2));
         priceInput.setHint(Texts.literal(String.valueOf(Items.EMERALD().getDefaultMaxStackSize())));
 
         addDynamicWidget(
-            (x, y, w, h) -> GuiConstants.createButton(addButton, x, y, w, h, b -> onAddGoal()), (w, h) -> {
+            (x, y, w, h) -> GuiConstants.createButton(addButton, x, y, w, h, b -> onAddGoal(), Supplier::get), (w, h) -> {
                 int y = h / 2 + GuiConstants.PADDING / 2 + GuiConstants.BUTTON_HEIGHT + GuiConstants.PADDING;
                 return WidgetDimensions.from(w / 2 - labelWidth, y, labelWidth * 2, GuiConstants.BUTTON_HEIGHT);
             }
