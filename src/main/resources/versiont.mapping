@@ -504,11 +504,13 @@ import net.minecraft.class_339/net.minecraft.client.gui.components.AbstractWidge
 import net.minecraft.class_327/net.minecraft.client.gui.Font
 import net.minecraft.class_4587/com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.class_6382/net.minecraft.client.gui.narration.NarrationElementOutput
-import net.minecraft.class_342/net.minecraft.client.gui.components.EditBox
 import net.minecraft.class_364/net.minecraft.client.gui.components.events.GuiEventListener
-import net.minecraft.class_4185/net.minecraft.client.gui.components.Button
-import net.minecraft.class_7842/net.minecraft.client.gui.components.StringWidget
+import net.minecraft.class_342/net.minecraft.client.gui.components.EditBox (dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox)
+import net.minecraft.class_7842/net.minecraft.client.gui.components.StringWidget (dev.gxlg.librgetter.gui.widgets.unified.string.UnifiedStringWidget)
+import net.minecraft.class_4185/net.minecraft.client.gui.components.Button (dev.gxlg.librgetter.gui.widgets.unified.button.UnifiedButton)
+import net.minecraft.class_4185$class_12231/net.minecraft.client.gui.components.Button$Plain (dev.gxlg.librgetter.gui.widgets.unified.button.UnifiedButton)
 import net.minecraft.class_4185$class_4241/net.minecraft.client.gui.components.Button$OnPress
+import net.minecraft.class_4185$class_7841/net.minecraft.client.gui.components.Button$CreateNarration
 import net.minecraft.class_4185$class_7840/net.minecraft.client.gui.components.Button$Builder
 import net.minecraft.class_332/net.minecraft.client.gui.GuiGraphics@<=1.21.11/net.minecraft.client.gui.GuiGraphicsExtractor@>=26.1
 import net.minecraft.class_4280/net.minecraft.client.gui.components.ObjectSelectionList alt: _1_20_3
@@ -517,8 +519,6 @@ import net.minecraft.class_350/net.minecraft.client.gui.components.AbstractSelec
 import net.minecraft.class_350$class_351/net.minecraft.client.gui.components.AbstractSelectionList$Entry
 import net.minecraft.class_7528/net.minecraft.client.gui.components.AbstractScrollArea
 import net.minecraft.class_11909/net.minecraft.client.input.MouseButtonEvent
-import net.minecraft.class_4185$class_7841/net.minecraft.client.gui.components.Button$CreateNarration
-import net.minecraft.class_4185$class_12231/net.minecraft.client.gui.components.Button$Plain
 import !net.minecraft.client.gui.Gui
 
 class Gui
