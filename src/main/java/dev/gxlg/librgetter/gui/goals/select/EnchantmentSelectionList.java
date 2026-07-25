@@ -15,7 +15,7 @@ public class EnchantmentSelectionList extends CustomSelectionList implements Uni
     }
 
     @Override
-    public SelectEnchantmentScreen getselectEnchantmentScreen() {
+    public SelectEnchantmentScreen getSelectEnchantmentScreen() {
         return selectEnchantmentScreen;
     }
 }

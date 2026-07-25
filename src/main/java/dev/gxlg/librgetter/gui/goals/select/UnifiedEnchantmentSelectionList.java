@@ -10,11 +10,11 @@ import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
 import java.util.List;
 
 public interface UnifiedEnchantmentSelectionList extends CustomSelectionListInterface, UnifiedList {
-    SelectEnchantmentScreen getselectEnchantmentScreen();
+    SelectEnchantmentScreen getSelectEnchantmentScreen();
 
     default void init() {
         for (Enchantment enchantment : Enchantments.getAllEnchantments()) {
-            EnchantmentListEntry entry = new EnchantmentListEntry(getselectEnchantmentScreen().getFontField(), enchantment);
+            EnchantmentListEntry entry = new EnchantmentListEntry(getSelectEnchantmentScreen().getFontField(), enchantment);
             addEntry(entry);
             getCustomEntries().add(entry);
         }

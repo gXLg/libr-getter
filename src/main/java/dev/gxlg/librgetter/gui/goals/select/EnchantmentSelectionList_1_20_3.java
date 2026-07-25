@@ -15,7 +15,7 @@ public class EnchantmentSelectionList_1_20_3 extends CustomSelectionList_1_20_3 
     }
 
     @Override
-    public SelectEnchantmentScreen getselectEnchantmentScreen() {
+    public SelectEnchantmentScreen getSelectEnchantmentScreen() {
         return selectEnchantmentScreen;
     }
 }
