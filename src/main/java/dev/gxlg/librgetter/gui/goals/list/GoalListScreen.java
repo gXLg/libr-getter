@@ -16,8 +16,6 @@ import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
-import java.util.function.Supplier;
-
 public class GoalListScreen extends AbstractDynamicWidgetScreen {
     public static final R.RClass clazz = R.extendWrapper(AbstractDynamicWidgetScreen.class, GoalListScreen.class);
 
@@ -46,8 +44,8 @@ public class GoalListScreen extends AbstractDynamicWidgetScreen {
             l -> ((UnifiedGoalSelectionList) l).updateList()
         );
 
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(addGoalButton, x, y, w, h, b -> onAddPressed(), Supplier::get), GuiConstants.LEFT_BUTTON_DIMENSIONS);
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(doneButton, x, y, w, h, b -> onClose(), Supplier::get), GuiConstants.RIGHT_BUTTON_DIMENSIONS);
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(addGoalButton, x, y, w, h, b -> onAddPressed()), GuiConstants.LEFT_BUTTON_DIMENSIONS);
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(doneButton, x, y, w, h, b -> onClose()), GuiConstants.RIGHT_BUTTON_DIMENSIONS);
     }
 
     @Override

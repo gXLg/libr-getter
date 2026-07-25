@@ -17,6 +17,8 @@ import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.EditBox;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.StringWidget;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
+import java.util.function.Supplier;
+
 public class GuiConstants {
     public static final int PADDING = 12;
 
@@ -38,13 +40,13 @@ public class GuiConstants {
         GuiConstants.BUTTON_HEIGHT
     );
 
-    public static UnifiedButton createButton(Component text, int x, int y, int width, int height, Button$OnPressI onPress, Button$CreateNarrationI createNarration) {
+    public static UnifiedButton createButton(Component text, int x, int y, int width, int height, Button$OnPressI onPress) {
         if (V.lower("1.19.3")) {
             return new Button(x, y, width, height, text, onPress.asButton$OnPress());
         } else if (V.lower("1.21.11")) {
-            return new Button(x, y, width, height, text, onPress.asButton$OnPress(), createNarration.asButton$CreateNarration());
+            return new Button(x, y, width, height, text, onPress.asButton$OnPress(), ((Button$CreateNarrationI) Supplier::get).asButton$CreateNarration());
         } else {
-            return new Button$Plain(x, y, width, height, text, onPress.asButton$OnPress(), createNarration.asButton$CreateNarration());
+            return new Button$Plain(x, y, width, height, text, onPress.asButton$OnPress(), ((Button$CreateNarrationI) Supplier::get).asButton$CreateNarration());
         }
     }
 

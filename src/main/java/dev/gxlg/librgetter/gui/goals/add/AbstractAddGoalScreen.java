@@ -21,8 +21,6 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 import dev.gxlg.versiont.gen.net.minecraft.resources.Identifier;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.Items;
 
-import java.util.function.Supplier;
-
 public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen {
     public static final R.RClass clazz = R.extendWrapper(AbstractDynamicWidgetScreen.class, AbstractAddGoalScreen.class);
 
@@ -78,7 +76,7 @@ public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen 
         priceInput.setHint(Texts.literal(String.valueOf(Items.EMERALD().getDefaultMaxStackSize())));
 
         addDynamicWidget(
-            (x, y, w, h) -> GuiConstants.createButton(addButton, x, y, w, h, b -> onAddGoal(), Supplier::get), (w, h) -> {
+            (x, y, w, h) -> GuiConstants.createButton(addButton, x, y, w, h, b -> onAddGoal()), (w, h) -> {
                 int y = h / 2 + GuiConstants.PADDING / 2 + GuiConstants.BUTTON_HEIGHT + GuiConstants.PADDING;
                 return WidgetDimensions.from(w / 2 - labelWidth, y, labelWidth * 2, GuiConstants.BUTTON_HEIGHT);
             }
