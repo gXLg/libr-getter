@@ -1,13 +1,7 @@
 package dev.gxlg.librgetter.gui.goals.select;
 
 import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionList;
-import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
-import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.versiont.api.R;
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractSelectionList$Entry;
-import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
-
-import java.util.List;
 
 public class EnchantmentSelectionList extends CustomSelectionList implements UnifiedEnchantmentSelectionList {
     public static final R.RClass clazz = R.extendWrapper(CustomSelectionList.class, EnchantmentSelectionList.class);
@@ -20,19 +14,8 @@ public class EnchantmentSelectionList extends CustomSelectionList implements Uni
         init();
     }
 
-    private void init() {
-        for (Enchantment enchantment : Enchantments.getAllEnchantments()) {
-            EnchantmentListEntry entry = new EnchantmentListEntry(selectEnchantmentScreen.getFontField(), enchantment);
-            addEntry(entry);
-            entries.add(entry);
-        }
-    }
-
-    public void filterEntries(final String filter) {
-        List<AbstractSelectionList$Entry> filtered = entries.stream().map(e -> (EnchantmentListEntry) e)
-                                                            .filter(e -> filter.isEmpty() || e.getTranslatedName().contains(filter) || e.getIdString().contains(filter))
-                                                            .map(e -> (AbstractSelectionList$Entry) e).toList();
-        replaceEntries(filtered);
-        Gui.refreshScrollAmount(this);
+    @Override
+    public SelectEnchantmentScreen getSelectEnchantmentScreen() {
+        return selectEnchantmentScreen;
     }
 }

@@ -52,7 +52,7 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
         );
 
         UnifiedEditBox searchBox = (UnifiedEditBox) addDynamicWidget(
-            (x, y, w, h) -> createEditBox(x, y, w, h, Texts.literal("")),
+            (x, y, w, h) -> GuiConstants.createEditBox(getFontField(), x, y, w, h, Texts.literal("")),
             (w, h) -> WidgetDimensions.from(w / 2 - GuiConstants.BUTTON_WIDTH, GuiConstants.PADDING, GuiConstants.BUTTON_WIDTH * 2, GuiConstants.BUTTON_HEIGHT)
         );
         searchBox.setResponder(this::onSearchUpdated);
