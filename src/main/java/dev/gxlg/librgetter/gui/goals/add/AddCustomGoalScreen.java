@@ -1,5 +1,6 @@
 package dev.gxlg.librgetter.gui.goals.add;
 
+import dev.gxlg.librgetter.gui.GuiConstants;
 import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
@@ -18,7 +19,7 @@ public class AddCustomGoalScreen extends AbstractAddGoalScreen {
 
     @Override
     protected UnifiedWidget createEnchantmentWidget(int x, int y, int width, int height) {
-        enchantmentInput = createEditBox(x, y, width, height, Texts.literal(""));
+        enchantmentInput = GuiConstants.createEditBox(getFontField(), x, y, width, height, Texts.literal(""));
         return enchantmentInput;
     }
 

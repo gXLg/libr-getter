@@ -12,6 +12,7 @@ import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
+import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
 
 public class RequestTradesTask extends Task {
     @Override
@@ -27,6 +28,9 @@ public class RequestTradesTask extends Task {
         }
 
         Players.interactEntity(minecraftData.gameMode, minecraftData.localPlayer, taskContext.selectedVillager(), true);
+        if (!configManager.getBoolean(Config.NO_SWING)) {
+            minecraftData.localPlayer.swing(InteractionHand.MAIN_HAND());
+        }
 
         controller.scheduleTaskSwitch(TaskSwitch.sameTick(WaitTradesTask::new));
     }

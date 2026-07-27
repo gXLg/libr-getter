@@ -3,13 +3,18 @@ package dev.gxlg.librgetter.gui;
 import dev.gxlg.librgetter.gui.widgets.DynamicDimensionGetter;
 import dev.gxlg.librgetter.gui.widgets.WidgetDimensions;
 import dev.gxlg.librgetter.gui.widgets.unified.button.UnifiedButton;
-import dev.gxlg.librgetter.gui.widgets.unified.button.VButton;
+import dev.gxlg.librgetter.gui.widgets.unified.editbox.LegacyEditBox;
+import dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox;
 import dev.gxlg.librgetter.gui.widgets.unified.string.LegacyStringWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.string.UnifiedStringWidget;
-import dev.gxlg.librgetter.gui.widgets.unified.string.VStringWidget;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.Button;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.Button$CreateNarrationI;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.Button$OnPressI;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.Button$Plain;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.EditBox;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.StringWidget;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 import java.util.function.Supplier;
@@ -37,11 +42,19 @@ public class GuiConstants {
 
     public static UnifiedButton createButton(Component text, int x, int y, int width, int height, Button$OnPressI onPress) {
         if (V.lower("1.19.3")) {
-            return new VButton(x, y, width, height, text, onPress.asButton$OnPress());
+            return new Button(x, y, width, height, text, onPress.asButton$OnPress());
         } else if (V.lower("1.21.11")) {
-            return new VButton(x, y, width, height, text, onPress.asButton$OnPress(), Supplier::get);
+            return new Button(x, y, width, height, text, onPress.asButton$OnPress(), ((Button$CreateNarrationI) Supplier::get).asButton$CreateNarration());
         } else {
-            return new VButton.Plain(x, y, width, height, text, onPress.asButton$OnPress());
+            return new Button$Plain(x, y, width, height, text, onPress.asButton$OnPress(), ((Button$CreateNarrationI) Supplier::get).asButton$CreateNarration());
+        }
+    }
+
+    public static UnifiedEditBox createEditBox(Font font, int x, int y, int width, int height, Component narration) {
+        if (V.lower("1.19.3")) {
+            return new LegacyEditBox(font, x, y, width, height, narration);
+        } else {
+            return new EditBox(font, x, y, width, height, narration);
         }
     }
 
@@ -53,7 +66,7 @@ public class GuiConstants {
             return stringWidget;
 
         } else {
-            VStringWidget stringWidget = new VStringWidget(text, font);
+            StringWidget stringWidget = new StringWidget(text, font);
             stringWidget.setWidthField(width);
             stringWidget.setHeightField(height);
             stringWidget.setXField(x);

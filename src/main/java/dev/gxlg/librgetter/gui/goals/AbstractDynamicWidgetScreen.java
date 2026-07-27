@@ -5,11 +5,7 @@ import dev.gxlg.librgetter.gui.widgets.DynamicWidget;
 import dev.gxlg.librgetter.gui.widgets.DynamicWidgetCreator;
 import dev.gxlg.librgetter.gui.widgets.WidgetDimensions;
 import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
-import dev.gxlg.librgetter.gui.widgets.unified.editbox.LegacyEditBox;
-import dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox;
-import dev.gxlg.librgetter.gui.widgets.unified.editbox.VEditBox;
 import dev.gxlg.versiont.api.R;
-import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.events.GuiEventListener;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
@@ -74,13 +70,5 @@ public abstract class AbstractDynamicWidgetScreen extends Screen {
             widget.setHeightField(wd.height());
             dw.updater().accept(widget);
         });
-    }
-
-    protected UnifiedEditBox createEditBox(int x, int y, int width, int height, Component narration) {
-        if (V.lower("1.19.3")) {
-            return new LegacyEditBox(getFontField(), x, y, width, height, narration);
-        } else {
-            return new VEditBox(getFontField(), x, y, width, height, narration);
-        }
     }
 }

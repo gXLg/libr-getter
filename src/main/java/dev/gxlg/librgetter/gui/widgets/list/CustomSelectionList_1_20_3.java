@@ -1,6 +1,5 @@
 package dev.gxlg.librgetter.gui.widgets.list;
 
-import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.versiont.api.R;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
@@ -10,7 +9,7 @@ import dev.gxlg.versiont.gen.net.minecraft.client.input.MouseButtonEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CustomSelectionList_1_20_3 extends ObjectSelectionList_1_20_3 implements UnifiedWidget {
+public abstract class CustomSelectionList_1_20_3 extends ObjectSelectionList_1_20_3 implements CustomSelectionListInterface {
     public static final R.RClass clazz = R.extendWrapper(ObjectSelectionList_1_20_3.class, CustomSelectionList_1_20_3.class);
 
     protected final List<CustomSelectionListEntry> entries = new ArrayList<>();
@@ -35,27 +34,19 @@ public abstract class CustomSelectionList_1_20_3 extends ObjectSelectionList_1_2
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    private boolean clickElement(double mouseX, double mouseY, int button) {
-        if (button != 0) {
-            return false;
-        }
-        int rowHalf = this.getRowWidth() / 2;
-        int center = this.getXField() + this.getWidthField() / 2;
-        if (mouseX < center - rowHalf || mouseX > center + rowHalf) {
-            return false;
-        }
-        int top = getYField();
-        int bottom = top + getHeightField();
-        if (mouseY < top || mouseY > bottom) {
-            return false;
-        }
-        for (CustomSelectionListEntry entry : entries) {
-            if (entry.isMouseOver(mouseX, mouseY)) {
-                setSelected(entry);
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public void setX0Field(int x0) {
+        super.setXField(x0);
+    }
+
+    @Override
+    public void setY0Field(int y0) {
+        super.setYField(y0);
+    }
+
+    @Override
+    public List<CustomSelectionListEntry> getCustomEntries() {
+        return entries;
     }
 
     @Override

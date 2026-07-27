@@ -5,6 +5,7 @@ public enum Config {
     OFFHAND("offhand"),
     MANUAL("manual"),
     ROTATION_MODE("rotationMode"),
+    NO_SWING("noSwing"),
     WAIT_LOSE("waitLose"),
     SAFE_CHECKER("safeChecker"),
     TIMEOUT("timeout"),

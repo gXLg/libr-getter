@@ -66,13 +66,13 @@ public abstract class AbstractAddGoalScreen extends AbstractDynamicWidgetScreen 
 
         addDynamicWidget(this::createEnchantmentWidget, (w, h) -> getDimensions(w, h, labelWidth, 1, 0));
 
-        levelInput = (UnifiedEditBox) addDynamicWidget((x, y, w, h) -> createEditBox(x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 1));
+        levelInput = (UnifiedEditBox) addDynamicWidget((x, y, w, h) -> GuiConstants.createEditBox(font, x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 1));
         int maxLevel = getMaxLevel();
         if (maxLevel != Integer.MIN_VALUE) {
             levelInput.setHint(Texts.literal(String.valueOf(maxLevel)));
         }
 
-        priceInput = (UnifiedEditBox) addDynamicWidget((x, y, w, h) -> createEditBox(x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 2));
+        priceInput = (UnifiedEditBox) addDynamicWidget((x, y, w, h) -> GuiConstants.createEditBox(font, x, y, w, h, Texts.literal("")), (w, h) -> getDimensions(w, h, labelWidth, 1, 2));
         priceInput.setHint(Texts.literal(String.valueOf(Items.EMERALD().getDefaultMaxStackSize())));
 
         addDynamicWidget(
