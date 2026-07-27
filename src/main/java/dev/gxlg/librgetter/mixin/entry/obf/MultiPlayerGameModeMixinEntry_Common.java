@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @VersiontMixin(compare = { @Compare(version = "1.17", comparison = Comparison.NOT_LOWER) }, obfuscated = true)
@@ -19,6 +20,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MultiPlayerGameModeMixinEntry_Common {
     @Inject(at = @At("HEAD"), method = "method_2910(Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z", cancellable = true)
     private void startDestroyBlock(@Coerce Object pos, @Coerce Object direction, CallbackInfoReturnable<Boolean> info) {
-        MixinImpl.mixinReturn(MultiPlayerGameModeMixinImpl.class, info, i -> i.startDestroyBlock(R.wrapperInst(BlockPos.class, pos)));
+        MixinImpl.mixinReturn(MultiPlayerGameModeMixinImpl.class, info, i -> i.destroyBlock(R.wrapperInst(BlockPos.class, pos)));
+    }
+
+    @Inject(at = @At("HEAD"), method = "method_2902(Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z", cancellable = true)
+    private void continueDestroyBlock(@Coerce Object pos, @Coerce Object direction, CallbackInfoReturnable<Boolean> info) {
+        MixinImpl.mixinReturn(MultiPlayerGameModeMixinImpl.class, info, i -> i.destroyBlock(R.wrapperInst(BlockPos.class, pos)));
+    }
+
+    @Inject(at = @At("HEAD"), method = "method_2925()V", cancellable = true)
+    private void stopDestroyBlock(CallbackInfo info) {
+        MixinImpl.mixinVoid(MultiPlayerGameModeMixinImpl.class, info, MultiPlayerGameModeMixinImpl::stopDestroyBlock);
     }
 }

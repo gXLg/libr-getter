@@ -111,6 +111,10 @@ Enable/disable automatic tool selection.
             <td><b>Only Effective</b></td>
             <td>when <code>manual = false</code> and <code>tradeCycling = false</code></td>
         </tr>
+        <tr>
+            <td><b>Changing</b></td>
+            <td>cannot be changed while running</td>
+        </tr>
     </tbody>
 </table>
 
@@ -175,6 +179,10 @@ Enable/disable manual mode.
         <tr>
             <td><b>Only Effective</b></td>
             <td>when <code>tradeCycling = false</code></td>
+        </tr>
+        <tr>
+            <td><b>Changing</b></td>
+            <td>cannot be changed while running</td>
         </tr>
     </tbody>
 </table>
@@ -311,6 +319,37 @@ How to change head rotation between breaking the lectern and talking to the vill
 * NONE - don't change head rotation; may trigger AntiCheats
 * INSTANT - rotate the head instantly; should bypass most simple AntiCheats
 * SMOOTH - imitate natural player head rotation; slows down the process drastically but should bypass even some advanced AntiCheats
+
+## No Swing
+
+Enable/disable swinging the hand when placing or breaking the lectern and when talking to the villager.
+
+<table>
+    <tbody>
+        <tr>
+            <td><b>Config</b></td>
+            <td><code>noSwing</code></td>
+        </tr>
+        <tr>
+            <td><b>Values</b></td>
+            <td>true, false</td>
+        </tr>
+        <tr>
+            <td><b>Default</b></td>
+            <td>false</td>
+        </tr>
+        <tr>
+            <td><b>Only Effective</b></td>
+            <td>when <code>manual = false</code> and <code>tradeCycling = false</code></td>
+        </tr>
+    </tbody>
+</table>
+
+When disabled, LibrGetter will simulate legitimate behavior by swinging the hand when placing
+or breaking the lectern and when talking to the villager.
+
+When enabled, LibrGetter will not swing the hand to reduce the eye strain, but this may trigger
+anti-cheats on some servers.
 
 ## Success
 

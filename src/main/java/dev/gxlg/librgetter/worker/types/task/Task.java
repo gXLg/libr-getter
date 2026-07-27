@@ -40,7 +40,11 @@ public abstract class Task {
         return PermissionView.DEFAULT.forcesSecondaryUse();
     }
 
+    protected boolean disablesBlockBreakStopping() {
+        return PermissionView.DEFAULT.disablesBlockBreakStopping();
+    }
+
     public PermissionView createPermissionView() {
-        return new PermissionView(allowsBreakingLecterns(), allowsPlacingLectern(), allowsSettingTradeOffers(), allowsOpeningScreen(), forcesSecondaryUse());
+        return new PermissionView(allowsBreakingLecterns(), allowsPlacingLectern(), allowsSettingTradeOffers(), allowsOpeningScreen(), forcesSecondaryUse(), disablesBlockBreakStopping());
     }
 }

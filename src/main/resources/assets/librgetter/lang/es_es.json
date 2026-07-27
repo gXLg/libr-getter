@@ -14,6 +14,7 @@
   "librgetter.config.matchAtLeast": "Número de ofertas únicas que deben coincidir con la lista de objetivos para considerar el intento exitoso",
   "librgetter.config.matchMode": "Cuándo detener el ciclo:\nVANILLA - coincide el comercio normal\nPERFECT - todas las ofertas coinciden con la lista de objetivos\nATLEAST - al menos N ofertas deben coincidir con la lista de objetivos",
   "librgetter.config.notify": "Reproducir un sonido al finalizar",
+  "librgetter.config.noSwing": "Desactiva la animación de balanceo al colocar o romper el atril y hablar con el bibliotecario; reduce la fatiga visual; puede ser detectado por anti-cheats",
   "librgetter.config.offhand": "Colocar el atril en la mano secundaria para una colocación eficiente",
   "librgetter.config.originalPrice": "Usar el precio original del intercambio en lugar del precio ajustado con descuento",
   "librgetter.config.removeGoal": "Eliminar automáticamente un encantamiento de la lista de objetivos cuando se encuentre",
