@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConfigData {
     @OnlyEffective(when = Config.MANUAL, equals = "false")
     @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
+    @CanNotChangeWhileRunning
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean autoTool = true;
 
@@ -23,6 +24,7 @@ public class ConfigData {
     private boolean offhand = false;
 
     @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
+    @CanNotChangeWhileRunning
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean manual = false;
 

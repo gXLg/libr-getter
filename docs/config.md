@@ -111,6 +111,10 @@ Enable/disable automatic tool selection.
             <td><b>Only Effective</b></td>
             <td>when <code>manual = false</code> and <code>tradeCycling = false</code></td>
         </tr>
+        <tr>
+            <td><b>Changing</b></td>
+            <td>cannot be changed while running</td>
+        </tr>
     </tbody>
 </table>
 
@@ -175,6 +179,10 @@ Enable/disable manual mode.
         <tr>
             <td><b>Only Effective</b></td>
             <td>when <code>tradeCycling = false</code></td>
+        </tr>
+        <tr>
+            <td><b>Changing</b></td>
+            <td>cannot be changed while running</td>
         </tr>
     </tbody>
 </table>
