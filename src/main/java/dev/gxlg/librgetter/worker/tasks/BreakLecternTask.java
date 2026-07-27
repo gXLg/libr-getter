@@ -39,6 +39,9 @@ public class BreakLecternTask extends Task {
         } else {
             minecraftData.gameMode.continueDestroyBlock(taskContext.selectedLecternPos(), Direction.UP());
         }
+        if (!configManager.getBoolean(Config.NO_SWING)) {
+            minecraftData.localPlayer.swing(InteractionHand.MAIN_HAND());
+        }
     }
 
     @Override

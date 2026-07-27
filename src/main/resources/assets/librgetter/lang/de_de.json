@@ -14,6 +14,7 @@
   "librgetter.config.matchAtLeast": "Anzahl der eindeutigen Handelsoptionen, die mit der Zielliste übereinstimmen müssen, damit der Versuch als Erfolg gilt",
   "librgetter.config.matchMode": "Wann der Zyklus gestoppt wird:\nVANILLA - regulärer Trade stimmt überein\nPERFECT - alle angebotenen Trades stimmen mit der Zielliste überein\nATLEAST - mindestens N Trades müssen mit der Zielliste übereinstimmen",
   "librgetter.config.notify": "Spielt ein Ton ab, wenn erfolgreich gefunden",
+  "librgetter.config.noSwing": "Deaktiviert die Schwunganimation beim Platzieren oder Abbauen des Lesepults und beim Sprechen mit dem Bibliothekar; reduziert Augenbelastung; kann von Anti-Cheats erkannt werden",
   "librgetter.config.offhand": "Legt die Lesepulte in die andere Hand für eine effiziente Platzierung",
   "librgetter.config.originalPrice": "Verwende den ursprünglichen Preis des Handels anstelle des angepassten Rabattpreises",
   "librgetter.config.removeGoal": "Entfernt die Verzauberung automatisch aus der Suchliste, wenn erfolgreich gefunden",

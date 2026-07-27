@@ -14,6 +14,7 @@
   "librgetter.config.matchAtLeast": "Liczba unikalnych ofert, które muszą pasować do listy celów, aby uznać próbę za udaną",
   "librgetter.config.matchMode": "Kiedy zakończyć cyklowanie:\nVANILLA - standardowe dopasowanie ofert\nPERFECT - wszystkie oferty muszą być dopasowane do listy celów\nATLEAST - minimum N ofert musi być dopasowane do listy celów",
   "librgetter.config.notify": "Odtwarza dźwięk po zakończeniu",
+  "librgetter.config.noSwing": "Wyłącza animację zamachu przy stawianiu lub niszczeniu pulpitu oraz podczas rozmowy z bibliotekarzem; zmniejsza zmęczenie oczu; może zostać wykryte przez antycheaty",
   "librgetter.config.offhand": "Umieść pulpit w drugiej ręcę dla wydajniejszego stawiania",
   "librgetter.config.originalPrice": "Użyj oryginalnej ceny transakcji zamiast skorygowanej ceny z rabatem",
   "librgetter.config.removeGoal": "Automatycznie usuń zaklęcie z listy celów po jego znalezieniu",

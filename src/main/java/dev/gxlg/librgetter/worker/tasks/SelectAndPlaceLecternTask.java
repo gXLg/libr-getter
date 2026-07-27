@@ -17,6 +17,7 @@ import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.MultiPlayerGameMod
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.EntityAnchorArgument$Anchor;
 import dev.gxlg.versiont.gen.net.minecraft.core.Direction;
+import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Inventory;
 import dev.gxlg.versiont.gen.net.minecraft.world.inventory.ContainerInput;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.Items;
@@ -77,6 +78,9 @@ public class SelectAndPlaceLecternTask extends Task {
         Vec3 lowBlockPos = Vec3.atBottomCenterOf(taskContext.selectedLecternPos());
         BlockHitResult lowBlock = new BlockHitResult(lowBlockPos, Direction.UP(), taskContext.selectedLecternPos().below(), false);
         Players.interactBlock(gameMode, player, lowBlock, mainhand);
+        if (!configManager.getBoolean(Config.NO_SWING)) {
+            minecraftData.localPlayer.swing(mainhand ? InteractionHand.MAIN_HAND() : InteractionHand.OFF_HAND());
+        }
     }
 
     @Override

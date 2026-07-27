@@ -14,6 +14,7 @@
   "librgetter.config.matchAtLeast": "Số lượng giao dịch duy nhất phải khớp với danh sách mục tiêu để được xem là thành công",
   "librgetter.config.matchMode": "Khi nào dừng vòng lặp:\nVANILLA - khớp giao dịch thông thường\nPERFECT - mọi giao dịch được cung cấp khớp với danh sách mục tiêu\nATLEAST - phải có ít nhất N giao dịch khớp với danh sách mục tiêu",
   "librgetter.config.notify": "Phát âm thanh khi hoàn thành",
+  "librgetter.config.noSwing": "Tắt hoạt ảnh vung tay khi đặt hoặc phá bục để sách và khi nói chuyện với thủ thư; giảm mỏi mắt; có thể bị anti-cheat phát hiện",
   "librgetter.config.offhand": "Đặt bục để sách vào tay phụ để đặt bục giảng nhanh hơn",
   "librgetter.config.originalPrice": "Sử dụng giá gốc của giao dịch thay vì giá giảm đã điều chỉnh",
   "librgetter.config.removeGoal": "Tự động xóa loại phù phép trong danh sách mục tiêu khi tìm thấy",

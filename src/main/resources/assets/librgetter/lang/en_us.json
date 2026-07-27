@@ -14,6 +14,7 @@
   "librgetter.config.matchAtLeast": "Number of unique trades which must match the goals list to consider the attempt a success",
   "librgetter.config.matchMode": "When to stop cycling:\nVANILLA - regular trade matches\nPERFECT - all offered trades must match the goals list\nATLEAST - at least N trades must match the goals list",
   "librgetter.config.notify": "Plays a sound once finished",
+  "librgetter.config.noSwing": "Disable the swing animation when placing or breaking the lectern and talking to the librarian; reduces eye strain; may be detected by anti-cheats",
   "librgetter.config.offhand": "Put the lectern in the offhand for efficient placement",
   "librgetter.config.originalPrice": "Use the original price of the trade instead of the adjusted discount price",
   "librgetter.config.removeGoal": "Automatically remove an enchantment from the goals list once found",
