@@ -11,9 +11,12 @@ import dev.gxlg.librgetter.worker.types.context.TaskContextBuilder;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.net.minecraft.core.Direction;
+import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.block.state.BlockState;
 
 public class BreakLecternTask extends Task {
+    private boolean started = false;
+
     @Override
     public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) {
         MinecraftData minecraftData = taskContext.minecraftData();
@@ -30,7 +33,17 @@ public class BreakLecternTask extends Task {
             return;
         }
 
-        minecraftData.gameMode.continueDestroyBlock(taskContext.selectedLecternPos(), Direction.UP());
+        if (!started) {
+            started = true;
+            minecraftData.gameMode.startDestroyBlock(taskContext.selectedLecternPos(), Direction.UP());
+        } else {
+            minecraftData.gameMode.continueDestroyBlock(taskContext.selectedLecternPos(), Direction.UP());
+        }
+    }
+
+    @Override
+    protected boolean disablesBlockBreakStopping() {
+        return true;
     }
 
     @Override

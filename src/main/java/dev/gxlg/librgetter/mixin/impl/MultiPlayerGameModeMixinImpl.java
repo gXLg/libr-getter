@@ -18,7 +18,7 @@ public class MultiPlayerGameModeMixinImpl {
         this.stateView = stateView;
     }
 
-    public Optional<Boolean> startDestroyBlock(BlockPos blockPos) {
+    public Optional<Boolean> destroyBlock(BlockPos blockPos) {
         Minecraft client = Minecraft.getInstance();
         LocalPlayer player = client.getPlayerField();
         ClientLevel world = client.getLevelField();
@@ -28,10 +28,17 @@ public class MultiPlayerGameModeMixinImpl {
         if (!world.getBlockState(blockPos).getBlock().equals(Blocks.LECTERN())) {
             return Optional.empty();
         }
-        if (!stateView.createPermissionView().allowsBreakingLecterns()) {
-            return Optional.of(false);
+        if (stateView.createPermissionView().allowsBreakingLecterns()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return Optional.of(false);
+    }
+
+    public Optional<Object> stopDestroyBlock() {
+        if (!stateView.createPermissionView().disablesBlockBreakStopping()) {
+            return Optional.empty();
+        }
+        return Optional.of(new Object());
     }
 
     public Optional<InteractionResult> useItemOn(BlockHitResult hitResult) {

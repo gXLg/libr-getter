@@ -78,6 +78,7 @@ class MultiPlayerGameMode
     InteractionResult method_2896/useItemOn(LocalPlayer player, ClientLevel clientWorld, InteractionHand hand, BlockHitResult hit)
     InteractionResult method_2905/interact(Player player, Entity target, InteractionHand hand)
     void method_2906/handleInventoryMouseClick/handleContainerInput(int containerId, int slot, int otherSlot, ContainerInput containerInput, Player player)
+    boolean method_2910/startDestroyBlock(BlockPos pos, Direction side)
     boolean method_2902/continueDestroyBlock(BlockPos pos, Direction side)
     # 26.1
     InteractionResult interact(Player player, Entity target, EntityHitResult hitResult, InteractionHand hand)
@@ -310,6 +311,7 @@ class LivingEntity extends Entity
     ItemStack method_6047/getMainHandItem()
     void method_5702/lookAt(EntityAnchorArgument$Anchor anchor, Vec3 target)
     void method_5847/setYHeadRot(float headYaw)
+    void method_6104/swing(InteractionHand hand)
 
 class Villager extends LivingEntity
     VillagerData method_7231/getVillagerData()
@@ -885,4 +887,3 @@ class de.maxhenkel.tradecycling.net.CycleTradesPacket extends CustomPacketPayloa
 
 class de.maxhenkel.tradecycling.TradeCyclingClientMod
     static void sendCycleTradesPacket()
-
