@@ -21,10 +21,12 @@ public interface UnifiedEnchantmentSelectionList extends CustomSelectionListInte
     }
 
     default void filterEntries(String filter) {
-        List<AbstractSelectionList$Entry> filtered = getCustomEntries().stream().map(e -> (EnchantmentListEntry) e)
-                                                                       .filter(e -> filter.isEmpty() || e.getTranslatedName().contains(filter) || e.getIdString().contains(filter))
-                                                                       .map(e -> (AbstractSelectionList$Entry) e).toList();
-        replaceEntries(filtered);
+        List<EnchantmentListEntry> filtered = getCustomEntries().stream().map(e -> (EnchantmentListEntry) e)
+                                                                .filter(e -> filter.isEmpty() || e.getTranslatedName().contains(filter.toLowerCase()) || e.getIdString().contains(filter.toLowerCase()))
+                                                                .toList();
+        replaceEntries(filtered.stream().map(e -> (AbstractSelectionList$Entry) e).toList());
+        getCustomEntries().clear();
+        getCustomEntries().addAll(filtered);
         Gui.refreshScrollAmount(this);
     }
 }
