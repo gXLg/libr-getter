@@ -3,6 +3,7 @@ package dev.gxlg.librgetter.services.loaders;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallManager;
 import dev.gxlg.librgetter.services.ServiceLoader;
 import dev.gxlg.librgetter.services.types.Export;
 import dev.gxlg.librgetter.worker.Worker;
@@ -23,6 +24,8 @@ public class WorkerLoader extends ServiceLoader<WorkerLoader> {
 
     private final Supplier<GoalListManager> dependencyGoalListManager;
 
+    private final Supplier<TradehallManager> dependencyTradehallManager;
+
     private final Supplier<CompatibilityManager> dependencyCompatibilityManager;
 
     private Worker worker;
@@ -30,6 +33,7 @@ public class WorkerLoader extends ServiceLoader<WorkerLoader> {
     public WorkerLoader(SaveFileLoader saveFileLoader, CompatibilityLoader compatibilityLoader) {
         dependencyConfigManager = initDependency(saveFileLoader, SaveFileLoader.exportConfigManager);
         dependencyGoalListManager = initDependency(saveFileLoader, SaveFileLoader.exportGoalListManager);
+        dependencyTradehallManager = initDependency(saveFileLoader, SaveFileLoader.exportTradehallManager);
         dependencyCompatibilityManager = initDependency(compatibilityLoader, CompatibilityLoader.exportCompatibilityManager);
     }
 
@@ -37,8 +41,9 @@ public class WorkerLoader extends ServiceLoader<WorkerLoader> {
     public void init() {
         ConfigManager configManager = dependencyConfigManager.get();
         GoalListManager goalListManager = dependencyGoalListManager.get();
+        TradehallManager tradehallManager = dependencyTradehallManager.get();
         CompatibilityManager compatibilityManager = dependencyCompatibilityManager.get();
 
-        worker = new Worker(configManager, goalListManager, compatibilityManager);
+        worker = new Worker(configManager, goalListManager, tradehallManager, compatibilityManager);
     }
 }

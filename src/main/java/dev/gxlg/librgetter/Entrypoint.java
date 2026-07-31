@@ -29,6 +29,7 @@ import dev.gxlg.librgetter.services.loaders.SaveFileLoader;
 import dev.gxlg.librgetter.services.loaders.SharedControllerLoader;
 import dev.gxlg.librgetter.services.loaders.UpdaterLoader;
 import dev.gxlg.librgetter.services.loaders.WorkerLoader;
+import dev.gxlg.librgetter.services.loaders.WorldNameLoader;
 import dev.gxlg.versiont.api.R;
 import net.fabricmc.api.ClientModInitializer;
 
@@ -68,7 +69,10 @@ public class Entrypoint implements ClientModInitializer {
         NotifierLoader notifierLoader = new NotifierLoader();
         loaderManager.registerServiceLoader(notifierLoader);
 
-        SaveFileLoader saveFileLoader = new SaveFileLoader(coreLoader, notifierLoader);
+        WorldNameLoader worldNameLoader = new WorldNameLoader();
+        loaderManager.registerServiceLoader(worldNameLoader);
+
+        SaveFileLoader saveFileLoader = new SaveFileLoader(coreLoader, notifierLoader, worldNameLoader);
         loaderManager.registerServiceLoader(saveFileLoader);
 
         CompatibilityLoader compatibilityLoader = new CompatibilityLoader(saveFileLoader);

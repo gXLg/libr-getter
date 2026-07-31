@@ -25,7 +25,7 @@ adapter java.util.function.Consumer -> dev.gxlg.librgetter.utils.adapters.Consum
 import java.util.function.Supplier
 adapter java.util.function.Supplier -> dev.gxlg.librgetter.utils.adapters.SupplierAdapter
 
-import java.util.concurrent.CompletableFuture
+import java.nio.file.Path
 
 # ------------------------------------------------------------------------------------------------------------- #
 # Core
@@ -39,6 +39,10 @@ import net.minecraft.class_636/net.minecraft.client.multiplayer.MultiPlayerGameM
 import net.minecraft.class_1269/net.minecraft.world.InteractionResult
 import net.minecraft.class_1268/net.minecraft.world.InteractionHand
 import net.minecraft.class_3532/net.minecraft.util.Mth
+import net.minecraft.class_1132/net.minecraft.client.server.IntegratedServer
+import !net.minecraft.server.MinecraftServer
+import net.minecraft.class_5218/net.minecraft.world.level.storage.LevelResource
+import net.minecraft.class_642/net.minecraft.client.multiplayer.ServerData
 
 class Minecraft
     static Minecraft method_1551/getInstance()
@@ -48,11 +52,26 @@ class Minecraft
     @Nullable MultiPlayerGameMode field_1761/gameMode
     @Nullable ClientPacketListener method_1562/getConnection()
     @Nullable ClientPacketListener_1_20_2 method_1562/getConnection()
+    boolean method_1542/isLocalServer()
+    IntegratedServer method_1576/getSingleplayerServer()
+    ServerData method_1558/getCurrentServer()
+
     # <=26.1.2
     @Nullable Screen field_1755/screen
     void method_1507/setScreen(Screen screen)
     # 26.2
     Gui gui
+
+class IntegratedServer extends MinecraftServer
+
+class MinecraftServer
+    Path method_27050/getWorldPath(LevelResource resource)
+
+class LevelResource
+    static final LevelResource field_24188/ROOT
+
+class ServerData
+    String method_14209/getIpAddress()
 
 class HitResult
     HitResult$Type method_17783/getType()
@@ -238,6 +257,11 @@ class Vec3
     double method_10216/x()
     double method_10214/y()
     double method_10215/z()
+    Vec3 method_1019/add(Vec3 vec)
+    Vec3 method_1020/subtract(Vec3 vec)
+    Vec3 method_1021/scale(double factor)
+    Vec3 method_1029/normalize()
+    double method_1022/distanceTo(Vec3 target)
     static Vec3 method_24955/atBottomCenterOf(Vec3i pos)
     static Vec3 method_24953/atCenterOf(Vec3i pos)
 
@@ -306,6 +330,9 @@ class Entity
     Level method_73183/level()
     Level method_37908/level/getLevel()
     boolean method_5805/isAlive()
+    Vec3 method_18798/getDeltaMovement()
+    void method_18799/setDeltaMovement(Vec3 motion)
+    boolean method_24828/isOnGround/onGround()
 
 class LivingEntity extends Entity
     ItemStack method_6047/getMainHandItem()

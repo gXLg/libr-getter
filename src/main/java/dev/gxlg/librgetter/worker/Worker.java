@@ -3,6 +3,7 @@ package dev.gxlg.librgetter.worker;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallManager;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.SchedulingHandler;
@@ -43,11 +44,15 @@ public class Worker {
 
     private final GoalListManager goalListManager;
 
+    @SuppressWarnings({ "unused", "FieldCanBeLocal" })
+    private final TradehallManager tradehallManager;
+
     private final CompatibilityManager compatibilityManager;
 
-    public Worker(ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) {
+    public Worker(ConfigManager configManager, GoalListManager goalListManager, TradehallManager tradehallManager, CompatibilityManager compatibilityManager) {
         this.configManager = configManager;
         this.goalListManager = goalListManager;
+        this.tradehallManager = tradehallManager;
         this.compatibilityManager = compatibilityManager;
 
         TaskState taskState = new TaskState();
