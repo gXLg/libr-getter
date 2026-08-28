@@ -190,6 +190,9 @@ class RegistryAccess
 
 class HolderSet$Named extends HolderSet$ListBacked
 
+class ResourceKey
+    Identifier method_29177/location/identifier()
+
 class HolderSet$ListBacked
     Stream<Holder> method_40239/stream()
 
@@ -239,6 +242,7 @@ class Vec3i
     boolean method_19771/closerThan(Vec3i target, double distance)
 
 class BlockPos extends Vec3i
+    <init>(int x, int y, int z)
     BlockPos method_10069/offset(int x, int y, int z)
     BlockPos method_10093/relative(Direction direction)
     BlockPos method_10086/above(int distance)
@@ -276,6 +280,7 @@ class Level
     boolean method_8501/setBlockAndUpdate(BlockPos pos, BlockState state)
     void method_8486/playLocalSound(double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay)
     RegistryAccess method_30349/registryAccess()
+    ResourceKey method_27983/dimension()
 
 class ClientLevel extends Level
     Iterable<Entity> method_18112/entitiesForRendering()
@@ -893,6 +898,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTic
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Join
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Disconnect
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents$AfterClientLevelChange
 
 interface ClientTickEvents$EndTick
     void onEndTick(Minecraft client)
@@ -905,6 +911,9 @@ interface ClientPlayConnectionEvents$Disconnect
 
 interface ClientCommandRegistrationCallback
     void register(CommandDispatcher dispatcher, CommandBuildContext context)
+
+interface ClientLevelEvents$AfterClientLevelChange
+    void afterLevelChange(Minecraft client, ClientLevel level)
 
 # ------------------------------------------------------------------------------------------------------------- #
 # TradeCycling
