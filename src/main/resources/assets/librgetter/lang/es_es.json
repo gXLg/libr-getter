@@ -27,6 +27,8 @@
   "librgetter.config.tradehallScan": "Realiza un escaneo en segundo plano de estaciones de trabajo guardadas y elimina automáticamente las desactualizadas",
   "librgetter.config.waitLose": "Esperar a que el aldeano pierda su profesión; puede ralentizar el proceso, pero garantiza la actualización de profesión durante el lag",
   "librgetter.config.warning": "Enviar advertencias sobre formatos de encantamiento personalizados",
+  "librgetter.description.onlyEffective": "Esta configuración solo tiene efecto si:",
+  "librgetter.description.whenInstalled": "El mod '%s' está instalado",
   "librgetter.error.argument": "¡Este tipo de argumento no está soportado!",
   "librgetter.error.config.change": "¡Esta configuración no se puede cambiar mientras el proceso está en ejecución!",
   "librgetter.error.config.nofield": "No se pudo encontrar la declaración de configuración '%s', ¡informe esto al desarrollador!",

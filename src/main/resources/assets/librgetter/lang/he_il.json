@@ -27,6 +27,8 @@
   "librgetter.config.tradehallScan": "בצע סריקה ברקע של עמדות עבודה שמורות והסר אוטומטית עמדות לא עדכניות",
   "librgetter.config.waitLose": "חכה לוויליג'ר להפסיד את העבודה שלו; יכול להאט את התהליך, אבל מבטיח את עדכון סטטוס העבודה שיש לאגים",
   "librgetter.config.warning": "שלח אזהרות עבור פורמטי כישוף מותאמים אישית",
+  "librgetter.description.onlyEffective": "ההגדרה הזו יעילה רק אם:",
+  "librgetter.description.whenInstalled": "המוד '%s' מותקן",
   "librgetter.error.argument": "סוג ארגומנט זה אינו נתמך!",
   "librgetter.error.config.change": "לא ניתן לשנות הגדרה זו בזמן שהתליך פועל!",
   "librgetter.error.config.nofield": "לא ניתן היה למצוא את הצהרת ההגדרה '%s', דווח על זה למפתחים!",

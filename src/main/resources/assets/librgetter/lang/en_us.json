@@ -27,6 +27,8 @@
   "librgetter.config.tradehallScan": "Perform a background scan of saved workstations and remove outdated ones automatically",
   "librgetter.config.waitLose": "Wait for the villager to lose its profession; may slow down the process, but guarantees the profession update during lags",
   "librgetter.config.warning": "Send warnings for custom enchantment formats",
+  "librgetter.description.onlyEffective": "This config is effective only if:",
+  "librgetter.description.whenInstalled": "The mod '%s' is installed",
   "librgetter.error.argument": "This argument type is not supported!",
   "librgetter.error.config.change": "This config cannot be changed while the process is running!",
   "librgetter.error.config.nofield": "Could not find config declaration '%s', report this to the developer!",

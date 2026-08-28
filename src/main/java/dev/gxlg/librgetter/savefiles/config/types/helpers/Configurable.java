@@ -11,9 +11,12 @@ import dev.gxlg.librgetter.savefiles.config.types.IntRange;
 import dev.gxlg.librgetter.savefiles.config.types.OnlyEffective;
 import dev.gxlg.librgetter.savefiles.config.types.OptionsConfig;
 import dev.gxlg.librgetter.utils.chaining.compatibility.Compatibility;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public final class Configurable<T> {
     private final Config config;
@@ -92,6 +95,21 @@ public final class Configurable<T> {
         }
     }
 
+    public Description getDescription() {
+        List<OnlyEffectiveCondition> conditions = new ArrayList<>();
+        for (OnlyEffective onlyEffectiveCondition : field.getAnnotationsByType(OnlyEffective.class)) {
+            Config config = onlyEffectiveCondition.when();
+            String[] equals = onlyEffectiveCondition.equals();
+            conditions.add(new OnlyEffectiveCondition(config.getId(), equals));
+        }
+        String compatibility = null;
+        CompatibilityWith modCompatibilityCondition = field.getDeclaredAnnotation(CompatibilityWith.class);
+        if (modCompatibilityCondition != null) {
+            compatibility = modCompatibilityCondition.value();
+        }
+        return new Description(conditions, compatibility);
+    }
+
     public boolean hasEffect() {
         for (OnlyEffective onlyEffectiveCondition : field.getAnnotationsByType(OnlyEffective.class)) {
             Configurable<?> configurable = managerInstance.getConfigurable(onlyEffectiveCondition.when());
@@ -141,4 +159,8 @@ public final class Configurable<T> {
     public Class<T> type() {
         return type;
     }
+
+    public record Description(List<OnlyEffectiveCondition> conditions, @Nullable String compatibility) { }
+
+    public record OnlyEffectiveCondition(String when, String[] equals) { }
 }

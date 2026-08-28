@@ -27,6 +27,8 @@
   "librgetter.config.tradehallScan": "Wykonuje skan zapisanych stanowisk pracy w tle i automatycznie usuwa nieaktualne",
   "librgetter.config.waitLose": "Poczekaj, aż wieśniak straci swoją profesję; może spowolnić proces, ale gwarantuje aktualizację profesji podczas lagów",
   "librgetter.config.warning": "Wysyłaj ostrzeżenia dla niestandardowych formatów zaklęć",
+  "librgetter.description.onlyEffective": "Ta konfiguracja działa tylko wtedy, gdy:",
+  "librgetter.description.whenInstalled": "Mod '%s' jest zainstalowany",
   "librgetter.error.argument": "Ten typ argumentu nie jest wspierany!",
   "librgetter.error.config.change": "Ta konfiguracja nie może być zmieniona podczas działania procesu!",
   "librgetter.error.config.nofield": "Nie znaleziono deklaracji konfiguracji '%s', zgłoś to do dewelopera!",

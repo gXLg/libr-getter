@@ -27,6 +27,8 @@
   "librgetter.config.tradehallScan": "Führt eine Hintergrundprüfung gespeicherter Arbeitsstationen durch und entfernt veraltete automatisch",
   "librgetter.config.waitLose": "Warten, bis der Dorfbewohner sein Beruf verliert; kann den Prozess verlangsamen, garantiert aber die Aktualisierung des Berufs bei Lag",
   "librgetter.config.warning": "Sendet Warnungen über Benutzerdefinierte Verzauberungen",
+  "librgetter.description.onlyEffective": "Diese Einstellung ist nur wirksam, wenn:",
+  "librgetter.description.whenInstalled": "Der Mod '%s' ist installiert",
   "librgetter.error.argument": "Diese Art von Argumenten ist nicht unterstützt!",
   "librgetter.error.config.change": "Diese Konfiguration kann nicht geändert werden, während der Prozess läuft!",
   "librgetter.error.config.nofield": "Konnte Konfigurationsdeklaration '%s' nicht finden, bitte melden Sie dies dem Entwickler!",

@@ -27,6 +27,8 @@
   "librgetter.config.tradehallScan": "Выполняет фоновое сканирование сохраненных рабочих мест и автоматически удаляет устаревшие",
   "librgetter.config.waitLose": "Ждёт, пока житель потеряет профессию; может замедлить процесс, но гарантирует обновление профессии при лагах",
   "librgetter.config.warning": "Отправляет предупреждения для пользовательских чар",
+  "librgetter.description.onlyEffective": "Эта настройка действует только если:",
+  "librgetter.description.whenInstalled": "Мод '%s' установлен",
   "librgetter.error.argument": "Этот вид аргумента не поддерживается!",
   "librgetter.error.config.change": "Эту настройку нельзя изменить, пока процесс выполняется!",
   "librgetter.error.config.nofield": "Не удалось найти конфигурацию '%s', сообщите об этом разработчику!",

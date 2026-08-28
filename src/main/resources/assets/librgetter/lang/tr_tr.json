@@ -27,6 +27,8 @@
   "librgetter.config.tradehallScan": "Kaydedilmiş iş istasyonlarını arka planda tarar ve güncel olmayanları otomatik olarak kaldırır",
   "librgetter.config.waitLose": "Köylünün mesleğini bırakmasını bekle; işlemi yavaşlatabilir, ama oyunun yavaşlaması durumunda köylünün mesleğinin güncellenmesini garantiler",
   "librgetter.config.warning": "Özel büyü formatları için uyarılar gönder",
+  "librgetter.description.onlyEffective": "Bu ayar yalnızca şu durumda etkilidir:",
+  "librgetter.description.whenInstalled": "'%s' modu yüklüyse",
   "librgetter.error.argument": "Bu argüman tipi desteklenmiyor!",
   "librgetter.error.config.change": "İşlem yürütülürken ayarlar değiştirilemez!",
   "librgetter.error.config.nofield": "Ayar deklarasyonu '%s' bulunamadı, lütfen bunu geliştiriciye bildirin!",
