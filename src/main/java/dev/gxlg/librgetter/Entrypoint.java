@@ -27,6 +27,7 @@ import dev.gxlg.librgetter.services.loaders.MixinImplLoader;
 import dev.gxlg.librgetter.services.loaders.NotifierLoader;
 import dev.gxlg.librgetter.services.loaders.SaveFileLoader;
 import dev.gxlg.librgetter.services.loaders.SharedControllerLoader;
+import dev.gxlg.librgetter.services.loaders.TradehallScannerLoader;
 import dev.gxlg.librgetter.services.loaders.UpdaterLoader;
 import dev.gxlg.librgetter.services.loaders.WorkerLoader;
 import dev.gxlg.librgetter.services.loaders.WorldNameLoader;
@@ -74,6 +75,9 @@ public class Entrypoint implements ClientModInitializer {
 
         SaveFileLoader saveFileLoader = new SaveFileLoader(coreLoader, notifierLoader, worldNameLoader);
         loaderManager.registerServiceLoader(saveFileLoader);
+
+        TradehallScannerLoader tradehallScannerLoader = new TradehallScannerLoader(notifierLoader, saveFileLoader);
+        loaderManager.registerServiceLoader(tradehallScannerLoader);
 
         CompatibilityLoader compatibilityLoader = new CompatibilityLoader(saveFileLoader);
         loaderManager.registerServiceLoader(compatibilityLoader);
