@@ -19,6 +19,8 @@ public enum Config {
     ORIGINAL_PRICE("originalPrice"),
     MATCH_MODE("matchMode"),
     MATCH_AT_LEAST("matchAtLeast"),
+    TRADEHALL_MODE("tradehallMode"),
+    TRADEHALL_SCAN("tradehallScan"),
     TRADE_CYCLING("tradeCycling");
 
     private final String id;

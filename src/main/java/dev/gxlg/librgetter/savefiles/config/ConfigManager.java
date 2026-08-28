@@ -114,6 +114,7 @@ public class ConfigManager {
         SUCCESS("success"),
         MESSAGES("messages"),
         MATCHING("matching"),
+        TRADEHALL("tradehall"),
         COMPATIBILITY("compatibility");
 
         private final String id;
