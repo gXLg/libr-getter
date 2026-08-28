@@ -6,6 +6,7 @@ import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.savefiles.config.types.enums.LogMode;
 import dev.gxlg.librgetter.savefiles.config.types.enums.MatchMode;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallManager;
 import dev.gxlg.librgetter.utils.chaining.parser.Parser;
 import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
@@ -34,7 +35,7 @@ public class ParseAndMatchTradesTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, TradehallManager tradehallManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
         List<EnchantmentTrade> offeredEnchantments = new ArrayList<>();
         for (int i = 0; i < offers.size(); i++) {
             if (i >= 2 && configManager.getOptions(Config.MATCH_MODE) == MatchMode.VANILLA) {

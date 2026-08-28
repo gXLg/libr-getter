@@ -3,6 +3,7 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallManager;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
@@ -22,7 +23,7 @@ public class LockTradesTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, TradehallManager tradehallManager, CompatibilityManager compatibilityManager) throws InternalErrorException {
         MinecraftData minecraftData = taskContext.minecraftData();
 
         // wait for the screen to open
@@ -40,6 +41,9 @@ public class LockTradesTask extends Task {
         }
         // confirm the trade
         minecraftData.gameMode.handleContainerInput(player.getContainerMenuField().getContainerIdField(), 2, 0, ContainerInput.PICKUP(), player);
+        // save the workstation
+        tradehallManager.addOrUpdateWorkstation(taskContext.selectedLecternPos(), matchedTrades);
+        tradehallManager.save();
 
         controller.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
     }

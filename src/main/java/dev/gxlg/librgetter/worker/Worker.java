@@ -44,7 +44,6 @@ public class Worker {
 
     private final GoalListManager goalListManager;
 
-    @SuppressWarnings({ "unused", "FieldCanBeLocal" })
     private final TradehallManager tradehallManager;
 
     private final CompatibilityManager compatibilityManager;
@@ -81,7 +80,7 @@ public class Worker {
             stateController.setTaskContext(currentContext);
 
             try {
-                currentTask.work(currentContext, taskSchedulerController, configManager, goalListManager, compatibilityManager);
+                currentTask.work(currentContext, taskSchedulerController, configManager, goalListManager, tradehallManager, compatibilityManager);
             } catch (LibrGetterException exception) {
                 Texts.sendMessage(exception.getTranslatableErrorMessage());
                 systemSchedulerController.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
