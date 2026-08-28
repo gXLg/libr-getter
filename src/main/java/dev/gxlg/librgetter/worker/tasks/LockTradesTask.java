@@ -5,6 +5,8 @@ import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.savefiles.tradehalls.TradehallManager;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
+import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
+import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -15,11 +17,16 @@ import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import dev.gxlg.versiont.gen.net.minecraft.network.protocol.game.ServerboundSelectTradePacket;
 import dev.gxlg.versiont.gen.net.minecraft.world.inventory.ContainerInput;
 
+import java.util.List;
+
 public class LockTradesTask extends Task {
     private final int offerIndex;
 
-    public LockTradesTask(int offer) {
+    private final List<EnchantmentTrade> matchedTrades;
+
+    public LockTradesTask(int offer, List<EnchantmentTrade> matchedTrades) {
         this.offerIndex = offer;
+        this.matchedTrades = matchedTrades;
     }
 
     @Override
@@ -41,11 +48,13 @@ public class LockTradesTask extends Task {
         }
         // confirm the trade
         minecraftData.gameMode.handleContainerInput(player.getContainerMenuField().getContainerIdField(), 2, 0, ContainerInput.PICKUP(), player);
+        // close the screen
+        Gui.getScreen(minecraftData.client).onClose();
         // save the workstation
         tradehallManager.addOrUpdateWorkstation(taskContext.selectedLecternPos(), matchedTrades);
         tradehallManager.save();
 
-        controller.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
+        controller.scheduleTaskSwitch(TaskSwitch.sameTick(FinishTask::new));
     }
 
     @Override

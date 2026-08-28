@@ -46,9 +46,10 @@ public class ParseAndMatchTradesTask extends Task {
                 continue;
             }
             EnchantmentTrade trade = Parser.parseTrade(offer, configManager, goalListManager);
-            if (trade != null) {
-                offeredEnchantments.add(trade);
+            if (trade == null) {
+                continue;
             }
+            offeredEnchantments.add(trade);
             if (configManager.getOptions(Config.MATCH_MODE) == MatchMode.VANILLA) {
                 break;
             }
@@ -68,25 +69,26 @@ public class ParseAndMatchTradesTask extends Task {
             controller.scheduleTaskSwitch(taskSwitch);
             return;
         }
+        List<EnchantmentTrade> matchedTrades = matching.get();
 
         MinecraftData minecraftData = taskContext.minecraftData();
         if (configManager.getBoolean(Config.NOTIFY)) {
             Players.playFoundNotification(minecraftData.localPlayer);
         }
-        matching.get().forEach(e -> {
-            EnchantmentFoundMessage message = new EnchantmentFoundMessage(e, taskContext.attemptsCounter(), !configManager.getBoolean(Config.REMOVE_GOAL));
+        for (EnchantmentTrade trade : matchedTrades) {
+            EnchantmentFoundMessage message = new EnchantmentFoundMessage(trade, taskContext.attemptsCounter(), !configManager.getBoolean(Config.REMOVE_GOAL));
             Texts.sendMessage(message);
-        });
+        }
 
         if (configManager.getBoolean(Config.REMOVE_GOAL)) {
-            for (EnchantmentTrade trade : matching.get()) {
+            for (EnchantmentTrade trade : matchedTrades) {
                 goalListManager.removeMatchingGoal(trade);
                 Texts.sendMessage(new EnchantmentRemovedMessage(trade));
             }
             goalListManager.save();
         }
 
-        controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> new FinalizeSearchTask(offers)));
+        controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> new FinalizeSearchTask(offers, matchedTrades)));
     }
 
     private boolean isEnchantmentTrade(MerchantOffer offer) {

@@ -27,17 +27,12 @@ import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
 import java.util.List;
 
 public class StartTask extends Task {
-    private final boolean resetCounter;
-
-    public StartTask(boolean resetCounter) {
-        this.resetCounter = resetCounter;
-    }
-
     @Override
     public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, TradehallManager tradehallManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
         if (taskContext.selectedLecternPos() == null && !compatibilityManager.isUsingTradeCycling()) {
             throw new NoLecternSetException();
         }
+
         if (taskContext.selectedVillager() == null) {
             throw new NoLibrarianSetException();
         }
@@ -47,16 +42,15 @@ public class StartTask extends Task {
         if (!taskContext.selectedVillager().isAlive()) {
             throw new VillagerNotExistException();
         }
-
         if (goalListManager.getGoals().isEmpty()) {
             throw new EmptyGoalsListException();
         }
 
         MinecraftData minecraftData = new MinecraftData();
         if (configManager.getBoolean(Config.SAFE_CHECKER) && configManager.getConfigurable(Config.SAFE_CHECKER).hasEffect()) {
-            // If the villager is sitting, assume it cannot move
+            // If the villager is a passenger (in boat, minecart), assume it cannot move
             if (!taskContext.selectedVillager().isPassenger()) {
-                List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), minecraftData.clientLevel, 2);
+                List<BlockPos> path = PathFinding.findPathToBlock(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), minecraftData.clientLevel, 2);
                 if (path != null) {
                     throw new UnsafeSetupException();
                 }
@@ -66,9 +60,6 @@ public class StartTask extends Task {
         controller.scheduleContextUpdate(ctx -> {
             if (!configManager.getBoolean(Config.AUTO_TOOL)) {
                 ctx.setDefaultItem(minecraftData.localPlayer.getMainHandItem());
-            }
-            if (resetCounter) {
-                ctx.resetAttemptsCounter();
             }
             ctx.setTradeOfferData(null).setMinecraftData(minecraftData);
         });

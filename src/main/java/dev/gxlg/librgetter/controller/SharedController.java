@@ -76,14 +76,15 @@ public class SharedController {
         if (stateView.isWorking()) {
             throw new AlreadyRunningException();
         }
-        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
+        controller.scheduleContextUpdate(TaskContextBuilder::resetAttemptsCounter);
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(StartTask::new));
     }
 
     public void continueWorking() throws AlreadyRunningException {
         if (stateView.isWorking()) {
             throw new AlreadyRunningException();
         }
-        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(false)));
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(StartTask::new));
     }
 
     public void selector() throws LibrGetterException {
