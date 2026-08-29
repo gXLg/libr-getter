@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.gui;
 
-import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedList;
+import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedListWidget;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.vertex.PoseStack;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
@@ -44,12 +44,12 @@ public class Gui_1_17_0 extends Gui.Base {
     }
 
     @Override
-    public void removeListEntry(UnifiedList list, ObjectSelectionList$Entry entry) {
+    public void removeListEntry(UnifiedListWidget list, ObjectSelectionList$Entry entry) {
         list.removeEntry(entry);
     }
 
     @Override
-    public void refreshScrollAmount(UnifiedList list) {
+    public void refreshScrollAmount(UnifiedListWidget list) {
         // this method is not needed, as the scrolling is clamped per default in versions [1.17, 1.21)
     }
 

@@ -1,13 +1,36 @@
-package dev.gxlg.librgetter.gui.widgets.list;
+package dev.gxlg.librgetter.gui.widgets.unified.list;
 
-import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedWidgetList;
+import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractSelectionList$Entry;
-import dev.gxlg.versiont.gen.net.minecraft.client.input.MouseButtonEvent;
 
 import java.util.List;
 
-public interface CustomSelectionListInterface extends UnifiedWidgetList {
-    List<CustomSelectionListEntry> getCustomEntries();
+public interface UnifiedListWidget extends UnifiedWidget {
+    void setX0Field(int x0);
+
+    void setY0Field(int y0);
+
+    int getXField();
+
+    @Override
+    default void setXField(int x) {
+        setX0Field(x);
+    }
+
+    int getYField();
+
+    @Override
+    default void setYField(int y) {
+        setY0Field(y);
+    }
+
+    int getWidthField();
+
+    int getHeightField();
+
+    int getRowWidth();
+
+    List<AbstractSelectionList$Entry> children();
 
     void clearEntries();
 
@@ -16,19 +39,12 @@ public interface CustomSelectionListInterface extends UnifiedWidgetList {
     @SuppressWarnings("UnusedReturnValue")
     int addEntry(AbstractSelectionList$Entry entry);
 
-    @SuppressWarnings("unused")
-    boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick);
+    @SuppressWarnings("UnusedReturnValue")
+    boolean removeEntry(AbstractSelectionList$Entry entry);
 
-    @SuppressWarnings("unused")
-    boolean mouseClicked(double mouseX, double mouseY, int button);
+    void removeEntry2(AbstractSelectionList$Entry entry);
 
-    int getXField();
-
-    int getYField();
-
-    int getWidthField();
-
-    int getHeightField();
+    AbstractSelectionList$Entry getSelected();
 
     void setSelected(AbstractSelectionList$Entry entry);
 
@@ -46,7 +62,7 @@ public interface CustomSelectionListInterface extends UnifiedWidgetList {
         if (mouseY < top || mouseY > bottom) {
             return false;
         }
-        for (CustomSelectionListEntry entry : getCustomEntries()) {
+        for (AbstractSelectionList$Entry entry : children()) {
             if (entry.isMouseOver(mouseX, mouseY)) {
                 setSelected(entry);
                 return true;
@@ -54,6 +70,5 @@ public interface CustomSelectionListInterface extends UnifiedWidgetList {
         }
         return false;
     }
-
-    int getRowWidth();
 }
+

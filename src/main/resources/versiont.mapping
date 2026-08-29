@@ -685,6 +685,7 @@ class AbstractSelectionList_1_20_3 extends AbstractScrollArea
     AbstractSelectionList$Entry method_25334/getSelected()
     void method_25313/setSelected(AbstractSelectionList$Entry entry)
 
+    List<AbstractSelectionList$Entry> method_25396/children()
     int method_25321/addEntry(AbstractSelectionList$Entry entry)
     void method_25339/clearEntries()
     void method_25314/replaceEntries(List<AbstractSelectionList$Entry> entries)
@@ -709,6 +710,7 @@ class AbstractSelectionList extends GuiEventListener
     AbstractSelectionList$Entry method_25334/getSelected()
     void method_25313/setSelected(AbstractSelectionList$Entry entry)
 
+    List<AbstractSelectionList$Entry> method_25396/children()
     int method_25321/addEntry(AbstractSelectionList$Entry entry)
     void method_25339/clearEntries()
     void method_25314/replaceEntries(List<AbstractSelectionList$Entry> entries)

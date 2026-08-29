@@ -1,21 +1,32 @@
 package dev.gxlg.librgetter.gui.widgets.list;
 
+import dev.gxlg.librgetter.gui.GuiConstants;
+import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedListWidget;
 import dev.gxlg.versiont.api.R;
-import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.ObjectSelectionList_1_20_3;
+import dev.gxlg.versiont.gen.net.minecraft.client.input.KeyEvent;
 import dev.gxlg.versiont.gen.net.minecraft.client.input.MouseButtonEvent;
+import org.jspecify.annotations.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class CustomSelectionList_1_20_3 extends ObjectSelectionList_1_20_3 implements CustomSelectionListInterface {
+public class CustomSelectionList_1_20_3 extends ObjectSelectionList_1_20_3 implements UnifiedListWidget {
     public static final R.RClass clazz = R.extendWrapper(ObjectSelectionList_1_20_3.class, CustomSelectionList_1_20_3.class);
 
-    protected final List<CustomSelectionListEntry> entries = new ArrayList<>();
+    private final GuiConstants.KeyPressCallback keyPressCallback;
 
-    public CustomSelectionList_1_20_3(Minecraft minecraft, int width, int height, int y, int itemHeight) {
-        super(minecraft, width, height, y, itemHeight);
+    public CustomSelectionList_1_20_3(int width, int height, int y, int itemHeight, GuiConstants.KeyPressCallback keyPressCallback) {
+        super(Minecraft.getInstance(), width, height, y, itemHeight);
+        this.keyPressCallback = keyPressCallback;
+    }
+
+    @Override
+    public void setX0Field(int x0) {
+        setXField(x0);
+    }
+
+    @Override
+    public void setY0Field(int y0) {
+        setYField(y0);
     }
 
     @Override
@@ -35,27 +46,18 @@ public abstract class CustomSelectionList_1_20_3 extends ObjectSelectionList_1_2
     }
 
     @Override
-    public void setX0Field(int x0) {
-        super.setXField(x0);
-    }
-
-    @Override
-    public void setY0Field(int y0) {
-        super.setYField(y0);
-    }
-
-    @Override
-    public List<CustomSelectionListEntry> getCustomEntries() {
-        return entries;
-    }
-
-    @Override
-    public int getRowWidth() {
-        if (V.lower("1.20.5")) {
-            // before the transparent UI, the DirtUI was more clamped
-            return super.getRowWidth();
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyPressCallback.onKeyPress(keyCode)) {
+            return true;
         }
-        return super.getRowWidth() + 50;
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    @Override
+    public boolean keyPressed(@NonNull KeyEvent event) {
+        if (keyPressCallback.onKeyPress(event.key())) {
+            return true;
+        }
+        return super.keyPressed(event);
+    }
 }
