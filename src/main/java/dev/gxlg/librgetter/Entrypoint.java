@@ -7,11 +7,7 @@ import dev.gxlg.librgetter.gui.goals.add.AddCustomGoalScreen;
 import dev.gxlg.librgetter.gui.goals.add.AddGoalScreen;
 import dev.gxlg.librgetter.gui.goals.list.GoalListEntry;
 import dev.gxlg.librgetter.gui.goals.list.GoalListScreen;
-import dev.gxlg.librgetter.gui.goals.list.GoalSelectionList;
-import dev.gxlg.librgetter.gui.goals.list.GoalSelectionList_1_20_3;
 import dev.gxlg.librgetter.gui.goals.select.EnchantmentListEntry;
-import dev.gxlg.librgetter.gui.goals.select.EnchantmentSelectionList;
-import dev.gxlg.librgetter.gui.goals.select.EnchantmentSelectionList_1_20_3;
 import dev.gxlg.librgetter.gui.goals.select.SelectEnchantmentScreen;
 import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionList;
 import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionListEntry;
@@ -46,11 +42,7 @@ public class Entrypoint implements ClientModInitializer {
             AddGoalScreen.clazz,
             GoalListEntry.clazz,
             GoalListScreen.clazz,
-            GoalSelectionList.clazz,
-            GoalSelectionList_1_20_3.clazz,
             EnchantmentListEntry.clazz,
-            EnchantmentSelectionList.clazz,
-            EnchantmentSelectionList_1_20_3.clazz,
             SelectEnchantmentScreen.clazz,
             AbstractDynamicWidgetScreen.clazz,
             CustomSelectionList.clazz,

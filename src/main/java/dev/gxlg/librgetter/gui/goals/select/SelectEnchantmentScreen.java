@@ -5,9 +5,10 @@ import dev.gxlg.librgetter.gui.goals.AbstractDynamicWidgetScreen;
 import dev.gxlg.librgetter.gui.goals.add.AddCustomGoalScreen;
 import dev.gxlg.librgetter.gui.goals.add.AddGoalScreen;
 import dev.gxlg.librgetter.gui.widgets.WidgetDimensions;
-import dev.gxlg.librgetter.gui.widgets.unified.UnifiedWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox;
+import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedListWidget;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.TranslatablePartialMessage;
@@ -15,9 +16,13 @@ import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableA
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableSearchLabel;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableSelectButton;
 import dev.gxlg.versiont.api.R;
-import dev.gxlg.versiont.api.V;
+import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractSelectionList$Entry;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
     public static final R.RClass clazz = R.extendWrapper(AbstractDynamicWidgetScreen.class, SelectEnchantmentScreen.class);
@@ -32,7 +37,9 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
 
     private final Screen lastScreen;
 
-    private UnifiedEnchantmentSelectionList selectionList = null;
+    private final List<EnchantmentListEntry> customEntries = new ArrayList<>();
+
+    private UnifiedListWidget selectionList = null;
 
     public SelectEnchantmentScreen(Screen lastScreen, GoalListManager goalListManager) {
         super(Texts.literal(""));
@@ -46,10 +53,11 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
         Component addCustomButton = ADD_CUSTOM_BUTTON.getComponent();
         Component searchLabel = SEARCH_LABEL.getComponent();
 
-        selectionList = (UnifiedEnchantmentSelectionList) addDynamicWidget(
-            (x, y, w, h) -> createList(y, w, h),
+        selectionList = (UnifiedListWidget) addDynamicWidget(
+            (x, y, w, h) -> GuiConstants.createListWidget(y, w, h, GuiConstants.BUTTON_HEIGHT, null),
             (w, h) -> WidgetDimensions.from(0, GuiConstants.PADDING * 2 + GuiConstants.BUTTON_HEIGHT, w, h - GuiConstants.PADDING * 4 - GuiConstants.BUTTON_HEIGHT * 2)
         );
+        initList();
 
         UnifiedEditBox searchBox = (UnifiedEditBox) addDynamicWidget(
             (x, y, w, h) -> GuiConstants.createEditBox(getFontField(), x, y, w, h, Texts.literal("")),
@@ -62,9 +70,23 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
         addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(addCustomButton, x, y, w, h, (button) -> onAddCustomPressed()), GuiConstants.RIGHT_BUTTON_DIMENSIONS);
     }
 
+    private void initList() {
+        if (selectionList != null) {
+            for (Enchantment enchantment : Enchantments.getAllEnchantments()) {
+                EnchantmentListEntry entry = new EnchantmentListEntry(getFontField(), enchantment);
+                selectionList.addEntry(entry);
+                customEntries.add(entry);
+            }
+        }
+    }
+
     private void onSearchUpdated(String filter) {
         if (selectionList != null) {
-            selectionList.filterEntries(filter);
+            List<EnchantmentListEntry> filtered = customEntries.stream()
+                                                               .filter(e -> filter.isEmpty() || e.getTranslatedName().contains(filter.toLowerCase()) || e.getIdString().contains(filter.toLowerCase()))
+                                                               .toList();
+            selectionList.replaceEntries(filtered.stream().map(e -> (AbstractSelectionList$Entry) e).toList());
+            Gui.refreshScrollAmount(selectionList);
         }
     }
 
@@ -87,13 +109,4 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
     public void onClose() {
         Gui.setScreen(getMinecraftField(), lastScreen);
     }
-
-    private UnifiedWidget createList(int y, int width, int height) {
-        if (V.lower("1.20.3")) {
-            return new EnchantmentSelectionList(this, y, width, height);
-        } else {
-            return new EnchantmentSelectionList_1_20_3(this, y, width, height);
-        }
-    }
-
 }

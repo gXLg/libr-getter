@@ -2,9 +2,12 @@ package dev.gxlg.librgetter.gui;
 
 import dev.gxlg.librgetter.gui.widgets.DynamicDimensionGetter;
 import dev.gxlg.librgetter.gui.widgets.WidgetDimensions;
+import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionList;
+import dev.gxlg.librgetter.gui.widgets.list.CustomSelectionList_1_20_3;
 import dev.gxlg.librgetter.gui.widgets.unified.button.UnifiedButton;
 import dev.gxlg.librgetter.gui.widgets.unified.editbox.LegacyEditBox;
 import dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox;
+import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedListWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.string.LegacyStringWidget;
 import dev.gxlg.librgetter.gui.widgets.unified.string.UnifiedStringWidget;
 import dev.gxlg.versiont.api.V;
@@ -76,5 +79,17 @@ public class GuiConstants {
             }
             return stringWidget;
         }
+    }
+
+    public static UnifiedListWidget createListWidget(int y, int w, int h, int itemHeight, KeyPressCallback keyPressCallback) {
+        if (V.lower("1.20.3")) {
+            return new CustomSelectionList(w, h, y, y + h, itemHeight, keyPressCallback);
+        } else {
+            return new CustomSelectionList_1_20_3(w, h, y, itemHeight, keyPressCallback);
+        }
+    }
+
+    public interface KeyPressCallback {
+        boolean onKeyPress(int keyCode);
     }
 }
