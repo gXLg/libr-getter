@@ -3,7 +3,7 @@ package dev.gxlg.librgetter.commands;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import dev.gxlg.librgetter.controller.SharedController;
-import dev.gxlg.librgetter.gui.config.ConfigScreen;
+import dev.gxlg.librgetter.gui.impl.config.ConfigScreen;
 import dev.gxlg.librgetter.savefiles.config.Config;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.savefiles.config.types.helpers.Configurable;

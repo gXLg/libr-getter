@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.gui;
 
-import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedListWidget;
+import dev.gxlg.librgetter.gui.lib.widgets.unified.list.UnifiedListWidget;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.vertex.PoseStack;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
