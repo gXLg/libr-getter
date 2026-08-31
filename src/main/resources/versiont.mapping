@@ -25,7 +25,11 @@ adapter java.util.function.Consumer -> dev.gxlg.librgetter.utils.adapters.Consum
 import java.util.function.Supplier
 adapter java.util.function.Supplier -> dev.gxlg.librgetter.utils.adapters.SupplierAdapter
 
+import java.util.Map$Entry
+adapter java.util.Map$Entry -> dev.gxlg.librgetter.utils.adapters.Map$EntryAdapter
+
 import java.nio.file.Path
+import java.io.File
 
 # ------------------------------------------------------------------------------------------------------------- #
 # Core
@@ -43,6 +47,9 @@ import net.minecraft.class_1132/net.minecraft.client.server.IntegratedServer
 import !net.minecraft.server.MinecraftServer
 import net.minecraft.class_5218/net.minecraft.world.level.storage.LevelResource
 import net.minecraft.class_642/net.minecraft.client.multiplayer.ServerData
+import net.minecraft.class_2874/net.minecraft.world.level.dimension.DimensionType
+import net.minecraft.class_641/net.minecraft.client.multiplayer.ServerList
+import net.minecraft.class_32/net.minecraft.world.level.storage.LevelStorageSource
 
 class Minecraft
     static Minecraft method_1551/getInstance()
@@ -62,16 +69,33 @@ class Minecraft
     # 26.2
     Gui gui
 
+    final KeyboardHandler field_1774/keyboardHandler
+    LevelStorageSource method_1586/getLevelSource()
+
+class LevelStorageSource
+    Path getBaseDir()
+
 class IntegratedServer extends MinecraftServer
 
 class MinecraftServer
     Path method_27050/getWorldPath(LevelResource resource)
+    RegistryAccess method_30611/registryAccess()
 
 class LevelResource
     static final LevelResource field_24188/ROOT
 
+class DimensionType
+    static File method_12488/getStorageFolder(ResourceKey dimension, File levelRoot)
+    static Path method_12488/getStorageFolder(ResourceKey dimension, Path levelRoot)
+
+class ServerList
+    <init>(Minecraft client)
+    void method_2981/load()
+    int method_2984/size()
+    ServerData method_2982/get(int i)
+
 class ServerData
-    String method_14209/getIpAddress()
+    final String field_3761/ip
 
 class HitResult
     HitResult$Type method_17783/getType()
@@ -172,6 +196,7 @@ class VillagerProfession
 
 class Registries
     static final ResourceKey field_41265/ENCHANTMENT
+    static final ResourceKey field_41223/DIMENSION
 
 class Registry
     ResourceKey method_30517/key()
@@ -179,8 +204,10 @@ class Registry
     Holder method_47983/wrapAsHolder([Object] value)
     Stream<Holder$Reference> method_42017/listElements()
     Stream<[Object]> method_10220/stream()
+    Set<Map$Entry<ResourceKey, [Object]>> method_29722/entrySet()
 
     static final Registry field_11160/ENCHANTMENT
+    static final ResourceKey field_25298/DIMENSION_REGISTRY
 
 class BuiltInRegistries
     static final Registry field_41176/ENCHANTMENT
@@ -293,12 +320,15 @@ import net.minecraft.class_4970$class_4971/net.minecraft.world.level.block.state
 import net.minecraft.class_2248/net.minecraft.world.level.block.Block
 import net.minecraft.class_2246/net.minecraft.world.level.block.Blocks
 import net.minecraft.class_4970/net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.class_2482/net.minecraft.world.level.block.SlabBlock
 
 class BlockBehaviour
     accessible final boolean field_23159/hasCollision
 
 class Block extends BlockBehaviour
     BlockState method_9564/defaultBlockState()
+
+class SlabBlock extends Block
 
 class BlockBehaviour$BlockStateBase
     Block method_26204/getBlock()
@@ -554,6 +584,10 @@ import net.minecraft.class_350$class_351/net.minecraft.client.gui.components.Abs
 import net.minecraft.class_7528/net.minecraft.client.gui.components.AbstractScrollArea
 import net.minecraft.class_11909/net.minecraft.client.input.MouseButtonEvent
 import !net.minecraft.client.gui.Gui
+import net.minecraft.class_309/net.minecraft.client.KeyboardHandler
+
+class KeyboardHandler
+    void method_1455/setClipboard(String text)
 
 class Gui
     @Nullable Screen screen
@@ -636,6 +670,8 @@ class AbstractWidget extends GuiEventListener
     int field_22759/height
     int field_22760/x
     int field_22761/y
+
+    void method_25355/setMessage(Component message)
 
 class Font
     int method_1727/width(String text)
