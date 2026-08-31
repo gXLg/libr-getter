@@ -47,7 +47,7 @@ public class CustomSelectionList_1_20_3 extends ObjectSelectionList_1_20_3 imple
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyPressCallback.onKeyPress(keyCode)) {
+        if (keyPressCallback != null && keyPressCallback.onKeyPress(keyCode)) {
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -55,7 +55,7 @@ public class CustomSelectionList_1_20_3 extends ObjectSelectionList_1_20_3 imple
 
     @Override
     public boolean keyPressed(@NonNull KeyEvent event) {
-        if (keyPressCallback.onKeyPress(event.key())) {
+        if (keyPressCallback != null && keyPressCallback.onKeyPress(event.key())) {
             return true;
         }
         return super.keyPressed(event);

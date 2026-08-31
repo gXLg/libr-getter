@@ -22,6 +22,7 @@ import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class GuiConstants {
     public static final int PADDING = 12;
 
@@ -29,18 +30,53 @@ public class GuiConstants {
 
     public static final int BUTTON_HEIGHT = 18;
 
-    public static final DynamicDimensionGetter LEFT_BUTTON_DIMENSIONS = (w, h) -> WidgetDimensions.from(
+    public static final DynamicDimensionGetter TOP_LEFT_DIMENSIONS = (w, h) -> WidgetDimensions.from(
+        w / 2 - GuiConstants.PADDING / 2 - GuiConstants.BUTTON_WIDTH,
+        GuiConstants.PADDING,
+        GuiConstants.BUTTON_WIDTH,
+        GuiConstants.BUTTON_HEIGHT
+    );
+
+    public static final DynamicDimensionGetter TOP_RIGHT_DIMENSIONS = (w, h) -> WidgetDimensions.from(
+        w / 2 + GuiConstants.PADDING / 2,
+        GuiConstants.PADDING,
+        GuiConstants.BUTTON_WIDTH,
+        GuiConstants.BUTTON_HEIGHT
+    );
+
+    public static final DynamicDimensionGetter TOP_CENTER_DIMENSIONS = (w, h) -> WidgetDimensions.from(
+        w / 2 - GuiConstants.BUTTON_WIDTH,
+        GuiConstants.PADDING,
+        GuiConstants.BUTTON_WIDTH * 2,
+        GuiConstants.BUTTON_HEIGHT
+    );
+
+    public static final DynamicDimensionGetter BOTTOM_LEFT_DIMENSIONS = (w, h) -> WidgetDimensions.from(
         w / 2 - GuiConstants.PADDING / 2 - GuiConstants.BUTTON_WIDTH,
         h - GuiConstants.PADDING - GuiConstants.BUTTON_HEIGHT,
         GuiConstants.BUTTON_WIDTH,
         GuiConstants.BUTTON_HEIGHT
     );
 
-    public static final DynamicDimensionGetter RIGHT_BUTTON_DIMENSIONS = (w, h) -> WidgetDimensions.from(
+    public static final DynamicDimensionGetter BOTTOM_RIGHT_DIMENSIONS = (w, h) -> WidgetDimensions.from(
         w / 2 + GuiConstants.PADDING / 2,
         h - GuiConstants.PADDING - GuiConstants.BUTTON_HEIGHT,
         GuiConstants.BUTTON_WIDTH,
         GuiConstants.BUTTON_HEIGHT
+    );
+
+    public static final DynamicDimensionGetter BOTTOM_CENTER_DIMENSIONS = (w, h) -> WidgetDimensions.from(
+        w / 2 - GuiConstants.BUTTON_WIDTH,
+        h - GuiConstants.PADDING - GuiConstants.BUTTON_HEIGHT,
+        GuiConstants.BUTTON_WIDTH * 2,
+        GuiConstants.BUTTON_HEIGHT
+    );
+
+    public static final DynamicDimensionGetter DEFAULT_LIST = (w, h) -> WidgetDimensions.from(
+        0,
+        GuiConstants.PADDING * 2 + GuiConstants.BUTTON_HEIGHT,
+        w,
+        h - GuiConstants.PADDING * 4 - GuiConstants.BUTTON_HEIGHT * 2
     );
 
     public static UnifiedButton createButton(Component text, int x, int y, int width, int height, Button$OnPressI onPress) {

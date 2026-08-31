@@ -5,15 +5,16 @@ import dev.gxlg.librgetter.gui.impl.goals.select.SelectEnchantmentScreen;
 import dev.gxlg.librgetter.gui.lib.GuiConstants;
 import dev.gxlg.librgetter.gui.lib.widgets.WidgetDimensions;
 import dev.gxlg.librgetter.gui.lib.widgets.unified.list.UnifiedListWidget;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.TranslatablePartialMessage;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableAddGoalButton;
+import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableClearButton;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableDoneButton;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.versiont.api.R;
-import dev.gxlg.versiont.gen.net.minecraft.client.gui.Font;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -28,6 +29,8 @@ public class GoalListScreen extends AbstractDynamicWidgetScreen {
 
     public static final TranslatablePartialMessage ADD_GOAL_BUTTON = new TranslatableAddGoalButton();
 
+    public static final TranslatablePartialMessage CLEAR_BUTTON = new TranslatableClearButton();
+
     private final Screen lastScreen;
 
     private final GoalListManager goalListManager;
@@ -36,56 +39,59 @@ public class GoalListScreen extends AbstractDynamicWidgetScreen {
 
     private UnifiedListWidget selectionList = null;
 
-    public GoalListScreen(Screen lastScreen, GoalListManager goalListManager) {
+    public GoalListScreen(Screen lastScreen, GoalListAccessor goalListAccessor) {
         super(Texts.literal(""));
         this.lastScreen = lastScreen;
-        this.goalListManager = goalListManager;
+        this.goalListManager = goalListAccessor.createAccessForCurrentManager();
     }
 
     @Override
     protected void initWidgets() {
         Component addGoalButton = ADD_GOAL_BUTTON.getComponent();
         Component doneButton = DONE_BUTTON.getComponent();
+        Component clearButton = CLEAR_BUTTON.getComponent();
 
         selectionList = (UnifiedListWidget) addDynamicWidget(
             (x, y, w, h) -> GuiConstants.createListWidget(y, w, h, GuiConstants.BUTTON_HEIGHT, this::onKeyPress),
-            (w, h) -> WidgetDimensions.from(0, GuiConstants.PADDING, w, h - GuiConstants.PADDING * 3 - GuiConstants.BUTTON_HEIGHT),
-            l -> onUpdateList()
+            GuiConstants.DEFAULT_LIST,
+            u -> updateList()
         );
 
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(addGoalButton, x, y, w, h, b -> onAddPressed()), GuiConstants.LEFT_BUTTON_DIMENSIONS);
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(doneButton, x, y, w, h, b -> onClose()), GuiConstants.RIGHT_BUTTON_DIMENSIONS);
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(addGoalButton, x, y, w, h, b -> onAddPressed()), GuiConstants.BOTTOM_LEFT_DIMENSIONS);
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(doneButton, x, y, w, h, b -> onClose()), GuiConstants.BOTTOM_RIGHT_DIMENSIONS);
+        addDynamicWidget(
+            (x, y, w, h) -> GuiConstants.createButton(clearButton, x, y, w, h, b -> onClearButtonPressed()),
+            (w, h) -> WidgetDimensions.from(w - GuiConstants.PADDING - GuiConstants.BUTTON_WIDTH / 2, GuiConstants.PADDING, GuiConstants.BUTTON_WIDTH / 2, GuiConstants.BUTTON_HEIGHT)
+        );
     }
 
-    private void onUpdateList() {
-        if (selectionList != null) {
-            selectionList.clearEntries();
-            customEntries.clear();
-
-            Font font = getFontField();
-            for (EnchantmentTrade trade : goalListManager.getGoals()) {
-                GoalListEntry entry = new GoalListEntry(font, trade);
-                selectionList.addEntry(entry);
-                customEntries.add(entry);
-            }
+    private void updateList() {
+        if (selectionList == null) {
+            return;
+        }
+        selectionList.clearEntries();
+        customEntries.clear();
+        for (EnchantmentTrade trade : goalListManager.getGoals()) {
+            GoalListEntry entry = new GoalListEntry(getFontField(), trade);
+            selectionList.addEntry(entry);
+            customEntries.add(entry);
         }
     }
 
     private boolean onKeyPress(int keyCode) {
         if (keyCode == GLFW.GLFW_KEY_DELETE) {
-            removeSelectedGoal();
-            return true;
+            return removeSelectedGoal();
         }
         return false;
     }
 
-    private void removeSelectedGoal() {
+    private boolean removeSelectedGoal() {
         if (selectionList == null) {
-            return;
+            return false;
         }
         GoalListEntry selectedEntry = (GoalListEntry) selectionList.getSelected();
         if (selectedEntry == null) {
-            return;
+            return false;
         }
         if (customEntries.size() > 1) {
             int index = customEntries.indexOf(selectedEntry);
@@ -96,6 +102,12 @@ public class GoalListScreen extends AbstractDynamicWidgetScreen {
         customEntries.remove(selectedEntry);
         Gui.removeListEntry(selectionList, selectedEntry);
         Gui.refreshScrollAmount(selectionList);
+        return true;
+    }
+
+    private void onClearButtonPressed() {
+        goalListManager.clearGoals();
+        updateList();
     }
 
     @Override
@@ -106,9 +118,5 @@ public class GoalListScreen extends AbstractDynamicWidgetScreen {
 
     private void onAddPressed() {
         Gui.setScreen(getMinecraftField(), new SelectEnchantmentScreen(this, goalListManager));
-    }
-
-    public GoalListManager getGoalListManager() {
-        return goalListManager;
     }
 }

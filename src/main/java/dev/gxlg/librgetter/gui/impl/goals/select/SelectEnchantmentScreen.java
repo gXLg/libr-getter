@@ -4,7 +4,6 @@ import dev.gxlg.librgetter.gui.impl.goals.AbstractDynamicWidgetScreen;
 import dev.gxlg.librgetter.gui.impl.goals.add.AddCustomGoalScreen;
 import dev.gxlg.librgetter.gui.impl.goals.add.AddGoalScreen;
 import dev.gxlg.librgetter.gui.lib.GuiConstants;
-import dev.gxlg.librgetter.gui.lib.widgets.WidgetDimensions;
 import dev.gxlg.librgetter.gui.lib.widgets.unified.editbox.UnifiedEditBox;
 import dev.gxlg.librgetter.gui.lib.widgets.unified.list.UnifiedListWidget;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
@@ -20,6 +19,7 @@ import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractSelecti
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +41,8 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
 
     private UnifiedListWidget selectionList = null;
 
+    private UnifiedEditBox searchBox = null;
+
     public SelectEnchantmentScreen(Screen lastScreen, GoalListManager goalListManager) {
         super(Texts.literal(""));
         this.goalListManager = goalListManager;
@@ -54,40 +56,50 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
         Component searchLabel = SEARCH_LABEL.getComponent();
 
         selectionList = (UnifiedListWidget) addDynamicWidget(
-            (x, y, w, h) -> GuiConstants.createListWidget(y, w, h, GuiConstants.BUTTON_HEIGHT, null),
-            (w, h) -> WidgetDimensions.from(0, GuiConstants.PADDING * 2 + GuiConstants.BUTTON_HEIGHT, w, h - GuiConstants.PADDING * 4 - GuiConstants.BUTTON_HEIGHT * 2)
+            (x, y, w, h) -> GuiConstants.createListWidget(y, w, h, GuiConstants.BUTTON_HEIGHT, this::onKeyPressed),
+            GuiConstants.DEFAULT_LIST,
+            u -> updateList()
         );
-        initList();
 
-        UnifiedEditBox searchBox = (UnifiedEditBox) addDynamicWidget(
-            (x, y, w, h) -> GuiConstants.createEditBox(getFontField(), x, y, w, h, Texts.literal("")),
-            (w, h) -> WidgetDimensions.from(w / 2 - GuiConstants.BUTTON_WIDTH, GuiConstants.PADDING, GuiConstants.BUTTON_WIDTH * 2, GuiConstants.BUTTON_HEIGHT)
-        );
+        searchBox = (UnifiedEditBox) addDynamicWidget((x, y, w, h) -> GuiConstants.createEditBox(getFontField(), x, y, w, h, Texts.literal("")), GuiConstants.TOP_CENTER_DIMENSIONS);
         searchBox.setResponder(this::onSearchUpdated);
         searchBox.setHint(searchLabel);
 
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(selectButton, x, y, w, h, (button) -> onSelect()), GuiConstants.LEFT_BUTTON_DIMENSIONS);
-        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(addCustomButton, x, y, w, h, (button) -> onAddCustomPressed()), GuiConstants.RIGHT_BUTTON_DIMENSIONS);
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(selectButton, x, y, w, h, (button) -> onSelect()), GuiConstants.BOTTOM_LEFT_DIMENSIONS);
+        addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(addCustomButton, x, y, w, h, (button) -> onAddCustomPressed()), GuiConstants.BOTTOM_RIGHT_DIMENSIONS);
     }
 
-    private void initList() {
-        if (selectionList != null) {
-            for (Enchantment enchantment : Enchantments.getAllEnchantments()) {
-                EnchantmentListEntry entry = new EnchantmentListEntry(getFontField(), enchantment);
-                selectionList.addEntry(entry);
-                customEntries.add(entry);
-            }
+    private boolean onKeyPressed(int keyCode) {
+        if (keyCode == GLFW.GLFW_KEY_ENTER) {
+            onSelect();
+            return true;
         }
+        return false;
+    }
+
+    private void updateList() {
+        if (selectionList == null || searchBox == null) {
+            return;
+        }
+        selectionList.clearEntries();
+        customEntries.clear();
+        for (Enchantment enchantment : Enchantments.getAllEnchantments()) {
+            EnchantmentListEntry entry = new EnchantmentListEntry(getFontField(), enchantment);
+            selectionList.addEntry(entry);
+            customEntries.add(entry);
+        }
+        onSearchUpdated(searchBox.getValue());
     }
 
     private void onSearchUpdated(String filter) {
-        if (selectionList != null) {
-            List<EnchantmentListEntry> filtered = customEntries.stream()
-                                                               .filter(e -> filter.isEmpty() || e.getTranslatedName().contains(filter.toLowerCase()) || e.getIdString().contains(filter.toLowerCase()))
-                                                               .toList();
-            selectionList.replaceEntries(filtered.stream().map(e -> (AbstractSelectionList$Entry) e).toList());
-            Gui.refreshScrollAmount(selectionList);
+        if (selectionList == null) {
+            return;
         }
+        List<EnchantmentListEntry> filtered = customEntries.stream()
+                                                           .filter(e -> filter.isEmpty() || e.getTranslatedName().contains(filter.toLowerCase()) || e.getIdString().contains(filter.toLowerCase()))
+                                                           .toList();
+        selectionList.replaceEntries(filtered.stream().map(e -> (AbstractSelectionList$Entry) e).toList());
+        Gui.refreshScrollAmount(selectionList);
     }
 
     private void onSelect() {
