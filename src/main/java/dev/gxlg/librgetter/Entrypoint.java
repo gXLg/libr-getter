@@ -9,6 +9,8 @@ import dev.gxlg.librgetter.gui.impl.goals.list.GoalListEntry;
 import dev.gxlg.librgetter.gui.impl.goals.list.GoalListScreen;
 import dev.gxlg.librgetter.gui.impl.goals.select.EnchantmentListEntry;
 import dev.gxlg.librgetter.gui.impl.goals.select.SelectEnchantmentScreen;
+import dev.gxlg.librgetter.gui.impl.tradehall.TradehallEntry;
+import dev.gxlg.librgetter.gui.impl.tradehall.TradehallScreen;
 import dev.gxlg.librgetter.gui.lib.widgets.list.CustomSelectionList;
 import dev.gxlg.librgetter.gui.lib.widgets.list.CustomSelectionListEntry;
 import dev.gxlg.librgetter.gui.lib.widgets.list.CustomSelectionList_1_20_3;
@@ -26,7 +28,6 @@ import dev.gxlg.librgetter.services.loaders.SharedControllerLoader;
 import dev.gxlg.librgetter.services.loaders.TradehallScannerLoader;
 import dev.gxlg.librgetter.services.loaders.UpdaterLoader;
 import dev.gxlg.librgetter.services.loaders.WorkerLoader;
-import dev.gxlg.librgetter.services.loaders.WorldNameLoader;
 import dev.gxlg.versiont.api.R;
 import net.fabricmc.api.ClientModInitializer;
 
@@ -44,6 +45,8 @@ public class Entrypoint implements ClientModInitializer {
             GoalListScreen.clazz,
             EnchantmentListEntry.clazz,
             SelectEnchantmentScreen.clazz,
+            TradehallEntry.clazz,
+            TradehallScreen.clazz,
             AbstractDynamicWidgetScreen.clazz,
             CustomSelectionList.clazz,
             CustomSelectionList_1_20_3.clazz,
@@ -62,13 +65,10 @@ public class Entrypoint implements ClientModInitializer {
         NotifierLoader notifierLoader = new NotifierLoader();
         loaderManager.registerServiceLoader(notifierLoader);
 
-        WorldNameLoader worldNameLoader = new WorldNameLoader();
-        loaderManager.registerServiceLoader(worldNameLoader);
-
-        SaveFileLoader saveFileLoader = new SaveFileLoader(coreLoader, notifierLoader, worldNameLoader);
+        SaveFileLoader saveFileLoader = new SaveFileLoader(coreLoader, notifierLoader);
         loaderManager.registerServiceLoader(saveFileLoader);
 
-        TradehallScannerLoader tradehallScannerLoader = new TradehallScannerLoader(notifierLoader, saveFileLoader);
+        TradehallScannerLoader tradehallScannerLoader = new TradehallScannerLoader(saveFileLoader);
         loaderManager.registerServiceLoader(tradehallScannerLoader);
 
         CompatibilityLoader compatibilityLoader = new CompatibilityLoader(saveFileLoader);

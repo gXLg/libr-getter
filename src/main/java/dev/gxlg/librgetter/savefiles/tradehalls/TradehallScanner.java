@@ -1,10 +1,8 @@
 package dev.gxlg.librgetter.savefiles.tradehalls;
 
-import dev.gxlg.librgetter.notifier.Notifier;
 import dev.gxlg.librgetter.savefiles.config.Config;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.utils.PathFinding;
-import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTickI;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
@@ -19,17 +17,14 @@ public class TradehallScanner {
 
     public static final int SCAN_RADIUS = 64;
 
-    private final Notifier notifier;
-
-    private final TradehallManager tradehallManager;
+    private final TradehallAccessor tradehallAccessor;
 
     private final ConfigManager configManager;
 
     private int ticksSinceLastScan = 0;
 
-    public TradehallScanner(Notifier notifier, TradehallManager tradehallManager, ConfigManager configManager) {
-        this.notifier = notifier;
-        this.tradehallManager = tradehallManager;
+    public TradehallScanner(TradehallAccessor tradehallAccessor, ConfigManager configManager) {
+        this.tradehallAccessor = tradehallAccessor;
         this.configManager = configManager;
 
         ClientTickEvents$EndTickI endTick = this::tick;
@@ -45,23 +40,20 @@ public class TradehallScanner {
             return;
         }
         ticksSinceLastScan = 0;
-        try {
-            scan(client);
-        } catch (InternalErrorException e) {
-            notifier.addNotification(e.getTranslatableErrorMessage());
-        }
+        scan(client);
     }
 
-    private void scan(Minecraft client) throws InternalErrorException {
+    private void scan(Minecraft client) {
         LocalPlayer player = client.getPlayerField();
         ClientLevel level = client.getLevelField();
         if (player == null || level == null) {
             return;
         }
+        TradehallManager tradehallManager = tradehallAccessor.createAccessForCurrentManager();
         BlockPos center = player.blockPosition();
-        TradehallData.WorkstationList workstations = tradehallManager.getWorkstations();
+        WorkstationList workstations = tradehallManager.getWorkstations();
         workstations = workstations.filterWorkstations(center, SCAN_RADIUS);
-        for (TradehallData.Workstation workstation : workstations) {
+        for (WorkstationList.Workstation workstation : workstations) {
             BlockPos pos = workstation.getPosition().toBlockPos();
             Block block = level.getBlockState(pos).getBlock();
             if (block.equals(Blocks.LECTERN())) {
@@ -71,5 +63,6 @@ public class TradehallScanner {
             }
             tradehallManager.removeWorkstation(pos);
         }
+        tradehallManager.save();
     }
 }
