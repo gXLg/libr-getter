@@ -36,7 +36,7 @@ public class TradeMessage extends Message {
         MutableComponent text = Texts.literal(enchantmentName + (trade.lvl() == -1 ? "" : " " + trade.lvl()));
         if (showPrice) {
             text = text.append(Texts.literal(" ("));
-            text = text.append(Texts.literal(trade.price() + "").withStyle(ChatFormatting.GREEN()));
+            text = text.append(Texts.literal(trade.price() + "").withStyle(ChatFormatting.DARK_GREEN()));
             text = text.append(Texts.literal(")").withStyle(ChatFormatting.RESET()));
         }
         return text;

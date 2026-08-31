@@ -55,7 +55,7 @@ public class TradehallEntry extends CustomSelectionListEntry {
         int contentY = top + height / 2 - 4;
         int contentWidth = width - 14;
 
-        Component leftText = new TradeListMessage(trades).getComponent();
+        Component leftText = new TradeListMessage(trades, true).getComponent();
         Component rightText = Texts.literal(position.toString());
 
         Gui.extractText(poseStack, graphics, font, leftText, contentX, contentY, -1);
