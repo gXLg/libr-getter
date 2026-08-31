@@ -2,7 +2,8 @@ package dev.gxlg.librgetter.worker.tasks;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
-import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
 import dev.gxlg.librgetter.savefiles.tradehalls.TradehallManager;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
@@ -30,7 +31,7 @@ public class LockTradesTask extends Task {
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, TradehallManager tradehallManager, CompatibilityManager compatibilityManager) throws InternalErrorException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListAccessor goalListAccessor, TradehallAccessor tradehallAccessor, CompatibilityManager compatibilityManager) throws InternalErrorException {
         MinecraftData minecraftData = taskContext.minecraftData();
 
         // wait for the screen to open
@@ -51,6 +52,7 @@ public class LockTradesTask extends Task {
         // close the screen
         Gui.getScreen(minecraftData.client).onClose();
         // save the workstation
+        TradehallManager tradehallManager = tradehallAccessor.createAccessForCurrentManager();
         tradehallManager.addOrUpdateWorkstation(taskContext.selectedLecternPos(), matchedTrades);
         tradehallManager.save();
 

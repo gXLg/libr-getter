@@ -2,9 +2,9 @@ package dev.gxlg.librgetter.worker.tasks.tradehall;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
-import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
-import dev.gxlg.librgetter.savefiles.tradehalls.TradehallData;
-import dev.gxlg.librgetter.savefiles.tradehalls.TradehallManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
+import dev.gxlg.librgetter.savefiles.tradehalls.WorkstationList;
 import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
@@ -20,10 +20,10 @@ import java.util.List;
 
 public class SearchNextWorkstationTask extends Task {
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, TradehallManager tradehallManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListAccessor goalListAccessor, TradehallAccessor tradehallAccessor, CompatibilityManager compatibilityManager) throws LibrGetterException {
         LocalPlayer player = taskContext.minecraftData().localPlayer;
         ClientLevel world = taskContext.minecraftData().clientLevel;
-        TradehallData.WorkstationList blacklist = tradehallManager.getWorkstations();
+        WorkstationList blacklist = tradehallAccessor.createAccessForCurrentManager().getWorkstations();
         PathFinding.Jobsite workstation;
         List<BlockPos> path;
         while (true) {

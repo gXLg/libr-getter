@@ -2,8 +2,8 @@ package dev.gxlg.librgetter.worker;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
-import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
-import dev.gxlg.librgetter.savefiles.tradehalls.TradehallManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.SchedulingHandler;
@@ -42,16 +42,16 @@ public class Worker {
 
     private final ConfigManager configManager;
 
-    private final GoalListManager goalListManager;
+    private final GoalListAccessor goalListAccessor;
 
-    private final TradehallManager tradehallManager;
+    private final TradehallAccessor tradehallAccessor;
 
     private final CompatibilityManager compatibilityManager;
 
-    public Worker(ConfigManager configManager, GoalListManager goalListManager, TradehallManager tradehallManager, CompatibilityManager compatibilityManager) {
+    public Worker(ConfigManager configManager, GoalListAccessor goalListAccessor, TradehallAccessor tradehallAccessor, CompatibilityManager compatibilityManager) {
         this.configManager = configManager;
-        this.goalListManager = goalListManager;
-        this.tradehallManager = tradehallManager;
+        this.goalListAccessor = goalListAccessor;
+        this.tradehallAccessor = tradehallAccessor;
         this.compatibilityManager = compatibilityManager;
 
         TaskState taskState = new TaskState();
@@ -80,7 +80,7 @@ public class Worker {
             stateController.setTaskContext(currentContext);
 
             try {
-                currentTask.work(currentContext, taskSchedulerController, configManager, goalListManager, tradehallManager, compatibilityManager);
+                currentTask.work(currentContext, taskSchedulerController, configManager, goalListAccessor, tradehallAccessor, compatibilityManager);
             } catch (LibrGetterException exception) {
                 Texts.sendMessage(exception.getTranslatableErrorMessage());
                 systemSchedulerController.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));

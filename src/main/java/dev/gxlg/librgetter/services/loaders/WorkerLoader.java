@@ -2,8 +2,8 @@ package dev.gxlg.librgetter.services.loaders;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
-import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
-import dev.gxlg.librgetter.savefiles.tradehalls.TradehallManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
 import dev.gxlg.librgetter.services.ServiceLoader;
 import dev.gxlg.librgetter.services.types.Export;
 import dev.gxlg.librgetter.worker.Worker;
@@ -22,9 +22,9 @@ public class WorkerLoader extends ServiceLoader<WorkerLoader> {
 
     private final Supplier<ConfigManager> dependencyConfigManager;
 
-    private final Supplier<GoalListManager> dependencyGoalListManager;
+    private final Supplier<GoalListAccessor> dependencyGoalListAccessor;
 
-    private final Supplier<TradehallManager> dependencyTradehallManager;
+    private final Supplier<TradehallAccessor> dependencyTradehallAccessor;
 
     private final Supplier<CompatibilityManager> dependencyCompatibilityManager;
 
@@ -32,18 +32,18 @@ public class WorkerLoader extends ServiceLoader<WorkerLoader> {
 
     public WorkerLoader(SaveFileLoader saveFileLoader, CompatibilityLoader compatibilityLoader) {
         dependencyConfigManager = initDependency(saveFileLoader, SaveFileLoader.exportConfigManager);
-        dependencyGoalListManager = initDependency(saveFileLoader, SaveFileLoader.exportGoalListManager);
-        dependencyTradehallManager = initDependency(saveFileLoader, SaveFileLoader.exportTradehallManager);
+        dependencyGoalListAccessor = initDependency(saveFileLoader, SaveFileLoader.exportGoalListAccessor);
+        dependencyTradehallAccessor = initDependency(saveFileLoader, SaveFileLoader.exportTradehallAccessor);
         dependencyCompatibilityManager = initDependency(compatibilityLoader, CompatibilityLoader.exportCompatibilityManager);
     }
 
     @Override
     public void init() {
         ConfigManager configManager = dependencyConfigManager.get();
-        GoalListManager goalListManager = dependencyGoalListManager.get();
-        TradehallManager tradehallManager = dependencyTradehallManager.get();
+        GoalListAccessor goalListAccessor = dependencyGoalListAccessor.get();
+        TradehallAccessor tradehallAccessor = dependencyTradehallAccessor.get();
         CompatibilityManager compatibilityManager = dependencyCompatibilityManager.get();
 
-        worker = new Worker(configManager, goalListManager, tradehallManager, compatibilityManager);
+        worker = new Worker(configManager, goalListAccessor, tradehallAccessor, compatibilityManager);
     }
 }

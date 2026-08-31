@@ -7,6 +7,7 @@ import dev.gxlg.librgetter.gui.impl.config.ConfigScreen;
 import dev.gxlg.librgetter.savefiles.config.Config;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.savefiles.config.types.helpers.Configurable;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.utils.chaining.commands.Commands;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
@@ -50,13 +51,13 @@ import java.util.List;
 public class LibrGetCommand implements CommandsManager.Command {
     private final ConfigManager configManager;
 
-    private final GoalListManager goalListManager;
+    private final GoalListAccessor goalListAccessor;
 
     private final SharedController sharedController;
 
-    public LibrGetCommand(ConfigManager configManager, GoalListManager goalListManager, SharedController sharedController) {
+    public LibrGetCommand(ConfigManager configManager, GoalListAccessor goalListAccessor, SharedController sharedController) {
         this.configManager = configManager;
-        this.goalListManager = goalListManager;
+        this.goalListAccessor = goalListAccessor;
         this.sharedController = sharedController;
     }
 
@@ -77,10 +78,11 @@ public class LibrGetCommand implements CommandsManager.Command {
     }
 
     private void list() {
-        Texts.sendMessage(new ListGoalsMessage(goalListManager.getGoals()));
+        Texts.sendMessage(new ListGoalsMessage(goalListAccessor.createAccessForCurrentManager().getGoals()));
     }
 
     private void clearGoals() {
+        GoalListManager goalListManager = goalListAccessor.createAccessForCurrentManager();
         goalListManager.clearGoals();
         goalListManager.save();
         Texts.sendMessage(new GoalsListClearedMessage());
@@ -232,6 +234,7 @@ public class LibrGetCommand implements CommandsManager.Command {
     }
 
     private void addGoal(EnchantmentTrade newTrade, boolean custom) {
+        GoalListManager goalListManager = goalListAccessor.createAccessForCurrentManager();
         EnchantmentTrade alreadyPresentTrade = null;
         for (EnchantmentTrade trade : goalListManager.getGoals()) {
             if (trade.same(newTrade)) {
@@ -252,6 +255,7 @@ public class LibrGetCommand implements CommandsManager.Command {
     }
 
     private void removeGoalAllLevels(EnchantmentTrade tradeToRemove) throws NotInGoalsException {
+        GoalListManager goalListManager = goalListAccessor.createAccessForCurrentManager();
         List<EnchantmentTrade> alreadyPresentTrades = new ArrayList<>();
         for (EnchantmentTrade trade : goalListManager.getGoals()) {
             if (trade.id().equals(tradeToRemove.id())) {
@@ -269,6 +273,7 @@ public class LibrGetCommand implements CommandsManager.Command {
     }
 
     private void removeGoal(EnchantmentTrade tradeToRemove) throws NotInGoalsException {
+        GoalListManager goalListManager = goalListAccessor.createAccessForCurrentManager();
         EnchantmentTrade alreadyPresentTrade = null;
         for (EnchantmentTrade trade : goalListManager.getGoals()) {
             if (trade.same(tradeToRemove)) {

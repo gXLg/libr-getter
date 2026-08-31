@@ -2,7 +2,8 @@ package dev.gxlg.librgetter.keybinds;
 
 import dev.gxlg.librgetter.controller.SharedController;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
-import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
 import dev.gxlg.librgetter.utils.chaining.keybinds.Keybinds;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
@@ -17,8 +18,14 @@ public class KeybindManager {
 
     private final String modId;
 
-    public KeybindManager(String modId, ConfigManager configManager, GoalListManager goalListManager, String modVersion, SharedController sharedController) {
-        this.keybinds = List.of(new ConfigMenuKeybind(modVersion, configManager), new ToggleWorkKeybind(sharedController), new SelectKeybind(sharedController), new GoalScreenKeybind(goalListManager));
+    public KeybindManager(String modId, ConfigManager configManager, GoalListAccessor goalListAccessor, String modVersion, SharedController sharedController, TradehallAccessor tradehallAccessor) {
+        this.keybinds = List.of(
+            new ConfigMenuKeybind(modVersion, configManager),
+            new ToggleWorkKeybind(sharedController),
+            new SelectKeybind(sharedController),
+            new GoalScreenKeybind(goalListAccessor),
+            new TradehallScreenKeybind(tradehallAccessor)
+        );
         this.modId = modId;
     }
 

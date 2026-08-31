@@ -3,8 +3,8 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.Config;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
-import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
-import dev.gxlg.librgetter.savefiles.tradehalls.TradehallManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -19,14 +19,14 @@ public class BreakLecternTask extends Task {
     private boolean started = false;
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, TradehallManager tradehallManager, CompatibilityManager compatibilityManager) {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListAccessor goalListAccessor, TradehallAccessor tradehallAccessor, CompatibilityManager compatibilityManager) {
         MinecraftData minecraftData = taskContext.minecraftData();
 
         BlockState targetBlock = minecraftData.clientLevel.getBlockState(taskContext.selectedLecternPos());
         if (targetBlock.isAir()) {
             // lectern is broken now
             controller.scheduleContextUpdate(TaskContextBuilder::increaseAttemptsCounter);
-            controller.scheduleTaskSwitch(TaskSwitch.sameTick(WaitVillagerLoseProfessionTask::new));
+            controller.scheduleTaskSwitch(TaskSwitch.nextTick(WaitVillagerLoseProfessionTask::new));
             return;
         }
 

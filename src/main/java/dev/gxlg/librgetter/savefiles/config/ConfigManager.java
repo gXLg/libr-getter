@@ -2,7 +2,6 @@ package dev.gxlg.librgetter.savefiles.config;
 
 import dev.gxlg.librgetter.notifier.Notifier;
 import dev.gxlg.librgetter.savefiles.JsonSaveFile;
-import dev.gxlg.librgetter.savefiles.SaveFileManager;
 import dev.gxlg.librgetter.savefiles.config.types.ConfigCategory;
 import dev.gxlg.librgetter.savefiles.config.types.OptionsConfig;
 import dev.gxlg.librgetter.savefiles.config.types.helpers.Configurable;
@@ -10,6 +9,7 @@ import dev.gxlg.librgetter.utils.messages.translatable.error.NoConfigFieldMessag
 import dev.gxlg.librgetter.utils.messages.translatable.error.UncategorizedConfigMessage;
 
 import java.lang.reflect.Field;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -104,8 +104,8 @@ public class ConfigManager {
         saveFile.save();
     }
 
-    public static ConfigManager init(SaveFileManager saveManager, Notifier notifier) {
-        JsonSaveFile<ConfigData> saveFile = saveManager.createSaveFile(FILENAME, ConfigData.class, ConfigData::new);
+    public static ConfigManager init(Path savePath, Notifier notifier) {
+        JsonSaveFile<ConfigData> saveFile = JsonSaveFile.init(notifier, savePath, FILENAME, ConfigData.class, ConfigData::new);
         return new ConfigManager(saveFile, notifier);
     }
 
