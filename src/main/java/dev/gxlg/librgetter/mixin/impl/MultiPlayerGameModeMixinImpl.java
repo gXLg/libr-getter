@@ -6,9 +6,12 @@ import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
 import dev.gxlg.versiont.gen.net.minecraft.world.InteractionResult;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.Entity;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
 import dev.gxlg.versiont.gen.net.minecraft.world.phys.BlockHitResult;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class MultiPlayerGameModeMixinImpl {
@@ -55,5 +58,18 @@ public class MultiPlayerGameModeMixinImpl {
             return Optional.of(InteractionResult.FAIL());
         }
         return Optional.empty();
+    }
+
+    public Optional<InteractionResult> interact(Entity entity) {
+        if (!stateView.createPermissionView().allowsSettingTradeOffers()) {
+            return Optional.empty();
+        }
+        if (!(entity instanceof Villager)) {
+            return Optional.empty();
+        }
+        if (Objects.equals(stateView.getTaskContext().selectedVillager(), entity)) {
+            return Optional.empty();
+        }
+        return Optional.of(InteractionResult.FAIL());
     }
 }

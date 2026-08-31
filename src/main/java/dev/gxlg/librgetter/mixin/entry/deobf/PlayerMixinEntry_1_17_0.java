@@ -1,4 +1,4 @@
-package dev.gxlg.librgetter.mixin.entry.obf;
+package dev.gxlg.librgetter.mixin.entry.deobf;
 
 import dev.gxlg.librgetter.mixin.MixinImpl;
 import dev.gxlg.librgetter.mixin.impl.PlayerMixinImpl;
@@ -10,11 +10,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@VersiontMixin(compare = { @Compare(version = "1.17", comparison = Comparison.NOT_LOWER) }, obfuscated = true)
-@SuppressWarnings("UnresolvedMixinReference")
-@Mixin(targets = "net.minecraft.class_1657", remap = false)
-public class PlayerMixinEntry {
-    @Inject(at = @At("HEAD"), method = "method_21823()Z", cancellable = true)
+@VersiontMixin(compare = { @Compare(version = "1.17", comparison = Comparison.NOT_LOWER) })
+@Mixin(targets = "net.minecraft.world.entity.player.Player", remap = false)
+public class PlayerMixinEntry_1_17_0 {
+    @Inject(at = @At("HEAD"), method = "isSecondaryUseActive()Z", cancellable = true)
     private void isSecondaryUseActive(CallbackInfoReturnable<Boolean> info) {
         MixinImpl.mixinReturn(PlayerMixinImpl.class, info, PlayerMixinImpl::isSecondaryUseActive);
     }

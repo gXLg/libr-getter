@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @VersiontMixin(compare = { @Compare(version = "1.17", comparison = Comparison.NOT_LOWER) })
 @Mixin(targets = "net.minecraft.client.multiplayer.ClientPacketListener", remap = false)
-public class ClientPacketListenerMixinEntry {
+public class ClientPacketListenerMixinEntry_1_17_0 {
     @Inject(at = @At("HEAD"), method = "handleMerchantOffers(Lnet/minecraft/network/protocol/game/ClientboundMerchantOffersPacket;)V", order = 900)
     private void handleMerchantOffers(@Coerce Object packet, CallbackInfo info) {
         MixinImpl.mixin(ClientPacketListenerMixinImpl.class, i -> i.handleMerchantOffers(R.wrapperInst(ClientboundMerchantOffersPacket.class, packet)));
