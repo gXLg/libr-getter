@@ -10,6 +10,7 @@ import dev.gxlg.versiont.gen.net.minecraft.world.entity.Entity;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Block;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.SlabBlock;
 import dev.gxlg.versiont.gen.net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -169,7 +170,11 @@ public class PathFinding {
             return true;
         }
         // Check if at least one of both current and next position has a collidable block under feet
-        return isOnGround(from, world) || isOnGround(from.relative(dir), world);
+        if (!isOnGround(from, world) && !isOnGround(from.relative(dir), world)) {
+            return false;
+        }
+        // Check if moving over slab
+        return !(world.getBlockState(from.below()).getBlock() instanceof SlabBlock);
     }
 
     private static List<BlockPos> findPathInternal(BlockPos from, BlockPos to, ClientLevel world, int minHeight, Predicate<BlockPos> finishCriteria) {
