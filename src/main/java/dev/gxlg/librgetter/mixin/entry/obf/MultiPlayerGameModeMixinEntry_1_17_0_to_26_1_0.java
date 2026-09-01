@@ -18,9 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(targets = "net.minecraft.class_636", remap = false)
 public abstract class MultiPlayerGameModeMixinEntry_1_17_0_to_26_1_0 {
     @Inject(
-        at = @At("HEAD"),
-        method = "method_2905(Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;",
-        cancellable = true
+        at = @At("HEAD"), method = "method_2905(Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;", cancellable = true
     )
     private void interact(@Coerce Object player, @Coerce Object entity, @Coerce Object hand, CallbackInfoReturnable<Object> info) {
         MixinImpl.mixinReturnWrapped(MultiPlayerGameModeMixinImpl.class, info, i -> i.interact(R.wrapperInst(Entity.class, entity)));
