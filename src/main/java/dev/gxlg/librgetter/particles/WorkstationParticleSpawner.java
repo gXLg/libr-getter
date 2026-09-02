@@ -22,7 +22,7 @@ public class WorkstationParticleSpawner {
 
     public static final float PARTICLE_SCALE = 2.0F;
 
-    public static final float SCAN_RADIUS = 64;
+    public static final int SCAN_RADIUS = 64;
 
     private final StateView stateView;
 
@@ -46,7 +46,7 @@ public class WorkstationParticleSpawner {
         }
         BlockPos lectern = ctx.selectedLecternPos();
         if (lectern != null) {
-            checkLectern(level, player.blockPosition(), lectern);
+            checkLectern(level, player, lectern);
         }
     }
 
@@ -56,16 +56,17 @@ public class WorkstationParticleSpawner {
         }
         Vec3 eyes = EntityAnchorArgument$Anchor.EYES().apply(villager);
         Vec3 direction = player.getPositionField().subtract(eyes).normalize();
-        Vec3 pos = eyes.add(direction.scale(0.5F));
-
+        Vec3 pos = eyes.add(direction.scale(0.5D));
         spawnParticle(level, pos);
     }
 
-    private void checkLectern(ClientLevel level, BlockPos playerPos, BlockPos lecternPos) {
-        if (!playerPos.closerThan(lecternPos, SCAN_RADIUS)) {
+    private void checkLectern(ClientLevel level, Player player, BlockPos lecternPos) {
+        if (!player.blockPosition().closerThan(lecternPos, SCAN_RADIUS)) {
             return;
         }
-        Vec3 pos = Vec3.atBottomCenterOf(lecternPos.above(1));
+        Vec3 center = Vec3.atBottomCenterOf(lecternPos).add(new Vec3(0.0D, 0.75D, 0.0D));
+        Vec3 direction = player.getPositionField().subtract(center).normalize();
+        Vec3 pos = center.add(direction.scale(0.5D));
         spawnParticle(level, pos);
     }
 
