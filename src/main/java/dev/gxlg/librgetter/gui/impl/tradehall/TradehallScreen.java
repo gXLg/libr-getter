@@ -70,6 +70,12 @@ public class TradehallScreen extends AbstractDynamicWidgetScreen {
         Component copyButton = COPY_BUTTON.getComponent();
         Component dimensionLabel = Texts.literal(tradehallManagerKeys.get(tradehallManagerIndex));
 
+        tradehallList = (UnifiedListWidget) addDynamicWidget(
+            (x, y, w, h) -> GuiConstants.createListWidget(y, w, h, GuiConstants.BUTTON_HEIGHT, this::onKeyPressed),
+            (w, h) -> WidgetDimensions.from(0, GuiConstants.PADDING * 3 + GuiConstants.BUTTON_HEIGHT * 2, w, h - GuiConstants.PADDING * 5 - GuiConstants.BUTTON_HEIGHT * 3),
+            u -> updateList()
+        );
+
         searchBox = (UnifiedEditBox) addDynamicWidget((x, y, w, h) -> GuiConstants.createEditBox(getFontField(), x, y, w, h, Texts.literal("")), GuiConstants.TOP_CENTER_DIMENSIONS);
         searchBox.setResponder(this::onSearchUpdated);
         searchBox.setHint(searchLabel);
@@ -77,12 +83,6 @@ public class TradehallScreen extends AbstractDynamicWidgetScreen {
         dimensionButton = (UnifiedButton) addDynamicWidget(
             (x, y, w, h) -> GuiConstants.createButton(dimensionLabel, x, y, w, h, button -> onDimensionChange()),
             (w, h) -> WidgetDimensions.from(w / 2 - GuiConstants.BUTTON_WIDTH, GuiConstants.PADDING * 2 + GuiConstants.BUTTON_HEIGHT, GuiConstants.BUTTON_WIDTH * 2, GuiConstants.BUTTON_HEIGHT)
-        );
-
-        tradehallList = (UnifiedListWidget) addDynamicWidget(
-            (x, y, w, h) -> GuiConstants.createListWidget(y, w, h, GuiConstants.BUTTON_HEIGHT, this::onKeyPressed),
-            (w, h) -> WidgetDimensions.from(0, GuiConstants.PADDING * 3 + GuiConstants.BUTTON_HEIGHT * 2, w, h - GuiConstants.PADDING * 5 - GuiConstants.BUTTON_HEIGHT * 3),
-            u -> updateList()
         );
 
         addDynamicWidget((x, y, w, h) -> GuiConstants.createButton(doneButton, x, y, w, h, button -> onClose()), GuiConstants.BOTTOM_LEFT_DIMENSIONS);
