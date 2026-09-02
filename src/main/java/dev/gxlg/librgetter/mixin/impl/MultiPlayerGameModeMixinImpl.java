@@ -1,5 +1,6 @@
 package dev.gxlg.librgetter.mixin.impl;
 
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAutoSaver;
 import dev.gxlg.librgetter.worker.state.StateView;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
@@ -17,8 +18,11 @@ import java.util.Optional;
 public class MultiPlayerGameModeMixinImpl {
     private final StateView stateView;
 
-    public MultiPlayerGameModeMixinImpl(StateView stateView) {
+    private final TradehallAutoSaver tradehallAutoSaver;
+
+    public MultiPlayerGameModeMixinImpl(StateView stateView, TradehallAutoSaver tradehallAutoSaver) {
         this.stateView = stateView;
+        this.tradehallAutoSaver = tradehallAutoSaver;
     }
 
     public Optional<Boolean> destroyBlock(BlockPos blockPos) {
@@ -61,13 +65,15 @@ public class MultiPlayerGameModeMixinImpl {
     }
 
     public Optional<InteractionResult> interact(Entity entity) {
+        if (!(entity instanceof Villager villager)) {
+            return Optional.empty();
+        }
+        tradehallAutoSaver.addVillager(villager);
+
         if (!stateView.createPermissionView().allowsSettingTradeOffers()) {
             return Optional.empty();
         }
-        if (!(entity instanceof Villager)) {
-            return Optional.empty();
-        }
-        if (Objects.equals(stateView.getTaskContext().selectedVillager(), entity)) {
+        if (Objects.equals(stateView.getTaskContext().selectedVillager(), villager)) {
             return Optional.empty();
         }
         return Optional.of(InteractionResult.FAIL());

@@ -16,15 +16,15 @@ public class TradehallScanner {
 
     public static final int SCAN_RADIUS = 64;
 
-    private final TradehallAccessor tradehallAccessor;
-
     private final ConfigManager configManager;
+
+    private final TradehallAccessor tradehallAccessor;
 
     private int ticksSinceLastScan = 0;
 
-    public TradehallScanner(TradehallAccessor tradehallAccessor, ConfigManager configManager) {
-        this.tradehallAccessor = tradehallAccessor;
+    public TradehallScanner(ConfigManager configManager, TradehallAccessor tradehallAccessor) {
         this.configManager = configManager;
+        this.tradehallAccessor = tradehallAccessor;
     }
 
     public void start() {

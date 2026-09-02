@@ -26,7 +26,7 @@ import dev.gxlg.librgetter.services.loaders.NotifierLoader;
 import dev.gxlg.librgetter.services.loaders.ParticleSpawnerLoader;
 import dev.gxlg.librgetter.services.loaders.SaveFileLoader;
 import dev.gxlg.librgetter.services.loaders.SharedControllerLoader;
-import dev.gxlg.librgetter.services.loaders.TradehallScannerLoader;
+import dev.gxlg.librgetter.services.loaders.TradehallUpdaterLoader;
 import dev.gxlg.librgetter.services.loaders.UpdaterLoader;
 import dev.gxlg.librgetter.services.loaders.WorkerLoader;
 import dev.gxlg.versiont.api.R;
@@ -69,8 +69,8 @@ public class Entrypoint implements ClientModInitializer {
         SaveFileLoader saveFileLoader = new SaveFileLoader(coreLoader, notifierLoader);
         loaderManager.registerServiceLoader(saveFileLoader);
 
-        TradehallScannerLoader tradehallScannerLoader = new TradehallScannerLoader(saveFileLoader);
-        loaderManager.registerServiceLoader(tradehallScannerLoader);
+        TradehallUpdaterLoader tradehallUpdaterLoader = new TradehallUpdaterLoader(saveFileLoader);
+        loaderManager.registerServiceLoader(tradehallUpdaterLoader);
 
         CompatibilityLoader compatibilityLoader = new CompatibilityLoader(saveFileLoader);
         loaderManager.registerServiceLoader(compatibilityLoader);
@@ -90,7 +90,7 @@ public class Entrypoint implements ClientModInitializer {
         KeybindsLoader keybindsLoader = new KeybindsLoader(coreLoader, saveFileLoader, sharedControllerLoader);
         loaderManager.registerServiceLoader(keybindsLoader);
 
-        MixinImplLoader mixinImplLoader = new MixinImplLoader(workerLoader, compatibilityLoader);
+        MixinImplLoader mixinImplLoader = new MixinImplLoader(workerLoader, compatibilityLoader, tradehallUpdaterLoader);
         loaderManager.registerServiceLoader(mixinImplLoader);
 
         UpdaterLoader updaterLoader = new UpdaterLoader(coreLoader, notifierLoader, saveFileLoader);

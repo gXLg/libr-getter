@@ -1,6 +1,7 @@
 package dev.gxlg.librgetter.mixin.impl;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAutoSaver;
 import dev.gxlg.librgetter.utils.ClientNetwork;
 import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.utils.types.TradeOfferData;
@@ -21,13 +22,20 @@ public class ClientPacketListenerMixinImpl {
 
     private final CompatibilityManager compatibilityManager;
 
-    public ClientPacketListenerMixinImpl(StateView stateView, SystemSchedulerController systemSchedulerController, CompatibilityManager compatibilityManager) {
+    private final TradehallAutoSaver tradehallAutoSaver;
+
+    public ClientPacketListenerMixinImpl(StateView stateView, SystemSchedulerController systemSchedulerController, CompatibilityManager compatibilityManager, TradehallAutoSaver tradehallAutoSaver) {
         this.stateView = stateView;
         this.systemSchedulerController = systemSchedulerController;
         this.compatibilityManager = compatibilityManager;
+        this.tradehallAutoSaver = tradehallAutoSaver;
     }
 
     public void handleMerchantOffers(ClientboundMerchantOffersPacket packet) {
+        if (packet.getVillagerXp() > 0) {
+            tradehallAutoSaver.addTradeOffers(TradeOfferData.offers(packet.getOffers()));
+        }
+
         if (!stateView.createPermissionView().allowsSettingTradeOffers()) {
             return;
         }
