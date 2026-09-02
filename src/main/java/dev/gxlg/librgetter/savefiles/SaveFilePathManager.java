@@ -2,13 +2,12 @@ package dev.gxlg.librgetter.savefiles;
 
 import dev.gxlg.librgetter.notifier.Notifier;
 import dev.gxlg.librgetter.utils.chaining.filesystem.Filesystem;
-import dev.gxlg.librgetter.utils.chaining.world.World;
 import dev.gxlg.librgetter.utils.messages.translatable.error.CouldNotInitSaveFileDirectoryMessage;
 import dev.gxlg.librgetter.utils.messages.translatable.error.InternalErrorMessage;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
-import dev.gxlg.versiont.gen.net.minecraft.core.RegistryAccess;
 import dev.gxlg.versiont.gen.net.minecraft.resources.ResourceKey;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.Level;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.storage.LevelResource;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
@@ -115,15 +114,12 @@ public class SaveFilePathManager {
     public List<DimensionKey> listAllDimensions() {
         Minecraft client = Minecraft.getInstance();
         if (client.isLocalServer()) {
-            ClientLevel level = client.getLevelField();
-            if (level == null) {
-                return List.of(getCurrentDimension());
+            List<DimensionKey> dimensions = new ArrayList<>();
+            for (Level level : client.getSingleplayerServer().getAllLevels()) {
+                ResourceKey key = level.dimension();
+                dimensions.add(new DimensionKey(key, key.identifier().toString()));
             }
-            RegistryAccess access = client.getSingleplayerServer().registryAccess();
-            return access.lookupOrThrow(World.getDimensionRegistryKey()).entrySet().stream().map(e -> {
-                ResourceKey key = e.getKey();
-                return new DimensionKey(key, key.identifier().toString());
-            }).sorted(Comparator.comparing(DimensionKey::stringKey)).toList();
+            return dimensions.stream().sorted(Comparator.comparing(DimensionKey::stringKey)).toList();
         }
         Path root = getWorldSavePath(getCurrentWorldInfo());
         DimensionKey current = getCurrentDimension();

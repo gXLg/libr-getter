@@ -79,6 +79,7 @@ class IntegratedServer extends MinecraftServer
 
 class MinecraftServer
     Path method_27050/getWorldPath(LevelResource resource)
+    Iterable<Level> method_3738/getAllLevels()
     RegistryAccess method_30611/registryAccess()
 
 class LevelResource
