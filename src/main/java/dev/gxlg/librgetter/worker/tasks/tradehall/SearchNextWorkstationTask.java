@@ -28,7 +28,7 @@ public class SearchNextWorkstationTask extends Task {
         List<BlockPos> path;
         while (true) {
             workstation = PathFinding.findJobsite(world, player.blockPosition(), p -> !blacklist.workstationExists(p));
-            path = PathFinding.findPathToBlock(player.blockPosition(), workstation.lectern(), world, 2);
+            path = PathFinding.findPathToBlock(player.blockPosition(), workstation.lectern(), world, PathFinding.PLAYER_HEIGHT);
             if (path == null) {
                 blacklist.addDummyWorkstation(workstation.lectern());
                 continue;
@@ -37,7 +37,7 @@ public class SearchNextWorkstationTask extends Task {
         }
         BlockPos lecternPos = workstation.lectern();
         Villager villager = workstation.librarian();
-        List<BlockPos> humanizedPath = PathFinding.humanize(path, world, 2);
+        List<BlockPos> humanizedPath = PathFinding.humanize(path, world, PathFinding.PLAYER_HEIGHT);
 
         controller.scheduleContextUpdate(ctx -> ctx.setLecternPos(lecternPos).setVillager(villager).resetAttemptsCounter());
         controller.scheduleTaskSwitch(TaskSwitch.sameTick(() -> new WalkTask(humanizedPath)));

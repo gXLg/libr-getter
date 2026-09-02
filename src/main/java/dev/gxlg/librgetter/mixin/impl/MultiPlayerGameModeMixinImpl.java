@@ -1,6 +1,7 @@
 package dev.gxlg.librgetter.mixin.impl;
 
 import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAutoSaver;
+import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
 import dev.gxlg.librgetter.worker.state.StateView;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
@@ -65,7 +66,7 @@ public class MultiPlayerGameModeMixinImpl {
     }
 
     public Optional<InteractionResult> interact(Entity entity) {
-        if (!(entity instanceof Villager villager)) {
+        if (!(entity instanceof Villager villager) || !Villagers.isVillagerLibrarian(villager)) {
             return Optional.empty();
         }
         tradehallAutoSaver.addVillager(villager);

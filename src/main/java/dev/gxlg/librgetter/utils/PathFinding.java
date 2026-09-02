@@ -27,6 +27,14 @@ import java.util.function.Predicate;
 public class PathFinding {
     public static final Predicate<Entity> DEFAULT_LIBRARIAN_PREDICATE = e -> (e instanceof Villager v) && Villagers.isVillagerLibrarian(v);
 
+    public static final int DEFAULT_LECTERN_VILLAGER_DISTANCE = 4;
+
+    public static final int DEFAULT_LECTERN_SEARCH_RADIUS = 7;
+
+    public static final int PLAYER_HEIGHT = 2;
+
+    public static final int VILLAGER_HEIGHT = 2;
+
     private static final Direction[] directions = new Direction[]{
         Direction.UP(), Direction.DOWN(), Direction.NORTH(), Direction.SOUTH(), Direction.EAST(), Direction.WEST()
     };
@@ -137,11 +145,11 @@ public class PathFinding {
     }
 
     public static Jobsite findJobsite(ClientLevel world, BlockPos center, Predicate<BlockPos> allowedLecterns) throws CouldNotFindLecternException, CouldNotFindLibrarianException {
-        BlockPos foundLecternPos = PathFinding.searchForBlock(world, center, 5, Blocks.LECTERN(), allowedLecterns);
+        BlockPos foundLecternPos = PathFinding.searchForBlock(world, center, DEFAULT_LECTERN_SEARCH_RADIUS, Blocks.LECTERN(), allowedLecterns);
         if (foundLecternPos == null) {
             throw new CouldNotFindLecternException();
         }
-        Villager foundVillager = (Villager) PathFinding.searchForEntity(world, foundLecternPos, 4.0, DEFAULT_LIBRARIAN_PREDICATE);
+        Villager foundVillager = (Villager) PathFinding.searchForEntity(world, foundLecternPos, DEFAULT_LECTERN_VILLAGER_DISTANCE, DEFAULT_LIBRARIAN_PREDICATE);
         if (foundVillager == null) {
             throw new CouldNotFindLibrarianException();
         }

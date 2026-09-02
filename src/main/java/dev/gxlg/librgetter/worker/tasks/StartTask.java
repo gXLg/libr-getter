@@ -23,6 +23,7 @@ import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.EntityAnchorArgument$Anchor;
 import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
 
 import java.util.List;
 
@@ -36,10 +37,11 @@ public class StartTask extends Task {
         if (taskContext.selectedVillager() == null) {
             throw new NoLibrarianSetException();
         }
-        if (!Villagers.isVillagerLibrarian(taskContext.selectedVillager())) {
+        Villager villager = taskContext.selectedVillager();
+        if (!Villagers.isVillagerLibrarian(villager)) {
             throw new VillagerNotLibrarianException();
         }
-        if (!taskContext.selectedVillager().isAlive()) {
+        if (!villager.isAlive()) {
             throw new VillagerNotExistException();
         }
         if (goalListAccessor.createAccessForCurrentManager().getGoals().isEmpty()) {
@@ -49,8 +51,9 @@ public class StartTask extends Task {
         MinecraftData minecraftData = new MinecraftData();
         if (configManager.getBoolean(Config.SAFE_CHECKER) && configManager.getConfigurable(Config.SAFE_CHECKER).hasEffect()) {
             // If the villager is a passenger (in boat, minecart), assume it cannot move
-            if (!taskContext.selectedVillager().isPassenger()) {
-                List<BlockPos> path = PathFinding.findPathInsideBlock(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), minecraftData.clientLevel, 2);
+            if (!villager.isPassenger()) {
+                BlockPos villagerPos = villager.blockPosition();
+                List<BlockPos> path = PathFinding.findPathInsideBlock(villagerPos, taskContext.selectedLecternPos(), minecraftData.clientLevel, PathFinding.VILLAGER_HEIGHT);
                 if (path != null) {
                     throw new UnsafeSetupException();
                 }
@@ -64,7 +67,7 @@ public class StartTask extends Task {
             ctx.setTradeOfferData(null).setMinecraftData(minecraftData);
         });
 
-        Task rotationTask = new RotationTask(minecraftData.localPlayer, EntityAnchorArgument$Anchor.EYES().apply(taskContext.selectedVillager()), new WaitVillagerAcceptProfessionTask());
+        Task rotationTask = new RotationTask(minecraftData.localPlayer, EntityAnchorArgument$Anchor.EYES().apply(villager), new WaitVillagerAcceptProfessionTask());
         controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> {
             Texts.sendMessage(new ProcessStartedMessage());
             return rotationTask;

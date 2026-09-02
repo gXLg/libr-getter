@@ -77,7 +77,7 @@ public class TradehallAutoSaver {
         } catch (LibrGetterException e) {
             return;
         }
-        BlockPos lecternPos = PathFinding.searchForBlock(level, villager.blockPosition(), 4, Blocks.LECTERN(), p -> true);
+        BlockPos lecternPos = PathFinding.searchForBlock(level, villager.blockPosition(), PathFinding.DEFAULT_LECTERN_VILLAGER_DISTANCE, Blocks.LECTERN(), p -> true);
         if (lecternPos == null) {
             return;
         }
@@ -85,6 +85,8 @@ public class TradehallAutoSaver {
         tradehallManager.addOrUpdateWorkstation(lecternPos, parsed);
         tradehallManager.save();
     }
+
+    private static final int ENTRY_EXPIRATION_TICKS = 20 * 2; // 2 seconds
 
     private static class TimedEntry<T> {
         private final T data;
@@ -100,7 +102,7 @@ public class TradehallAutoSaver {
         }
 
         public boolean isExpired() {
-            return timer > 20 * 2; // 2 seconds
+            return timer > ENTRY_EXPIRATION_TICKS;
         }
 
         public T getData() {
