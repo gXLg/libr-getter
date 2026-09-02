@@ -9,6 +9,7 @@ public enum Config {
     WAIT_LOSE("waitLose"),
     SAFE_CHECKER("safeChecker"),
     TIMEOUT("timeout"),
+    PARTICLES("particles"),
     NOTIFY("notify"),
     REMOVE_GOAL("removeGoal"),
     LOCK("lock"),

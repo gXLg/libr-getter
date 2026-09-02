@@ -73,7 +73,7 @@ class Minecraft
     LevelStorageSource method_1586/getLevelSource()
 
 class LevelStorageSource
-    Path getBaseDir()
+    Path method_19636/getBaseDir()
 
 class IntegratedServer extends MinecraftServer
 
@@ -301,6 +301,12 @@ class Vec3
 
 import net.minecraft.class_1937/net.minecraft.world.level.Level
 import net.minecraft.class_638/net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.class_2394/net.minecraft.core.particles.ParticleOptions
+import net.minecraft.class_2390/net.minecraft.core.particles.DustParticleOptions
+import net.minecraft.class_1160/com.mojang.math.Vector3f/org.joml.Vector3f
+
+class Vector3f
+    <init>(float x, float y, float z)
 
 class Level
     BlockState method_8320/getBlockState(BlockPos pos)
@@ -308,9 +314,15 @@ class Level
     void method_8486/playLocalSound(double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay)
     RegistryAccess method_30349/registryAccess()
     ResourceKey method_27983/dimension()
+    void method_8406/addParticle(ParticleOptions particleData, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
 
 class ClientLevel extends Level
     Iterable<Entity> method_18112/entitiesForRendering()
+
+class DustParticleOptions extends ParticleOptions
+    <init>(Vector3f color, float scale)
+    # 1.21.2
+    <init>(int color, float scale)
 
 # ------------------------------------------------------------------------------------------------------------- #
 # Blocks
@@ -368,6 +380,7 @@ class Entity
     Vec3 method_18798/getDeltaMovement()
     void method_18799/setDeltaMovement(Vec3 motion)
     boolean method_24828/isOnGround/onGround()
+    Vec3 field_22467/position
 
 class LivingEntity extends Entity
     ItemStack method_6047/getMainHandItem()
@@ -393,7 +406,7 @@ class LocalPlayer extends AbstractClientPlayer
     void sendOverlayMessage(Component message)
 
 class EntityAnchorArgument$Anchor
-    static EntityAnchorArgument$Anchor field_9851/EYES
+    static final EntityAnchorArgument$Anchor field_9851/EYES
     Vec3 method_9302/apply(Entity entity)
 
 # ------------------------------------------------------------------------------------------------------------- #
@@ -932,14 +945,27 @@ class ClientPlayNetworking
 # ------------------------------------------------------------------------------------------------------------- #
 # Fabric Events
 
+import !net.fabricmc.fabric.api.event.Event
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTick
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndWorldTick/net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndLevelTick
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Join
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Disconnect
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents$AfterClientLevelChange
 
+class Event
+    void register([Object] listener)
+
+class ClientTickEvents
+    static final Event END_CLIENT_TICK
+    static final Event END_WORLD_TICK/END_LEVEL_TICK
+
 interface ClientTickEvents$EndTick
     void onEndTick(Minecraft client)
+
+interface ClientTickEvents$EndLevelTick
+    void onEndTick(ClientLevel level)
 
 interface ClientPlayConnectionEvents$Join
     void onPlayReady(ClientPacketListener handler, PacketSender sender, Minecraft client)

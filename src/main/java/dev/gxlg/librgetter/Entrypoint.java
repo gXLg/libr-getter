@@ -23,6 +23,7 @@ import dev.gxlg.librgetter.services.loaders.CoreLoader;
 import dev.gxlg.librgetter.services.loaders.KeybindsLoader;
 import dev.gxlg.librgetter.services.loaders.MixinImplLoader;
 import dev.gxlg.librgetter.services.loaders.NotifierLoader;
+import dev.gxlg.librgetter.services.loaders.ParticleSpawnerLoader;
 import dev.gxlg.librgetter.services.loaders.SaveFileLoader;
 import dev.gxlg.librgetter.services.loaders.SharedControllerLoader;
 import dev.gxlg.librgetter.services.loaders.TradehallScannerLoader;
@@ -76,6 +77,9 @@ public class Entrypoint implements ClientModInitializer {
 
         WorkerLoader workerLoader = new WorkerLoader(saveFileLoader, compatibilityLoader);
         loaderManager.registerServiceLoader(workerLoader);
+
+        ParticleSpawnerLoader particleSpawnerLoader = new ParticleSpawnerLoader(workerLoader);
+        loaderManager.registerServiceLoader(particleSpawnerLoader);
 
         SharedControllerLoader sharedControllerLoader = new SharedControllerLoader(workerLoader);
         loaderManager.registerServiceLoader(sharedControllerLoader);

@@ -18,6 +18,7 @@
   "librgetter.config.noSwing": "Disable the swing animation when placing or breaking the lectern and talking to the librarian; reduces eye strain; may be detected by anti-cheats",
   "librgetter.config.offhand": "Put the lectern in the offhand for efficient placement",
   "librgetter.config.originalPrice": "Use the original price of the trade instead of the adjusted discount price",
+  "librgetter.config.particles": "Spawn particles on the selected villager and lectern for visualization",
   "librgetter.config.removeGoal": "Automatically remove an enchantment from the goals list once found",
   "librgetter.config.rotationMode": "Rotate the head before placing the lectern and talking to the librarian:\nNONE - don't rotate\nINSTANT - instant head rotation\nSMOOTH - more natural head rotation; slows down the process",
   "librgetter.config.safeChecker": "Check if the villager can interfere with the placing process",

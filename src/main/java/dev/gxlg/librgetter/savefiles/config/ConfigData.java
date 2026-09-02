@@ -51,6 +51,9 @@ public class ConfigData {
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private int timeout = 0;
 
+    @ConfigCategory(ConfigManager.Category.PROCESS)
+    private boolean particles = true;
+
     @ConfigCategory(ConfigManager.Category.SUCCESS)
     private boolean notify = false;
 

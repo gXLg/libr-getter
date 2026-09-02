@@ -18,6 +18,7 @@
   "librgetter.config.noSwing": "Kürsüyü yerleştirirken veya kırarken ve kütüphaneciyle konuşurken sallama animasyonunu devre dışı bırakır; göz yorgunluğunu azaltır; anti-cheat'ler tarafından tespit edilebilir",
   "librgetter.config.offhand": "Daha etkili yerleştirme için kürsüyü sol ele al",
   "librgetter.config.originalPrice": "İndirime göre ayarlanmış fiyat yerine işlemin orijinal fiyatını kullan",
+  "librgetter.config.particles": "Görselleştirme için seçili köylü ve kürsüde parçacık oluştur",
   "librgetter.config.removeGoal": "Büyü bulunduktan sonra otomatik olarak hedef listesinden çıkar",
   "librgetter.config.rotationMode": "Kürsüyü yerleştirmeden ve köylüyle konuşmadan önce kafayı çevir:\nNONE - çevirme\nINSTANT - kafayı anında çevir\nSMOOTH - daha doğal kafa çevirme; işlemi yavaşlatır",
   "librgetter.config.safeChecker": "Köylünün blok yerleştirme işlemine engel olup olmadığını kontrol et",

@@ -18,6 +18,7 @@
   "librgetter.config.noSwing": "Desactiva la animación de balanceo al colocar o romper el atril y hablar con el bibliotecario; reduce la fatiga visual; puede ser detectado por anti-cheats",
   "librgetter.config.offhand": "Colocar el atril en la mano secundaria para una colocación eficiente",
   "librgetter.config.originalPrice": "Usar el precio original del intercambio en lugar del precio ajustado con descuento",
+  "librgetter.config.particles": "Genera partículas en el aldeano y en el atril seleccionados para visualizarlos",
   "librgetter.config.removeGoal": "Eliminar automáticamente un encantamiento de la lista de objetivos cuando se encuentre",
   "librgetter.config.rotationMode": "Girar la cabeza antes de colocar el atril y hablar con el bibliotecario:\nNONE - no girar\nINSTANT - giro instantáneo\nSMOOTH - giro más natural; ralentiza el proceso",
   "librgetter.config.safeChecker": "Comprobar si el aldeano puede interferir con el proceso de colocación",

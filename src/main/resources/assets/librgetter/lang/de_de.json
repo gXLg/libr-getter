@@ -18,6 +18,7 @@
   "librgetter.config.noSwing": "Deaktiviert die Schwunganimation beim Platzieren oder Abbauen des Lesepults und beim Sprechen mit dem Bibliothekar; reduziert Augenbelastung; kann von Anti-Cheats erkannt werden",
   "librgetter.config.offhand": "Legt die Lesepulte in die andere Hand für eine effiziente Platzierung",
   "librgetter.config.originalPrice": "Verwende den ursprünglichen Preis des Handels anstelle des angepassten Rabattpreises",
+  "librgetter.config.particles": "Erzeugt Partikel am ausgewählten Dorfbewohner und am Lesepult zur Visualisierung",
   "librgetter.config.removeGoal": "Entfernt die Verzauberung automatisch aus der Suchliste, wenn erfolgreich gefunden",
   "librgetter.config.rotationMode": "Kopf drehen, bevor das Lesepult platziert und mit dem Bibliothekar gesprochen wird:\nNONE - nicht drehen\nINSTANT - sofortige Drehung\nSMOOTH - natürlichere Drehung; verlangsamt den Ablauf",
   "librgetter.config.safeChecker": "Prüft, ob der Dorfbewohner den Platzierungsprozess verhindern könnte",
