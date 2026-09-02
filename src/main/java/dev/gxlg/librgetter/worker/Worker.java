@@ -4,6 +4,7 @@ import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
 import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
+import dev.gxlg.librgetter.utils.TickUtil;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.SchedulingHandler;
@@ -21,10 +22,8 @@ import dev.gxlg.librgetter.worker.types.context.TaskContext;
 import dev.gxlg.librgetter.worker.types.context.TaskContextBuilder;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
-import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTickI;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$DisconnectI;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$JoinI;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
 public class Worker {
@@ -68,7 +67,7 @@ public class Worker {
 
         ClientPlayConnectionEvents.JOIN.register(((ClientPlayConnectionEvents$JoinI) (h, s, c) -> reset()).unwrap(ClientPlayConnectionEvents.Join.class));
         ClientPlayConnectionEvents.DISCONNECT.register(((ClientPlayConnectionEvents$DisconnectI) (h, c) -> reset()).unwrap(ClientPlayConnectionEvents.Disconnect.class));
-        ClientTickEvents.END_CLIENT_TICK.register(((ClientTickEvents$EndTickI) c -> work()).unwrap(ClientTickEvents.EndTick.class));
+        TickUtil.registerLevelTicker(l -> work());
     }
 
     private void work() {

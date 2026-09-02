@@ -3,14 +3,13 @@ package dev.gxlg.librgetter.savefiles.tradehalls;
 import dev.gxlg.librgetter.savefiles.config.Config;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.utils.PathFinding;
-import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTickI;
+import dev.gxlg.librgetter.utils.TickUtil;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Block;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
 public class TradehallScanner {
     public static final int SCAN_INTERVAL_TICKS = 20 * 60;
@@ -26,12 +25,13 @@ public class TradehallScanner {
     public TradehallScanner(TradehallAccessor tradehallAccessor, ConfigManager configManager) {
         this.tradehallAccessor = tradehallAccessor;
         this.configManager = configManager;
-
-        ClientTickEvents$EndTickI endTick = this::tick;
-        ClientTickEvents.END_CLIENT_TICK.register(endTick.unwrap(ClientTickEvents.EndTick.class));
     }
 
-    private void tick(Minecraft client) {
+    public void start() {
+        TickUtil.registerLevelTicker(this::tick);
+    }
+
+    private void tick(ClientLevel level) {
         if (!configManager.getBoolean(Config.TRADEHALL_SCAN)) {
             return;
         }
@@ -40,13 +40,12 @@ public class TradehallScanner {
             return;
         }
         ticksSinceLastScan = 0;
-        scan(client);
+        scan(level);
     }
 
-    private void scan(Minecraft client) {
-        LocalPlayer player = client.getPlayerField();
-        ClientLevel level = client.getLevelField();
-        if (player == null || level == null) {
+    private void scan(ClientLevel level) {
+        LocalPlayer player = Minecraft.getInstance().getPlayerField();
+        if (player == null) {
             return;
         }
         TradehallManager tradehallManager = tradehallAccessor.createAccessForCurrentManager();

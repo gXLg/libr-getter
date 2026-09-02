@@ -12,9 +12,6 @@ public class TradehallScannerLoader extends ServiceLoader<TradehallScannerLoader
 
     private final Supplier<ConfigManager> dependencyConfigManager;
 
-    @SuppressWarnings({ "unused", "FieldCanBeLocal" })
-    private TradehallScanner tradehallScanner;
-
     public TradehallScannerLoader(SaveFileLoader saveFileLoader) {
         dependencyTradehallAccessor = initDependency(saveFileLoader, SaveFileLoader.exportTradehallAccessor);
         dependencyConfigManager = initDependency(saveFileLoader, SaveFileLoader.exportConfigManager);
@@ -24,6 +21,7 @@ public class TradehallScannerLoader extends ServiceLoader<TradehallScannerLoader
     public void init() {
         TradehallAccessor tradehallAccessor = dependencyTradehallAccessor.get();
         ConfigManager configManager = dependencyConfigManager.get();
-        tradehallScanner = new TradehallScanner(tradehallAccessor, configManager);
+        TradehallScanner tradehallScanner = new TradehallScanner(tradehallAccessor, configManager);
+        tradehallScanner.start();
     }
 }
