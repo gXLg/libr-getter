@@ -50,7 +50,7 @@ public class StartTask extends Task {
         if (configManager.getBoolean(Config.SAFE_CHECKER) && configManager.getConfigurable(Config.SAFE_CHECKER).hasEffect()) {
             // If the villager is a passenger (in boat, minecart), assume it cannot move
             if (!taskContext.selectedVillager().isPassenger()) {
-                List<BlockPos> path = PathFinding.findPathToBlock(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), minecraftData.clientLevel, 2);
+                List<BlockPos> path = PathFinding.findPathInsideBlock(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), minecraftData.clientLevel, 2);
                 if (path != null) {
                     throw new UnsafeSetupException();
                 }

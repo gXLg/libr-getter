@@ -35,6 +35,10 @@ public class PathFinding {
         return findPathInternal(from, to, world, minHeight, pos -> pos.getY() == to.getY() && manhattan(pos, to) == 1 && isOnGround(pos, world));
     }
 
+    public static List<BlockPos> findPathInsideBlock(BlockPos from, BlockPos to, ClientLevel world, int minHeight) {
+        return findPathInternal(from, to, world, minHeight, pos -> to.equals(from));
+    }
+
     public static List<BlockPos> humanize(List<BlockPos> path, ClientLevel world, int minHeight) {
         // make jumps and falls aim directly for the next block
         List<BlockPos> altitudeFix = new ArrayList<>();
