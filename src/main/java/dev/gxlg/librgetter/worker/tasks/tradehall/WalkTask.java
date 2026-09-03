@@ -61,7 +61,12 @@ public class WalkTask extends Task {
 
         // initiate movement
         Vec3 delta = goalPos.subtract(playerPos);
-        Vec3 horizontalMove = (new Vec3(delta.x(), 0, delta.z())).normalize().scale(Math.min(0.18, distanceLimit));
+        Vec3 horizontalMove;
+        if (delta.x() < 1.0E-8 && delta.z() < 1.0E-8) {
+            horizontalMove = new Vec3(0, 0, 0);
+        } else {
+            horizontalMove = (new Vec3(delta.x(), 0, delta.z())).normalize().scale(Math.min(0.18, distanceLimit));
+        }
         boolean jump = goalPos.y() > playerPos.y() && player.onGround();
         Vec3 verticalMove = new Vec3(0, jump ? 0.42 : player.getDeltaMovement().y(), 0);
         player.setDeltaMovement(verticalMove.add(horizontalMove));
