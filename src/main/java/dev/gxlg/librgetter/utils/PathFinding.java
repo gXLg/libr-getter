@@ -44,7 +44,7 @@ public class PathFinding {
     }
 
     public static List<BlockPos> findPathInsideBlock(BlockPos from, BlockPos to, ClientLevel world, int minHeight) {
-        return findPathInternal(from, to, world, minHeight, pos -> to.equals(from));
+        return findPathInternal(from, to, world, minHeight, pos -> pos.equals(to));
     }
 
     public static List<BlockPos> humanize(List<BlockPos> path, ClientLevel world, int minHeight) {
