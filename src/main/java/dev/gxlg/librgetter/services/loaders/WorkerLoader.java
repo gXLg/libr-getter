@@ -45,5 +45,6 @@ public class WorkerLoader extends ServiceLoader<WorkerLoader> {
         CompatibilityManager compatibilityManager = dependencyCompatibilityManager.get();
 
         worker = new Worker(configManager, goalListAccessor, tradehallAccessor, compatibilityManager);
+        worker.start();
     }
 }

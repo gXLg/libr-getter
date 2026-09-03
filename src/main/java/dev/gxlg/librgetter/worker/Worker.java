@@ -64,7 +64,9 @@ public class Worker {
         userSchedulerController = new UserSchedulerController(taskContextUpdateScheduler, taskSwitchScheduler);
         taskSchedulerController = new TaskSchedulerController(taskContextUpdateScheduler, taskSwitchScheduler);
         schedulingHandler = new SchedulingHandler(taskContextUpdateScheduler, taskSwitchScheduler);
+    }
 
+    public void start() {
         ClientPlayConnectionEvents.JOIN.register(((ClientPlayConnectionEvents$JoinI) (h, s, c) -> reset()).unwrap(ClientPlayConnectionEvents.Join.class));
         ClientPlayConnectionEvents.DISCONNECT.register(((ClientPlayConnectionEvents$DisconnectI) (h, c) -> reset()).unwrap(ClientPlayConnectionEvents.Disconnect.class));
         TickUtil.registerLevelTicker(l -> work());
