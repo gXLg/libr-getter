@@ -7,12 +7,16 @@ import dev.gxlg.librgetter.savefiles.SaveFilePathManager;
 import dev.gxlg.librgetter.utils.messages.translatable.error.CouldNotInitSaveFileMessage;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class AbstractManagerAccessor<K, T, M> {
+    public static final int MAX_CACHE = 20;
+
     protected final SaveFilePathManager saveFilePathManager;
 
     private final Notifier notifier;
@@ -22,6 +26,8 @@ public abstract class AbstractManagerAccessor<K, T, M> {
     private final Class<T> type;
 
     private final Supplier<T> defaultDataSupplier;
+
+    private final List<Map.Entry<Path, M>> cache = new ArrayList<>();
 
     public AbstractManagerAccessor(SaveFilePathManager saveFilePathManager, Notifier notifier, String filename, Class<T> type, Supplier<T> defaultDataSupplier) {
         this.saveFilePathManager = saveFilePathManager;
@@ -59,7 +65,16 @@ public abstract class AbstractManagerAccessor<K, T, M> {
             return createManagerForSaveFile(new DummySaveFile<>(defaultDataSupplier.get()));
         }
         Path savePath = getSavePathForKey(key);
+        Map.Entry<Path, M> cachedEntry = cache.stream().filter(e -> Objects.equals(e.getKey(), savePath)).findFirst().orElse(null);
+        if (cachedEntry != null) {
+            return cachedEntry.getValue();
+        }
         JsonSaveFile<T> saveFile = JsonSaveFile.init(notifier, savePath, filename, type, defaultDataSupplier);
-        return createManagerForSaveFile(saveFile);
+        M manager = createManagerForSaveFile(saveFile);
+        cache.add(Map.entry(savePath, manager));
+        if (cache.size() > MAX_CACHE) {
+            cache.remove(0);
+        }
+        return manager;
     }
 }
