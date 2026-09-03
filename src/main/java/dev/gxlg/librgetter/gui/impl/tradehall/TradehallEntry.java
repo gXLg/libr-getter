@@ -1,5 +1,6 @@
 package dev.gxlg.librgetter.gui.impl.tradehall;
 
+import dev.gxlg.librgetter.gui.lib.widgets.WidgetDimensions;
 import dev.gxlg.librgetter.gui.lib.widgets.list.CustomSelectionListEntry;
 import dev.gxlg.librgetter.savefiles.tradehalls.WorkstationList;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
@@ -51,15 +52,13 @@ public class TradehallEntry extends CustomSelectionListEntry {
 
     @Override
     public void render(PoseStack poseStack, GuiGraphicsExtractor graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
-        int contentX = left + 7;
-        int contentY = top + height / 2 - 4;
-        int contentWidth = width - 14;
+        WidgetDimensions content = getContentDimensions(top, left, width, height);
 
         Component leftText = new TradeListMessage(trades, true).getComponent();
         Component rightText = Texts.literal(position.toString());
 
-        Gui.extractText(poseStack, graphics, font, leftText, contentX, contentY, -1);
-        Gui.extractText(poseStack, graphics, font, rightText, contentX + contentWidth - font.width(rightText), contentY, -1);
+        Gui.extractText(poseStack, graphics, font, leftText, content.x(), content.y(), -1);
+        Gui.extractText(poseStack, graphics, font, rightText, content.x() + content.width() - font.width(rightText), content.y(), -1);
     }
 
     @Override
