@@ -1,6 +1,6 @@
 package dev.gxlg.librgetter.utils.chaining.gui;
 
-import dev.gxlg.librgetter.gui.widgets.unified.list.UnifiedList;
+import dev.gxlg.librgetter.gui.lib.widgets.unified.list.UnifiedListWidget;
 import dev.gxlg.versiont.api.V;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.vertex.PoseStack;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
@@ -48,11 +48,11 @@ public class Gui {
         implementation.extractText(poseStack, guiGraphics, font, str, x, y, color);
     }
 
-    public static void removeListEntry(UnifiedList list, ObjectSelectionList$Entry entry) {
+    public static void removeListEntry(UnifiedListWidget list, ObjectSelectionList$Entry entry) {
         implementation.removeListEntry(list, entry);
     }
 
-    public static void refreshScrollAmount(UnifiedList list) {
+    public static void refreshScrollAmount(UnifiedListWidget list) {
         implementation.refreshScrollAmount(list);
     }
 
@@ -71,9 +71,9 @@ public class Gui {
 
         public abstract void extractText(PoseStack poseStack, GuiGraphicsExtractor guiGraphics, Font font, Component str, int x, int y, int color);
 
-        public abstract void removeListEntry(UnifiedList list, ObjectSelectionList$Entry entry);
+        public abstract void removeListEntry(UnifiedListWidget list, ObjectSelectionList$Entry entry);
 
-        public abstract void refreshScrollAmount(UnifiedList list);
+        public abstract void refreshScrollAmount(UnifiedListWidget list);
 
         public abstract Screen getScreen(Minecraft minecraft);
 

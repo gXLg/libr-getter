@@ -3,7 +3,8 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.Config;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
-import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
 import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
@@ -22,40 +23,37 @@ import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.EntityAnchorArgument$Anchor;
 import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
+import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
 
 import java.util.List;
 
 public class StartTask extends Task {
-    private final boolean resetCounter;
-
-    public StartTask(boolean resetCounter) {
-        this.resetCounter = resetCounter;
-    }
-
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListAccessor goalListAccessor, TradehallAccessor tradehallAccessor, CompatibilityManager compatibilityManager) throws LibrGetterException {
         if (taskContext.selectedLecternPos() == null && !compatibilityManager.isUsingTradeCycling()) {
             throw new NoLecternSetException();
         }
+
         if (taskContext.selectedVillager() == null) {
             throw new NoLibrarianSetException();
         }
-        if (!Villagers.isVillagerLibrarian(taskContext.selectedVillager())) {
+        Villager villager = taskContext.selectedVillager();
+        if (!Villagers.isVillagerLibrarian(villager)) {
             throw new VillagerNotLibrarianException();
         }
-        if (!taskContext.selectedVillager().isAlive()) {
+        if (!villager.isAlive()) {
             throw new VillagerNotExistException();
         }
-
-        if (goalListManager.getGoals().isEmpty()) {
+        if (goalListAccessor.createAccessForCurrentManager().getGoals().isEmpty()) {
             throw new EmptyGoalsListException();
         }
 
         MinecraftData minecraftData = new MinecraftData();
         if (configManager.getBoolean(Config.SAFE_CHECKER) && configManager.getConfigurable(Config.SAFE_CHECKER).hasEffect()) {
-            // If the villager is sitting, assume it cannot move
-            if (!taskContext.selectedVillager().isPassenger()) {
-                List<BlockPos> path = PathFinding.findPath(taskContext.selectedVillager().blockPosition(), taskContext.selectedLecternPos(), minecraftData.clientLevel, 2);
+            // If the villager is a passenger (in boat, minecart), assume it cannot move
+            if (!villager.isPassenger()) {
+                BlockPos villagerPos = villager.blockPosition();
+                List<BlockPos> path = PathFinding.findPathInsideBlock(villagerPos, taskContext.selectedLecternPos(), minecraftData.clientLevel, PathFinding.VILLAGER_HEIGHT);
                 if (path != null) {
                     throw new UnsafeSetupException();
                 }
@@ -66,13 +64,10 @@ public class StartTask extends Task {
             if (!configManager.getBoolean(Config.AUTO_TOOL)) {
                 ctx.setDefaultItem(minecraftData.localPlayer.getMainHandItem());
             }
-            if (resetCounter) {
-                ctx.resetAttemptsCounter();
-            }
             ctx.setTradeOfferData(null).setMinecraftData(minecraftData);
         });
 
-        Task rotationTask = new RotationTask(minecraftData.localPlayer, EntityAnchorArgument$Anchor.EYES().apply(taskContext.selectedVillager()), new WaitVillagerAcceptProfessionTask());
+        Task rotationTask = new RotationTask(minecraftData.localPlayer, EntityAnchorArgument$Anchor.EYES().apply(villager), new WaitVillagerAcceptProfessionTask());
         controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> {
             Texts.sendMessage(new ProcessStartedMessage());
             return rotationTask;

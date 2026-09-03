@@ -1,57 +1,54 @@
 package dev.gxlg.librgetter.savefiles.goals;
 
 import dev.gxlg.librgetter.savefiles.JsonSaveFile;
-import dev.gxlg.librgetter.savefiles.SaveFileManager;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 
 import java.util.List;
 
 public class GoalListManager {
-    public static final String FILENAME = "goals.json";
-
     private final JsonSaveFile<GoalListData> saveFile;
-
-    private final GoalListData data;
 
     private GoalListManager(JsonSaveFile<GoalListData> saveFile) {
         this.saveFile = saveFile;
-        this.data = saveFile.getData();
+    }
+
+    private GoalListData getData() {
+        return saveFile.getData();
     }
 
     public List<EnchantmentTrade> getGoals() {
-        return List.copyOf(data.goals);
+        return List.copyOf(getData());
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public boolean addGoal(EnchantmentTrade goal) {
-        return data.goals.add(goal);
+        return getData().add(goal);
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public boolean removeGoal(EnchantmentTrade goal) {
-        return data.goals.remove(goal);
+        return getData().remove(goal);
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public boolean removeMatchingGoal(EnchantmentTrade trade) {
-        for (EnchantmentTrade goal : data.goals) {
+        for (EnchantmentTrade goal : getData()) {
             if (trade.same(goal)) {
-                return data.goals.remove(goal);
+                return getData().remove(goal);
             }
         }
         return false;
     }
 
     public void clearGoals() {
-        data.goals.clear();
+        getData().clear();
     }
 
     public void save() {
         saveFile.save();
     }
 
-    public static GoalListManager init(SaveFileManager saveFileManager) {
-        JsonSaveFile<GoalListData> saveFile = saveFileManager.createSaveFile(FILENAME, GoalListData.class, GoalListData::new);
+    public static GoalListManager init(JsonSaveFile<GoalListData> saveFile) {
         return new GoalListManager(saveFile);
     }
 }

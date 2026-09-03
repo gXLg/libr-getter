@@ -7,6 +7,6 @@ import java.util.List;
 
 public class OfferMessage extends TranslatableFeedbackMessage {
     public OfferMessage(List<EnchantmentTrade> trades) {
-        super("librgetter.feedback.offer", new TradeListMessage(trades));
+        super("librgetter.feedback.offer", new TradeListMessage(trades, true));
     }
 }

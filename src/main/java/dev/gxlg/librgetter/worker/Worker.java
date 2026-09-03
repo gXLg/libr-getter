@@ -2,7 +2,9 @@ package dev.gxlg.librgetter.worker;
 
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
-import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
+import dev.gxlg.librgetter.utils.TickUtil;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.worker.scheduling.SchedulingHandler;
@@ -20,10 +22,8 @@ import dev.gxlg.librgetter.worker.types.context.TaskContext;
 import dev.gxlg.librgetter.worker.types.context.TaskContextBuilder;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
-import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTickI;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$DisconnectI;
 import dev.gxlg.versiont.gen.net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$JoinI;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
 public class Worker {
@@ -41,13 +41,16 @@ public class Worker {
 
     private final ConfigManager configManager;
 
-    private final GoalListManager goalListManager;
+    private final GoalListAccessor goalListAccessor;
+
+    private final TradehallAccessor tradehallAccessor;
 
     private final CompatibilityManager compatibilityManager;
 
-    public Worker(ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) {
+    public Worker(ConfigManager configManager, GoalListAccessor goalListAccessor, TradehallAccessor tradehallAccessor, CompatibilityManager compatibilityManager) {
         this.configManager = configManager;
-        this.goalListManager = goalListManager;
+        this.goalListAccessor = goalListAccessor;
+        this.tradehallAccessor = tradehallAccessor;
         this.compatibilityManager = compatibilityManager;
 
         TaskState taskState = new TaskState();
@@ -61,10 +64,12 @@ public class Worker {
         userSchedulerController = new UserSchedulerController(taskContextUpdateScheduler, taskSwitchScheduler);
         taskSchedulerController = new TaskSchedulerController(taskContextUpdateScheduler, taskSwitchScheduler);
         schedulingHandler = new SchedulingHandler(taskContextUpdateScheduler, taskSwitchScheduler);
+    }
 
+    public void start() {
         ClientPlayConnectionEvents.JOIN.register(((ClientPlayConnectionEvents$JoinI) (h, s, c) -> reset()).unwrap(ClientPlayConnectionEvents.Join.class));
         ClientPlayConnectionEvents.DISCONNECT.register(((ClientPlayConnectionEvents$DisconnectI) (h, c) -> reset()).unwrap(ClientPlayConnectionEvents.Disconnect.class));
-        ClientTickEvents.END_CLIENT_TICK.register(((ClientTickEvents$EndTickI) c -> work()).unwrap(ClientTickEvents.EndTick.class));
+        TickUtil.registerLevelTicker(l -> work());
     }
 
     private void work() {
@@ -76,7 +81,7 @@ public class Worker {
             stateController.setTaskContext(currentContext);
 
             try {
-                currentTask.work(currentContext, taskSchedulerController, configManager, goalListManager, compatibilityManager);
+                currentTask.work(currentContext, taskSchedulerController, configManager, goalListAccessor, tradehallAccessor, compatibilityManager);
             } catch (LibrGetterException exception) {
                 Texts.sendMessage(exception.getTranslatableErrorMessage());
                 systemSchedulerController.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));

@@ -2,7 +2,7 @@ package dev.gxlg.librgetter.commands;
 
 import dev.gxlg.librgetter.controller.SharedController;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
-import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
 import dev.gxlg.librgetter.utils.chaining.commands.Commands;
 import dev.gxlg.versiont.gen.com.mojang.brigadier.CommandDispatcher;
 import dev.gxlg.versiont.gen.net.minecraft.commands.CommandBuildContext;
@@ -12,8 +12,8 @@ import java.util.List;
 public class CommandsManager {
     private final List<Command> commands;
 
-    public CommandsManager(ConfigManager configManager, GoalListManager goalListManager, SharedController sharedController) {
-        this.commands = List.of(new LibrGetCommand(configManager, goalListManager, sharedController));
+    public CommandsManager(ConfigManager configManager, GoalListAccessor goalListAccessor, SharedController sharedController) {
+        this.commands = List.of(new LibrGetCommand(configManager, goalListAccessor, sharedController));
     }
 
     public void register() {

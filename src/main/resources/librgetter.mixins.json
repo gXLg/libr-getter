@@ -4,16 +4,19 @@
   "compatibilityLevel": "JAVA_16",
   "plugin": "dev.gxlg.versiont.mixins.VersiontMixinPlugin",
   "client": [
-    "obf.ClientPacketListenerMixinEntry",
-    "obf.MultiPlayerGameModeMixinEntry_1_17_0",
-    "obf.MultiPlayerGameModeMixinEntry_1_19_0",
-    "obf.MultiPlayerGameModeMixinEntry_Common",
-    "obf.PlayerMixinEntry",
-    "deobf.ClientPacketListenerMixinEntry",
+    "deobf.ClientPacketListenerMixinEntry_1_17_0",
     "deobf.MultiPlayerGameModeMixinEntry_1_17_0",
+    "deobf.MultiPlayerGameModeMixinEntry_1_17_0_to_1_19_0",
+    "deobf.MultiPlayerGameModeMixinEntry_1_17_0_to_26_1_0",
     "deobf.MultiPlayerGameModeMixinEntry_1_19_0",
-    "deobf.MultiPlayerGameModeMixinEntry_Common",
-    "deobf.PlayerMixinEntry"
+    "deobf.MultiPlayerGameModeMixinEntry_26_1_0",
+    "deobf.PlayerMixinEntry_1_17_0",
+    "obf.ClientPacketListenerMixinEntry_1_17_0",
+    "obf.MultiPlayerGameModeMixinEntry_1_17_0",
+    "obf.MultiPlayerGameModeMixinEntry_1_17_0_to_1_19_0",
+    "obf.MultiPlayerGameModeMixinEntry_1_17_0_to_26_1_0",
+    "obf.MultiPlayerGameModeMixinEntry_1_19_0",
+    "obf.PlayerMixinEntry_1_17_0"
   ],
   "injectors": {
     "defaultRequire": 1

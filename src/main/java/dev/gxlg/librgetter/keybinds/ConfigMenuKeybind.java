@@ -1,7 +1,7 @@
 package dev.gxlg.librgetter.keybinds;
 
-import dev.gxlg.librgetter.gui.config.ConfigMenu;
-import dev.gxlg.librgetter.gui.config.ConfigScreen;
+import dev.gxlg.librgetter.gui.impl.config.ConfigMenu;
+import dev.gxlg.librgetter.gui.impl.config.ConfigScreen;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;

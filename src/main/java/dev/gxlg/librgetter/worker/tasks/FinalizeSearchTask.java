@@ -3,10 +3,12 @@ package dev.gxlg.librgetter.worker.tasks;
 import dev.gxlg.librgetter.compatibility.CompatibilityManager;
 import dev.gxlg.librgetter.savefiles.config.Config;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
-import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
+import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
+import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
 import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.exceptions.tasks.CanNotLockException;
+import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.librgetter.worker.scheduling.controllers.TaskSchedulerController;
 import dev.gxlg.librgetter.worker.types.context.MinecraftData;
 import dev.gxlg.librgetter.worker.types.context.TaskContext;
@@ -21,19 +23,22 @@ import java.util.List;
 public class FinalizeSearchTask extends Task {
     private final List<MerchantOffer> offers;
 
-    public FinalizeSearchTask(List<MerchantOffer> offers) {
+    private final List<EnchantmentTrade> matchedTrades;
+
+    public FinalizeSearchTask(List<MerchantOffer> offers, List<EnchantmentTrade> matchedTrades) {
         this.offers = offers;
+        this.matchedTrades = matchedTrades;
     }
 
     @Override
-    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListManager goalListManager, CompatibilityManager compatibilityManager) throws LibrGetterException {
+    public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListAccessor goalListAccessor, TradehallAccessor tradehallAccessor, CompatibilityManager compatibilityManager) throws LibrGetterException {
         if (configManager.getBoolean(Config.MANUAL)) {
             controller.scheduleTaskSwitch(TaskSwitch.sameTick(ManualModeWaitTask::new));
             return;
         }
 
         if (!configManager.getBoolean(Config.LOCK)) {
-            controller.scheduleTaskSwitch(TaskSwitch.nextTick(StandbyTask::new));
+            controller.scheduleTaskSwitch(TaskSwitch.sameTick(FinishTask::new));
             return;
         }
 
@@ -53,7 +58,7 @@ public class FinalizeSearchTask extends Task {
                 // TradeCycling process keeps the screen open, else we have to open it again
                 Players.interactEntity(minecraftData.gameMode, minecraftData.localPlayer, taskContext.selectedVillager(), true);
             }
-            return new LockTradesTask(buy);
+            return new LockTradesTask(buy, matchedTrades);
         }));
     }
 

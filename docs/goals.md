@@ -17,8 +17,13 @@ librarian villagers. Each goal consists of an enchantment ID (e.g. `minecraft:ef
 a level (e.g. `5`), and the price limit in emeralds (e.g. `32`). Interactions with goals
 list described on this page happen through a client-side game-command.
 
-The goals list is stored in a file named `goals.json` located in the `config/librgetter` folder of your Minecraft
-directory. You can edit this file manually with any text editor, but make sure to follow the correct JSON
+The goals list is saved per-world or per-server in a file named `goals.json`. The locations are as follows:
+* If in singleplayer, the file will be saved inside a folder `librgetter-world-config` inside the world save folder,
+  e.g. under `<minecraft>/saves/New World/librgetter-world-config/goals.json`
+* If on a server, the file will be saved inside the `librgetter-server-config/<ip>` folder,
+  e.g. under `<minecraft>/librgetter-server-config/play.friends-smp.net/goals.json`
+
+You can edit this file manually with any text editor, but make sure to follow the correct JSON
 format and to edit the file while Minecraft is closed to avoid any issues.
 
 <div align="center">

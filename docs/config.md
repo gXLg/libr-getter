@@ -80,6 +80,7 @@ and a brief description of what they contain:
 * **Messages** - configs related to various messages displayed by LibrGetter
 * **Matching** - configs related to how LibrGetter matches the obtained enchantments with your goals,
   such as allowing partial matches or having a custom matching algorithm
+* **Trade Hall** - configs related to trade hall management
 * **Compatibility** - configs related to compatibility with other mods
 
 In following sections you can find a detailed description of each config option available in each category.
@@ -320,7 +321,7 @@ How to change head rotation between breaking the lectern and talking to the vill
 * INSTANT - rotate the head instantly; should bypass most simple AntiCheats
 * SMOOTH - imitate natural player head rotation; slows down the process drastically but should bypass even some advanced AntiCheats
 
-## No Swing
+### No Swing
 
 Enable/disable swinging the hand when placing or breaking the lectern and when talking to the villager.
 
@@ -350,6 +351,32 @@ or breaking the lectern and when talking to the villager.
 
 When enabled, LibrGetter will not swing the hand to reduce the eye strain, but this may trigger
 anti-cheats on some servers.
+
+### Particles
+
+Enable/disable spawning particles on the selected villager and lectern for visualization.
+
+<table>
+    <tbody>
+        <tr>
+            <td><b>Config</b></td>
+            <td><code>particles</code></td>
+        </tr>
+        <tr>
+            <td><b>Values</b></td>
+            <td>true, false</td>
+        </tr>
+        <tr>
+            <td><b>Default</b></td>
+            <td>true</td>
+        </tr>
+    </tbody>
+</table>
+
+When enabled, LibrGetter will spawn magenta dust particles on the selected villager and lectern for visualization.
+This can be useful to see if the selection is correct, especially if using the automatic selection or the Trade Hall mode.
+
+When disabled, no particles will be spawned.
 
 ## Success
 
@@ -658,6 +685,67 @@ Some example scenarios:
   one matching trade offer. Then you'd use `matchMode ATLEAST` and `matchAtLeast 1`
 * You'd like to get a villager with his offers ideally covering the whole goals list at once.
   Then you'd use `matchMode ATLEAST` and `matchAtLeast N` where `N` is the amount of items in your goals list.
+
+## Trade Hall
+
+See the whole [<kbd>Trade Hall</kbd>](/libr-getter/tradehall) section for more information about the Trade Hall feature.
+
+### Trade Hall Mode
+
+<table>
+    <tbody>
+        <tr>
+            <td><b>Config</b></td>
+            <td><code>tradehallMode</code></td>
+        </tr>
+        <tr>
+            <td><b>Values</b></td>
+            <td>true, false</td>
+        </tr>
+        <tr>
+            <td><b>Default</b></td>
+            <td>false</td>
+        </tr>
+        <tr>
+            <td><b>Only Effective</b></td>
+            <td>when <code>manual = false</code>, <code>lock = true</code> and <code>removeGoal = true</code></td>
+        </tr>
+    </tbody>
+</table>
+
+When enabled, upon finding a matching enchantment on a villager, LibrGetter will search for the next librarian
+workstation within 7 blocks, find a path and automatically walk there.
+This will be done until no more goals are present in the goal list or until no more workstations can be found.
+
+For best experience, follow these steps:
+* line up all librarians which you want to cycle in your trading hall in a straight line
+* remove any obstacles that could block the walking
+* avoid complicated paths, as the integrated pathfinder is very lightweight
+
+Note, that the auto-walk feature might be banned on some servers. Consult the admin if not sure.
+The feature is not safe against anti-cheats and might trigger their detection system.
+
+### Trade Hall Scan
+
+<table>
+    <tbody>
+        <tr>
+            <td><b>Config</b></td>
+            <td><code>tradehallScan</code></td>
+        </tr>
+        <tr>
+            <td><b>Values</b></td>
+            <td>true, false</td>
+        </tr>
+        <tr>
+            <td><b>Default</b></td>
+            <td>true</td>
+        </tr>
+    </tbody>
+</table>
+
+When enabled, LibrGetter will scan the surrounding area for any workstations without a lectern and
+automatically remove them. The scan happens once every minute (1200 ticks) and scans in the radius of 64 blocks.
 
 ## Compatibility
 
