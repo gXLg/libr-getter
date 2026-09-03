@@ -55,7 +55,7 @@ public class SaveFilePathManager {
         boolean isServer = !client.isLocalServer();
         String name;
         if (isServer) {
-            name = client.getCurrentServer().getIpField();
+            name = client.getCurrentServer().getIpField().replaceAll("[\\\\/:*?\"<>|]", "_");
         } else {
             name = client.getSingleplayerServer().getWorldPath(LevelResource.ROOT()).getParent().toFile().getName();
         }
