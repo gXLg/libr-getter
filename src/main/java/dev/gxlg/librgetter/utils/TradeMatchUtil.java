@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MatchUtil {
+public class TradeMatchUtil {
     public static List<EnchantmentTrade> parseTrades(List<MerchantOffer> offers, ConfigManager configManager, GoalListManager goalListManager) throws LibrGetterException {
         List<EnchantmentTrade> offeredEnchantments = new ArrayList<>();
         for (int i = 0; i < offers.size(); i++) {

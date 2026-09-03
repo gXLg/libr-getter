@@ -3,9 +3,9 @@ package dev.gxlg.librgetter.savefiles.tradehalls;
 import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
-import dev.gxlg.librgetter.utils.MatchUtil;
 import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.TickUtil;
+import dev.gxlg.librgetter.utils.TradeMatchUtil;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
@@ -63,7 +63,7 @@ public class TradehallAutoSaver {
             TradehallEntry entry = entries.remove();
             List<EnchantmentTrade> parsed;
             try {
-                parsed = MatchUtil.parseTrades(entry.merchantOffers(), configManager, goalListManager);
+                parsed = TradeMatchUtil.parseTrades(entry.merchantOffers(), configManager, goalListManager);
             } catch (LibrGetterException e) {
                 return;
             }
