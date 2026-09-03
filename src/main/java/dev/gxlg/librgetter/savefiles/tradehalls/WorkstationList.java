@@ -24,15 +24,12 @@ public class WorkstationList extends ArrayList<WorkstationList.Workstation> {
     }
 
     public WorkstationList filterWorkstations(BlockPos center, int radius) {
-        Position centerPos = Position.fromBlockPos(center);
         WorkstationList filtered = new WorkstationList();
         for (Workstation ws : this) {
-            int dx = ws.position.x - centerPos.x;
-            int dy = ws.position.y - centerPos.y;
-            int dz = ws.position.z - centerPos.z;
-            if (dx * dx + dy * dy + dz * dz <= radius * radius) {
-                filtered.add(ws);
+            if (!ws.getPosition().toBlockPos().closerThan(center, radius)) {
+                continue;
             }
+            filtered.add(ws);
         }
         return filtered;
     }
