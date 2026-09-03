@@ -32,7 +32,7 @@
         <br>
         <a href="https://www.paypal.com/donate?hosted_button_id=DVC2UQP2AXR68"><img alt="PayPal" src="https://img.shields.io/endpoint?url=https%3A%2F%2FgXLg.github.io%2Fbadges%2Fdonate.json"></a>
         <br>
-        <a href="https://https://github.com/sponsors/gXLg"><img alt="GitHub Sponsors" src="https://img.shields.io/endpoint?url=https%3A%2F%2FgXLg.github.io%2Fbadges%2Fsponsor.json"></a>
+        <a href="https://github.com/sponsors/gXLg"><img alt="GitHub Sponsors" src="https://img.shields.io/endpoint?url=https%3A%2F%2FgXLg.github.io%2Fbadges%2Fsponsor.json"></a>
       </td>
     </tr>
   </table>
@@ -46,18 +46,15 @@
 * LibrGetter is actively maintained and updated with new features and bug fixes
 * Support me by downloading from Modrinth or making a donation through PayPal or GitHub Sponsors
 
-> <sup><b>⚠️ Warning</b></sup><br>
-> If you have used the mod before version `v3.2.0` (Jun 11, 2026), upon updating, your configuration and goals list
-> will be reset to the default values. Please make sure to back up your configuration file before updating, if necessary.
-
 # Features
 
 * Fully automatic and highly efficient
 * Compatible with many other client-side mods for librarian villagers
 * Very customizable process with many configuration options
 * Stable against multiple lag types
-* Supports enchantments tags up from `1.19.3`
 * Configurable through client-side commands and in-game GUIs
+* Works with Trade Halls and can cycle multiple villagers in a row
+* Supports enchantments tags up from `1.19.3`
 
 # Installation
 
