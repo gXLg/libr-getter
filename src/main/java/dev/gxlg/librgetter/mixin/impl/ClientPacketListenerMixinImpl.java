@@ -32,9 +32,7 @@ public class ClientPacketListenerMixinImpl {
     }
 
     public void handleMerchantOffers(ClientboundMerchantOffersPacket packet) {
-        if (packet.getVillagerXp() > 0) {
-            tradehallAutoSaver.addTradeOffers(TradeOfferData.offers(packet.getOffers()));
-        }
+        tradehallAutoSaver.registerOffers(packet.getOffers(), packet.getVillagerXp() > 0);
 
         if (!stateView.createPermissionView().allowsSettingTradeOffers()) {
             return;

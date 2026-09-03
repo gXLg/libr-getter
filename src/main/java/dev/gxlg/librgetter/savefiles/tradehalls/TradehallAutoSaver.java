@@ -8,10 +8,10 @@ import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.TickUtil;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.types.EnchantmentTrade;
-import dev.gxlg.librgetter.utils.types.TradeOfferData;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
 import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
+import dev.gxlg.versiont.gen.net.minecraft.world.item.trading.MerchantOffer;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
@@ -25,9 +25,9 @@ public class TradehallAutoSaver {
 
     private final TradehallAccessor tradehallAccessor;
 
-    private final Queue<TimedEntry<Villager>> villagers = new LinkedBlockingQueue<>();
+    private final Queue<Villager> villagers = new LinkedBlockingQueue<>();
 
-    private final Queue<TimedEntry<TradeOfferData>> tradeOffers = new LinkedBlockingQueue<>();
+    private final Queue<TradehallEntry> entries = new LinkedBlockingQueue<>();
 
     public TradehallAutoSaver(ConfigManager configManager, GoalListAccessor goalListAccessor, TradehallAccessor tradehallAccessor) {
         this.configManager = configManager;
@@ -40,73 +40,44 @@ public class TradehallAutoSaver {
     }
 
     public void addVillager(Villager villager) {
-        villagers.add(new TimedEntry<>(villager));
+        villagers.add(villager);
     }
 
-    public void addTradeOffers(TradeOfferData tradeOfferData) {
-        tradeOffers.add(new TimedEntry<>(tradeOfferData));
+    public void registerOffers(List<MerchantOffer> merchantOffers, boolean traded) {
+        if (villagers.isEmpty()) {
+            return;
+        }
+        Villager villager = villagers.remove();
+        if (!traded || merchantOffers.isEmpty()) {
+            return;
+        }
+        entries.add(new TradehallEntry(villager, merchantOffers));
     }
 
     private void tick(ClientLevel level) {
-        if (!villagers.isEmpty()) {
-            TimedEntry<Villager> timedVillager = villagers.element();
-            if (timedVillager.isExpired()) {
-                villagers.remove();
-            } else {
-                timedVillager.tick();
-            }
-        }
-        if (!tradeOffers.isEmpty()) {
-            TimedEntry<TradeOfferData> timedTradeOffer = tradeOffers.element();
-            if (timedTradeOffer.isExpired()) {
-                tradeOffers.remove();
-            } else {
-                timedTradeOffer.tick();
-            }
-        }
-        if (villagers.isEmpty() || tradeOffers.isEmpty()) {
-            return;
-        }
-        Villager villager = villagers.remove().getData();
-        TradeOfferData tradeOfferData = tradeOffers.remove().getData();
         GoalListManager goalListManager = goalListAccessor.createAccessForCurrentManager();
-
-        List<EnchantmentTrade> parsed;
-        try {
-            parsed = MatchUtil.parseTrades(tradeOfferData.getTradeOfferList(), configManager, goalListManager);
-        } catch (LibrGetterException e) {
-            return;
-        }
-        BlockPos lecternPos = PathFinding.searchForBlock(level, villager.blockPosition(), PathFinding.DEFAULT_LECTERN_VILLAGER_DISTANCE, Blocks.LECTERN(), p -> true);
-        if (lecternPos == null) {
-            return;
-        }
         TradehallManager tradehallManager = tradehallAccessor.createAccessForCurrentManager();
-        tradehallManager.addOrUpdateWorkstation(lecternPos, parsed);
-        tradehallManager.save();
-    }
+        boolean dirty = false;
 
-    private static final int ENTRY_EXPIRATION_TICKS = 20 * 2; // 2 seconds
-
-    private static class TimedEntry<T> {
-        private final T data;
-
-        private int timer = 0;
-
-        public TimedEntry(T data) {
-            this.data = data;
+        while (!entries.isEmpty()) {
+            TradehallEntry entry = entries.remove();
+            List<EnchantmentTrade> parsed;
+            try {
+                parsed = MatchUtil.parseTrades(entry.merchantOffers(), configManager, goalListManager);
+            } catch (LibrGetterException e) {
+                return;
+            }
+            BlockPos lecternPos = PathFinding.searchForBlock(level, entry.villager.blockPosition(), PathFinding.DEFAULT_LECTERN_VILLAGER_DISTANCE, Blocks.LECTERN(), p -> true);
+            if (lecternPos == null) {
+                continue;
+            }
+            tradehallManager.addOrUpdateWorkstation(lecternPos, parsed);
+            dirty = true;
         }
-
-        public void tick() {
-            timer++;
-        }
-
-        public boolean isExpired() {
-            return timer > ENTRY_EXPIRATION_TICKS;
-        }
-
-        public T getData() {
-            return data;
+        if (dirty) {
+            tradehallManager.save();
         }
     }
+
+    private record TradehallEntry(Villager villager, List<MerchantOffer> merchantOffers) { }
 }
