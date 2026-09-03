@@ -1,5 +1,6 @@
 package dev.gxlg.librgetter.gui.impl.goals.select;
 
+import dev.gxlg.librgetter.gui.lib.widgets.WidgetDimensions;
 import dev.gxlg.librgetter.gui.lib.widgets.list.CustomSelectionListEntry;
 import dev.gxlg.librgetter.utils.chaining.enchantments.Enchantments;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
@@ -51,14 +52,11 @@ public class EnchantmentListEntry extends CustomSelectionListEntry {
 
     @Override
     public void render(PoseStack poseStack, GuiGraphicsExtractor graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
-        int contentX = left + 7;
-        int contentY = top + height / 2 - 4;
-        int contentWidth = width - 14;
-
-        Gui.extractText(poseStack, graphics, font, translatedName, contentX, contentY, -1);
+        WidgetDimensions content = getContentDimensions(top, left, width, height);
+        Gui.extractText(poseStack, graphics, font, translatedName, content.x(), content.y(), -1);
         if (!tradeable) {
             Component text = NOT_TRADEABLE_LABEL.getComponent();
-            Gui.extractText(poseStack, graphics, font, text, contentX + contentWidth - font.width(text), contentY, -1);
+            Gui.extractText(poseStack, graphics, font, text, content.x() + content.width() - font.width(text), content.y(), -1);
         }
     }
 

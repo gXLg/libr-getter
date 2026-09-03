@@ -32,7 +32,7 @@ public class JsonSaveFile<T> {
         save();
     }
 
-    public T getData() {
+    public T accessData() {
         return data;
     }
 

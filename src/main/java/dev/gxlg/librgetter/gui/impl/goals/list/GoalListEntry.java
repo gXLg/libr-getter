@@ -1,5 +1,6 @@
 package dev.gxlg.librgetter.gui.impl.goals.list;
 
+import dev.gxlg.librgetter.gui.lib.widgets.WidgetDimensions;
 import dev.gxlg.librgetter.gui.lib.widgets.list.CustomSelectionListEntry;
 import dev.gxlg.librgetter.utils.chaining.gui.Gui;
 import dev.gxlg.librgetter.utils.messages.objects.trades.TradeMessage;
@@ -34,12 +35,10 @@ public class GoalListEntry extends CustomSelectionListEntry {
 
     @Override
     public void render(PoseStack poseStack, GuiGraphicsExtractor graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
-        int contentX = left + 7;
-        int contentY = top + height / 2 - 4;
-        int contentWidth = width - 14;
+        WidgetDimensions content = getContentDimensions(top, left, width, height);
 
-        Gui.extractText(poseStack, graphics, font, component, contentX, contentY, -1);
-        Gui.extractText(poseStack, graphics, font, priceString, contentX + contentWidth - font.width(priceString), contentY, -1);
+        Gui.extractText(poseStack, graphics, font, component, content.x(), content.y(), -1);
+        Gui.extractText(poseStack, graphics, font, priceString, content.x() + content.width() - font.width(priceString), content.y(), -1);
     }
 
     public EnchantmentTrade getTrade() {

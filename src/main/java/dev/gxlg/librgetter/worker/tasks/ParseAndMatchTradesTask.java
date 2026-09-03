@@ -7,7 +7,7 @@ import dev.gxlg.librgetter.savefiles.config.types.enums.LogMode;
 import dev.gxlg.librgetter.savefiles.goals.GoalListAccessor;
 import dev.gxlg.librgetter.savefiles.goals.GoalListManager;
 import dev.gxlg.librgetter.savefiles.tradehalls.TradehallAccessor;
-import dev.gxlg.librgetter.utils.MatchUtil;
+import dev.gxlg.librgetter.utils.TradeMatchUtil;
 import dev.gxlg.librgetter.utils.chaining.players.Players;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
@@ -35,12 +35,12 @@ public class ParseAndMatchTradesTask extends Task {
     @Override
     public void work(TaskContext taskContext, TaskSchedulerController controller, ConfigManager configManager, GoalListAccessor goalListAccessor, TradehallAccessor tradehallAccessor, CompatibilityManager compatibilityManager) throws LibrGetterException {
         GoalListManager goalListManager = goalListAccessor.createAccessForCurrentManager();
-        List<EnchantmentTrade> offeredEnchantments = MatchUtil.parseTrades(offers, configManager, goalListManager);
+        List<EnchantmentTrade> offeredEnchantments = TradeMatchUtil.parseTrades(offers, configManager, goalListManager);
         LogMode logMode = configManager.getOptions(Config.LOG_MODE);
         if (logMode != LogMode.NONE) {
             Texts.sendMessage(new OfferMessage(offeredEnchantments), logMode == LogMode.ACTIONBAR);
         }
-        Optional<List<EnchantmentTrade>> matching = MatchUtil.matchTrades(offeredEnchantments, configManager, goalListManager);
+        Optional<List<EnchantmentTrade>> matching = TradeMatchUtil.matchTrades(offeredEnchantments, configManager, goalListManager);
         if (matching.isEmpty()) {
             TaskSwitch taskSwitch;
             if (compatibilityManager.isUsingTradeCycling()) {
