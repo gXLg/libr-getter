@@ -55,7 +55,7 @@ public class SaveFilePathManager {
         boolean isServer = !client.isLocalServer();
         String name;
         if (isServer) {
-            name = client.getCurrentServer().getIpField().replaceAll("[\\\\/:*?\"<>|]", "_");
+            name = sanitizeFileName(client.getCurrentServer().getIpField());
         } else {
             name = client.getSingleplayerServer().getWorldPath(LevelResource.ROOT()).getParent().toFile().getName();
         }
@@ -92,7 +92,7 @@ public class SaveFilePathManager {
             if (root == null) {
                 return null;
             }
-            return ensureFolder(root.resolve(dimension.stringKey()));
+            return ensureFolder(root.resolve(sanitizeFileName(dimension.stringKey())));
         }
         Path saveRoot = Minecraft.getInstance().getLevelSource().getBaseDir();
         Path worldRoot = saveRoot.resolve(worldInfo.name());
@@ -149,6 +149,11 @@ public class SaveFilePathManager {
                 return null;
             }
         } else {
+            Path parent = ensureFolder(folderPath.getParent());
+            if (parent == null) {
+                notifier.addNotification(new CouldNotInitSaveFileDirectoryMessage());
+                return null;
+            }
             try {
                 Files.createDirectory(folderPath);
             } catch (IOException e) {
@@ -168,6 +173,10 @@ public class SaveFilePathManager {
         public @NotNull String toString() {
             return name + (isServer ? " (server)" : " (local)");
         }
+    }
+
+    public static String sanitizeFileName(String filename) {
+        return filename.replaceAll("[\\\\/:*?\"<>|]", "_");
     }
 
     public record DimensionKey(ResourceKey resourceKey, String stringKey) { }

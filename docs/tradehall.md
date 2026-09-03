@@ -25,9 +25,9 @@ The locations are as follows:
 * If in singleplayer, the file will be saved inside a folder `librgetter-dimension-config` inside the
   dimension save folder inside the world save folder, e.g.:
   * before `26.1` under `<minecraft>/saves/New World/DIM-1/librgetter-dimension-config/tradehall.json`
-  * after `26.1` under `<minecraft>/saves/New World/dimensions/the_nether/librgetter-dimension-config/tradehall.json`
+  * after `26.1` under `<minecraft>/saves/New World/dimensions/minecraft/the_nether/librgetter-dimension-config/tradehall.json`
 * If on a server, the file will be saved inside the `librgetter-server-config/<ip>/<dimension>` folder,
-  e.g. under `<minecraft>/librgetter-server-config/play.friends-smp.net/overworld/tradehall.json`
+  e.g. under `<minecraft>/librgetter-server-config/play.friends-smp.net/minecraft_overworld/tradehall.json`
 
 You can edit this file manually with any text editor, but make sure to follow the correct JSON
 format and to edit the file while Minecraft is closed to avoid any issues.
