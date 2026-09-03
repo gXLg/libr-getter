@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@VersiontMixin(compare = { @Compare(version = "1.17", comparison = Comparison.NOT_LOWER), @Compare(version = "1.19", comparison = Comparison.LOWER) }, obfuscated = true)
+@VersiontMixin(compare = { @Compare(version = "1.17", comparison = Comparison.NOT_LOWER), @Compare(version = "26.1", comparison = Comparison.LOWER) }, obfuscated = true)
 @SuppressWarnings("UnresolvedMixinReference")
 @Mixin(targets = "net.minecraft.class_636", remap = false)
 public abstract class MultiPlayerGameModeMixinEntry_1_17_0_to_26_1_0 {
