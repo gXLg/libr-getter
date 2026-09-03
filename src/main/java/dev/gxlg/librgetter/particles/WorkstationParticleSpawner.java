@@ -1,5 +1,7 @@
 package dev.gxlg.librgetter.particles;
 
+import dev.gxlg.librgetter.savefiles.config.Config;
+import dev.gxlg.librgetter.savefiles.config.ConfigManager;
 import dev.gxlg.librgetter.utils.TickUtil;
 import dev.gxlg.librgetter.utils.chaining.world.World;
 import dev.gxlg.librgetter.worker.state.StateView;
@@ -24,9 +26,12 @@ public class WorkstationParticleSpawner {
 
     public static final int SCAN_RADIUS = 64;
 
+    private final ConfigManager configManager;
+
     private final StateView stateView;
 
-    public WorkstationParticleSpawner(StateView stateView) {
+    public WorkstationParticleSpawner(ConfigManager configManager, StateView stateView) {
+        this.configManager = configManager;
         this.stateView = stateView;
     }
 
@@ -35,6 +40,9 @@ public class WorkstationParticleSpawner {
     }
 
     private void tick(ClientLevel level) {
+        if (!configManager.getBoolean(Config.PARTICLES)) {
+            return;
+        }
         LocalPlayer player = Minecraft.getInstance().getPlayerField();
         if (player == null) {
             return;

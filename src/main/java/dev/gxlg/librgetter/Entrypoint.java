@@ -78,7 +78,7 @@ public class Entrypoint implements ClientModInitializer {
         WorkerLoader workerLoader = new WorkerLoader(saveFileLoader, compatibilityLoader);
         loaderManager.registerServiceLoader(workerLoader);
 
-        ParticleSpawnerLoader particleSpawnerLoader = new ParticleSpawnerLoader(workerLoader);
+        ParticleSpawnerLoader particleSpawnerLoader = new ParticleSpawnerLoader(saveFileLoader, workerLoader);
         loaderManager.registerServiceLoader(particleSpawnerLoader);
 
         SharedControllerLoader sharedControllerLoader = new SharedControllerLoader(workerLoader);
