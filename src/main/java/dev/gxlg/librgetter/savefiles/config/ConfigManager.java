@@ -29,7 +29,7 @@ public class ConfigManager {
 
     private ConfigManager(JsonSaveFile<ConfigData> saveFile, Notifier notifier) {
         this.saveFile = saveFile;
-        ConfigData data = saveFile.getData();
+        ConfigData data = saveFile.accessData();
         ConfigData defaultData = new ConfigData();
 
         for (Config config : Config.values()) {

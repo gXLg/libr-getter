@@ -15,22 +15,22 @@ public class TradehallManager {
     }
 
     public WorkstationList getWorkstations() {
-        return new WorkstationList(saveFile.getData());
+        return new WorkstationList(saveFile.accessData());
     }
 
     public void removeWorkstation(BlockPos lecternPos) {
-        WorkstationList.Workstation workstation = saveFile.getData().findWorkstation(lecternPos);
+        WorkstationList.Workstation workstation = saveFile.accessData().findWorkstation(lecternPos);
         if (workstation != null) {
-            saveFile.getData().remove(workstation);
+            saveFile.accessData().remove(workstation);
         }
     }
 
     public void addOrUpdateWorkstation(BlockPos lecternPos, List<EnchantmentTrade> trades) {
-        saveFile.getData().addOrUpdateWorkstation(lecternPos, trades);
+        saveFile.accessData().addOrUpdateWorkstation(lecternPos, trades);
     }
 
     public void clearWorkstations() {
-        saveFile.getData().clear();
+        saveFile.accessData().clear();
     }
 
     public void save() {

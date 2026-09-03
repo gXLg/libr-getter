@@ -12,36 +12,33 @@ public class GoalListManager {
         this.saveFile = saveFile;
     }
 
-    private GoalListData getData() {
-        return saveFile.getData();
-    }
-
     public List<EnchantmentTrade> getGoals() {
-        return List.copyOf(getData());
+        return List.copyOf(saveFile.accessData());
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public boolean addGoal(EnchantmentTrade goal) {
-        return getData().add(goal);
+        return saveFile.accessData().add(goal);
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public boolean removeGoal(EnchantmentTrade goal) {
-        return getData().remove(goal);
+        return saveFile.accessData().remove(goal);
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public boolean removeMatchingGoal(EnchantmentTrade trade) {
-        for (EnchantmentTrade goal : getData()) {
+        GoalListData accessedData = saveFile.accessData();
+        for (EnchantmentTrade goal : accessedData) {
             if (trade.same(goal)) {
-                return getData().remove(goal);
+                return accessedData.remove(goal);
             }
         }
         return false;
     }
 
     public void clearGoals() {
-        getData().clear();
+        saveFile.accessData().clear();
     }
 
     public void save() {
