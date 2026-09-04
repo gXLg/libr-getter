@@ -12,7 +12,11 @@ public class TradeListMessage extends Message {
     private final List<TradeMessage> tradeMessages;
 
     public TradeListMessage(List<EnchantmentTrade> tradeList) {
-        this.tradeMessages = tradeList.stream().map(TradeMessage::new).toList();
+        this(tradeList, false);
+    }
+
+    public TradeListMessage(List<EnchantmentTrade> tradeList, boolean showPrice) {
+        this.tradeMessages = tradeList.stream().map(t -> new TradeMessage(t, showPrice)).toList();
     }
 
     @Override

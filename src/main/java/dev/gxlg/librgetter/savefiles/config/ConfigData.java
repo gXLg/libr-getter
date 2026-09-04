@@ -10,7 +10,7 @@ import dev.gxlg.librgetter.savefiles.config.types.enums.MatchMode;
 import dev.gxlg.librgetter.savefiles.config.types.enums.RotationMode;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({ "unused", "FieldMayBeFinal", "UnusedReturnValue" })
+@SuppressWarnings({ "unused", "FieldMayBeFinal" })
 public class ConfigData {
     @OnlyEffective(when = Config.MANUAL, equals = "false")
     @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
@@ -51,6 +51,9 @@ public class ConfigData {
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private int timeout = 0;
 
+    @ConfigCategory(ConfigManager.Category.PROCESS)
+    private boolean particles = true;
+
     @ConfigCategory(ConfigManager.Category.SUCCESS)
     private boolean notify = false;
 
@@ -84,6 +87,15 @@ public class ConfigData {
     @IntRange(min = 1)
     @ConfigCategory(ConfigManager.Category.MATCHING)
     private int matchAtLeast = 1;
+
+    @OnlyEffective(when = Config.LOCK, equals = "true")
+    @OnlyEffective(when = Config.REMOVE_GOAL, equals = "true")
+    @OnlyEffective(when = Config.MANUAL, equals = "false")
+    @ConfigCategory(ConfigManager.Category.TRADEHALL)
+    private boolean tradehallMode = false;
+
+    @ConfigCategory(ConfigManager.Category.TRADEHALL)
+    private boolean tradehallScan = true;
 
     @CompatibilityWith("trade_cycling")
     @CanNotChangeWhileRunning

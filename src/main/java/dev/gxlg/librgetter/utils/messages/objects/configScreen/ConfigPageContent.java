@@ -39,13 +39,13 @@ public class ConfigPageContent extends PageContent {
     private MutableComponent buildEntry(Configurable<?> configurable) {
         String configName = configurable.config().getId();
         String showName = (configurable.isCompatibility() ? "+ " : "") + configName;
-        MutableComponent name = new TranslatableConfigDescription(configurable).getComponent();
+        MutableComponent description = new TranslatableConfigDescription(configurable).getComponent();
 
         ChatFormatting green = configurable.hasEffect() ? ChatFormatting.GREEN() : ChatFormatting.GRAY();
         ChatFormatting black = configurable.hasEffect() ? ChatFormatting.BLACK() : ChatFormatting.GRAY();
         ChatFormatting red = configurable.hasEffect() ? ChatFormatting.RED() : ChatFormatting.GRAY();
 
-        MutableComponent text = Texts.literal(showName).withStyle(Style.EMPTY().withHoverEvent(Texts.hoverable(name)).withColor(black));
+        MutableComponent text = Texts.literal(showName).withStyle(Style.EMPTY().withHoverEvent(Texts.hoverable(description)).withColor(black));
 
         ClickEvent resetCommand;
         MutableComponent leftText, middleText, rightText;

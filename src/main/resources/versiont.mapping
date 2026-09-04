@@ -25,7 +25,11 @@ adapter java.util.function.Consumer -> dev.gxlg.librgetter.utils.adapters.Consum
 import java.util.function.Supplier
 adapter java.util.function.Supplier -> dev.gxlg.librgetter.utils.adapters.SupplierAdapter
 
-import java.util.concurrent.CompletableFuture
+import java.util.Map$Entry
+adapter java.util.Map$Entry -> dev.gxlg.librgetter.utils.adapters.Map$EntryAdapter
+
+import java.nio.file.Path
+import java.io.File
 
 # ------------------------------------------------------------------------------------------------------------- #
 # Core
@@ -39,6 +43,13 @@ import net.minecraft.class_636/net.minecraft.client.multiplayer.MultiPlayerGameM
 import net.minecraft.class_1269/net.minecraft.world.InteractionResult
 import net.minecraft.class_1268/net.minecraft.world.InteractionHand
 import net.minecraft.class_3532/net.minecraft.util.Mth
+import net.minecraft.class_1132/net.minecraft.client.server.IntegratedServer
+import !net.minecraft.server.MinecraftServer
+import net.minecraft.class_5218/net.minecraft.world.level.storage.LevelResource
+import net.minecraft.class_642/net.minecraft.client.multiplayer.ServerData
+import net.minecraft.class_2874/net.minecraft.world.level.dimension.DimensionType
+import net.minecraft.class_641/net.minecraft.client.multiplayer.ServerList
+import net.minecraft.class_32/net.minecraft.world.level.storage.LevelStorageSource
 
 class Minecraft
     static Minecraft method_1551/getInstance()
@@ -48,11 +59,44 @@ class Minecraft
     @Nullable MultiPlayerGameMode field_1761/gameMode
     @Nullable ClientPacketListener method_1562/getConnection()
     @Nullable ClientPacketListener_1_20_2 method_1562/getConnection()
+    boolean method_1542/isLocalServer()
+    IntegratedServer method_1576/getSingleplayerServer()
+    ServerData method_1558/getCurrentServer()
+
     # <=26.1.2
     @Nullable Screen field_1755/screen
     void method_1507/setScreen(Screen screen)
     # 26.2
     Gui gui
+
+    final KeyboardHandler field_1774/keyboardHandler
+    LevelStorageSource method_1586/getLevelSource()
+
+class LevelStorageSource
+    Path method_19636/getBaseDir()
+
+class IntegratedServer extends MinecraftServer
+
+class MinecraftServer
+    Path method_27050/getWorldPath(LevelResource resource)
+    Iterable<Level> method_3738/getAllLevels()
+    RegistryAccess method_30611/registryAccess()
+
+class LevelResource
+    static final LevelResource field_24188/ROOT
+
+class DimensionType
+    static File method_12488/getStorageFolder(ResourceKey dimension, File levelRoot)
+    static Path method_12488/getStorageFolder(ResourceKey dimension, Path levelRoot)
+
+class ServerList
+    <init>(Minecraft client)
+    void method_2981/load()
+    int method_2984/size()
+    ServerData method_2982/get(int i)
+
+class ServerData
+    final String field_3761/ip
 
 class HitResult
     HitResult$Type method_17783/getType()
@@ -153,6 +197,7 @@ class VillagerProfession
 
 class Registries
     static final ResourceKey field_41265/ENCHANTMENT
+    static final ResourceKey field_41223/DIMENSION
 
 class Registry
     ResourceKey method_30517/key()
@@ -160,8 +205,10 @@ class Registry
     Holder method_47983/wrapAsHolder([Object] value)
     Stream<Holder$Reference> method_42017/listElements()
     Stream<[Object]> method_10220/stream()
+    Set<Map$Entry<ResourceKey, [Object]>> method_29722/entrySet()
 
     static final Registry field_11160/ENCHANTMENT
+    static final ResourceKey field_25298/DIMENSION_REGISTRY
 
 class BuiltInRegistries
     static final Registry field_41176/ENCHANTMENT
@@ -170,6 +217,9 @@ class RegistryAccess
     Registry method_30530/registryOrThrow/lookupOrThrow(ResourceKey key)
 
 class HolderSet$Named extends HolderSet$ListBacked
+
+class ResourceKey
+    Identifier method_29177/location/identifier()
 
 class HolderSet$ListBacked
     Stream<Holder> method_40239/stream()
@@ -220,6 +270,7 @@ class Vec3i
     boolean method_19771/closerThan(Vec3i target, double distance)
 
 class BlockPos extends Vec3i
+    <init>(int x, int y, int z)
     BlockPos method_10069/offset(int x, int y, int z)
     BlockPos method_10093/relative(Direction direction)
     BlockPos method_10086/above(int distance)
@@ -238,6 +289,11 @@ class Vec3
     double method_10216/x()
     double method_10214/y()
     double method_10215/z()
+    Vec3 method_1019/add(Vec3 vec)
+    Vec3 method_1020/subtract(Vec3 vec)
+    Vec3 method_1021/scale(double factor)
+    Vec3 method_1029/normalize()
+    double method_1022/distanceTo(Vec3 target)
     static Vec3 method_24955/atBottomCenterOf(Vec3i pos)
     static Vec3 method_24953/atCenterOf(Vec3i pos)
 
@@ -246,15 +302,28 @@ class Vec3
 
 import net.minecraft.class_1937/net.minecraft.world.level.Level
 import net.minecraft.class_638/net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.class_2394/net.minecraft.core.particles.ParticleOptions
+import net.minecraft.class_2390/net.minecraft.core.particles.DustParticleOptions
+import net.minecraft.class_1160/com.mojang.math.Vector3f/org.joml.Vector3f
+
+class Vector3f
+    <init>(float x, float y, float z)
 
 class Level
     BlockState method_8320/getBlockState(BlockPos pos)
     boolean method_8501/setBlockAndUpdate(BlockPos pos, BlockState state)
     void method_8486/playLocalSound(double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay)
     RegistryAccess method_30349/registryAccess()
+    ResourceKey method_27983/dimension()
+    void method_8406/addParticle(ParticleOptions particleData, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
 
 class ClientLevel extends Level
     Iterable<Entity> method_18112/entitiesForRendering()
+
+class DustParticleOptions extends ParticleOptions
+    <init>(Vector3f color, float scale)
+    # 1.21.2
+    <init>(int color, float scale)
 
 # ------------------------------------------------------------------------------------------------------------- #
 # Blocks
@@ -264,12 +333,15 @@ import net.minecraft.class_4970$class_4971/net.minecraft.world.level.block.state
 import net.minecraft.class_2248/net.minecraft.world.level.block.Block
 import net.minecraft.class_2246/net.minecraft.world.level.block.Blocks
 import net.minecraft.class_4970/net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.class_2482/net.minecraft.world.level.block.SlabBlock
 
 class BlockBehaviour
     accessible final boolean field_23159/hasCollision
 
 class Block extends BlockBehaviour
     BlockState method_9564/defaultBlockState()
+
+class SlabBlock extends Block
 
 class BlockBehaviour$BlockStateBase
     Block method_26204/getBlock()
@@ -306,6 +378,10 @@ class Entity
     Level method_73183/level()
     Level method_37908/level/getLevel()
     boolean method_5805/isAlive()
+    Vec3 method_18798/getDeltaMovement()
+    void method_18799/setDeltaMovement(Vec3 motion)
+    boolean method_24828/isOnGround/onGround()
+    Vec3 field_22467/position
 
 class LivingEntity extends Entity
     ItemStack method_6047/getMainHandItem()
@@ -331,7 +407,7 @@ class LocalPlayer extends AbstractClientPlayer
     void sendOverlayMessage(Component message)
 
 class EntityAnchorArgument$Anchor
-    static EntityAnchorArgument$Anchor field_9851/EYES
+    static final EntityAnchorArgument$Anchor field_9851/EYES
     Vec3 method_9302/apply(Entity entity)
 
 # ------------------------------------------------------------------------------------------------------------- #
@@ -507,10 +583,10 @@ import net.minecraft.class_327/net.minecraft.client.gui.Font
 import net.minecraft.class_4587/com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.class_6382/net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.class_364/net.minecraft.client.gui.components.events.GuiEventListener
-import net.minecraft.class_342/net.minecraft.client.gui.components.EditBox (dev.gxlg.librgetter.gui.widgets.unified.editbox.UnifiedEditBox)
-import net.minecraft.class_7842/net.minecraft.client.gui.components.StringWidget (dev.gxlg.librgetter.gui.widgets.unified.string.UnifiedStringWidget)
-import net.minecraft.class_4185/net.minecraft.client.gui.components.Button (dev.gxlg.librgetter.gui.widgets.unified.button.UnifiedButton)
-import net.minecraft.class_4185$class_12231/net.minecraft.client.gui.components.Button$Plain (dev.gxlg.librgetter.gui.widgets.unified.button.UnifiedButton)
+import net.minecraft.class_342/net.minecraft.client.gui.components.EditBox (dev.gxlg.librgetter.gui.lib.widgets.unified.editbox.UnifiedEditBox)
+import net.minecraft.class_7842/net.minecraft.client.gui.components.StringWidget (dev.gxlg.librgetter.gui.lib.widgets.unified.string.UnifiedStringWidget)
+import net.minecraft.class_4185/net.minecraft.client.gui.components.Button (dev.gxlg.librgetter.gui.lib.widgets.unified.button.UnifiedButton)
+import net.minecraft.class_4185$class_12231/net.minecraft.client.gui.components.Button$Plain (dev.gxlg.librgetter.gui.lib.widgets.unified.button.UnifiedButton)
 import net.minecraft.class_4185$class_4241/net.minecraft.client.gui.components.Button$OnPress
 import net.minecraft.class_4185$class_7841/net.minecraft.client.gui.components.Button$CreateNarration
 import net.minecraft.class_4185$class_7840/net.minecraft.client.gui.components.Button$Builder
@@ -522,6 +598,10 @@ import net.minecraft.class_350$class_351/net.minecraft.client.gui.components.Abs
 import net.minecraft.class_7528/net.minecraft.client.gui.components.AbstractScrollArea
 import net.minecraft.class_11909/net.minecraft.client.input.MouseButtonEvent
 import !net.minecraft.client.gui.Gui
+import net.minecraft.class_309/net.minecraft.client.KeyboardHandler
+
+class KeyboardHandler
+    void method_1455/setClipboard(String text)
 
 class Gui
     @Nullable Screen screen
@@ -605,6 +685,8 @@ class AbstractWidget extends GuiEventListener
     int field_22760/x
     int field_22761/y
 
+    void method_25355/setMessage(Component message)
+
 class Font
     int method_1727/width(String text)
     int method_27525/width(FormattedText text)
@@ -653,6 +735,7 @@ class AbstractSelectionList_1_20_3 extends AbstractScrollArea
     AbstractSelectionList$Entry method_25334/getSelected()
     void method_25313/setSelected(AbstractSelectionList$Entry entry)
 
+    List<AbstractSelectionList$Entry> method_25396/children()
     int method_25321/addEntry(AbstractSelectionList$Entry entry)
     void method_25339/clearEntries()
     void method_25314/replaceEntries(List<AbstractSelectionList$Entry> entries)
@@ -677,6 +760,7 @@ class AbstractSelectionList extends GuiEventListener
     AbstractSelectionList$Entry method_25334/getSelected()
     void method_25313/setSelected(AbstractSelectionList$Entry entry)
 
+    List<AbstractSelectionList$Entry> method_25396/children()
     int method_25321/addEntry(AbstractSelectionList$Entry entry)
     void method_25339/clearEntries()
     void method_25314/replaceEntries(List<AbstractSelectionList$Entry> entries)
@@ -862,13 +946,27 @@ class ClientPlayNetworking
 # ------------------------------------------------------------------------------------------------------------- #
 # Fabric Events
 
+import !net.fabricmc.fabric.api.event.Event
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTick
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndWorldTick/net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndLevelTick
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Join
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Disconnect
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents$AfterClientLevelChange
+
+class Event
+    void register([Object] listener)
+
+class ClientTickEvents
+    static final Event END_CLIENT_TICK
+    static final Event END_WORLD_TICK/END_LEVEL_TICK
 
 interface ClientTickEvents$EndTick
     void onEndTick(Minecraft client)
+
+interface ClientTickEvents$EndLevelTick
+    void onEndTick(ClientLevel level)
 
 interface ClientPlayConnectionEvents$Join
     void onPlayReady(ClientPacketListener handler, PacketSender sender, Minecraft client)
@@ -878,6 +976,9 @@ interface ClientPlayConnectionEvents$Disconnect
 
 interface ClientCommandRegistrationCallback
     void register(CommandDispatcher dispatcher, CommandBuildContext context)
+
+interface ClientLevelEvents$AfterClientLevelChange
+    void afterLevelChange(Minecraft client, ClientLevel level)
 
 # ------------------------------------------------------------------------------------------------------------- #
 # TradeCycling

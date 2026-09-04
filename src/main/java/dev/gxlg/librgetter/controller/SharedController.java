@@ -1,12 +1,11 @@
 package dev.gxlg.librgetter.controller;
 
+import dev.gxlg.librgetter.utils.PathFinding;
 import dev.gxlg.librgetter.utils.chaining.texts.Texts;
 import dev.gxlg.librgetter.utils.chaining.villagers.Villagers;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.exceptions.commands.AlreadyRunningException;
 import dev.gxlg.librgetter.utils.exceptions.commands.BlockNotLecternException;
-import dev.gxlg.librgetter.utils.exceptions.commands.CouldNotFindLecternException;
-import dev.gxlg.librgetter.utils.exceptions.commands.CouldNotFindLibrarianException;
 import dev.gxlg.librgetter.utils.exceptions.commands.EntityNotVillagerException;
 import dev.gxlg.librgetter.utils.exceptions.commands.NothingTargetedException;
 import dev.gxlg.librgetter.utils.exceptions.commands.VillagerNotLibrarianException;
@@ -19,6 +18,7 @@ import dev.gxlg.librgetter.worker.scheduling.controllers.UserSchedulerController
 import dev.gxlg.librgetter.worker.state.StateView;
 import dev.gxlg.librgetter.worker.tasks.StandbyTask;
 import dev.gxlg.librgetter.worker.tasks.StartTask;
+import dev.gxlg.librgetter.worker.types.context.TaskContextBuilder;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientLevel;
@@ -57,59 +57,9 @@ public class SharedController {
             throw new InternalErrorException("world");
         }
 
-        BlockPos foundLecternPos = null;
-        for (int distance = 1; distance < 5; distance++) {
-            for (int deltaX = -distance; deltaX <= distance; deltaX++) {
-                for (int deltaY = -distance; deltaY <= distance; deltaY++) {
-                    for (int deltaZ = -distance; deltaZ <= distance; deltaZ++) {
-                        if (distance != Math.abs(deltaX) && distance != Math.abs(deltaY) && distance != Math.abs(deltaZ)) {
-                            continue;
-                        }
-
-                        BlockPos pos = player.blockPosition().offset(deltaX, deltaY, deltaZ);
-                        if (world.getBlockState(pos).getBlock().equals(Blocks.LECTERN())) {
-                            foundLecternPos = pos;
-                            break;
-                        }
-                    }
-                    if (foundLecternPos != null) {
-                        break;
-                    }
-                }
-                if (foundLecternPos != null) {
-                    break;
-                }
-            }
-            if (foundLecternPos != null) {
-                break;
-            }
-        }
-        if (foundLecternPos == null) {
-            throw new CouldNotFindLecternException();
-        }
-        Iterable<Entity> worldEntities = world.entitiesForRendering();
-        Villager foundVillager = null;
-        float minDistance = Float.MAX_VALUE;
-        for (Entity entity : worldEntities) {
-            if (entity instanceof Villager villager) {
-                if (Villagers.isVillagerLibrarian(villager)) {
-                    float distance = villager.distanceTo(player);
-                    if (distance < minDistance && distance < 10) {
-                        foundVillager = villager;
-                        minDistance = distance;
-                    }
-                }
-            }
-        }
-        if (foundVillager == null) {
-            throw new CouldNotFindLibrarianException();
-        }
-
-        BlockPos finalLecternPos = foundLecternPos;
-        Villager finalVillager = foundVillager;
-
-        controller.scheduleContextUpdate(ctx -> ctx.setLecternPos(finalLecternPos).setVillager(finalVillager));
-        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
+        PathFinding.Jobsite workstation = PathFinding.findJobsite(world, player.blockPosition(), p -> true);
+        controller.scheduleContextUpdate(ctx -> ctx.setLecternPos(workstation.lectern()).setVillager(workstation.librarian()).resetAttemptsCounter());
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(StartTask::new));
     }
 
     public void stopWorking() throws ProcessNotRunningException {
@@ -126,14 +76,15 @@ public class SharedController {
         if (stateView.isWorking()) {
             throw new AlreadyRunningException();
         }
-        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(true)));
+        controller.scheduleContextUpdate(TaskContextBuilder::resetAttemptsCounter);
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(StartTask::new));
     }
 
     public void continueWorking() throws AlreadyRunningException {
         if (stateView.isWorking()) {
             throw new AlreadyRunningException();
         }
-        controller.scheduleTaskSwitch(TaskSwitch.nextTick(() -> new StartTask(false)));
+        controller.scheduleTaskSwitch(TaskSwitch.nextTick(StartTask::new));
     }
 
     public void selector() throws LibrGetterException {
