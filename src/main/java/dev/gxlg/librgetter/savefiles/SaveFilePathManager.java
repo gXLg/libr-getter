@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +32,10 @@ public class SaveFilePathManager {
 
     private final Path serverSavePath;
 
+    private final Base64.Encoder encoder;
+
+    private final Base64.Decoder decoder;
+
     public SaveFilePathManager(String modId, Notifier notifier) {
         this.modId = modId;
         this.notifier = notifier;
@@ -40,6 +45,20 @@ public class SaveFilePathManager {
 
         Path rootPath = FabricLoader.getInstance().getGameDir();
         this.serverSavePath = ensureFolder(rootPath.resolve(modId + "-server-config"));
+
+        this.encoder = Base64.getUrlEncoder().withoutPadding();
+        this.decoder = Base64.getUrlDecoder();
+    }
+
+    private String encodeFileName(String string) {
+        String clean = string.replaceAll("[\\\\/:*?\"<>|.]", "-");
+        String encoded = encoder.encodeToString(string.getBytes());
+        return clean + "." + encoded;
+    }
+
+    private String decodeFileName(String string) {
+        String encoded = string.split("[.]")[1];
+        return new String(decoder.decode(encoded));
     }
 
     public Path getWorldSavePath(WorldInfo worldInfo) {
@@ -55,7 +74,7 @@ public class SaveFilePathManager {
         boolean isServer = !client.isLocalServer();
         String name;
         if (isServer) {
-            name = sanitizeFileName(client.getCurrentServer().getIpField());
+            name = encodeFileName(client.getCurrentServer().getIpField());
         } else {
             name = client.getSingleplayerServer().getWorldPath(LevelResource.ROOT()).getParent().toFile().getName();
         }
@@ -76,7 +95,7 @@ public class SaveFilePathManager {
         }
         try (Stream<Path> stream = Files.list(serverSavePath)) {
             stream.filter(Files::isDirectory).forEach(path -> {
-                String name = path.getFileName().toString();
+                String name = decodeFileName(path.getFileName().toString());
                 worldInfos.add(new WorldInfo(name, true));
             });
         } catch (IOException e) {
@@ -92,7 +111,7 @@ public class SaveFilePathManager {
             if (root == null) {
                 return null;
             }
-            return ensureFolder(root.resolve(sanitizeFileName(dimension.stringKey())));
+            return ensureFolder(root.resolve(encodeFileName(dimension.stringKey())));
         }
         Path saveRoot = Minecraft.getInstance().getLevelSource().getBaseDir();
         Path worldRoot = saveRoot.resolve(worldInfo.name());
@@ -129,14 +148,14 @@ public class SaveFilePathManager {
         List<DimensionKey> dimensions = new ArrayList<>();
         try (Stream<Path> stream = Files.list(root)) {
             stream.filter(Files::isDirectory).forEach(e -> {
-                String name = e.toFile().getName();
+                String name = decodeFileName(e.toFile().getName());
                 dimensions.add(new DimensionKey(null, name));
             });
         } catch (IOException e) {
             notifier.addNotification(new CouldNotInitSaveFileDirectoryMessage());
             return List.of(getCurrentDimension());
         }
-        if (!dimensions.contains(current)) {
+        if (dimensions.stream().noneMatch(d -> d.stringKey().equals(current.stringKey()))) {
             dimensions.add(current);
         }
         return dimensions.stream().sorted(Comparator.comparing(DimensionKey::stringKey)).toList();
@@ -173,10 +192,6 @@ public class SaveFilePathManager {
         public @NotNull String toString() {
             return name + (isServer ? " (server)" : " (local)");
         }
-    }
-
-    public static String sanitizeFileName(String filename) {
-        return filename.replaceAll("[\\\\/:*?\"<>|]", "_");
     }
 
     public record DimensionKey(ResourceKey resourceKey, String stringKey) { }
