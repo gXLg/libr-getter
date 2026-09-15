@@ -41,7 +41,7 @@
 <hr>
 
 * Use LibrGetter while playing in singleplayer, on LAN worlds, on vanilla or modded servers, and even in Realms
-* Supports all Minecraft versions from <code>1.17</code> up to <code>26.2</code>, use the same JAR file for all supported Minecraft versions
+* Supports all Minecraft versions from <code>1.17</code> up to <code>26.3</code>, use the same JAR file for all supported Minecraft versions
 * Join the community on Discord to get help, report bugs, request features and get development insights
 * LibrGetter is actively maintained and updated with new features and bug fixes
 * Support me by downloading from Modrinth or making a donation through PayPal or GitHub Sponsors
