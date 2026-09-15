@@ -866,6 +866,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.minecraft.class_304/net.minecraft.client.KeyMapping
 import net.minecraft.class_304$class_11900/net.minecraft.client.KeyMapping$Category
+import net.minecraft.class_3675/com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.class_3675$class_307/com.mojang.blaze3d.platform.InputConstants$Type
 
 class KeyBindingHelper
@@ -883,8 +884,17 @@ class KeyMapping
 class KeyMapping$Category
     static KeyMapping$Category method_74698/register(Identifier id)
 
+class InputConstants
+    static final int field_32022/KEY_H
+    static final int field_32024/KEY_J
+    static final int field_32025/KEY_K
+    static final int field_31936/KEY_COMMA
+    static final int field_31943/KEY_PERIOD
+    static final int field_31987/KEY_DELETE
+    static final int field_31957/KEY_RETURN
+
 class InputConstants$Type
-    static final InputConstants$Type field_1668/KEYSYM
+    static final InputConstants$Type field_1668/KEYSYM/KEYBOARD
 
 # ------------------------------------------------------------------------------------------------------------- #
 # Sounds
