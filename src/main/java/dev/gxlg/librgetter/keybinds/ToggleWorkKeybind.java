@@ -4,12 +4,12 @@ import dev.gxlg.librgetter.controller.SharedController;
 import dev.gxlg.librgetter.utils.exceptions.LibrGetterException;
 import dev.gxlg.librgetter.utils.exceptions.common.InternalErrorException;
 import dev.gxlg.librgetter.worker.types.task.Task;
+import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants;
 import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants$Type;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.player.LocalPlayer;
 import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
 
@@ -21,7 +21,7 @@ public class ToggleWorkKeybind extends Keybind {
     private Villager lastLibrarian;
 
     public ToggleWorkKeybind(SharedController sharedController) {
-        super("librgetter.keys.toggle", InputConstants$Type.KEYSYM(), GLFW.GLFW_KEY_J);
+        super("librgetter.keys.toggle", InputConstants$Type.KEYBOARD(), InputConstants.KEY_J());
         this.sharedController = sharedController;
 
         lastLecternPos = sharedController.getStateView().getTaskContext().selectedLecternPos();

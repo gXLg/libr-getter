@@ -15,11 +15,11 @@ import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableA
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableSearchLabel;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableSelectButton;
 import dev.gxlg.versiont.api.R;
+import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.components.AbstractSelectionList$Entry;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 import dev.gxlg.versiont.gen.net.minecraft.world.item.enchantment.Enchantment;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class SelectEnchantmentScreen extends AbstractDynamicWidgetScreen {
     }
 
     private boolean onKeyPressed(int keyCode) {
-        if (keyCode == GLFW.GLFW_KEY_ENTER) {
+        if (keyCode == InputConstants.KEY_RETURN()) {
             onSelect();
             return true;
         }

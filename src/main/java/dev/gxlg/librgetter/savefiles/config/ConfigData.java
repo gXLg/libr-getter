@@ -33,11 +33,6 @@ public class ConfigData {
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private RotationMode rotationMode = RotationMode.INSTANT;
 
-    @OnlyEffective(when = Config.MANUAL, equals = "false")
-    @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
-    @ConfigCategory(ConfigManager.Category.PROCESS)
-    private boolean noSwing = false;
-
     @OnlyEffective(when = Config.TRADE_CYCLING, equals = "false")
     @ConfigCategory(ConfigManager.Category.PROCESS)
     private boolean waitLose = false;

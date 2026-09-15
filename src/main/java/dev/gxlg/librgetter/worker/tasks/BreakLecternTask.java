@@ -12,7 +12,6 @@ import dev.gxlg.librgetter.worker.types.context.TaskContextBuilder;
 import dev.gxlg.librgetter.worker.types.switcher.TaskSwitch;
 import dev.gxlg.librgetter.worker.types.task.Task;
 import dev.gxlg.versiont.gen.net.minecraft.core.Direction;
-import dev.gxlg.versiont.gen.net.minecraft.world.InteractionHand;
 import dev.gxlg.versiont.gen.net.minecraft.world.level.block.state.BlockState;
 
 public class BreakLecternTask extends Task {
@@ -39,9 +38,6 @@ public class BreakLecternTask extends Task {
             minecraftData.gameMode.startDestroyBlock(taskContext.selectedLecternPos(), Direction.UP());
         } else {
             minecraftData.gameMode.continueDestroyBlock(taskContext.selectedLecternPos(), Direction.UP());
-        }
-        if (!configManager.getBoolean(Config.NO_SWING)) {
-            minecraftData.localPlayer.swing(InteractionHand.MAIN_HAND());
         }
     }
 
