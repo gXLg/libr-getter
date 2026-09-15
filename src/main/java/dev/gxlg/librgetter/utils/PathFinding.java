@@ -110,6 +110,9 @@ public class PathFinding {
     }
 
     public static BlockPos searchForBlock(ClientLevel world, BlockPos center, int radius, Block block, Predicate<BlockPos> allowedPositions) {
+        if (world.getBlockState(center).getBlock().equals(block) && allowedPositions.test(center)) {
+            return center;
+        }
         for (int distance = 1; distance < radius; distance++) {
             for (int deltaX = -distance; deltaX <= distance; deltaX++) {
                 for (int deltaY = -distance; deltaY <= distance; deltaY++) {

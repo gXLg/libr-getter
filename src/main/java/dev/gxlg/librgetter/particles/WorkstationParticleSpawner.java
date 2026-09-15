@@ -13,6 +13,7 @@ import dev.gxlg.versiont.gen.net.minecraft.commands.arguments.EntityAnchorArgume
 import dev.gxlg.versiont.gen.net.minecraft.core.BlockPos;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.npc.villager.Villager;
 import dev.gxlg.versiont.gen.net.minecraft.world.entity.player.Player;
+import dev.gxlg.versiont.gen.net.minecraft.world.level.block.Blocks;
 import dev.gxlg.versiont.gen.net.minecraft.world.phys.Vec3;
 
 public class WorkstationParticleSpawner {
@@ -62,6 +63,9 @@ public class WorkstationParticleSpawner {
         if (player.distanceTo(villager) > SCAN_RADIUS) {
             return;
         }
+        if (!villager.isAlive()) {
+            return;
+        }
         Vec3 eyes = EntityAnchorArgument$Anchor.EYES().apply(villager);
         Vec3 direction = player.getPositionField().subtract(eyes).normalize();
         Vec3 pos = eyes.add(direction.scale(0.5D));
@@ -70,6 +74,9 @@ public class WorkstationParticleSpawner {
 
     private void checkLectern(ClientLevel level, Player player, BlockPos lecternPos) {
         if (!player.blockPosition().closerThan(lecternPos, SCAN_RADIUS)) {
+            return;
+        }
+        if (!level.getBlockState(lecternPos).getBlock().equals(Blocks.LECTERN())) {
             return;
         }
         Vec3 center = Vec3.atBottomCenterOf(lecternPos).add(new Vec3(0.0D, 0.75D, 0.0D));

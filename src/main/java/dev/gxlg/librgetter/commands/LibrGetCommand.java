@@ -294,12 +294,9 @@ public class LibrGetCommand implements CommandsManager.Command {
 
         ArgumentBuilder baseCommand = Commands.literal("librget");
 
-        ArgumentBuilder subCommand;
-
         // add subcommand
         {
-            subCommand = Commands.literal("add");
-
+            ArgumentBuilder subCommand = Commands.literal("add");
             ArgumentBuilder enchantmentArgument, levelArgument, priceArgument;
 
             enchantmentArgument = Commands.argument("enchantment", enchantmentArgumentType).executes(CommandHelper.commandWrapper(this::add));
@@ -317,7 +314,7 @@ public class LibrGetCommand implements CommandsManager.Command {
 
         // remove subcommand
         {
-            subCommand = Commands.literal("remove");
+            ArgumentBuilder subCommand = Commands.literal("remove");
             ArgumentBuilder enchantmentArgument, levelArgument;
 
             enchantmentArgument = Commands.argument("enchantment", enchantmentArgumentType).executes(CommandHelper.commandWrapper(this::remove));
@@ -333,7 +330,7 @@ public class LibrGetCommand implements CommandsManager.Command {
 
         // no-arg subcommands
         {
-            subCommand = Commands.literal("clear").executes(CommandHelper.commandWrapper(ctx -> clearGoals()));
+            ArgumentBuilder subCommand = Commands.literal("clear").executes(CommandHelper.commandWrapper(ctx -> clearGoals()));
             baseCommand = baseCommand.then(subCommand);
 
             subCommand = Commands.literal("list").executes(CommandHelper.commandWrapper(ctx -> list()));
@@ -354,7 +351,7 @@ public class LibrGetCommand implements CommandsManager.Command {
 
         // automatically create config commands for each simply configurable value in Config
         {
-            subCommand = Commands.literal("config");
+            ArgumentBuilder subCommand = Commands.literal("config");
             for (Configurable<?> configurable : configManager.getConfigurables()) {
                 String name = configurable.config().getId();
 

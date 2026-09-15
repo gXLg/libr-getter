@@ -17,10 +17,10 @@ import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableC
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableDoneButton;
 import dev.gxlg.librgetter.utils.messages.translatable.partial.gui.TranslatableSearchLabel;
 import dev.gxlg.versiont.api.R;
+import dev.gxlg.versiont.gen.com.mojang.blaze3d.platform.InputConstants;
 import dev.gxlg.versiont.gen.net.minecraft.client.Minecraft;
 import dev.gxlg.versiont.gen.net.minecraft.client.gui.screens.Screen;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +101,7 @@ public class TradehallScreen extends AbstractDynamicWidgetScreen {
     }
 
     private boolean onKeyPressed(int keyCode) {
-        if (keyCode == GLFW.GLFW_KEY_DELETE) {
+        if (keyCode == InputConstants.KEY_DELETE()) {
             return removeSelectedWorkstation();
         }
         return false;
