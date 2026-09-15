@@ -387,7 +387,6 @@ class LivingEntity extends Entity
     ItemStack method_6047/getMainHandItem()
     void method_5702/lookAt(EntityAnchorArgument$Anchor anchor, Vec3 target)
     void method_5847/setYHeadRot(float headYaw)
-    void method_6104/swing(InteractionHand hand)
 
 class Villager extends LivingEntity
     VillagerData method_7231/getVillagerData()
